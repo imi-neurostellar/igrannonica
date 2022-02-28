@@ -1,0 +1,26 @@
+<div style="display: flex; flex-direction: row;">
+    <div>
+        <label for="red">CRVENA</label>
+        <br>
+        <input type="number" min="0" max="255" [(ngModel)]="red" name="red">
+    </div>
+    <div>
+        <label for="green">ZELENA</label>
+        <br>
+        <input type="number" min="0" max="255" [(ngModel)]="green" name="green">
+    </div>
+    <div>
+        <label for="blue">PLAVA</label>
+        <br>
+        <input type="number" min="0" max="255" [(ngModel)]="blue" name="blue">
+    </div>
+</div>
+<button type="button" (click)="submit()" [style.backgroundColor]="'rgb('+red+','+green+','+blue+')'"
+    [style.color]="(red+green+blue>255*1.5 ? '#000':'#fff')">
+    DODAJ BOJU
+</button>
+<br><br>
+<div [style.backgroundColor]="color" style="width: 200px; height: 40px;"></div>
+
+<br>
+<button type="button" (click)="goToColors()">POGLEDAJ BOJE</button>
