@@ -1,0 +1,24 @@
+<div id="forma">
+    <h2>DODAJ LAPTOP</h2>
+    <label>Brand:</label>
+    <input type="text" placeholder=" Lenovo" [(ngModel)]="laptop.brand"><br>
+    <label>Model:</label>
+    <input type="text" placeholder=" Ideapad" [(ngModel)]="laptop.model"><br>
+    <label>Ram:</label>  &nbsp;
+    <input type="number" placeholder=" 8" [(ngModel)]="laptop.ram"> <br>
+    <label>Memorija:</label>&nbsp;
+    <input type="number" placeholder=" 1000" [(ngModel)]="laptop.hdd"> <br>
+    <label>Grafika:</label>  &nbsp; &nbsp;
+    <input type="text" placeholder=" nVidia GeForce 1080" [(ngModel)]="laptop.graphics"> <br>
+    <label>Ekran:</label>
+    <input type="text" placeholder="  15.6" [(ngModel)]="laptop.display"> <br>
+    <label>Procesor:</label>
+    <input type="text" placeholder="  Intel i7 dualCore " [(ngModel)]="laptop.processor"><br>
+    <label>Cena:</label>  &nbsp; &nbsp; &nbsp; &nbsp;
+    <input type="number" placeholder=" 760 " [(ngModel)]="laptop.price"><br>
+    
+    <button (click)="dodaj(laptop)">Dodaj laptop</button> 
+
+    <button (click)="back()">Nazad na početnu</button> 
+</div>
+
