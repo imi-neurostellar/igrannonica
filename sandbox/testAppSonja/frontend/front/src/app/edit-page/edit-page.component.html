@@ -1,0 +1,70 @@
+<div>
+    <form #f="ngForm" (ngSubmit)="handleSubmit(f)">
+
+        <input type="hidden" id="id" name="id" [(ngModel)]="student.id">
+        <input type="hidden" id="regNum" name="regNum" [(ngModel)]="student.regNum">
+
+        <label for="fname">Ime</label><br>
+        <input type="text" id="fname" name="firstname" [(ngModel)]="student.firstName">
+        <br>
+    
+        <label for="lname">Prezime</label><br>
+        <input type="text" id="lname" name="lastname" [(ngModel)]="student.lastName">
+        <br>
+    
+        <label for="gpa">Prosecna ocena</label><br>
+        <input type="text" id="gpa" name="gpa" [(ngModel)]="student.gpa">
+        <br>
+        
+        <label for="address">Adresa</label><br>
+        <input type="text" id="address" name="address" [(ngModel)]="student.address">
+        <br>
+        
+        <label for="phone">Broj telefona</label><br>
+        <input type="text" id="phone" name="phone" [(ngModel)]="student.phoneNum">
+        <br>
+      
+        <input type="submit" value="Sacuvaj izmenu">
+    </form>
+
+    <br><br>
+    <a routerLink="">Povratak na spisak studenata</a>
+
+</div>
+
+<style>
+
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+
+input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+    background-color: #45a049;
+    }
+
+    div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 50%;
+    margin: 50px auto;
+    }
+
+</style>

@@ -1,0 +1,72 @@
+<h2>Spisak studenata</h2>
+
+<table *ngIf="students && students.length > 0">
+    <thead>
+        <tr>
+            <th>Ime i prezime</th>
+            <th>Broj indeksa</th>
+            <th>Prosecna ocena</th>
+            <th>Adresa</th>
+            <th>Broj telefona</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let student of students">
+            <td>{{student.firstName}} {{student.lastName}}</td>
+            <td>{{student.regNum}}</td>
+            <td>{{student.gpa}}</td>
+            <td>{{student.address}}</td>
+            <td>{{student.phoneNum}}</td>
+            <td>
+                <button><a routerLink="../edit/{{student.id}}" type="button" class="btn btn-primary">Izmeni podatke</a></button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary" (click)="pickStudentForDelete(student.id)">Obrisi studenta</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div>
+    <button id="btnDodaj" type="button" class="btn btn-primary"><a routerLink="../add">Dodaj novog studenta</a></button>
+</div>
+
+<!--
+<p *ngIf="!students || !students.length">
+    Nema studenata!
+</p>
+-->
+
+<style>
+
+    h2 {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    table {
+    border-collapse: collapse;
+    width: 60%;
+    margin: auto;
+    }
+
+    th, td {
+    text-align: left;
+    padding: 8px;
+    }
+
+    tr:nth-child(even){background-color: #f2f2f2}
+
+    th {
+    background-color: #04AA6D;
+    color: white;
+    }
+
+    div {
+        text-align: center;
+        padding-top: 70px;
+    }
+
+</style>
