@@ -1,0 +1,70 @@
+<div>
+    <form #f="ngForm" (ngSubmit)="handleSave(f)">
+
+        <input type="hidden" id="id" name="id" [value]="" ngModel>
+        <input type="hidden" id="gpa" name="gpa" [value]="" ngModel>
+        
+        <label for="fname">Ime</label><br>
+        <input type="text" id="fname" name="firstname" [value]="" ngModel>
+        <br>
+    
+        <label for="lname">Prezime</label><br>
+        <input type="text" id="lname" name="lastname" [value]="" ngModel>
+        <br>
+
+        <label for="regNum">Broj indeksa</label><br>
+        <input type="text" id="regNum" name="regNum" [value]="" ngModel>
+        <br>
+        
+        <label for="address">Adresa</label><br>
+        <input type="text" id="address" name="address" [value]="" ngModel>
+        <br>
+        
+        <label for="phone">Broj telefona</label><br>
+        <input type="text" id="phone" name="phone" [value]="" ngModel>
+        <br>
+      
+        <input type="submit" value="Dodaj studenta">
+    </form>
+
+    <br><br>
+    <a routerLink="">Povratak na spisak studenata</a>
+
+</div>
+
+<style>
+
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+
+input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+    background-color: #45a049;
+    }
+
+    div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 50%;
+    margin: 50px auto;
+    }
+
+</style>

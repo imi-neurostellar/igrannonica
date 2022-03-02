@@ -1,0 +1,19 @@
+<router-outlet></router-outlet>
+  <div>
+    <label>Unesi broj a:</label>
+    <br>
+    <input type="number" min="0" [(ngModel)]="a" name="a">
+  </div>
+  <div>
+    <label>Unesi broj b:</label>
+    <br>
+    <input type="number" min="0" [(ngModel)]="b" name ="b">
+  </div>
+  
+  <button type="button" (click)="sumNumbers()" >
+      SABERI BROJEVE
+  </button>
+  
+  <div>
+    Rezultat je: {{Sum}}
+  </div>

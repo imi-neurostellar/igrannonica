@@ -1,0 +1,22 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid green;
+    margin-top:15px;
+  }
+
+th{
+    border:1px solid green;
+    height: 30px;
+    background-color:springgreen;
+}
+
+td{
+    border:1px solid salmon;
+    height: 30px;
+    text-align: center;
+}
+#forma{
+    width: 250px;
+    margin: auto;
+}
