@@ -10,7 +10,7 @@ An in-depth paragraph about your project and overview of use.
 
 ### Dependencies
 
-* .NET 3.1
+* .NET 5.0
 * NodeJS
 
 ### Installing
@@ -21,7 +21,7 @@ npm install -g @angular/cli
 cd .\frontend\
 npm install
 ```
-* Za instalaciju ASP.NET Core:
+* Za instalaciju .NET:
 Visual Studio Installer > (Izaberite vasu verziju Visual Studio editora) > Modify > ASP.NET and web development > Modify
 
 ### Executing program
