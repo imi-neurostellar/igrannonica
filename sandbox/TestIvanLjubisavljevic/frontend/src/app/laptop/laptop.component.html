@@ -1,0 +1,41 @@
+<div *ngIf="laptop" id="forma">
+    <h4>Karakteristike laptopa:</h4>
+  <b>Brend:</b> {{laptop.brand}}  <br>
+  <b>Model</b>: {{laptop.model}} <br>
+  <b>RAM</b>: {{laptop.ram}} GB<br>
+  <b>HDD</b>: {{laptop.hdd}} GB<br>
+  <b>Grafika</b>: {{laptop.graphics}} (GB)<br>
+  <b>Dijagonala ekrana</b>: {{laptop.display}} "<br>
+  <b>Procesor</b>: {{laptop.processor}} <br>
+  <b>Cena</b>: {{laptop.price}} €<br><br>
+
+
+  <table *ngIf="laptopoviM">
+    <tr>
+        <th colspan="9">LAPTOPOVI MARKE {{laptop.brand}}</th>
+    </tr>
+    <tr>
+        <th>Brend</th>
+        <th>MODEL</th>
+        <th>RAM</th>
+        <th>HDD</th>
+        <th>Grafika</th>
+        <th>Dijagonala ekrana</th>
+        
+        <th>Procesor</th>
+        <th>Cena</th>
+    </tr>
+    <tr *ngFor="let laptop of laptopoviM" (click)="pogledaj(laptop.id)">
+        <td>{{laptop.brand}}</td>
+        <td>{{laptop.model}}</td>
+        <td>{{laptop.ram}}</td>
+        <td>{{laptop.hdd}}</td>
+        <td>{{laptop.graphics}}</td>
+        <td>{{laptop.display}}</td>
+       
+        <td>{{laptop.processor}}</td>
+        <td>{{laptop.price}} €</td>
+    </tr>
+</table>
+</div>
+<router-outlet></router-outlet>

@@ -1,0 +1,29 @@
+<table *ngIf="laptops">
+    <tr>
+        <th colspan="11">SPISAK DOSTUPNIH LAPTOPOVA</th>
+    </tr>
+    <tr>
+        <th>BREND</th>
+        <th>MODEL</th>
+        <th>RAM</th>
+        <th>MEMORIJA</th>
+        <th>GRAFIKA</th>
+        <th>EKRAN</th>
+        <th>PROCESOR</th>
+        <th>CENA</th>
+        <th>UREDI</th>
+        <th>OBRIŠI</th>
+    </tr>
+    <tr *ngFor="let laptop of laptops" (click)="pogledaj(laptop.id)">
+        <td>{{laptop.brand}}</td>
+        <td>{{laptop.model}}</td>
+        <td>{{laptop.ram}} gb</td>
+        <td>{{laptop.hdd}} gb</td>
+        <td>{{laptop.graphics}}</td>
+        <td>{{laptop.display}}"</td>
+        <td>{{laptop.processor}}</td>
+        <td>{{laptop.price}} €</td>
+        <td ><button (click)="izmeni(laptop)">IZMENI</button></td>
+        <td ><button (click)="obrisi(laptop)">ORBIŠI</button></td>
+    </tr>
+</table>

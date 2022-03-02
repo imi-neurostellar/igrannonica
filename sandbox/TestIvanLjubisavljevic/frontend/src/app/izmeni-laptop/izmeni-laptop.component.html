@@ -1,0 +1,25 @@
+<div *ngIf="laptop" id="forma">
+    <label>Brand:</label>
+    <input type="text" [(ngModel)]="laptop.brand" ><br>
+    <label>Model:</label> 
+    <input type="text"  [(ngModel)]="laptop.model"><br>
+    <label>Ram:</label> 
+    <input type="number"  [(ngModel)]="laptop.ram"> <br>
+    <label>Memorija:</label> 
+    <input type="number"  [(ngModel)]="laptop.hdd"> <br>
+    <label>Grafika:</label> 
+    <input type="text"  [(ngModel)]="laptop.graphics"> <br>
+    <label>Ekran:</label>
+    <input type="text"  [(ngModel)]="laptop.display"> <br>
+    <label>Procesor:</label>
+    <input type="text"  [(ngModel)]="laptop.processor"><br>
+    <label>Cena:</label> 
+    <input type="number"  [(ngModel)]="laptop.price"><br>
+
+    <button (click)="izmeni(laptop)">Sačuvaj izmene</button><br>
+    <button (click)="back()">Nazad na početnu</button> 
+</div>
+
+<div *ngIf="izmenio" id="forma">
+    <p style="color:green">Uspešno izmenjeni podaci!</p>
+</div>

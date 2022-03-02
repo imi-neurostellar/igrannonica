@@ -1,0 +1,15 @@
+table{
+    background-color: lightblue;
+    text-align: center;
+}
+td,tr,th{
+    border:2px solid black;
+    padding: 3px;
+    
+}
+tr:nth-child(even) {
+    background-color: Lightgreen;
+}
+tr:nth-child(odd) {
+    background-color: lightblue;
+}

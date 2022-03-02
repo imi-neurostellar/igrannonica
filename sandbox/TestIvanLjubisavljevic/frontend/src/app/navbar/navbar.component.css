@@ -1,0 +1,17 @@
+button{
+    margin:5px;
+    padding:5px;
+    width: 150px;
+    color:  rgb(19, 0, 128);
+    font-weight: bold;
+}
+
+button:hover{
+    background-color: rgb(170, 165, 190);
+    color:black;
+}
+
+div{
+    margin: auto;
+    width: 26%;
+}
