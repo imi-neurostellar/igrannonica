@@ -17,8 +17,8 @@ export class AuthService {
     return this.http.post(`${API_SETTINGS.apiURL}/login`, { username, password });
   }
 
-  register(username: string, password: string) {
-    return this.http.post(`${API_SETTINGS.apiURL}/register`, { username, password });
+  register(user: any) {
+    return this.http.post(`${API_SETTINGS.apiURL}/register`, user);
   }
 
   isAuthenticated(): boolean {
