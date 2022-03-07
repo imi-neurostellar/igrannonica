@@ -14,11 +14,11 @@ export class AuthService {
   constructor(private http: HttpClient, private cookie: CookieService) { }
 
   login(username: string, password: string) {
-    return this.http.post(`${API_SETTINGS.apiURL}/login`, { username, password });
+    return this.http.post(`${API_SETTINGS.apiURL}/auth/login`, { username, password }, { responseType: 'text' });
   }
 
   register(user: any) {
-    return this.http.post(`${API_SETTINGS.apiURL}/register`, user);
+    return this.http.post(`${API_SETTINGS.apiURL}/auth/register`, user);
   }
 
   isAuthenticated(): boolean {

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { response } from 'express';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/_services/auth.service';
-//import { LoginService } from 'src/app/_services/login.service';
 
 @Component({
   selector: 'app-login-page',
@@ -19,7 +17,8 @@ export class LoginPageComponent implements OnInit {
   pattEmail: RegExp = /^[a-zA-Z0-9]+([\.\-\+][a-zA-Z0-9]+)*\@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private cookie: CookieService
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +31,8 @@ export class LoginPageComponent implements OnInit {
     }
     else {
       this.authService.login(this.email, this.password).subscribe((response) => {
-        console.log(response)
+        console.log(response);
+        this.cookie.set('token', response);
       })
     }
   }
