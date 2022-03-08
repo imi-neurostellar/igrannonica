@@ -9,10 +9,10 @@ namespace api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private AuthService _auth;
-        public AuthController(IConfiguration configuration)
+        private IAuthService _auth;
+        public AuthController(IAuthService auth)
         {
-            _auth=new AuthService(configuration);
+            _auth = auth;
         }
 
         [HttpPost("register")]

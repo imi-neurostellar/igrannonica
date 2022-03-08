@@ -22,7 +22,8 @@ builder.Services.AddSingleton<IMongoClient>(s =>
     new MongoClient(builder.Configuration.GetValue<string>("UserStoreDatabaseSettings:ConnectionString")));
 
 builder.Services.AddScoped<IUserService, UserService>();
- 
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 builder.Services.AddControllers();
 
