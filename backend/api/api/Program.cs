@@ -1,7 +1,10 @@
+using System.Text;
 using api.Data;
 using api.Interfaces;
 using api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +24,22 @@ builder.Services.AddSingleton<IUserStoreDatabaseSettings>(sp =>
 builder.Services.AddSingleton<IMongoClient>(s =>
     new MongoClient(builder.Configuration.GetValue<string>("UserStoreDatabaseSettings:ConnectionString")));
 
+//Inject Dependencies
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+//Add Authentication
+builder.Services.AddAuthentication(
+    JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("AppSettings:JwtToken").Value)),
+            ValidateIssuer=false,
+            ValidateAudience=false
+        };
+    
+    });
 
 
 builder.Services.AddControllers();
@@ -38,6 +55,9 @@ app.UseCors(
     );
 
 // Configure the HTTP request pipeline.
+
+//Add Authentication
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -27,6 +28,13 @@ namespace api.Controllers
         {
             
             return Ok(_auth.Login(user));
+        }
+
+        [HttpGet("Auth")]
+        [Authorize(Roles ="User")]
+        public async Task<ActionResult<string>> TestAuth()
+        {
+            return Ok("works");
         }
 
 
