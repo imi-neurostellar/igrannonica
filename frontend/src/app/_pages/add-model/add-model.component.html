@@ -1,0 +1,62 @@
+<div class="container p-3" style="background-color: rgb(249, 251, 253);">
+
+    <h2 class="my-4 text-primary"> Nov model: </h2>
+    <div class="form-group row align-items-center">
+        <label for="name" class="col-sm-2 col-form-label col-form-label-lg">Naziv</label>
+        <div class="col-sm-7">
+            <input type="text" class="form-control form-control-lg" name="name" placeholder="Naziv..."
+                [(ngModel)]="newModel.name">
+        </div>
+
+        <div class="col-sm-3">
+
+        </div>
+    </div>
+
+    <div class="form-group row my-2">
+        <label for="desc" class="col-sm-2 col-form-label">Opis</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" name="desc" rows="3" [(ngModel)]="newModel.description"></textarea>
+        </div>
+    </div>
+
+    <div style="flex-direction: column; align-items: center; justify-items: center;">
+        <label for="type">Tip: </label>
+        <select id=typeOptions class="form-control" name="type" [(ngModel)]="newModel.type">
+            <option *ngFor="let option of Object.keys(ANNType); let optionName of Object.values(ANNType)"
+                [value]="option">
+                {{ optionName }}
+            </option>
+        </select>
+    </div>
+
+    <!--<div class="form-group row">
+    <label for="value" class="col-4">Vrednost</label>
+    <div class="input-group">
+        <input type="number" min="0" class="form-control" name="value" placeholder="Vrednost..."
+            [(ngModel)]="newModel.value">
+        <div class="input-group-prepend">
+            <span class="input-group-text">#</span>
+        </div>
+        <input type="number" min="1" class="form-control" name="count" placeholder="Br." [(ngModel)]="newModel.count">
+        <input type="text" class="form-control" name="sum" placeholder="Suma"
+            value="=({{newModel.value * newModel.count}})" readonly>
+    </div>
+</div>-->
+
+    <div class="my-4">
+        <label for="dataset">Izvor podataka:</label>
+        <!--<app-upload-dataset id="dataset"></app-upload-dataset>-->
+    </div>
+
+    <div class="form-group row">
+        <div class="col-4"></div>
+        <button class="btn btn-lg btn-primary col-4" (click)="addModel();">Dodaj</button>
+        <div class="col-1"></div>
+        <div class="col-3">
+            <input type="text" class="form-control-plaintext text-center" id="dateCreated" placeholder="--/--/--"
+                value="{{newModel.dateCreated | date: 'dd/MM/yyyy'}}" readonly>
+        </div>
+    </div>
+
+</div>
