@@ -37,17 +37,35 @@ namespace api.Controllers
             
             return user;
         }
+        // GET api/<UserController>/5
+        //potrebno za profile page
+        [HttpGet("{id}")]
+        public ActionResult<User> GetUserUsername(string username)
+        {
+            var user = userService.GetUserUsername(username);
 
+            if (user == null)
+                return NotFound($"User with Id = {username} not found");
+
+            return user;
+        }
         // POST api/<UserController>
         [HttpPost]
         public ActionResult<User> Post([FromBody] User user)
         {
-            userService.Create(user);
+            
+            var existingUser = userService.GetUserUsername(user.Username);
 
-            //Debug.WriteLine("\nTest.\n");
+            if (existingUser != null)
+                return NotFound($"User with username = {user.Username} exisits");
+            else
+            {
+                userService.Create(user);
 
-            return CreatedAtAction(nameof(Get), new { id = user._id }, user);
+                //Debug.WriteLine("\nTest.\n");
 
+                return CreatedAtAction(nameof(Get), new { id = user._id }, user);
+            }
         }
 
         // PUT api/<UserController>/5

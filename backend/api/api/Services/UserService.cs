@@ -19,11 +19,13 @@ namespace api.Services
             return user;
         }
 
-    
-
         public List<User> Get()
         {
             return _users.Find(user => true).ToList();
+        }
+        public User GetUserUsername(string username)
+        {
+            return _users.Find(user => user.Username == username).FirstOrDefault();
         }
 
         public User Get(string id)
