@@ -53,4 +53,19 @@ namespace api.Services
   "firstName" : "Ivan",
   "lastName" : "Ljubisavljevic"
 }
- */
+
+
+{
+    "_id": {
+        "$oid": "62291140d88e6bcf95c96a58"
+    },
+    "uploaderId":"",
+    "extension" : "",
+    "name" : ""
+
+
+}
+
+
+
+*/
