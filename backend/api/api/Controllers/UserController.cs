@@ -56,10 +56,11 @@ namespace api.Controllers
         {
             var existingUser = userService.Get(id);
 
+            //ne mora da se proverava
             if(existingUser == null)
                 return NotFound($"User with Id = {id} not found");
 
-            userService.Update(id, existingUser);
+            userService.Update(id, user);
             return NoContent();
         }
 
@@ -79,9 +80,7 @@ namespace api.Controllers
 }
 /*
 {
-    "userId": {
-        "$oid": "62276146c4a20eabc664abc3"
-    },
+  "_id": "",
   "username" : "ivan996sk",
   "email" : "ivan996sk@gmail.com",
   "password" : "proba",
