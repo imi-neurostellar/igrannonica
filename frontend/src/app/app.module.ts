@@ -10,7 +10,7 @@ import { RegisterPageComponent } from './_pages/register-page/register-page.comp
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OnlyAuthorizedComponent } from './_pages/only-authorized/only-authorized.component';
 import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.component';
-import { CsvParser } from 'csv-parser';
+import { NgxCsvParser } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [

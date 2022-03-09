@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 
 @Component({
   selector: 'app-dataset-load',
@@ -7,76 +8,42 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class DatasetLoadComponent {
 
-   //array varibales to store csv data
-   lines : any[] = []; //for headings
-   linesR : any[] = []; // for rows
+  delimiter: string = "";
+  delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
 
-/*
-    const csv = require('csv-parser')
-    const fs = require('fs')
-    const res : string[] = [];
+  header: string = "";
+  headerOptions: Array<string> = ["Da", "Ne"]; //podrazumevano je "Da" ======> false
 
-    fs.createReadStream('https://raw.githubusercontent.com/sharmaroshan/Churn-Modelling-Dataset/master/Churn_Modelling.csv')
-      .pipe(csv())
-      .on('data', (data : string) => res.push(data))
-      .on('end', () => {
-        console.log(res);
+  slice: string = "";
 
-*/
+  csvRecords: any[] = [];
+  rowsNumber: number = 0;
+  colsNumber: number = 0;
 
-  changeListener(files: FileList) {
-
-    console.log(files);
-
-    if(files && files.length > 0) {
-    
-      let file: File | null = files.item(0);
-      if (file == null)
-        return;
-
-      if (file) { 
-          console.log(file.name);
-          console.log(file.size);
-          console.log(file.type);
-          //File reader method
-          let reader: FileReader = new FileReader();
-          reader.readAsText(file);
-          reader.onload = (e) => {
-            let csv: any = reader.result;
-            let allTextLines = [];
-            allTextLines = csv.split(/\r|\n|\r/);
-          
-          //Table Headings
-            let headers = allTextLines[0].split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
-            let data = headers;
-            let tarr = [];
-            for (let j = 0; j < headers.length; j++) {
-              tarr.push(data[j]);
-            }
-            //Pusd headings to array variable
-            this.lines.push(tarr);
-            //console.log(this.lines);
-            
-          
-            // Table Rows
-            let tarrR : string[] = [];
-            
-            let arrl = allTextLines.length;
-            let rows = [];
-            for(let i = 1; i < arrl; i++){
-            rows.push(allTextLines[i].split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/));
-          
-            }
-            
-            for (let j = 0; j < arrl; j++) {
-                tarrR.push(rows[j]);
-            }
-          //Push rows to array variable
-            this.linesR.push(tarrR);
-            console.log(this.linesR);
-        }
-      }
-    }
+  constructor(private ngxCsvParser: NgxCsvParser) {
   }
+
+  @ViewChild('fileImportInput', { static: false }) fileImportInput: any;
+
+    changeListener($event: any): void {
+
+    const files = $event.srcElement.files;
+
+    this.ngxCsvParser.parse(files[0], { header: (this.header == "") ? false : (this.header == "Da") ? false : true, delimiter: (this.delimiter == "razmak") ? " " : (this.delimiter == "") ? "," : this.delimiter})
+      .pipe().subscribe((result) => {
+
+        console.log('Result', result);
+        if (result.constructor === Array) {
+          this.csvRecords = result;
+          this.rowsNumber = this.csvRecords.length;
+          this.colsNumber = this.csvRecords[0].length;
+        }
+        
+      }, (error: NgxCSVParserError) => {
+        console.log('Error', error);
+      });
+
+  }
+
 
 }

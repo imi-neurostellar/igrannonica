@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -9,10 +10,10 @@ namespace api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private AuthService _auth;
-        public AuthController(IConfiguration configuration)
+        private IAuthService _auth;
+        public AuthController(IAuthService auth)
         {
-            _auth=new AuthService(configuration);
+            _auth = auth;
         }
 
         [HttpPost("register")]
@@ -27,6 +28,13 @@ namespace api.Controllers
         {
             
             return Ok(_auth.Login(user));
+        }
+
+        [HttpGet("Auth")]
+        [Authorize(Roles ="User")]
+        public async Task<ActionResult<string>> TestAuth()
+        {
+            return Ok("works");
         }
 
 

@@ -1,18 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 
 namespace api.Models
 {
+    [BsonIgnoreExtraElements]//ignorise visak elemenata iz baze --moze da se obrise jer nemamo viska
     public class User
     {
-        [Key]
-        public Guid userId { get; set; }
-        public string username { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]//mongo data type to .net
+        public string _id { get; set; }
+        [BsonElement("username")]
+        public string Username { get; set; }
+        [BsonElement("email")]
+        public string Email { get; set; }
+        [BsonElement("password")]
+        public string Password { get; set; }
 
 
-        public string firstName { get; set; }
-        public int lastName { get; set; }
+        [BsonElement("firstName")]
+        public string FirstName { get; set; }
+        [BsonElement("lastName")]
+        public string LastName { get; set; }
         
     }
 }
