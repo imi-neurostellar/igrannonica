@@ -1,0 +1,46 @@
+<div class="container">
+
+    <input style="display: inline-block; width:350px;" list=delimiterOptions placeholder="Izaberite ili ukucajte delimiter za .csv fajl" class="form-control" [(ngModel)]="delimiter">
+    <datalist id=delimiterOptions>
+      <option *ngFor="let option of delimiterOptions">{{option}}</option>
+    </datalist>
+    &nbsp;&nbsp;&nbsp;
+    <input style="display: inline-block" [ngStyle]="{width:'350px'}"  list=headerOptions placeholder="Da li .csv ima header?" class="form-control" [(ngModel)]="header">
+    <datalist id=headerOptions>
+      <option *ngFor="let option of headerOptions">{{option}}</option>
+    </datalist>
+
+    <br><br>
+
+    <input class="form-control mb-5" type="file" class="upload" (change)="changeListener($event)">
+
+    <table class="table table-bordered table-light mt-5">
+      <thead>
+        <tr>
+          <th *ngFor="let item of csvRecords[0]; let i = index">{{item}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--<tr *ngFor="let row of csvRecords | ((header == 'Da') ? (slice:1:11) : (slice:0:11))">-->
+        <!--<ng-container *ngIf="header == 'Da'">
+          <tr *ngFor="let row of csvRecords | slice:1:11">
+            <td *ngFor="let col of row">{{col}}</td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="header == 'Ne'">
+          <tr *ngFor="let row of csvRecords | slice:0:10">
+            <td *ngFor="let col of row">{{col}}</td>
+          </tr>
+        </ng-container>-->
+        
+        <tr *ngFor="let row of csvRecords | slice:1:11">
+          <td *ngFor="let col of row">{{col}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="csvRecords[0]" id="info">
+        . . . <br>
+      {{rowsNumber}} x {{colsNumber}}
+    </div>
+
+  </div>

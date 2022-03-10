@@ -23,6 +23,7 @@ namespace api.Services
         {
             return _users.Find(user => true).ToList();
         }
+
         public User GetUserUsername(string username)
         {
             return _users.Find(user => user.Username == username).FirstOrDefault();
@@ -54,7 +55,6 @@ namespace api.Services
   "lastName" : "Ljubisavljevic"
 }
 
-
 {
     "_id": {
         "$oid": "62291140d88e6bcf95c96a58"
@@ -62,10 +62,6 @@ namespace api.Services
     "uploaderId":"",
     "extension" : "",
     "name" : ""
-
-
 }
-
-
 
 */

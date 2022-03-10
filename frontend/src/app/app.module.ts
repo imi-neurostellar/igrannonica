@@ -9,13 +9,16 @@ import { LoginPageComponent } from './_pages/login-page/login-page.component';
 import { RegisterPageComponent } from './_pages/register-page/register-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OnlyAuthorizedComponent } from './_pages/only-authorized/only-authorized.component';
+import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.component';
+import { NgxCsvParser } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
     RegisterPageComponent,
-    OnlyAuthorizedComponent
+    OnlyAuthorizedComponent,
+    DatasetLoadComponent
   ],
   imports: [
     BrowserModule,
