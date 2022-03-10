@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Model from 'src/app/_data/Model';
-import { ANNType } from 'src/app/_data/Model';
+import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer } from 'src/app/_data/Model';
 
 @Component({
   selector: 'app-add-model',
@@ -10,7 +10,12 @@ import { ANNType } from 'src/app/_data/Model';
 export class AddModelComponent implements OnInit {
 
   newModel: Model
+
   ANNType = ANNType;
+  Encoding = Encoding;
+  ActivationFunction = ActivationFunction;
+  LossFunction = LossFunction;
+  Optimizer = Optimizer;
   Object = Object;
 
   constructor() {

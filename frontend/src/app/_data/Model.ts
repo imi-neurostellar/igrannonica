@@ -12,8 +12,8 @@ export default class Model {
         public randomTestSetDistribution: number = 0.10, //0.1-0.9 (10% - 90%)
 
         // Neural net training settings
-        public encoding: Encoding = Encoding.Label,
         public type: ANNType = ANNType.FullyConnected,
+        public encoding: Encoding = Encoding.Label,
         public optimizer: Optimizer = Optimizer.Adam,
         public lossFunction: LossFunction = LossFunction.MeanSquaredError,
         public inputNeurons: number = 1,
