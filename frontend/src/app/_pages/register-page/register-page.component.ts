@@ -104,7 +104,7 @@ export class RegisterPageComponent implements OnInit {
 
     this.firstNameValidation();
     this.lastNameValidation();
-    this.nickNameValidation();
+    //this.nickNameValidation();
     this.emailValidation();
     this.passwordValidation();
 
@@ -114,19 +114,21 @@ export class RegisterPageComponent implements OnInit {
       let user = {
         firstName: this.firstName,
         lastName: this.lastName,
-        nickName: this.nickName,
-        email: this.email,
-        password: this.pass1
+        username: this.nickName,
+        password: this.pass1,
+        email: this.email
       }
 
       this.authService.register(user)
         .subscribe(
           (response) => {
             console.log(response);
-            /*if ()
+            if (response === 'User added')
               this.router.navigate(['/login']); //registracija uspesna, idi na login
-            else if ()
-              alert('Nalog sa unetim email-om već postoji!');*/
+            else if (response === 'Email Already Exists')
+              alert('Nalog sa unetim email-om već postoji!');
+            else if (response === 'Username Already Exists')
+              alert('Nalog sa unetim korisnićkim imenom već postoji!');
           }
         );
     }

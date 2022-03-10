@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   register(user: any) {
-    return this.http.post(`${API_SETTINGS.apiURL}/auth/register`, user);
+    return this.http.post(`${API_SETTINGS.apiURL}/auth/register`, { ...user }, { responseType: 'text' });
   }
 
   isAuthenticated(): boolean {
