@@ -37,7 +37,7 @@ namespace api.Controllers
             
             return user;
         }
-
+        /*
         // GET api/<UserController>/5
         //potrebno za profile page
         [HttpGet("{id}")]
@@ -50,7 +50,7 @@ namespace api.Controllers
 
             return user;
         }
-
+        */
         // POST api/<UserController>
         [HttpPost]
         public ActionResult<User> Post([FromBody] User user)
