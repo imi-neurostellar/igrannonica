@@ -6,5 +6,6 @@ namespace api.Services
     {
         string Login(AuthRequest user);
         string Register(RegisterRequest user);
+        string RenewToken(string token);
     }
 }

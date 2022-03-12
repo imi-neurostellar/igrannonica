@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Net.Http.Headers;
 
 namespace api.Controllers
 {
@@ -35,6 +36,21 @@ namespace api.Controllers
         public async Task<ActionResult<string>> TestAuth()
         {
             return Ok("works");
+        }
+
+        [HttpPost("renewJwt")]
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult<string>> RenewJwt() {
+            var authorization = Request.Headers[HeaderNames.Authorization];
+            
+            var newToken=_auth.RenewToken(authorization);
+            if(newToken== null)
+                return BadRequest();
+            return Ok(newToken);
+
+
+
+
         }
 
 

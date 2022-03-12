@@ -1,4 +1,5 @@
-﻿using api.Interfaces;
+﻿using System.Net.Http.Headers;
+using api.Interfaces;
 using api.Models;
 using api.Models.Users;
 using MongoDB.Driver;
@@ -42,6 +43,18 @@ namespace api.Services
 
             _users.InsertOne(u);
             return "User added";
+        }
+
+        public string RenewToken(string header)
+        {
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                return _jwt.RenewToken(parameter);
+            }
+            return null;
         }
 
 
