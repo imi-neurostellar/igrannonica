@@ -10,8 +10,10 @@ import { RegisterPageComponent } from './_pages/register-page/register-page.comp
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OnlyAuthorizedComponent } from './_pages/only-authorized/only-authorized.component';
 import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.component';
-import { NgxCsvParser } from 'ngx-csv-parser';
 import { AddModelComponent } from './_pages/add-model/add-model.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MaterialModule } from './material.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { AddModelComponent } from './_pages/add-model/add-model.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]
