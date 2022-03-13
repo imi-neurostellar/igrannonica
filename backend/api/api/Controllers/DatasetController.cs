@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using api.Models;
+using api.Services;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,103 @@ namespace api.Controllers
     [ApiController]
     public class DatasetController : ControllerBase
     {
-        // GET: api/<DatasetController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IDatasetService _datasetService;
+
+        public DatasetController(IDatasetService datasetService)
         {
-            return new string[] { "value1", "value2" };
+            _datasetService = datasetService;
         }
 
-        // GET api/<DatasetController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+
+        // GET: api/<DatasetController>/{id}/datasets
+        [HttpGet("{id}/datasets")]
+        public ActionResult<List<Dataset>> Get(string id)
         {
-            return "value";
+            return _datasetService.GetAllDatesets(id);
+        }
+
+        // GET api/<DatasetController>/{id}/{name}
+        [HttpGet("{id}/{name}")]
+        public ActionResult<Dataset> Get(string id, string name)
+        {
+            var dataset = _datasetService.GetOneDataset(id, name);
+
+            if (dataset == null)
+                return NotFound($"Dataset with name = {name} not found");
+
+            return dataset;
         }
 
         // POST api/<DatasetController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("post")]
+        public ActionResult<Dataset> Post([FromBody] Dataset dataset)
         {
+            var existingUser = _datasetService.GetOneDataset(dataset.uploaderId,dataset.name);
+
+            if (existingUser != null)
+                return NotFound($"Dateset with name = {dataset.name} exisits");
+            else
+            {
+                _datasetService.Create(dataset);
+
+                return CreatedAtAction(nameof(Get), new { id = dataset._id }, dataset);
+            }
         }
 
         // PUT api/<DatasetController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id}/{name}")]
+        public ActionResult Put(string id, string name, [FromBody] Dataset dataset)
         {
+            var existingDataset = _datasetService.GetOneDataset(id, name);
+
+            //ne mora da se proverava
+            if (existingDataset == null)
+                return NotFound($"Dataset with name = {name} not found");
+
+            _datasetService.Update(id, name, dataset);
+            return NoContent();
         }
 
         // DELETE api/<DatasetController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(string id, string name)
         {
+            var dataset = _datasetService.GetOneDataset(id, name);
+
+            if (dataset == null)
+                return NotFound($"Dataset with name = {name} not found");
+
+            _datasetService.Delete(dataset.uploaderId,dataset.name);
+
+            return Ok($"Dataset with name = {name} deleted");
+
         }
     }
 }
+
+/*
+{
+  "_id": "",
+  "uploaderId" : "uploaderId",
+  "name" : "name",
+  "description" : "description",
+  "dateCreated" : "dateCreated",
+  "inputColumns" : [2,3,4],
+  "columnToPredict" : 1,
+  "randomTestSet" : true,
+  "randomTestSetDistribution" : 1,
+  "type" : "type",
+  "encoding" : "encoding",
+  "optimizer" : "optimizer",
+  "lossFunction" : "lossFunction",
+  "inputNeurons" : 2,
+  "hiddenLayerNeurons" : 3,
+  "hiddenLayers" : 8,
+  "batchSize" : 6,
+  "inputLayerActivationFunction" : "inputLayerActivationFunction",
+  "hiddenLayerActivationFunction" : "hiddenLayerActivationFunction",
+  "outputLayerActivationFunction" : "outputLayerActivationFunction",
+  "extension" : "extension"
+
+}
+*/
