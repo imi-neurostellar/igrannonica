@@ -8,6 +8,7 @@ export default class Model {
         //Test set settings
         public inputColumns: number[] = [0],
         public columnToPredict: number = 1,
+        public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.10, //0.1-0.9 (10% - 90%)
 
@@ -31,6 +32,8 @@ export enum ANNType {
     Convolutional = 'konvoluciona'
 }
 
+// replaceMissing srednja vrednost mean, median, najcesca vrednost (mode)
+// removeOutliers
 export enum Encoding {
     Label = 'label',
     OneHot = 'one hot'

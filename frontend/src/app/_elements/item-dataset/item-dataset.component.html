@@ -1,0 +1,15 @@
+<div class="card" style="width: 18rem;">
+    <div class="card-header">
+        {{dataset.name}}
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            {{dataset.description}}
+        </p>
+        <table class="table table-bordered table-sm">
+            <thead>
+                <th scope="col" *ngFor="let column of dataset.header">{{column}}</th>
+            </thead>
+        </table>
+    </div>
+</div>

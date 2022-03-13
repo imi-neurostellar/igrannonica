@@ -1,0 +1,12 @@
+<div class="d-flex flex-row">
+    <div class="mx-2" *ngFor="let item of items" [ngSwitch]="item.constructor.name">
+        <ng-template ngSwitchCase="Dataset">
+            <app-item-dataset [dataset]="item">
+            </app-item-dataset>
+        </ng-template>
+        <ng-template ngSwitchCase="Predictor">
+            <app-item-predictor>
+            </app-item-predictor>
+        </ng-template>
+    </div>
+</div>

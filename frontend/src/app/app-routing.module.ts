@@ -7,9 +7,10 @@ import { OnlyAuthorizedComponent } from './_pages/only-authorized/only-authorize
 import { RegisterPageComponent } from './_pages/register-page/register-page.component';
 import { AddModelComponent } from './_pages/add-model/add-model.component';
 import { LoginModalComponent } from './_modals/login-modal/login-modal.component';
+import { HomeComponent } from './_pages/home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', component: HomeComponent },
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
   { path: 'only-authorized', component: OnlyAuthorizedComponent, canActivate: [AuthGuardService] },
