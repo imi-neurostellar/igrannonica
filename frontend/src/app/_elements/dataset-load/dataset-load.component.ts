@@ -38,7 +38,7 @@ export class DatasetLoadComponent {
     this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.delimiter == "razmak") ? " " : (this.delimiter == "") ? "," : this.delimiter})
     .pipe().subscribe((result) => {
 
-      //console.log('Result', result);
+      console.log('Result', result);
       if (result.constructor === Array) {
         this.csvRecords = result;
         if (this.hasHeader)

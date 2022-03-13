@@ -1,55 +1,13 @@
-<!--<script>
-    $(document).ready(function(){
-        $(".btn").click(function(){
-            $("#exampleModal").modal('show');
-        });
+<!-- Button trigger modal, OVO JE U STVARI DUGME U NAVBARU -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForLogin">
+    Otvori login modal
+</button>
 
-        $('#exampleModal').modal({
-    		backdrop: 'static',
-    		keyboard: false
-		});
-    });
-</script>-->
+<!-- Button trigger modal, OVO JE U STVARI DUGME U NAVBARU -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForRegister">
+    Otvori register modal
+</button>
+  
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForLogin" (click)="openModal()">
-    Open Modal
-  </button>
-
-<!--
-<div style="min-height: 100vh; position: relative;">
-
-    <div class="container p-5 rounded-3 shadow-sm border" style="max-width: 50em; margin-top: 50px;">
-        <h3 class="text-center pb-5">Prijavite se</h3>
-        <form>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="username">Korisničko ime</label>
-                <input [(ngModel)]="username" name="username" type="text" id="username"
-                    class="form-control form-control-lg" placeholder="Unesite korisničko ime..." />
-            </div>
-
-            <div class="form-outline mb-3">
-                <label class="form-label" for="password">Lozinka</label>
-                <input [(ngModel)]="password" name="password" type="password" id="password"
-                    class="form-control form-control-lg" placeholder="Unesite lozinku..." />
-            </div>
-
-            <div class="text-center text-lg-start mt-4 pt-2">
-                <p *ngIf="wrongCreds" class="small fw-bold mt-2 pt-1 mb-0 text-danger">Lozinka ili e-mail su pogrešni
-                </p>
-                <br>
-
-                <button type="button" class="btn btn-primary btn-lg"
-                    style="padding-left: 2.5rem; padding-right: 2.5rem;" (click)="onSubmit()">Prijava
-                </button>
-
-                <br>
-                <p class="small fw-bold mt-2 pt-1 mb-0">Još uvek nemate nalog?
-                    <a routerLink="/register" class="link-danger">Registrujte se</a>
-                </p>
-            </div>
-        </form>
-    </div>
-
-</div>
--->
+<app-login-modal></app-login-modal>
+<app-register-modal></app-register-modal>

@@ -13,6 +13,7 @@ import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.comp
 import { AddModelComponent } from './_pages/add-model/add-model.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModalComponent } from './_modals/login-modal/login-modal.component';
+import { RegisterModalComponent } from './_modals/register-modal/register-modal.component';
 
 import { MaterialModule } from './material.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -25,7 +26,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     OnlyAuthorizedComponent,
     DatasetLoadComponent,
     AddModelComponent,
-    LoginModalComponent
+    LoginModalComponent,
+    RegisterModalComponent
   ],
   imports: [
     BrowserModule,
