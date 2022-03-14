@@ -7,7 +7,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
-import { LoginPageComponent } from './_pages/login-page/login-page.component';
 import { RegisterPageComponent } from './_pages/register-page/register-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OnlyAuthorizedComponent } from './_pages/only-authorized/only-authorized.component';
@@ -16,6 +15,7 @@ import { AddModelComponent } from './_pages/add-model/add-model.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModalComponent } from './_modals/login-modal/login-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegisterModalComponent } from './_modals/register-modal/register-modal.component';
 
 import { MaterialModule } from './material.module';
 import { HomeComponent } from './_pages/home/home.component';
@@ -32,6 +32,7 @@ import { CarouselComponent } from './_elements/carousel/carousel.component';
     DatasetLoadComponent,
     AddModelComponent,
     LoginModalComponent,
+    RegisterModalComponent,
     HomeComponent,
     NavbarComponent,
     ItemPredictorComponent,

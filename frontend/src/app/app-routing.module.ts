@@ -8,6 +8,7 @@ import { RegisterPageComponent } from './_pages/register-page/register-page.comp
 import { AddModelComponent } from './_pages/add-model/add-model.component';
 import { LoginModalComponent } from './_modals/login-modal/login-modal.component';
 import { HomeComponent } from './_pages/home/home.component';
+import { RegisterModalComponent } from './_modals/register-modal/register-modal.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'register', component: RegisterPageComponent },
   { path: 'only-authorized', component: OnlyAuthorizedComponent, canActivate: [AuthGuardService] },
   { path: 'add-model', component: AddModelComponent },
-  { path: 'login-modal-test', component: LoginModalComponent }
+  { path: 'login-modal-test', component: LoginModalComponent },
+  { path: 'register-modal-test', component: RegisterModalComponent }
 ];
 
 @NgModule({
