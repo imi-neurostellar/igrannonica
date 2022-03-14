@@ -1,10 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Net.Http.Headers;
+using api.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 namespace api.Controllers
 {
@@ -14,9 +11,11 @@ namespace api.Controllers
     {
         private string[] permittedExtensions = { ".csv" };
         private readonly IConfiguration _configuration;
+        private JwtToken _token;
         public FileUploadController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _token = new JwtToken(configuration);
 
         }
 
@@ -34,25 +33,9 @@ namespace api.Controllers
 
                 var scheme = headerValue.Scheme;
                 var parameter = headerValue.Parameter;
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
-                try
-                {
-                    tokenHandler.ValidateToken(parameter, new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                    }, out SecurityToken validatedToken);
-
-                    var jwtToken = (JwtSecurityToken)validatedToken;
-                    username = jwtToken.Claims.First(x => x.Type == "name").Value;
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest();
-                }
+                username = _token.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
             }else 
                 return BadRequest();
             
