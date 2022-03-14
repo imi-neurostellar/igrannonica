@@ -10,7 +10,6 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class LoginModalComponent implements OnInit {
 
-  loginModal: any;
   username: string = '';
   password: string = '';
 
@@ -29,8 +28,7 @@ export class LoginModalComponent implements OnInit {
     this.authService.login(this.username, this.password).subscribe((response) => { //ako nisu ok podaci, ne ide hide nego mora opet da ukucava!!!!podesi
       console.log(response);
       this.cookie.set('token', response);
-      this.resetData(); //dodato
-      this.loginModal.hide(); //dodato
+      (<HTMLSelectElement>document.getElementById('closeButton')).click();
       this.router.navigate(['add-model']);
     }, error => {
       console.warn(error); //NETACNI PODACI

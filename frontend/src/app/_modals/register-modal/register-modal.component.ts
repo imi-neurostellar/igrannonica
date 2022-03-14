@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
-
-declare var window: any;
 
 @Component({
   selector: 'app-register-modal',
@@ -10,8 +7,6 @@ declare var window: any;
   styleUrls: ['./register-modal.component.css']
 })
 export class RegisterModalComponent implements OnInit {
-
-  registerModal: any;
 
   firstName: string = '';
   lastName: string = '';
@@ -28,25 +23,18 @@ export class RegisterModalComponent implements OnInit {
   wrongPass2Bool: boolean = false;
 
   pattName: RegExp = /^[a-zA-ZšŠđĐčČćĆžŽ]+([ \-][a-zA-ZšŠđĐčČćĆžŽ]+)*$/;
-  pattUsername: RegExp = /^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){6,18}[a-zA-Z0-9]$/;
+  pattUsername: RegExp = /^[a-zA-Z0-9]{6,18}$/;
   pattTwoSpaces: RegExp = /  /;
   pattEmail: RegExp = /^[a-zA-Z0-9]+([\.\-\+][a-zA-Z0-9]+)*\@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/;
   pattPassword: RegExp = /.{6,30}$/;
 
   constructor(
-    private router: Router,
     private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.registerModal = new window.bootstrap.Modal(
-      document.getElementById("modalForRegister")
-    ); 
   }
 
-  openModal() {
-    this.registerModal.show();
-  }
   doRegister() {
     this.validation();
   }
@@ -149,14 +137,17 @@ export class RegisterModalComponent implements OnInit {
           (response) => {
             console.log(response);
             if (response === 'User added') {
-              this.resetData(); //DODATO
-              this.registerModal.hide(); //dodato
-              this.router.navigate(['/login']); //registracija uspesna, idi na LOGIN MODAL, SREDITI
+              this.resetData();
+              (<HTMLSelectElement>document.getElementById('linkToLoginModal')).click();
             }
-            else if (response === 'Email Already Exists')
+            else if (response === 'Email Already Exists') {
               alert('Nalog sa unetim email-om već postoji!');
-            else if (response === 'Username Already Exists')
-              alert('Nalog sa unetim korisnićkim imenom već postoji!');
+              (<HTMLSelectElement>document.getElementById('email')).focus();
+            }
+            else if (response === 'Username Already Exists') {
+              alert('Nalog sa unetim korisničkim imenom već postoji!');
+              (<HTMLSelectElement>document.getElementById('username')).focus();
+            }
           }
         );
     }

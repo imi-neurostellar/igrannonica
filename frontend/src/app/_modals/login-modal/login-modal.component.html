@@ -2,8 +2,8 @@
 <div class="modal fade" id="modalForLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-info">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetData()"></button>
+      <div class="modal-header" style="background-color: #003459;">
+        <button id="closeButton" type="button" class="btn-close" style="background-color:white;" data-bs-dismiss="modal" aria-label="Close" (click)="resetData()"></button>
       </div>
       <div class="modal-body px-5" style="color:#003459">
           <h1 class="text-center mt-2 mb-4">Prijavite se</h1>
@@ -27,7 +27,7 @@
             </div>
           </form>
           <div class="col-md-12 d-flex justify-content-center">
-            <button type="button" class="btn btn-lg btn-info" style="color:white; border-color: #00a8e8; margin-right: 10px;" (click)="doLogin()">Prijavite se</button>
+            <button type="button" class="btn btn-lg" style="color:white; background-color: #003459; margin-right: 10px;" (click)="doLogin()">Prijavite se</button>
             <button type="button" class="btn btn-lg btn-outline-secondary" data-bs-dismiss="modal" (click)="resetData()">Odustanite</button>
           </div>
           <br>
