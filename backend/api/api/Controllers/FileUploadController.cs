@@ -69,7 +69,7 @@ namespace api.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            return Ok();
+            return Ok(fullPath);
         }
     }
 }
