@@ -7,7 +7,8 @@ import pandas as pd
 import keras
 import csv
 import json
-
+import mlservice
+from mlservice import obuka
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -20,13 +21,8 @@ def index():
 @app.route('/data', methods = ['GET', 'POST'])
 def data():
     if request.method == 'POST':
-        f = request.json['filepath']
-        data = []
-        with open(f) as file:
-            csvfile = csv.reader(file)
-            for row in csvfile:
-                data.append(row)
-        data = pd.DataFrame(data)
+        f = request.json['filepath']  
+        data = pd.read_csv(f)
         print(data)
-        return render_template('data.html', data = data.to_html(header=False, index=False))
+        return obuka(data,request.json)
 app.run()
