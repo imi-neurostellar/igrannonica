@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import Predictor from 'src/app/_data/Predictor';
 import { ItemDatasetComponent } from 'src/app/_elements/item-dataset/item-dataset.component';
+import shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,8 @@ import { ItemDatasetComponent } from 'src/app/_elements/item-dataset/item-datase
 export class HomeComponent implements OnInit {
 
   publicDatasets: Dataset[];
+
+  shared = shared;
 
   constructor() {
     this.publicDatasets = [

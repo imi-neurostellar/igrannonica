@@ -16,7 +16,7 @@
                         [class]="(currentUrl === '/predict') ? 'text-secondary' : 'text-white'">Predvidi</a></li>
             </ul>
 
-            <div class="dropdown text-end">
+            <div *ngIf="shared.loggedIn" class="dropdown text-end">
                 <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser1"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
@@ -33,6 +33,18 @@
                     <li><a class="dropdown-item" href="#">Odjavi se</a></li>
                 </ul>
             </div>
+            <div *ngIf="!shared.loggedIn" class="dropdown text-end">
+                <button type="button" class="btn btn-primary mx-2" data-bs-toggle="modal"
+                    data-bs-target="#modalForLogin">
+                    Prijavi se
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForRegister">
+                    Registruj se
+                </button>
+            </div>
         </div>
     </div>
 </header>
+
+<app-login-modal></app-login-modal>
+<app-register-modal></app-register-modal>
