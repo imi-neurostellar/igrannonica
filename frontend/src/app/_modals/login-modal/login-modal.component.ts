@@ -27,9 +27,8 @@ export class LoginModalComponent implements OnInit {
   doLogin() {
     this.authService.login(this.username, this.password).subscribe((response) => { //ako nisu ok podaci, ne ide hide nego mora opet da ukucava!!!!podesi
       console.log(response);
-      this.cookie.set('token', response);
+      this.authService.authenticate(response);
       (<HTMLSelectElement>document.getElementById('closeButton')).click();
-      this.router.navigate(['add-model']);
     }, error => {
       console.warn(error); //NETACNI PODACI
     });

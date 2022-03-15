@@ -1,0 +1,53 @@
+<div class="d-flex flex-column align-items-center">
+    <img src="../../../assets/svg/logo.svg" class="bi me-2" width="256" height="256" role="img">
+    <div *ngIf="shared.loggedIn" class="d-flex flex-column align-items-center">
+        <h2 class="my-4">Započnite sa treniranjem!</h2>
+        <div id="cards" class="row align-items-center justify-content-center">
+            <div class="card shadow col-3 m-1" style="width: 18rem;">
+                <div class="card-body">
+                    <mat-icon width="48px" height="48px"
+                        style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">storage</mat-icon>
+                    <h3 class="card-title my-2">Moji izvori podataka</h3>
+                    <p class="card-text">
+                        <a class="stretched-link" routerLink="my-datasets">Preuredite</a> vaše izvore
+                        podataka, ili
+                        dodajte novi.
+                    </p>
+                </div>
+            </div>
+            <div class="card shadow col-3 m-1" style="width: 18rem;">
+                <div class="card-body">
+                    <mat-icon width="48px" height="48px"
+                        style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">model_training
+                    </mat-icon>
+                    <h3 class="card-title my-2">Moji modeli</h3>
+                    <p class="card-text">
+                        <a class="stretched-link" routerLink="my-models">Pregledajte</a> vaše modele, menjajte ih,
+                        napravite nove modele, ili
+                        ih obrišite.
+                    </p>
+                </div>
+            </div>
+            <div class="card shadow col-3 m-1" style="width: 18rem;">
+                <div class="card-body">
+                    <mat-icon width="48px" height="48px"
+                        style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">batch_prediction
+                    </mat-icon>
+                    <h3 class="card-title my-2">Rezultati treniranja</h3>
+                    <p class="card-text">
+                        <a class="stretched-link" routerLink="my-predictors">Pregledajte</a> sve vaše trenirane
+                        modele,
+                        koristite ih da predvidite vrednosti za red ili skup podataka, ili ih obrišite.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <h2 class="my-4">Pogledajte javne izvore podataka!</h2>
+    <app-carousel [items]="publicDatasets">
+    </app-carousel>
+    <h2 class="my-4">Iskoristite već trenirane modele!</h2>
+    <app-carousel [items]="publicPredictors">
+    </app-carousel>
+</div>

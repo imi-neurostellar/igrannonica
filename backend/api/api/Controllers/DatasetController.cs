@@ -32,12 +32,12 @@ namespace api.Controllers
             var dataset = _datasetService.GetOneDataset(id, name);
 
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} not found");
+                return NotFound($"Dataset with name = {name} or user with id = {id} not found");
 
             return dataset;
         }
 
-        // POST api/<DatasetController>
+        // POST api/<DatasetController>/post
         [HttpPost("post")]
         public ActionResult<Dataset> Post([FromBody] Dataset dataset)
         {
@@ -53,7 +53,7 @@ namespace api.Controllers
             }
         }
 
-        // PUT api/<DatasetController>/5
+        // PUT api/<DatasetController>/{id}/{name}
         [HttpPut("{id}/{name}")]
         public ActionResult Put(string id, string name, [FromBody] Dataset dataset)
         {
@@ -61,7 +61,7 @@ namespace api.Controllers
 
             //ne mora da se proverava
             if (existingDataset == null)
-                return NotFound($"Dataset with name = {name} not found");
+                return NotFound($"Dataset with name = {name} or user with id = {id} not found");
 
             _datasetService.Update(id, name, dataset);
             return NoContent();
@@ -74,7 +74,7 @@ namespace api.Controllers
             var dataset = _datasetService.GetOneDataset(id, name);
 
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} not found");
+                return NotFound($"Dataset with name = {name} or user with id = {id} not found");
 
             _datasetService.Delete(dataset.uploaderId,dataset.name);
 

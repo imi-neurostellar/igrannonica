@@ -1,0 +1,24 @@
+<div class="card" style="min-width: 12rem;">
+    <div class="card-header">
+        {{predictor.name}}
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            {{predictor.description}}
+        </p>
+        <div class="d-flex flex-column align-items-center">
+            <table class="table table-bordered table-sm">
+                <thead>
+                    <th class="text-center" *ngFor="let column of predictor.inputs">{{column}}</th>
+                </thead>
+            </table>
+            <mat-icon>arrow_downward</mat-icon>
+            <p>
+                {{predictor.output}}
+            </p>
+        </div>
+    </div>
+    <div class="card-footer text-center">
+        <a routerLink="predict" mat-raised-button color="primary">Iskoristi</a>
+    </div>
+</div>
