@@ -23,7 +23,7 @@ namespace api.Services
         //brisanje odredjenog name-a
         public void Delete(string uploaderId, string name)
         {
-            _dataset.DeleteOne(dataset => (dataset.UploaderId == uploaderId && dataset.name == name)); 
+            _dataset.DeleteOne(dataset => (dataset.uploaderId == uploaderId && dataset.name == name)); 
         }
         public List<Dataset> GetAllDatesets(string uploaderId)
         {
@@ -31,13 +31,13 @@ namespace api.Services
         }
         public Dataset GetOneDataset(string uploaderId, string name)
         {
-            return _dataset.Find(dataset => dataset.UploaderId == uploaderId && dataset.name == name).FirstOrDefault();
+            return _dataset.Find(dataset => dataset.uploaderId == uploaderId && dataset.name == name).FirstOrDefault();
         }
 
         //ako je potrebno da se zameni name  ili ekstenzija
         public void Update(string uploaderId, string name, Dataset dataset)
         {
-            _dataset.ReplaceOne(dataset => dataset.UploaderId == uploaderId && dataset.name == name, dataset);
+            _dataset.ReplaceOne(dataset => dataset.uploaderId == uploaderId && dataset.name == name, dataset);
         }
     }
 }
