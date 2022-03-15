@@ -29,6 +29,8 @@ builder.Services.AddScoped<IDatasetService, DatasetService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMlConnectionService, MlConnectionService>();
+builder.Services.AddScoped<IModelService, ModelService>();
+
 
 //Add Authentication
 builder.Services.AddAuthentication(
