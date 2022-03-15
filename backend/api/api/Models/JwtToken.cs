@@ -33,31 +33,13 @@ namespace api.Models
 
         public string RenewToken(string existingToken)
         {
-            if (existingToken == null)
+            var userName = TokenToUsername(existingToken);
+            if (userName == null)
                 return null;
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key= Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
-            try
-            {
-                tokenHandler.ValidateToken(existingToken, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                }, out SecurityToken validatedToken);
+            var authUser = new AuthRequest();
+            authUser.UserName = userName;
 
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var userName =jwtToken.Claims.First(x => x.Type == "name").Value;
-                var authUser = new AuthRequest();
-                authUser.UserName = userName;
-
-                return GenToken(authUser);
-            }
-            catch
-            {
-                return null;
-            }
+            return GenToken(authUser);
 
         }
 
