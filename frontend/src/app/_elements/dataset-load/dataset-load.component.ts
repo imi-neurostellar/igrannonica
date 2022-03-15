@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import Dataset from 'src/app/_data/Dataset';
 
 @Component({
   selector: 'app-dataset-load',
@@ -23,7 +24,10 @@ export class DatasetLoadComponent {
   checkedInputCols: Array<string> = [];
   checkedOutputCol: string = '';
 
+  dataset: Dataset;
+
   constructor(private ngxCsvParser: NgxCsvParser) {
+    this.dataset = new Dataset();
   }
 
   @ViewChild('fileImportInput', { static: false }) fileImportInput: any;
@@ -49,49 +53,12 @@ export class DatasetLoadComponent {
         else 
           this.rowsNumber = this.csvRecords.length;
         this.colsNumber = this.csvRecords[0].length;
+
+        this.dataset.header = this.csvRecords[0];
       }
     }, (error: NgxCSVParserError) => {
       console.log('Error', error);
     });
   }
 
-  getCheckedInputCols() : Array<string> {
-    this.checkedInputCols = new Array<string>();
-    let checkboxes = document.getElementsByName("cbs");
-
-    for (let i = 0; i < checkboxes.length; i++) {
-      let thatCb = <HTMLInputElement>checkboxes[i];
-      if (thatCb.checked)
-        this.checkedInputCols.push(thatCb.value);
-    }
-    //console.log(this.checkedInputCols);
-    return this.checkedInputCols;
-  }
-  getCheckedOutputCol() : string {
-    this.checkedOutputCol = '';
-    let radiobuttons = document.getElementsByName("rbs");
-
-    for (let i = 0; i < radiobuttons.length; i++) {
-      let thatRb = <HTMLInputElement>radiobuttons[i];
-      if (thatRb.checked) {
-        this.checkedOutputCol = thatRb.value;
-        break; 
-      }
-    }
-    //console.log(this.checkedOutputCol);
-    return this.checkedOutputCol;
-  }
-  validationInputsOutput() {
-    if (this.checkedInputCols.length == 0) {
-      alert("Molimo Vas da izaberete ulaznu kolonu/kolone za mrežu.")
-      return;
-    } 
-    for (let i = 0; i < this.checkedInputCols.length; i++) {  
-      if (this.checkedInputCols[i] == this.checkedOutputCol) {
-        let colName = this.checkedOutputCol;
-        alert("Izabrali ste istu kolonu (" + colName + ") kao ulaznu i izlaznu iz mreže. Korigujte izbor.");
-        return;
-      }
-    }
-  }
 }

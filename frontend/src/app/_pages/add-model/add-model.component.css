@@ -9,9 +9,6 @@
     color: white;
 }
 
-#wrapper {
-    background-image: url('/assets/images/add_model_background.jpg');
-}
 #container {
     border-radius: 8px;
 }

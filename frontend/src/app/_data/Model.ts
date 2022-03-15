@@ -7,8 +7,8 @@ export default class Model {
         public datasetId?: number,
 
         // Test set settings
-        public inputColumns: number[] = [0],
-        public columnToPredict: number = 1,
+        public inputColumns: string[] = [],
+        public columnToPredict: string = '',
         public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.10, //0.1-0.9 (10% - 90%)

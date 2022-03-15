@@ -32,6 +32,37 @@
             <h2>Izvor podataka:</h2>
             <app-dataset-load id="dataset"></app-dataset-load>
         </div>
+
+        <div *ngIf="datasetLoadComponent" class="mt-2">
+            <div class="row">
+              <div class="col d-flex justify-content-center">
+                <h3>Izaberite ulazne kolone:</h3> 
+                <div id="divInputs" class="form-check">
+                  <br>
+                  <div *ngFor="let item of datasetLoadComponent.dataset.header; let i = index">  
+                    <input *ngIf="i == 0" class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}" name="cbs" checked>
+                    <input *ngIf="i != 0" class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}" name="cbs">&nbsp;
+                    <label class="form-check-label" for="cb_{{item}}">
+                      {{item}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-left">
+                <h3>Izaberite izlaznu kolonu:</h3>
+                <div id="divOutputs" class="form-check">
+                  <br>
+                  <div *ngFor="let item of datasetLoadComponent.dataset.header; let i = index">
+                    <input *ngIf="i == 0" class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbs" checked>
+                    <input *ngIf="i != 0" class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbs">&nbsp;
+                    <label class="form-check-label" for="rb_{{item}}">
+                      {{item}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         
         <h2>Parametri treniranja:</h2>
 
@@ -109,7 +140,7 @@
 
         <div class="row mt-5">
             <div class="col-2">
-                <label for="inputNeurons" class="col-form-label">Broj ulaznih neurona: </label>
+                <label for="inputNeurons" class="col-form-label">Broj ulaznih neurona: </label> <!--UMESTO OVOGA IDE NASUMICAN REDOSLED? YES/NO-->
                 <input type="number" min="1" class="form-control" name="inputNeurons" [(ngModel)]="newModel.inputNeurons">
             </div>
             <div class="col-2">
