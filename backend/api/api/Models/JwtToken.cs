@@ -23,7 +23,7 @@ namespace api.Models
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("name", user.UserName),
                                                     new Claim("role", "User")}),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
