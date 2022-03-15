@@ -12,8 +12,8 @@
                         [class]="(currentUrl === '') ? 'text-secondary' : 'text-white'">Početna</a></li>
                 <li><a routerLink="add-model" class="nav-link px-2"
                         [class]="(currentUrl === '/add-model') ? 'text-secondary' : 'text-white'">Dodaj model</a></li>
-                <li><a routerLink="predict" class="nav-link px-2"
-                        [class]="(currentUrl === '/predict') ? 'text-secondary' : 'text-white'">Predvidi</a></li>
+                <li><a routerLink="my-predictors" class="nav-link px-2"
+                        [class]="(currentUrl === '/my-predictors') ? 'text-secondary' : 'text-white'">Predvidi</a></li>
             </ul>
 
             <div *ngIf="shared.loggedIn" class="dropdown text-end">
@@ -24,13 +24,13 @@
                 <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1"
                     style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 34px);"
                     data-popper-placement="bottom-end">
-                    <li><a class="dropdown-item" href="#">Nov model...</a></li>
-                    <li><a class="dropdown-item" href="#">Podešavanja</a></li>
-                    <li><a class="dropdown-item" href="#">Moj profil</a></li>
+                    <li><a class="dropdown-item" routerLink="add-model">Nov model...</a></li>
+                    <li><a class="dropdown-item" routerLink="settings">Podešavanja</a></li>
+                    <li><a class="dropdown-item" routerLink="profile">Moj profil</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" (click)="logOut()">Odjavi se</a></li>
+                    <li><a class="dropdown-item" routerLink="" (click)="logOut()">Odjavi se</a></li>
                 </ul>
             </div>
             <div *ngIf="!shared.loggedIn" class="dropdown text-end">

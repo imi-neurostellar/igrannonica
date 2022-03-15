@@ -2,22 +2,26 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuardService } from './_services/auth-guard.service';
-import { LoginPageComponent } from './_pages/login-page/login-page.component';
-import { OnlyAuthorizedComponent } from './_pages/only-authorized/only-authorized.component';
-import { RegisterPageComponent } from './_pages/register-page/register-page.component';
 import { AddModelComponent } from './_pages/add-model/add-model.component';
-import { LoginModalComponent } from './_modals/login-modal/login-modal.component';
 import { HomeComponent } from './_pages/home/home.component';
-import { RegisterModalComponent } from './_modals/register-modal/register-modal.component';
+import { MyDatasetsComponent } from './_pages/my-datasets/my-datasets.component';
+import { MyModelsComponent } from './_pages/my-models/my-models.component';
+import { MyPredictorsComponent } from './_pages/my-predictors/my-predictors.component';
+import { BrowsePredictorsComponent } from './_pages/browse-predictors/browse-predictors.component';
+import { BrowseDatasetsComponent } from './_pages/browse-datasets/browse-datasets.component';
+import { SettingsComponent } from './_pages/settings/settings.component';
+import { ProfileComponent } from './_pages/profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'login', component: LoginPageComponent },
-  { path: 'register', component: RegisterPageComponent },
-  { path: 'only-authorized', component: OnlyAuthorizedComponent, canActivate: [AuthGuardService] },
   { path: 'add-model', component: AddModelComponent },
-  { path: 'login-modal-test', component: LoginModalComponent },
-  { path: 'register-modal-test', component: RegisterModalComponent }
+  { path: 'my-datasets', component: MyDatasetsComponent, canActivate: [AuthGuardService] },
+  { path: 'my-models', component: MyModelsComponent, canActivate: [AuthGuardService] },
+  { path: 'my-predictors', component: MyPredictorsComponent, canActivate: [AuthGuardService] },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
+  { path: 'browse-datasets', component: BrowseDatasetsComponent },
+  { path: 'browse-predictors', component: BrowsePredictorsComponent }
 ];
 
 @NgModule({

@@ -1,9 +1,9 @@
 <div>
     <div class="d-flex flex-column align-items-center">
-        <div *ngIf="shared.loggedIn">
+        <div *ngIf="shared.loggedIn" class="d-flex flex-column align-items-center">
             <h2 class="my-4">Započnite sa treniranjem!</h2>
             <div id="cards" class="d-flex flex-row justify-content-center align-items-start">
-                <div class="card" style="width: 18rem;">
+                <div class="card shadow" style="width: 18rem;">
                     <div class="card-body">
                         <mat-icon width="48px" height="48px"
                             style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">storage</mat-icon>
@@ -15,7 +15,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="card mx-3" style="width: 18rem;">
+                <div class="card mx-3 shadow" style="width: 18rem;">
                     <div class="card-body">
                         <mat-icon width="48px" height="48px"
                             style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">model_training
@@ -28,7 +28,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="card" style="width: 18rem;">
+                <div class="card shadow" style="width: 18rem;">
                     <div class="card-body">
                         <mat-icon width="48px" height="48px"
                             style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">batch_prediction
