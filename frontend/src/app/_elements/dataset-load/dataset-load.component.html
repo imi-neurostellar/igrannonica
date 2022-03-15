@@ -1,19 +1,21 @@
 <div>
 
-  <input style="display: inline-block; width:350px;" list=delimiterOptions
+  <div class="d-flex justify-content-center">
+    <input style="display: inline-block; width:350px;" list=delimiterOptions
     placeholder="Izaberite ili ukucajte delimiter za .csv fajl" class="form-control" [(ngModel)]="delimiter"
     (input)="update()">
-  <datalist id=delimiterOptions>
-    <option *ngFor="let option of delimiterOptions">{{option}}</option>
-  </datalist>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <label for="checkboxHeader">Da li .csv ima header?</label> &nbsp;
-  <input (input)="update()" [(ngModel)]="hasHeader" type="checkbox" value="" id="checkboxHeader" checked>
-  <br><br>
+    <datalist id=delimiterOptions>
+      <option *ngFor="let option of delimiterOptions">{{option}}</option>
+    </datalist>  &nbsp;&nbsp;&nbsp;&nbsp;
+ 
+    <label for="type" class="form-check-label">Da li .csv ima header?
+      <input class="mx-3 form-check-input" type="checkbox" (input)="update()" [(ngModel)]="hasHeader" type="checkbox" value="" id="checkboxHeader" checked>
+    </label> &nbsp;&nbsp;&nbsp;&nbsp;
 
-  <input id="fileInput" class="form-control mb-5" type="file" class="upload" (change)="changeListener($event)" accept=".csv">
-
-  <table *ngIf="csvRecords.length > 0 && hasHeader" class="table table-bordered table-light mt-5">
+    <input id="fileInput" class="form-control" type="file" class="upload" (change)="changeListener($event)" accept=".csv">
+  </div>
+  
+  <table *ngIf="csvRecords.length > 0 && hasHeader" class="table table-bordered table-light my-4">
     <thead>
       <tr>
         <th *ngFor="let item of csvRecords[0]; let i = index">{{item}}</th>
@@ -26,7 +28,7 @@
     </tbody>
   </table>
 
-  <table *ngIf="csvRecords.length > 0 && !hasHeader" class="table table-bordered table-light mt-5">
+  <table *ngIf="csvRecords.length > 0 && !hasHeader" class="table table-bordered table-light mt-4">
     <tbody>
       <tr *ngFor="let row of csvRecords | slice:0:10">
         <td *ngFor="let col of row">{{col}}</td>
@@ -37,6 +39,37 @@
   <div *ngIf="csvRecords.length > 0" id="info">
     . . . <br>
     {{rowsNumber}} x {{colsNumber}}
+  </div>
+
+  <div *ngIf="csvRecords.length > 0" class="mt-2">
+    <div class="row">
+      <div class="col d-flex justify-content-center">
+        <h3>Izaberite ulazne kolone:</h3> 
+        <div id="divInputs" class="form-check">
+          <br>
+          <div *ngFor="let item of csvRecords[0]; let i = index">  
+            <input *ngIf="i == 0" class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}" name="cbs" checked>
+            <input *ngIf="i != 0" class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}" name="cbs">&nbsp;
+            <label class="form-check-label" for="cb_{{item}}">
+              {{item}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="col d-flex justify-content-left">
+        <h3>Izaberite izlaznu kolonu:</h3>
+        <div id="divOutputs" class="form-check">
+          <br>
+          <div *ngFor="let item of csvRecords[0]; let i = index">
+            <input *ngIf="i == 0" class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbs" checked>
+            <input *ngIf="i != 0" class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbs">&nbsp;
+            <label class="form-check-label" for="rb_{{item}}">
+              {{item}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
