@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import Predictor from 'src/app/_data/Predictor';
 
 @Component({
   selector: 'app-item-predictor',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./item-predictor.component.css']
 })
 export class ItemPredictorComponent implements OnInit {
+
+  @Input() predictor: Predictor = new Predictor();
 
   constructor() { }
 

@@ -11,6 +11,7 @@ import { BrowsePredictorsComponent } from './_pages/browse-predictors/browse-pre
 import { BrowseDatasetsComponent } from './_pages/browse-datasets/browse-datasets.component';
 import { SettingsComponent } from './_pages/settings/settings.component';
 import { ProfileComponent } from './_pages/profile/profile.component';
+import { PredictComponent } from './_pages/predict/predict.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
   { path: 'browse-datasets', component: BrowseDatasetsComponent },
-  { path: 'browse-predictors', component: BrowsePredictorsComponent }
+  { path: 'browse-predictors', component: BrowsePredictorsComponent },
+  { path: 'predict', component: PredictComponent }
 ];
 
 @NgModule({
