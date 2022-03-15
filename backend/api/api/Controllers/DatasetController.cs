@@ -41,9 +41,9 @@ namespace api.Controllers
         [HttpPost("post")]
         public ActionResult<Dataset> Post([FromBody] Dataset dataset)
         {
-            var existingUser = _datasetService.GetOneDataset(dataset.uploaderId,dataset.name);
+            var existingDataset = _datasetService.GetOneDataset(dataset.uploaderId,dataset.name);
 
-            if (existingUser != null)
+            if (existingDataset != null)
                 return NotFound($"Dateset with name = {dataset.name} exisits");
             else
             {
