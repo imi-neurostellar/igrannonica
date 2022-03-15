@@ -1,0 +1,47 @@
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace api.Models
+{
+    public class Model
+    {
+        internal string uploaderId;
+
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]//mongo data type to .net
+        public string _id { get; set; }
+        [BsonElement("uploaderId")]
+        public string UploaderId { get; set; }
+
+
+        public string name { get; set; }
+        public string description { get; set; }
+        //datetime
+        public string dateCreated { get; set; }
+        public string lastUpdated { get; set; }
+        //proveriti id
+        public string datasetId { get; set; }
+
+        //Test set settings
+        public int[] inputColumns { get; set; }
+        public int columnToPredict { get; set; }
+        public bool radnomOrder {get;set;}
+        public bool randomTestSet { get; set; }
+        public int randomTestSetDistribution { get; set; }
+
+        //Neural net training
+        public string type { get; set; }
+        public string encoding { get; set; }
+        public string optimizer { get; set; }
+        public string lossFunction { get; set; }
+        public int inputNeurons { get; set; }
+        public int hiddenLayerNeurons { get; set; }
+        public int hiddenLayers { get; set; }
+        public int batchSize { get; set; }
+        public string inputLayerActivationFunction { get; set; }
+        public string hiddenLayerActivationFunction { get; set; }
+        public string outputLayerActivationFunction { get; set; }
+
+
+    }
+}
