@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import Dataset from 'src/app/_data/Dataset';
 
@@ -8,6 +8,8 @@ import Dataset from 'src/app/_data/Dataset';
   styleUrls: ['./dataset-load.component.css']
 })
 export class DatasetLoadComponent {
+
+  @Output() loaded = new EventEmitter<string>();
 
   delimiter: string = "";
   delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
@@ -20,9 +22,6 @@ export class DatasetLoadComponent {
   files: any[] = [];
   rowsNumber: number = 0;
   colsNumber: number = 0;
-
-  checkedInputCols: Array<string> = [];
-  checkedOutputCol: string = '';
 
   dataset: Dataset;
 
@@ -55,6 +54,8 @@ export class DatasetLoadComponent {
         this.colsNumber = this.csvRecords[0].length;
 
         this.dataset.header = this.csvRecords[0];
+
+        this.loaded.emit("loaded");
       }
     }, (error: NgxCSVParserError) => {
       console.log('Error', error);

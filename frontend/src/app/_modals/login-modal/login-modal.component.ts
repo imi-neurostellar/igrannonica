@@ -25,13 +25,16 @@ export class LoginModalComponent implements OnInit {
   }
 
   doLogin() {
-    this.authService.login(this.username, this.password).subscribe((response) => { //ako nisu ok podaci, ne ide hide nego mora opet da ukucava!!!!podesi
-      console.log(response);
-      this.authService.authenticate(response);
-      (<HTMLSelectElement>document.getElementById('closeButton')).click();
-    }, error => {
-      console.warn(error); //NETACNI PODACI
-    });
+    if (this.username.length > 0 && this.password.length > 0) {
+      this.authService.login(this.username, this.password).subscribe((response) => { //ako nisu ok podaci, ne ide hide nego mora opet da ukucava!!!!podesi
+        console.log(response);
+        this.authService.authenticate(response);
+        (<HTMLSelectElement>document.getElementById('closeButton')).click();
+      }, error => {
+        console.warn(error); //NETACNI PODACI
+      });
+    }
+    
   }
   resetData() {
     this.username = '';

@@ -13,6 +13,7 @@ import { ModelsService } from 'src/app/_services/models.service';
 export class AddModelComponent implements OnInit {
 
   @ViewChild(DatasetLoadComponent) datasetLoadComponent?: DatasetLoadComponent;
+  datasetLoaded: boolean = false;
 
   newModel: Model;
 
@@ -31,6 +32,9 @@ export class AddModelComponent implements OnInit {
   }
 
   addModel() {
+    if (this.datasetLoadComponent)
+      this.models.addDataset(this.datasetLoadComponent?.dataset);
+
     this.getCheckedInputCols();
     this.getCheckedOutputCol();
     if (this.validationInputsOutput()) 
