@@ -48,7 +48,7 @@ export class RegisterModalComponent implements OnInit {
       return true;
     return false;
   }
-  isCorrectUsername(element: string) : boolean {
+  isCorrectUsername(element: string): boolean {
     if (this.pattUsername.test(element) && !(this.pattTwoSpaces.test(element)) && (element.length >= 1 && element.length <= 30))
       return true;
     return false;
@@ -85,7 +85,7 @@ export class RegisterModalComponent implements OnInit {
       this.wrongUsernameBool = false;
       return;
     }
-    (<HTMLSelectElement>document.getElementById('username')).focus();
+    (<HTMLSelectElement>document.getElementById('username-register')).focus();
     this.wrongUsernameBool = true;
   }
   emailValidation() {
@@ -146,7 +146,7 @@ export class RegisterModalComponent implements OnInit {
             }
             else if (response === 'Username Already Exists') {
               alert('Nalog sa unetim korisničkim imenom već postoji!');
-              (<HTMLSelectElement>document.getElementById('username')).focus();
+              (<HTMLSelectElement>document.getElementById('username-register')).focus();
             }
           }
         );
