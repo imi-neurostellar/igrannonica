@@ -22,24 +22,24 @@ namespace api.Services
             return model;
         }
 
-        public void Delete(string uploaderId, string name)
+        public void Delete(string username, string name)
         {
-            _model.DeleteOne(model => (model.uploaderId == uploaderId && model.name == name));
+            _model.DeleteOne(model => (model.username == username && model.name == name));
         }
 
-        public List<Model> GetAllModels(string uploaderId)
+        public List<Model> GetAllModels(string username)
         {
-            return _model.Find(model => model.uploaderId == uploaderId).ToList();
+            return _model.Find(model => model.username == username).ToList();
         }
 
-        public Model GetOneModel(string uploaderId, string name)
+        public Model GetOneModel(string username, string name)
         {
-            return _model.Find(model => model.uploaderId == uploaderId && model.name == name).FirstOrDefault();
+            return _model.Find(model => model.username == username && model.name == name).FirstOrDefault();
         }
 
-        public void Update(string uploaderId, string name, Model model)
+        public void Update(string username, string name, Model model)
         {
-            _model.ReplaceOne(model => model.uploaderId == uploaderId && model.name == name, model);
+            _model.ReplaceOne(model => model.username == username && model.name == name, model);
         }
         
     }

@@ -5,13 +5,11 @@ namespace api.Models
 {
     public class Model
     {
-        internal string uploaderId;
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]//mongo data type to .net
         public string _id { get; set; }
-        [BsonElement("uploaderId")]
-        public string UploaderId { get; set; }
+        public string username { get; set; }
 
 
         public string name { get; set; }

@@ -41,7 +41,7 @@ namespace api.Controllers
         [HttpPost("post")]
         public ActionResult<Dataset> Post([FromBody] Dataset dataset)
         {
-            var existingDataset = _datasetService.GetOneDataset(dataset.uploaderId,dataset.name);
+            var existingDataset = _datasetService.GetOneDataset(dataset.username, dataset.name);
 
             if (existingDataset != null)
                 return NotFound($"Dateset with name = {dataset.name} exisits");
@@ -67,16 +67,16 @@ namespace api.Controllers
             return NoContent();
         }
 
-        // DELETE api/<DatasetController>/5
-        [HttpDelete("{id}")]
-        public ActionResult Delete(string id, string name)
+        // DELETE api/<DatasetController>/username
+        [HttpDelete("{username}")]
+        public ActionResult Delete(string username, string name)
         {
-            var dataset = _datasetService.GetOneDataset(id, name);
+            var dataset = _datasetService.GetOneDataset(username, name);
 
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} or user with id = {id} not found");
+                return NotFound($"Dataset with name = {name} or user with username = {username} not found");
 
-            _datasetService.Delete(dataset.uploaderId,dataset.name);
+            _datasetService.Delete(dataset.username, dataset.name);
 
             return Ok($"Dataset with name = {name} deleted");
 

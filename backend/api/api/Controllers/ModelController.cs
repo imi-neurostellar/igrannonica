@@ -29,23 +29,22 @@ namespace api.Controllers
             return Ok(result);
         }
 
-        //id korisnika
-        // GET: api/<ModelController>/{id}/datasets
-        [HttpGet("{id}/models")]
-        public ActionResult<List<Model>> Get(string id)
+        // GET: api/<ModelController>/{username}/models
+        [HttpGet("{username}/models")]
+        public ActionResult<List<Model>> Get(string username)
         {
-            return _modelService.GetAllModels(id);
+            return _modelService.GetAllModels(username);
         }
 
         //id korisnika, name modela
-        // GET api/<ModelController>/{id}/{name}
-        [HttpGet("{id}/{name}")]
-        public ActionResult<Model> Get(string id, string name)
+        // GET api/<ModelController>/{username}/{name}
+        [HttpGet("{username}/{name}")]
+        public ActionResult<Model> Get(string username, string name)
         {
-            var model = _modelService.GetOneModel(id, name);
+            var model = _modelService.GetOneModel(username, name);
 
             if (model == null)
-                return NotFound($"Model with name = {name} or user with id = {id} not found");
+                return NotFound($"Model with name = {name} or user with username = {username} not found");
 
             return model;
         }
@@ -54,7 +53,7 @@ namespace api.Controllers
         [HttpPost("post")]
         public ActionResult<Model> Post([FromBody] Model model)
         {
-            var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
+            var existingModel = _modelService.GetOneModel(model.username, model.name);
 
             if (existingModel != null)
                 return NotFound($"Model with name = {model.name} exisits");
@@ -66,30 +65,30 @@ namespace api.Controllers
             }
         }
 
-        // PUT api/<ModelController>/{id}/{name}
-        [HttpPut("{id}/{name}")]
-        public ActionResult Put(string id, string name, [FromBody] Model model)
+        // PUT api/<ModelController>/{username}/{name}
+        [HttpPut("{username}/{name}")]
+        public ActionResult Put(string username, string name, [FromBody] Model model)
         {
-            var existingModel = _modelService.GetOneModel(id, name);
+            var existingModel = _modelService.GetOneModel(username, name);
 
             //ne mora da se proverava
             if (existingModel == null)
-                return NotFound($"Model with name = {name} or user with id = {id} not found");
+                return NotFound($"Model with name = {name} or user with username = {username} not found");
 
-            _modelService.Update(id, name, model);
+            _modelService.Update(username, name, model);
             return NoContent();
         }
 
-        // DELETE api/<ModelController>/5
-        [HttpDelete("{id}")]
-        public ActionResult Delete(string id, string name)
+        // DELETE api/<ModelController>/username
+        [HttpDelete("{username}")]
+        public ActionResult Delete(string username, string name)
         {
-            var model = _modelService.GetOneModel(id, name);
+            var model = _modelService.GetOneModel(username, name);
 
             if (model == null)
-                return NotFound($"Model with name = {name} or user with id = {id} not found");
+                return NotFound($"Model with name = {name} or user with username = {username} not found");
 
-            _modelService.Delete(model.uploaderId, model.name);
+            _modelService.Delete(model.username, model.name);
 
             return Ok($"Model with name = {name} deleted");
 

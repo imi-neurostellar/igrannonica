@@ -5,11 +5,11 @@ namespace api.Services
 {
 	public interface IModelService
 	{
-        Model GetOneModel(string uploaderId, string name);
-        List<Model> GetAllModels(string uploaderId);
+        Model GetOneModel(string username, string name);
+        List<Model> GetAllModels(string username);
         Model Create(Model model);
-        void Update(string uploaderId, string name, Model model);
-        void Delete(string uploaderId, string name);
+        void Update(string username, string name, Model model);
+        void Delete(string username, string name);
     }
 }
 
