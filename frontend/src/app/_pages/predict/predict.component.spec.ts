@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OnlyAuthorizedComponent } from './only-authorized.component';
+import { PredictComponent } from './predict.component';
 
-describe('OnlyAuthorizedComponent', () => {
-  let component: OnlyAuthorizedComponent;
-  let fixture: ComponentFixture<OnlyAuthorizedComponent>;
+describe('PredictComponent', () => {
+  let component: PredictComponent;
+  let fixture: ComponentFixture<PredictComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OnlyAuthorizedComponent ]
+      declarations: [ PredictComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OnlyAuthorizedComponent);
+    fixture = TestBed.createComponent(PredictComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
