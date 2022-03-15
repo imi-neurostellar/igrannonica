@@ -30,7 +30,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Odjavi se</a></li>
+                    <li><a class="dropdown-item" (click)="logOut()">Odjavi se</a></li>
                 </ul>
             </div>
             <div *ngIf="!shared.loggedIn" class="dropdown text-end">

@@ -3,9 +3,10 @@ export default class Model {
         public name: string = 'Novi model',
         public description: string = '',
         public dateCreated: Date = new Date(),
+        public lastUpdated: Date = new Date(),
         public datasetId?: number,
 
-        //Test set settings
+        // Test set settings
         public inputColumns: number[] = [0],
         public columnToPredict: number = 1,
         public randomOrder: boolean = true,

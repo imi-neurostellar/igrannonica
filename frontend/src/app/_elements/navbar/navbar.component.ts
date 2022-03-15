@@ -18,11 +18,13 @@ export class NavbarComponent implements OnInit {
     this.location.onUrlChange(() => {
       this.currentUrl = this.location.path();
     })
-
-    this.shared.loggedIn = auth.isAuthenticated();
   }
 
   ngOnInit(): void {
+    this.auth.updateUser();
   }
 
+  logOut() {
+    this.auth.logOut();
+  }
 }

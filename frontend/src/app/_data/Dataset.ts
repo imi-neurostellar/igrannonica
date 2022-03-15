@@ -5,6 +5,9 @@ export default class Dataset {
         public header: string[] = [],
         public fileId?: number,
         public extension: string = '.csv',
-        public dateCreated: Date = new Date()
+        public isPublic: boolean = false,
+        public accessibleByLink: boolean = false,
+        public dateCreated: Date = new Date(),
+        public lastUpdated: Date = new Date()
     ) { }
 }
