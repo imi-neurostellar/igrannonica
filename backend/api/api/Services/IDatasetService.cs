@@ -6,7 +6,8 @@ namespace api.Services
     public interface IDatasetService
     {
         Dataset GetOneDataset(string username, string name);
-        List<Dataset> GetAllDatesets(string username);
+        List<Dataset> GetMyDatesets(string username);
+        List<Dataset> GetPublicDatesets();
         Dataset Create(Dataset dataset);
         void Update(string username, string name, Dataset dataset);
         void Delete(string username, string name);

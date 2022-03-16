@@ -10,33 +10,21 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModelController : ControllerBase
+    public class PredictorController : Controller
     {
-
-        private IMlConnectionService _mlService;
-        private readonly IModelService _modelService;
+        private readonly IPredictorService _predictorService;
         private JwtToken jwtToken;
 
-
-        public ModelController(IMlConnectionService mlService, IModelService modelService, IConfiguration configuration)
+        public PredictorController(IPredictorService predictorService, IConfiguration configuration)
         {
-            _mlService = mlService;
-            _modelService = modelService;
+            _predictorService = predictorService;
             jwtToken = new JwtToken(configuration);
         }
 
-        [HttpPost("sendModel")]
+        // GET: api/<PredictorController>/mypredictors
+        [HttpGet("mypredictors")]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<string>> Test([FromBody] object model)
-        {
-            var result = await _mlService.SendModelAsync(model);
-            return Ok(result);
-        }
-
-        // GET: api/<ModelController>/mymodels
-        [HttpGet("/mymodels")]
-        [Authorize(Roles = "User")]
-        public ActionResult<List<Model>> Get()
+        public ActionResult<List<Predictor>> Get()
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -51,14 +39,19 @@ namespace api.Controllers
             else
                 return BadRequest();
 
-            return _modelService.GetMyModels(username);
+            return _predictorService.GetMyPredictors(username);
+        }
+        // GET: api/<PredictorController>/publicpredictors
+        [HttpGet("publicpredictors")]
+        public ActionResult<List<Predictor>> GetPublicPredictors()
+        {
+            return _predictorService.GetPublicPredictors();
         }
 
-        // name modela
-        // GET api/<ModelController>/{name}
+        // GET api/<PredictorController>/{name}
         [HttpGet("/{name}")]
         [Authorize(Roles = "User")]
-        public ActionResult<Model> Get(string name)
+        public ActionResult<Predictor> Get(string name)
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -73,35 +66,37 @@ namespace api.Controllers
             else
                 return BadRequest();
 
-            var model = _modelService.GetOneModel(username, name);
+            var predictor = _predictorService.GetOnePredictor(username, name);
 
-            if (model == null)
-                return NotFound($"Model with name = {name} or user with username = {username} not found");
+            if (predictor == null)
+                return NotFound($"Predictor with name = {name} or user with username = {username} not found");
 
-            return model;
+            return predictor;
         }
 
-        // POST api/<ModelController>/add
+        // POST api/<PredictorController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User")]
-        public ActionResult<Model> Post([FromBody] Model model)
+        public ActionResult<Predictor> Post([FromBody] Predictor predictor)
         {
-            var existingModel = _modelService.GetOneModel(model.username, model.name);
+            var existingModel = _predictorService.GetOnePredictor(predictor.username, predictor.name);
 
             if (existingModel != null)
-                return NotFound($"Model with name = {model.name} exisits");
+                return NotFound($"Predictor with name = {predictor.name} exisits");
             else
             {
-                _modelService.Create(model);
+                _predictorService.Create(predictor);
 
-                return CreatedAtAction(nameof(Get), new { id = model._id }, model);
+                return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
             }
         }
 
-        // PUT api/<ModelController>/{username}/{name}
-        [HttpPut("{name}")]
+
+
+        // PUT api/<PredictorController>/{name}
+        [HttpPut("/{name}")]
         [Authorize(Roles = "User")]
-        public ActionResult Put(string name, [FromBody] Model model)
+        public ActionResult Put(string name, [FromBody] Predictor predictor)
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -116,18 +111,20 @@ namespace api.Controllers
             else
                 return BadRequest();
 
+            var existingDataset = _predictorService.GetOnePredictor(username, name);
 
-            var existingModel = _modelService.GetOneModel(username, name);
+            //ne mora da se proverava
+            if (existingDataset == null)
+                return NotFound($"Predictor with name = {name} or user with username = {username} not found");
 
-            if (existingModel == null)
-                return NotFound($"Model with name = {name} or user with username = {username} not found");
+            _predictorService.Update(username, name, predictor);
 
-            _modelService.Update(username, name, model);
-            return NoContent();
+            return Ok($"Predictor with name = {name} updated");
         }
 
-        // DELETE api/<ModelController>/username
-        [HttpDelete("{name}")]
+
+        // DELETE api/<PredictorController>/name
+        [HttpDelete("/{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)
         {
@@ -144,16 +141,19 @@ namespace api.Controllers
             else
                 return BadRequest();
 
-            var model = _modelService.GetOneModel(username, name);
+            var predictor = _predictorService.GetOnePredictor(username, name);
 
-            if (model == null)
-                return NotFound($"Model with name = {name} or user with username = {username} not found");
+            if (predictor == null)
+                return NotFound($"Predictor with name = {name} or user with username = {username} not found");
 
-            _modelService.Delete(model.username, model.name);
+            _predictorService.Delete(predictor.username, predictor.name);
 
-            return Ok($"Model with name = {name} deleted");
+            return Ok($"Predictor with name = {name} deleted");
 
         }
+
+
+
 
     }
 }
