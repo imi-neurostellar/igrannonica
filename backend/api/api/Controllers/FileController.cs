@@ -8,13 +8,13 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FileUploadController : ControllerBase
+    public class FileController : ControllerBase
     {
         private string[] permittedExtensions = { ".csv" };
         private readonly IConfiguration _configuration;
         private JwtToken _token;
         private IFileService _fileservice;
-        public FileUploadController(IConfiguration configuration,IFileService fileService)
+        public FileController(IConfiguration configuration,IFileService fileService)
         {
             _configuration = configuration;
             _token = new JwtToken(configuration);
