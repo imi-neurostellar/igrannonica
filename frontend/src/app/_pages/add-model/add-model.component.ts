@@ -32,15 +32,26 @@ export class AddModelComponent implements OnInit {
   }
 
   addModel() {
-    if (this.datasetLoadComponent)
-      this.models.addDataset(this.datasetLoadComponent?.dataset);
-
-    this.getCheckedInputCols();
-    this.getCheckedOutputCol();
-    if (this.validationInputsOutput()) 
-      this.models.addModel(this.newModel).subscribe((response) => {
-        console.log(response);
+    console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
+    if (this.datasetLoadComponent) {
+      this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((fileId) => {
+        console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + fileId);
+        if (this.datasetLoadComponent) {
+          this.datasetLoadComponent.dataset.fileId = fileId;
+          this.models.addDataset(this.datasetLoadComponent.dataset).subscribe((datasetId) => {
+            console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ' + datasetId);
+            this.newModel.datasetId = datasetId;
+            this.getCheckedInputCols();
+            this.getCheckedOutputCol();
+            if (this.validationInputsOutput())
+              this.models.addModel(this.newModel).subscribe((response) => {
+                console.log('ADD MODEL: DONE! REPLY:\n' + response);
+              });
+          }
+          );
+        }
       });
+    }
   }
 
   getCheckedInputCols() {
@@ -62,17 +73,17 @@ export class AddModelComponent implements OnInit {
       let thatRb = <HTMLInputElement>radiobuttons[i];
       if (thatRb.checked) {
         this.newModel.columnToPredict = thatRb.value;
-        break; 
+        break;
       }
     }
     //console.log(this.checkedOutputCol);
   }
-  validationInputsOutput() : boolean {
+  validationInputsOutput(): boolean {
     if (this.newModel.inputColumns.length == 0) {
       alert("Molimo Vas da izaberete ulaznu kolonu/kolone za mrežu.")
       return false;
-    } 
-    for (let i = 0; i < this.newModel.inputColumns.length; i++) {  
+    }
+    for (let i = 0; i < this.newModel.inputColumns.length; i++) {
       if (this.newModel.inputColumns[i] == this.newModel.columnToPredict) {
         let colName = this.newModel.columnToPredict;
         alert("Izabrali ste istu kolonu (" + colName + ") kao ulaznu i izlaznu iz mreže. Korigujte izbor.");
