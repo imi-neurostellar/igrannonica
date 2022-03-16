@@ -1,19 +1,32 @@
 <div>
 
-  <input style="display: inline-block; width:350px;" list=delimiterOptions
+  <div class="mb-4">
+    <label for="name" class="col-form-label">Naziv dataseta:</label>
+    <input type="text" class="form-control" name="name" placeholder="Naziv..."
+        [(ngModel)]="dataset.name">
+  </div>
+  <label for="desc" class="col-sm-2 col-form-label">Opis:</label>
+  <div>
+      <textarea class="form-control" name="desc" rows="3" [(ngModel)]="dataset.description"></textarea>
+  </div>
+
+
+  <div class="d-flex justify-content-center">
+    <input style="display: inline-block; width:350px;" list=delimiterOptions
     placeholder="Izaberite ili ukucajte delimiter za .csv fajl" class="form-control" [(ngModel)]="delimiter"
     (input)="update()">
-  <datalist id=delimiterOptions>
-    <option *ngFor="let option of delimiterOptions">{{option}}</option>
-  </datalist>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <label for="checkboxHeader">Da li .csv ima header?</label> &nbsp;
-  <input (input)="update()" [(ngModel)]="hasHeader" type="checkbox" value="" id="checkboxHeader" checked>
-  <br><br>
+    <datalist id=delimiterOptions>
+      <option *ngFor="let option of delimiterOptions">{{option}}</option>
+    </datalist>  &nbsp;&nbsp;&nbsp;&nbsp;
+ 
+    <label for="type" class="form-check-label">Da li .csv ima header?
+      <input class="mx-3 form-check-input" type="checkbox" (input)="update()" [(ngModel)]="hasHeader" type="checkbox" value="" id="checkboxHeader" checked>
+    </label> &nbsp;&nbsp;&nbsp;&nbsp;
 
-  <input id="fileInput" class="form-control mb-5" type="file" class="upload" (change)="changeListener($event)" accept=".csv">
-
-  <table *ngIf="csvRecords.length > 0 && hasHeader" class="table table-bordered table-light mt-5">
+    <input id="fileInput" class="form-control" type="file" class="upload" (change)="changeListener($event)" accept=".csv">
+  </div>
+  
+  <table *ngIf="csvRecords.length > 0 && hasHeader" class="table table-bordered table-light my-4">
     <thead>
       <tr>
         <th *ngFor="let item of csvRecords[0]; let i = index">{{item}}</th>
@@ -26,7 +39,7 @@
     </tbody>
   </table>
 
-  <table *ngIf="csvRecords.length > 0 && !hasHeader" class="table table-bordered table-light mt-5">
+  <table *ngIf="csvRecords.length > 0 && !hasHeader" class="table table-bordered table-light mt-4">
     <tbody>
       <tr *ngFor="let row of csvRecords | slice:0:10">
         <td *ngFor="let col of row">{{col}}</td>
@@ -38,5 +51,7 @@
     . . . <br>
     {{rowsNumber}} x {{colsNumber}}
   </div>
+
+  
 
 </div>

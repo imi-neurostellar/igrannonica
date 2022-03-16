@@ -28,6 +28,10 @@ builder.Services.AddSingleton<IMongoClient>(s =>
 builder.Services.AddScoped<IDatasetService, DatasetService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMlConnectionService, MlConnectionService>();
+builder.Services.AddScoped<IModelService, ModelService>();
+builder.Services.AddScoped<IFileService, FileService>();
+
 
 //Add Authentication
 builder.Services.AddAuthentication(
