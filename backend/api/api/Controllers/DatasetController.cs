@@ -175,27 +175,15 @@ namespace api.Controllers
 
 /*
 {
-  "_id": "",
-  "uploaderId" : "uploaderId",
-  "name" : "name",
-  "description" : "description",
-  "dateCreated" : "dateCreated",
-  "inputColumns" : [2,3,4],
-  "columnToPredict" : 1,
-  "randomTestSet" : true,
-  "randomTestSetDistribution" : 1,
-  "type" : "type",
-  "encoding" : "encoding",
-  "optimizer" : "optimizer",
-  "lossFunction" : "lossFunction",
-  "inputNeurons" : 2,
-  "hiddenLayerNeurons" : 3,
-  "hiddenLayers" : 8,
-  "batchSize" : 6,
-  "inputLayerActivationFunction" : "inputLayerActivationFunction",
-  "hiddenLayerActivationFunction" : "hiddenLayerActivationFunction",
-  "outputLayerActivationFunction" : "outputLayerActivationFunction",
-  "extension" : "extension"
-
+    "_id": "",
+    "name": "name",
+    "description": "description",
+    "header" : ["ag","rt"],
+    "fileId" : "652",
+    "extension": "csb",
+    "isPublic" : true,
+    "accessibleByLink": true,
+    "dateCreated": "dateCreated",
+    "lastUpdated" : "proba12"
 }
 */

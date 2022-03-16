@@ -14,7 +14,7 @@ namespace api.Models
         public string name { get; set; }
         public string description { get; set; }
         public string[] header { get; set; }
-        public int fileId { get; set; }
+        public string fileId { get; set; }
         public string extension { get; set; }
         public bool isPublic { get; set; }
         public bool accessibleByLink { get; set; }
