@@ -7,5 +7,6 @@
         string CollectionName { get; set; }
         string DatasetCollectionName { get; set; }
         string ModelCollectionName { get; }
+        string FilesCollectionName { get; set; }
     }
 }

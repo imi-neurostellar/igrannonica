@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -12,10 +13,12 @@ namespace api.Controllers
         private string[] permittedExtensions = { ".csv" };
         private readonly IConfiguration _configuration;
         private JwtToken _token;
-        public FileUploadController(IConfiguration configuration)
+        private IFileService _fileservice;
+        public FileUploadController(IConfiguration configuration,IFileService fileService)
         {
             _configuration = configuration;
             _token = new JwtToken(configuration);
+            _fileservice = fileService;
 
         }
 
@@ -68,8 +71,12 @@ namespace api.Controllers
             {
                 await file.CopyToAsync(stream);
             }
+            FileModel fileModel= new FileModel();
+            fileModel.path=fullPath;
+            fileModel.username=username;
+            fileModel=_fileservice.Create(fileModel);
 
-            return Ok(fullPath);
+            return Ok(fileModel);
         }
     }
 }
