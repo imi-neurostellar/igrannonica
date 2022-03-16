@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import Model from 'src/app/_data/Model';
 import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
@@ -32,14 +33,24 @@ export class AddModelComponent implements OnInit {
   }
 
   addModel() {
+    this.saveModel(false); //trajno cuvanje
+  }
+  trainModel() {
+    this.saveModel(true).subscribe((modelId : any) => {
+      if (modelId)
+        this.models.trainModel(modelId);
+    }); //privremeno cuvanje modela => vraca id sacuvanog modela koji cemo da treniramo sad
+  }
+  saveModel(temporary: boolean) : any {
     if (this.datasetLoadComponent)
-      this.models.addDataset(this.datasetLoadComponent?.dataset);
+      this.models.addDataset(this.datasetLoadComponent?.dataset).subscribe((response) => {//id dataseta je response
+        this.newModel.datasetId = response;
 
-    this.getCheckedInputCols();
-    this.getCheckedOutputCol();
-    if (this.validationInputsOutput()) 
-      this.models.addModel(this.newModel).subscribe((response) => {
-        console.log(response);
+        this.getCheckedInputCols();
+        this.getCheckedOutputCol();
+        if (this.validationInputsOutput()) 
+          return this.models.addModel(this.newModel); //id modela
+        return of(null);
       });
   }
 
