@@ -18,27 +18,27 @@ namespace api.Controllers
         }
 
 
-        // GET: api/<DatasetController>/{id}/datasets
-        [HttpGet("{id}/datasets")]
-        public ActionResult<List<Dataset>> Get(string id)
+        // GET: api/<DatasetController>/{username}/datasets
+        [HttpGet("{username}/datasets")]
+        public ActionResult<List<Dataset>> Get(string username)
         {
-            return _datasetService.GetAllDatesets(id);
+            return _datasetService.GetAllDatesets(username);
         }
 
-        // GET api/<DatasetController>/{id}/{name}
-        [HttpGet("{id}/{name}")]
-        public ActionResult<Dataset> Get(string id, string name)
+        // GET api/<DatasetController>/{username}/{name}
+        [HttpGet("{username}/{name}")]
+        public ActionResult<Dataset> Get(string username, string name)
         {
-            var dataset = _datasetService.GetOneDataset(id, name);
+            var dataset = _datasetService.GetOneDataset(username, name);
 
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} or user with id = {id} not found");
+                return NotFound($"Dataset with name = {name} or user with username = {username} not found");
 
             return dataset;
         }
 
-        // POST api/<DatasetController>/post
-        [HttpPost("post")]
+        // POST api/<DatasetController>/add
+        [HttpPost("add")]
         public ActionResult<Dataset> Post([FromBody] Dataset dataset)
         {
             var existingDataset = _datasetService.GetOneDataset(dataset.username, dataset.name);
@@ -53,22 +53,22 @@ namespace api.Controllers
             }
         }
 
-        // PUT api/<DatasetController>/{id}/{name}
-        [HttpPut("{id}/{name}")]
-        public ActionResult Put(string id, string name, [FromBody] Dataset dataset)
+        // PUT api/<DatasetController>/{username}/{name}
+        [HttpPut("{username}/{name}")]
+        public ActionResult Put(string username, string name, [FromBody] Dataset dataset)
         {
-            var existingDataset = _datasetService.GetOneDataset(id, name);
+            var existingDataset = _datasetService.GetOneDataset(username, name);
 
             //ne mora da se proverava
             if (existingDataset == null)
-                return NotFound($"Dataset with name = {name} or user with id = {id} not found");
+                return NotFound($"Dataset with name = {name} or user with username = {username} not found");
 
-            _datasetService.Update(id, name, dataset);
+            _datasetService.Update(username, name, dataset);
             return NoContent();
         }
 
-        // DELETE api/<DatasetController>/username
-        [HttpDelete("{username}")]
+        // DELETE api/<DatasetController>/username/name
+        [HttpDelete("{username}/{name}")]
         public ActionResult Delete(string username, string name)
         {
             var dataset = _datasetService.GetOneDataset(username, name);

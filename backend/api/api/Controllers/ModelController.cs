@@ -49,8 +49,8 @@ namespace api.Controllers
             return model;
         }
 
-        // POST api/<ModelController>/post
-        [HttpPost("post")]
+        // POST api/<ModelController>/add
+        [HttpPost("add")]
         public ActionResult<Model> Post([FromBody] Model model)
         {
             var existingModel = _modelService.GetOneModel(model.username, model.name);
@@ -71,7 +71,6 @@ namespace api.Controllers
         {
             var existingModel = _modelService.GetOneModel(username, name);
 
-            //ne mora da se proverava
             if (existingModel == null)
                 return NotFound($"Model with name = {name} or user with username = {username} not found");
 
@@ -80,7 +79,7 @@ namespace api.Controllers
         }
 
         // DELETE api/<ModelController>/username
-        [HttpDelete("{username}")]
+        [HttpDelete("{username}/{name}")]
         public ActionResult Delete(string username, string name)
         {
             var model = _modelService.GetOneModel(username, name);
