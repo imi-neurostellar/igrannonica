@@ -33,7 +33,7 @@ export class AddModelComponent implements OnInit {
   }
 
   addModel() {
-    this.saveModel(false).subscribe(); //trajno cuvanje
+    this.saveModel(false); //trajno cuvanje
   }
 
   trainModel() {

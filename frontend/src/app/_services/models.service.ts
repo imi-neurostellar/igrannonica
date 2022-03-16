@@ -23,6 +23,7 @@ export class ModelsService {
     const options = {
       params: params,
       reportProgress: true,
+      headers: this.authService.authHeader()
     };
 
     const req = new HttpRequest('POST', `${API_SETTINGS.apiURL}/file/csv`, formData, options);
@@ -30,7 +31,7 @@ export class ModelsService {
   }
 
   addModel(model: Model) {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader(), responseType: 'text' });
+    return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }
   addDataset(dataset: Dataset) {
     return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader(), responseType: 'text' });
