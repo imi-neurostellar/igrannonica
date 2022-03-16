@@ -6,7 +6,7 @@ namespace api.Models
 {
 	public class Dataset
 	{
-        public string username;
+        public string username { get; set; }
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]//mongo data type to .net

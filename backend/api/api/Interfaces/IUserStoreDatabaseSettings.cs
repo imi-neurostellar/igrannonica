@@ -6,7 +6,8 @@
         string DatabaseName { get; set; }
         string CollectionName { get; set; }
         string DatasetCollectionName { get; set; }
-        string PredictorCollectionName { get; }
+        string PredictorCollectionName { get; set; }
+        string ModelCollectionName { get; set; }
         string FilesCollectionName { get; set; }
     }
 }

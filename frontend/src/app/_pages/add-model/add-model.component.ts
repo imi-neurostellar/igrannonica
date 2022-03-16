@@ -4,6 +4,7 @@ import Model from 'src/app/_data/Model';
 import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
+import shared from 'src/app/Shared';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class AddModelComponent implements OnInit {
   LossFunction = LossFunction;
   Optimizer = Optimizer;
   Object = Object;
+  shared = shared;
 
   constructor(private models: ModelsService) {
     this.newModel = new Model();
@@ -44,24 +46,27 @@ export class AddModelComponent implements OnInit {
   }
 
   saveModel(temporary: boolean): any {
-    console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
-    if (this.datasetLoadComponent) {
-      this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((fileId) => {
-        console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + fileId);
-        if (this.datasetLoadComponent) {
-          this.datasetLoadComponent.dataset.fileId = fileId;
-          this.models.addDataset(this.datasetLoadComponent.dataset).subscribe((datasetId) => {
-            console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ' + datasetId);
-            this.newModel.datasetId = datasetId;
-            this.getCheckedInputCols();
-            this.getCheckedOutputCol();
-            if (this.validationInputsOutput())
+    this.getCheckedInputCols();
+    this.getCheckedOutputCol();
+    if (this.validationInputsOutput()) {
+      console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
+      if (this.datasetLoadComponent) {
+        this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {
+          console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+          if (this.datasetLoadComponent) {
+            this.datasetLoadComponent.dataset.fileId = file._id;
+            this.datasetLoadComponent.dataset.username = shared.username;
+            this.models.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
+              console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ', dataset._id);
+              this.newModel.datasetId = dataset._id;
+              this.newModel.username = shared.username;
               this.models.addModel(this.newModel).subscribe((response) => {
-                console.log('ADD MODEL: DONE! REPLY:\n' + response);
+                console.log('ADD MODEL: DONE! REPLY:\n', response);
               });
-          });
-        }
-      });
+            });
+          }
+        });
+      }
     }
   }
 

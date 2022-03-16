@@ -13,7 +13,7 @@ namespace api.Services
         public ModelService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
         {
             var database = mongoClient.GetDatabase(settings.DatabaseName);
-            _model = database.GetCollection<Model>(settings.PredictorCollectionName);
+            _model = database.GetCollection<Model>(settings.ModelCollectionName);
         }
 
         public Model Create(Model model)

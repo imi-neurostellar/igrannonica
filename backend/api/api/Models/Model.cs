@@ -21,11 +21,11 @@ namespace api.Models
         public string datasetId { get; set; }
 
         //Test set settings
-        public int[] inputColumns { get; set; }
-        public int columnToPredict { get; set; }
-        public bool radnomOrder {get;set;}
+        public string[] inputColumns { get; set; }
+        public string columnToPredict { get; set; }
+        public bool randomOrder {get;set;}
         public bool randomTestSet { get; set; }
-        public int randomTestSetDistribution { get; set; }
+        public float randomTestSetDistribution { get; set; }
 
         //Neural net training
         public string type { get; set; }

@@ -22,21 +22,20 @@ export class ModelsService {
 
     const options = {
       params: params,
-      reportProgress: true,
+      reportProgress: false,
       headers: this.authService.authHeader()
     };
 
-    const req = new HttpRequest('POST', `${API_SETTINGS.apiURL}/file/csv`, formData, options);
-    return this.http.request(req);
+    return this.http.post(`${API_SETTINGS.apiURL}/file/csv`, formData, options);
   }
 
-  addModel(model: Model) {
+  addModel(model: Model): Observable<any> {
     return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }
-  addDataset(dataset: Dataset) {
-    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader(), responseType: 'text' });
+  addDataset(dataset: Dataset): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
   }
-  trainModel(modelId: string) {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader(), responseType: 'text' });
+  trainModel(modelId: string): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader() });
   }
 }

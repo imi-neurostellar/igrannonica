@@ -1,6 +1,7 @@
 class Shared {
     constructor(
-        public loggedIn: boolean
+        public loggedIn: boolean,
+        public username: string = ''
     ) { }
 }
 

@@ -1,4 +1,5 @@
 export default class Predictor {
+    _id: string = '';
     constructor(
         public name: string = 'Novi prediktor',
         public description: string = '',

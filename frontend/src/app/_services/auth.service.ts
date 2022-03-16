@@ -46,7 +46,7 @@ export class AuthService {
       this.http.post(`${API_SETTINGS.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
         this.authenticate(response);
       });
-    }, exp.getTime() - new Date().getTime());
+    }, exp.getTime() - new Date().getTime() - 60000);
   }
 
   authenticate(token: string) {
@@ -62,6 +62,7 @@ export class AuthService {
     if (this.cookie.check('token')) {
       const token = this.cookie.get('token');
       this.shared.loggedIn = this.isAuthenticated();
+      this.shared.username = jwtHelper.decodeToken(token).name;
       this.enableAutoRefresh();
     }
   }
