@@ -11,29 +11,49 @@ from sklearn.preprocessing import LabelEncoder
 import csv
 import json
 class Response:
-    def __init__(self,history,rezultat,tacnost,preciznost,recall,spec,f1,classificationreport,mse,mae,mape,rmse,cmatrix,fpr,tpr):
-        self.history=history
-        self.rezultat=rezultat
+    def __init__(self,tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse,fpr,tpr):
+
         self.tacnost=tacnost
         self.preciznost=preciznost
         self.recall=recall
         self.spec=spec
         self.f1=f1
-        self.classificationreport=classificationreport
         self.mse=mse
         self.mae=mae
         self.mape=mape
         self.rmse=rmse
-        self.cmatrix=cmatrix
         self.fpr=fpr
         self.tpr=tpr
+class fCallback(tf.keras.callbacks.Callback):
+    def __init__(self, x_test, y_test):
+        self.x_test = x_test
+        self.y_test = y_test
 
-    ### 1)Ucitavanje vrednosti
-def obuka(data,params):
+        
+    def on_epoch_end(self, epoch, logs=None):
+        print('Evaluation: ', self.model.evaluate(self.x_test))
+
+    
+def obuka(dataunos,params):
     import numpy as np
     import pandas as pd
     import tensorflow as tf
-    import matplotlib.pyplot as plt   
+    import matplotlib.pyplot as plt
+
+    ### 0) Pretvaranje data seta u novi, sa kolonama koje je korisnik izabrao za obuku
+ 
+    data=pd.DataFrame()
+    zeljenekolone=params["inputColumns"]
+    for i in range(len(zeljenekolone)):
+        data[zeljenekolone[i]]=dataunos[zeljenekolone[i]]
+    #print(data.head(10))
+
+    #predvidetikol=input("UNETI NAZIV KOLONE ČIJU VREDNOST TREBA PREDVIDETI ")
+    ###sta se cuva od promenjivih broj kolone ili naziv kolone???
+    predvidetikol=params["columnToPredict"]
+
+    data[predvidetikol]=dataunos[predvidetikol]
+    ### 1)Ucitavanje vrednosti 
     #print(1)
     #data1=pd.read_csv('titanic.csv')
     #data=data1.copy()
@@ -49,28 +69,27 @@ def obuka(data,params):
     ### 2)Proveravanje svih kolona za null vrednosti i popunjavanje medijanom ili srednjom vrednosti ili birisanje
 
     #####Part2 #####
-    '''
-    brisanje=input("DA LI ZELITE DA IZBRSETE SVE KOLONE SA NULL VREDNOSTIMA? ")
     
-    brisanje=True
+    #brisanje=input("DA LI ZELITE DA IZBRSETE SVE KOLONE SA NULL VREDNOSTIMA? ")
+    brisanje='ne'
     if(brisanje=='da'):
         data=data.dropna(axis=1)
     elif(brisanje=='ne'):
-        brisanjer=input("DA LI ZELITE DA IZBRISETE SVE REDOVE SA NULL VREDNOSTINA ")
+    #   brisanjer=input("DA LI ZELITE DA IZBRISETE SVE REDOVE SA NULL VREDNOSTIMA? ")
+        brisanjer='ne'
         if(brisanjer=='da'):
             data=data.dropna()
         elif(brisanjer=='ne'):
 
             for i in range(len(kolone)):
-                if(isinstance(data[kolone[i]].dtype, pd.CategoricalDtype)):
-                    print('cat')
 
                 if(data[kolone[i]].isnull().any()):
                     tippodataka=data[kolone[i]].dtype
                     kolona=data[kolone[i]].copy()
             
                     if(tippodataka==np.float64 or tippodataka==np.int64):
-                        popunjavanje=input("UNETI NACIN POPUNJAVANJA PROMENJIVIH SA NULL VREDNOSTIMA ")
+                        #popunjavanje=input("UNETI NACIN POPUNJAVANJA PROMENJIVIH SA NULL VREDNOSTIMA ")
+                        popunjavanje='medijana'
                         if(popunjavanje=='medijana'):
                             medijana=kolona.mean()
                             data[kolone[i]]=data[kolone[i]].fillna(medijana)
@@ -83,16 +102,14 @@ def obuka(data,params):
                     elif(tippodataka==np.object_):
                         najcescavrednost=kolona.value_counts().index[0]
                         data[kolone[i]]=data[kolone[i]].fillna(najcescavrednost)
-
-    '''  
+ 
     ### 3)Izbacivanje kolona koje ne uticu na rezultat PART2
     nredova=data.shape[0]
     for i in range(len(kolone)):
         if((data[kolone[i]].nunique()>(nredova/2)) and( data[kolone[i]].dtype==np.object_)):
             data.pop(kolone[i])
 
-
-    print(data.head(10))
+    #print(data.head(10))
 
     ### 4)izbor tipa enkodiranja
     kolone=data.columns ### Azuriranje postojecih kolona nakon moguceg brisanja
@@ -109,7 +126,7 @@ def obuka(data,params):
         for k in range(len(kolone)):
             if(data[kolone[k]].dtype==np.object_):
                 data[kolone[k]]=encoder.fit_transform(data[kolone[k]])
-        print(data.head(20))
+        #print(data.head(20))
 
     ### 6)Enkodiranje svih kategorijskih promenjivih onehot metodom
 
@@ -122,19 +139,16 @@ def obuka(data,params):
                 
                 kategorijskekolone.append(kolone[k]) ###U kategorijske kolone smestaju se nazivi svih kolona sa kategorijskim podacima
         
-        print(kategorijskekolone)
+        #print(kategorijskekolone)
 
         ### Enkodiranje 
         data=pd.get_dummies(data,columns=kategorijskekolone,prefix=kategorijskekolone)
-        print(data.head(10))
+        #print(data.head(10))
 
     kolone=data.columns ### Azuriranje kolona nakon moguceg dodavanja
 
     ### 7)Podela skupa na skup za trening i skup za testiranje
 
-    #predvidetikol=input("UNETI NAZIV KOLONE ČIJU VREDNOST TREBA PREDVIDETI ")
-    ###sta se cuva od promenjivih broj kolone ili naziv kolone???
-    predvidetikol=params["columnToPredict"]
 
     xkolone=[]
     for k in range(len(kolone)):
@@ -148,22 +162,18 @@ def obuka(data,params):
     ###Dodavanje vrednosti u y, samo za label enkodiranje, bez prefiksa
     y=data[predvidetikol].values
 
-    print(data[xkolone].head(10))
-    print(data[predvidetikol].head(10))
+    #print(data[xkolone].head(10))
+    #print(data[predvidetikol].head(10))
 
     ### 7.2)Unos velicina za trening i test skup
     #trening=int(input('UNETI VELIČINU TRENING SKUPA '))
     #test=int(input("UNETI VELICINU TESTNOG SKUPA"))
     test=params["randomTestSetDistribution"]
-    ###Provera unetih velicina
-    if(test<=0 or test>=100):
-        print("POGREŠAN UNOS VELIČINE SKUPA ZA TRENING")
-    if(test>1):
-        test=test/100
+    
 
     ### 7.3)Da li korisnik zeli nasumicno rasporedjivanje podataka?
     #nasumicno=input("DA LI ŽELITE NASUMIČNO RASPOREDJIVANJE PODATAKA U TRENING I TEST SKUP? ")
-    nasumicno=params["randomTestSet"]
+    nasumicno=params["randomOrder"]
     ###!!!Dugme za nasumici izbor
     if(nasumicno):
         random=50
@@ -194,7 +204,7 @@ def obuka(data,params):
     #brojnu=int(input("UNETI BROJ NEURONA ULAZNOG SLOJA "))
 
     aktivacijau=params["inputLayerActivationFunction"]
-    brojnu=params["inputNeurons"]
+    brojnu=len(kolone)
 
     classifier.add(tf.keras.layers.Dense(units=brojnu,activation=aktivacijau,input_dim=x_train.shape[1]))
 
@@ -204,14 +214,16 @@ def obuka(data,params):
 
     aktivacijas=params["hiddenLayerActivationFunction"]
     brojns=params["hiddenLayerNeurons"]
-
-    classifier.add(tf.keras.layers.Dense(units=brojns,activation=aktivacijas))
+    brojskrivenih=params["hiddenLayers"]
+    for i in range(brojskrivenih):
+        classifier.add(tf.keras.layers.Dense(units=brojns,activation=aktivacijas))
+    
 
     ### 12) Dodavanje treceg, izlaznog sloja
     #aktivacijai=input("UNETI ŽELJENU AKTIVACIONU FUNKCIJU IZLAZNOG SLOJA ")
 
     aktivacijai=params["outputLayerActivationFunction"]
-
+    
     classifier.add(tf.keras.layers.Dense(units=1,activation=aktivacijai))
 
 
@@ -222,29 +234,31 @@ def obuka(data,params):
     optimizator=params["optimizer"]
 
     ### 13.1)Izbor metrike za kompajler PART2
-    metrike=[]
+    metrike=['mae','mse']
+    lossf=params["lossFunction"]
+    '''
     while(1):
         m=params['lossFunction']
         
         if(m=='KRAJ'):
             break   
-        metrike.append(m)
-    classifier.compile(optimizer=optimizator, loss='binary_crossentropy',metrics = metrike)
-
+        metrike.append(m)'''
+    classifier.compile(optimizer=optimizator, loss=lossf,metrics =metrike)
+    performance_simple = fCallback(x_test, y_test)
     ### 14) 
     #uzorci=int(input("UNETI KOLIKO UZORAKA ĆE BITI UNETO U ISTO VREME "))
     #epohe=int(input("UNETI BROJ EPOHA"))
     uzorci=params["batchSize"]
     epohe=params["epochs"]
-    history=classifier.fit(x_train,y_train,batch_size=uzorci,epochs=epohe)
+    history=classifier.fit(x_train,y_train,batch_size=uzorci,epochs=epohe,callbacks=[performance_simple],validation_split=0.2)
 
     ### 14.1)Parametri grafika iz history PART2
     metrikedf=pd.DataFrame() ###DataFrame u kom se nalaze podaci o rezultatima metrika za iscrtavanje na grafiku. Svaka kolona sadrzi vrednost metrike po epohama
     for i in range(len(metrike)):
         metrikedf[metrike[i]]=history.history[metrike[i]]
         #print(history.history[metrike[i]])
-        plt.plot(history.history[metrike[i]])
-    plt.show()
+        #plt.plot(history.history[metrike[i]])
+    #plt.show()
 
     #print(metrikedf)
 
@@ -254,7 +268,7 @@ def obuka(data,params):
     ### 15) Predvidjanje
     y_pred=classifier.predict(x_test)
 
-    print(y_pred)
+    #print(y_pred)
 
     ### 15.1) Formatiranje podataka za metrike PART2
     y_pred=(y_pred>=0.5).astype('int')
@@ -264,7 +278,7 @@ def obuka(data,params):
 
     #print(y_test)
     ### 15.2) Kreiranje DataFrame-a u kom se nalaze kolone koje predstavljaju stvarne i predvidjene vrednosti, potrebne za iscrtavanje grafika i metrike PART2
-    rezultat=pd.DataFrame({"Stvarna vrednost ":y_test,"Predvidjena vrednost":y_pred})
+    #rezultat=pd.DataFrame({"Stvarna vrednost ":y_test,"Predvidjena vrednost":y_pred})
     #print(rezultat.head(20))
 
     #####METRIKE##### PART2
@@ -274,52 +288,54 @@ def obuka(data,params):
 
     ### 16)Tacnost
     tacnost=sm.accuracy_score(y_test,y_pred)
-    print('tacnost ',tacnost)
+    #print('tacnost ',tacnost)
 
     ### 17)Preciznost
     preciznost=sm.precision_score(y_test,y_pred)
-    print('preciznost ',preciznost)
+    #print('preciznost ',preciznost)
 
     ### 18)Recall
     recall=sm.recall_score(y_test,y_pred)
-    print('recall ',recall)
+    #print('recall ',recall)
 
     ### 19)Specificity
     tn, fp, fn, tp = sm.confusion_matrix(y_test,y_pred).ravel()
     spec = tn / (tn+fp)
-    print('spec ',spec)
+    #print('spec ',spec)
 
     ### 20)F1
     f1=sm.f1_score(y_test,y_pred)
-    print('f1 ',f1)
+    #print('f1 ',f1)
 
     ### 21)Classification report
-    classificationreport=sm.classification_report(y_test,y_pred)
-    print('classification ',classificationreport)
+    #classificationreport=sm.classification_report(y_test,y_pred)
+    #print('classification ',classificationreport)
 
     ### 22)Mean squared error (mse)
     mse=sm.mean_squared_error(y_test,y_pred)
-    print('mse ',mse)
+    #print('mse ',mse)
 
     ### 23)Mean absolute error (mae)
     mae=sm.mean_absolute_error(y_test,y_pred)
-    print('mae ',mae)
+    #print('mae ',mae)
 
     ### 24)Mean absolute percentage error (mape)
     mape=sm.mean_absolute_percentage_error(y_test,y_pred)
-    print('mape ',mape)
+    #print('mape ',mape)
 
     ### 25)Root mean square error (rmse) *** da bi se iskoristila u history, salje se u metrics preko funkcije
     import numpy as np
     rmse=np.sqrt(sm.mean_squared_error(y_test,y_pred))
-    print("rmse ",rmse)
+    #print("rmse ",rmse)
 
     ### 26)Confusion matrix
-    cmatrix=sm.confusion_matrix(y_test,y_pred)
-    print('cmatrix ',cmatrix)
+    #cmatrix=sm.confusion_matrix(y_test,y_pred)
+    #print('cmatrix ',cmatrix)
 
+    
     ### 27)ROC
     fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
+    '''
     plt.plot(fpr, tpr, color='blue')
     plt.title('ROC')
     plt.xlim([0.0, 1.0])
@@ -327,8 +343,9 @@ def obuka(data,params):
     plt.ylim([0.0, 1.0])
     plt.ylabel('True Positive Rate')
     plt.show()
+    '''
 
-    r=Response(history,rezultat,tacnost,preciznost,recall,spec,f1,classificationreport,mse,mae,mape,rmse,cmatrix,fpr,tpr)
+    r=Response(tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse,fpr,tpr)
     
     return "Done"
 
