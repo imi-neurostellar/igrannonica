@@ -1,1 +1,5 @@
-<p>my-datasets works!</p>
+<ul class="list-group my-2">
+    <li class="list-group-item" *ngFor="let dataset of myDatasets">
+        <app-item-dataset [dataset]="dataset"></app-item-dataset>
+    </li>
+</ul>

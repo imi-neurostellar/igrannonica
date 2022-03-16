@@ -11,7 +11,8 @@
                 <li><a routerLink="add-model" class="nav-link px-2"
                         [class]="(currentUrl === '/add-model') ? 'text-secondary' : 'text-white'">Dodaj model</a></li>
                 <li><a routerLink="my-predictors" class="nav-link px-2"
-                        [class]="(currentUrl === '/my-predictors') ? 'text-secondary' : 'text-white'">Predvidi</a></li>
+                        [class]="(currentUrl === '/my-predictors') ? 'text-secondary' : 'text-white' + (shared.loggedIn) ? '' : 'disabled'">Predvidi</a>
+                </li>
             </ul>
 
             <div *ngIf="shared.loggedIn" class="dropdown text-end">
