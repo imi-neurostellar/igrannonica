@@ -1,6 +1,6 @@
 #header {
     background-color: #003459;
-    padding-top: 25px;
+    padding-top: 30px;
     padding-bottom: 20px;
 }
 #header h1 {
@@ -11,4 +11,8 @@
 
 #container {
     border-radius: 8px;
+}
+
+#wrapper {
+    color: #003459;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import Model from 'src/app/_data/Model';
 import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
@@ -32,6 +33,17 @@ export class AddModelComponent implements OnInit {
   }
 
   addModel() {
+    this.saveModel(false).subscribe(); //trajno cuvanje
+  }
+
+  trainModel() {
+    this.saveModel(true).subscribe((modelId: any) => {
+      if (modelId)
+        this.models.trainModel(modelId);
+    }); //privremeno cuvanje modela => vraca id sacuvanog modela koji cemo da treniramo sad
+  }
+
+  saveModel(temporary: boolean): any {
     console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
     if (this.datasetLoadComponent) {
       this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((fileId) => {
@@ -47,8 +59,7 @@ export class AddModelComponent implements OnInit {
               this.models.addModel(this.newModel).subscribe((response) => {
                 console.log('ADD MODEL: DONE! REPLY:\n' + response);
               });
-          }
-          );
+          });
         }
       });
     }

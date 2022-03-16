@@ -4,7 +4,7 @@ export default class Model {
         public description: string = '',
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
-        public datasetId?: string,
+        public datasetId: string = '',
 
         // Test set settings
         public inputColumns: string[] = [],

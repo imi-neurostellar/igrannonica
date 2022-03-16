@@ -30,9 +30,12 @@ export class ModelsService {
   }
 
   addModel(model: Model) {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/sendModel`, model, { headers: this.authService.authHeader(), responseType: 'text' });
+    return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader(), responseType: 'text' });
   }
   addDataset(dataset: Dataset) {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/uploadDataset`, dataset, { headers: this.authService.authHeader(), responseType: 'text' });
+    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+  trainModel(modelId: string) {
+    return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader(), responseType: 'text' });
   }
 }

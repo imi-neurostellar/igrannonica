@@ -26,15 +26,20 @@ namespace api.Services
             _dataset.DeleteOne(dataset => (dataset.username == username && dataset.name == name)); 
         }
 
-        public List<Dataset> GetAllDatesets(string username)
+        public List<Dataset> GetMyDatesets(string username)
         {
             return _dataset.Find(dataset => dataset.username == username).ToList();
+        }
+        public List<Dataset> GetPublicDatesets()
+        {
+            return _dataset.Find(dataset => dataset.isPublic == true).ToList();
         }
 
         public Dataset GetOneDataset(string username, string name)
         {
             return _dataset.Find(dataset => dataset.username == username && dataset.name == name).FirstOrDefault();
         }
+        //odraditi za pretragu getOne
 
         //ako je potrebno da se zameni name  ili ekstenzija
         public void Update(string username, string name, Dataset dataset)
