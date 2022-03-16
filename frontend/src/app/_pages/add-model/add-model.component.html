@@ -1,189 +1,257 @@
-<div class="container p-3" style="background-color: rgb(249, 251, 253); min-height: 100%;">
-
-    <h2 class="my-4 text-primary"> Nov model: </h2>
-    <div class="form-group row align-items-center">
-        <label for="name" class="col-sm-2 col-form-label col-form-label-lg">Naziv</label>
-        <div class="col-sm-7">
-            <input type="text" class="form-control form-control-lg" name="name" placeholder="Naziv..."
-                [(ngModel)]="newModel.name">
-        </div>
-
-        <div class="col-sm-3">
-            <input type="text" class="form-control-plaintext text-center" id="dateCreated" placeholder="--/--/--"
-                value="{{newModel.dateCreated | date: 'dd/MM/yyyy'}}" readonly>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="desc" class="col-sm-2 col-form-label">Opis</label>
-        <div class="col-sm-10">
-            <textarea class="form-control" name="desc" rows="3" [(ngModel)]="newModel.description"></textarea>
-        </div>
-    </div>
-
-    <!--<div class="form-group row">
-    <label for="value" class="col-4">Vrednost</label>
-    <div class="input-group">
-        <input type="number" min="0" class="form-control" name="value" placeholder="Vrednost..."
-            [(ngModel)]="newModel.value">
-        <div class="input-group-prepend">
-            <span class="input-group-text">#</span>
-        </div>
-        <input type="number" min="1" class="form-control" name="count" placeholder="Br." [(ngModel)]="newModel.count">
-        <input type="text" class="form-control" name="sum" placeholder="Suma"
-            value="=({{newModel.value * newModel.count}})" readonly>
-        </div>
-    </div>-->
-
-    <div class="my-4">
-        <label for="dataset">Izvor podataka:</label>
-        <app-dataset-load id="dataset"></app-dataset-load>
-    </div>
-
-    <div class="form-group row my-2">
-        <div class="col-sm-2 col-form-label">
-            <label for="type" class="form-check-label">Podela test skupa:
-                <input class="mx-3 form-check-input" type="checkbox" [checked]="newModel.randomTestSet"
-                    (change)="newModel.randomTestSet = !newModel.randomTestSet">
-            </label>
-
-        </div>
-        <div>
-            <input type="range" min="0.1" max="0.9" step="0.1" class="form-control" name="randomTestSetDistribution"
-                [disabled]="!newModel.randomTestSet" [(ngModel)]="newModel.randomTestSetDistribution">
-        </div>
-    </div>
-
-    <h3> Parametri treniranja </h3>
-
-    <div class="form-group row my-2">
-        <label for="type" class="col-sm-2 col-form-label">Tip mreže: </label>
-        <div class="col-sm-10">
-            <select id=typeOptions class="form-control" name="type" [(ngModel)]="newModel.type">
-                <option *ngFor="let option of Object.keys(ANNType); let optionName of Object.values(ANNType)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="encoding" class="col-sm-2 col-form-label">Enkoding: </label>
-        <div class="col-sm-10">
-            <select id=encodingOptions class="form-control" name="encoding" [(ngModel)]="newModel.encoding">
-                <option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="optimizer" class="col-sm-2 col-form-label">Optimizacija: </label>
-        <div class="col-sm-10">
-            <select id=optimizerOptions class="form-control" name="optimizer" [(ngModel)]="newModel.optimizer">
-                <option *ngFor="let option of Object.keys(Optimizer); let optionName of Object.values(Optimizer)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="lossFunction" class="col-sm-2 col-form-label">Funkcija obrade gubitka: </label>
-        <div class="col-sm-10">
-            <select id=lossFunctionOptions class="form-control" name="lossFunction" [(ngModel)]="newModel.lossFunction">
-                <option *ngFor="let option of Object.keys(LossFunction); let optionName of Object.values(LossFunction)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="inputNeurons" class="col-sm-2 col-form-label">Broj ulaznih neurona: </label>
-        <div class="col-sm-10">
-            <input type="number" min="1" class="form-control" name="inputNeurons" [(ngModel)]="newModel.inputNeurons">
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="inputLayerActivationFunction" class="col-sm-2 col-form-label">Funkcija aktivacije ulaznog sloja:
-        </label>
-        <div class="col-sm-10">
-            <select id=inputLayerActivationFunctionOptions class="form-control" name="inputLayerActivationFunction"
-                [(ngModel)]="newModel.inputLayerActivationFunction">
-                <option
-                    *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="hiddenLayerNeurons" class="col-sm-2 col-form-label">Broj neurona skrivenih slojeva: </label>
-        <div class="col-sm-10">
-            <input type="number" min="1" class="form-control" name="hiddenLayerNeurons"
-                [(ngModel)]="newModel.hiddenLayerNeurons">
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="hiddenLayerActivationFunction" class="col-sm-2 col-form-label">Funkcija aktivacije skrivenih
-            slojeva:
-        </label>
-        <div class="col-sm-10">
-            <select id=hiddenLayerActivationFunctionOptions class="form-control" name="hiddenLayerActivationFunction"
-                [(ngModel)]="newModel.hiddenLayerActivationFunction">
-                <option
-                    *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="hiddenLayers" class="col-sm-2 col-form-label">Broj skrivenih slojeva: </label>
-        <div class="col-sm-10">
-            <input type="number" min="1" class="form-control" name="hiddenLayers" [(ngModel)]="newModel.hiddenLayers">
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="outputLayerActivationFunction" class="col-sm-2 col-form-label">Funkcija aktivacije izlaznog
-            sloja:
-        </label>
-        <div class="col-sm-10">
-            <select id=outputLayerActivationFunctionOptions class="form-control" name="outputLayerActivationFunction"
-                [(ngModel)]="newModel.outputLayerActivationFunction">
-                <option
-                    *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="batchSize" class="col-sm-2 col-form-label">Broj uzorka po iteraciji: </label>
-        <div class="col-sm-10">
-            <input type="number" min="1" class="form-control" name="batchSize" [(ngModel)]="newModel.batchSize">
-        </div>
-    </div>
-
-    <div class=" form-group row my-4">
-        <div class="col-4"></div>
-        <button class="btn btn-lg btn-primary col-4" (click)="addModel();">Dodaj</button>
-        <div class="col-4"></div>
-    </div>
-
+<div id="header">
+    <h1>Napravite svoj model veštačke neuronske mreže</h1>
 </div>
+
+<div id="wrapper">
+    
+    <div id="container" class="container p-5" style="background-color: white; min-height: 100%;">
+        
+        <div class="form-group row mb-4 d-flex justify-content-center"> <!--justify-content-center-->
+            <h2 class="col-2"> Nov model: </h2>
+            <div class="col-3">
+                    <label for="name" class="col-form-label">Naziv modela:</label>
+                    <input type="text" class="form-control" name="name" placeholder="Naziv..."
+                        [(ngModel)]="newModel.name">
+            </div>
+            <div class="col-5">
+                <label for="desc" class="col-sm-2 col-form-label">Opis:</label>
+                <div>
+                    <textarea class="form-control" name="desc" rows="3" [(ngModel)]="newModel.description"></textarea>
+                </div>
+            </div>
+            <div class="col-2">
+                <label for="dateCreated" class="col-form-label">Datum:</label> &nbsp;&nbsp;
+                <input type="text" class="form-control-plaintext" id="dateCreated" placeholder="--/--/--"
+                    value="{{newModel.dateCreated | date: 'dd/MM/yyyy'}}" readonly>
+            </div>
+        </div>
+    
+        <div class="mt-5 justify-content-center">
+            <h2>Izvor podataka:</h2>
+            <app-dataset-load id="dataset" (loaded)="datasetLoaded = true"></app-dataset-load>
+        </div>
+
+        <div *ngIf="datasetLoaded">
+            <div *ngIf="datasetLoadComponent" class="row">
+              <div class="col d-flex justify-content-center">
+                <h3>Izaberite ulazne kolone:</h3> 
+                <div id="divInputs" class="form-check mt-2">
+                  <br>
+                  <div *ngFor="let item of datasetLoadComponent.dataset.header; let i = index">  
+                    <input *ngIf="i == 0" class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}" name="cbs" checked>
+                    <input *ngIf="i != 0" class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}" name="cbs">&nbsp;
+                    <label class="form-check-label" for="cb_{{item}}">
+                      {{item}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-left">
+                <h3>Izaberite izlaznu kolonu:</h3>
+                <div id="divOutputs" class="form-check mt-2">
+                  <br>
+                  <div *ngFor="let item of datasetLoadComponent.dataset.header; let i = index">
+                    <input *ngIf="i == 0" class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbs" checked>
+                    <input *ngIf="i != 0" class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbs">&nbsp;
+                    <label class="form-check-label" for="rb_{{item}}">
+                      {{item}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        
+        
+        <h2 class="mt-5 mb-4">Parametri treniranja:</h2>
+
+        <div>
+            <div class="row p-2">
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="type" class="col-form-label">Tip mreže: </label>
+                </div>
+                <div class="col-2">
+                    <select id=typeOptions class="form-control" name="type" [(ngModel)]="newModel.type">
+                        <option *ngFor="let option of Object.keys(ANNType); let optionName of Object.values(ANNType)"
+                            [value]="option">
+                            {{ optionName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="hiddenLayers" class="col-form-label">Broj skrivenih slojeva: </label>
+                </div>
+                <div class="col-1">
+                    <input type="number" min="1" class="form-control" name="hiddenLayers" [(ngModel)]="newModel.hiddenLayers">
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="encoding" class="col-form-label">Enkoding: </label>
+                </div>
+                <div class="col-2">
+                    <select id=encodingOptions class="form-control" name="encoding" [(ngModel)]="newModel.encoding">
+                        <option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)"
+                            [value]="option">
+                            {{ optionName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="hiddenLayerNeurons" class="col-form-label">Broj neurona skrivenih slojeva: </label>
+                </div>
+                <div class="col-1">
+                    <input type="number" min="1" class="form-control" name="hiddenLayerNeurons" [(ngModel)]="newModel.hiddenLayerNeurons">
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="optimizer" class="col-form-label">Optimizacija: </label>
+                </div>
+                <div class="col-2">
+                    <select id=optimizerOptions class="form-control" name="optimizer" [(ngModel)]="newModel.optimizer">
+                        <option *ngFor="let option of Object.keys(Optimizer); let optionName of Object.values(Optimizer)"
+                            [value]="option">
+                            {{ optionName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="batchSize" class="col-form-label">Broj uzorka po iteraciji: </label>
+                </div>
+                <div class="col-1">
+                    <input type="number" min="1" class="form-control" name="batchSize" [(ngModel)]="newModel.batchSize">
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="lossFunction" class="col-form-label">Funkcija obrade gubitka: </label>
+                </div>
+                <div class="col-2">
+                    <select id=lossFunctionOptions class="form-control" name="lossFunction" [(ngModel)]="newModel.lossFunction">
+                        <option *ngFor="let option of Object.keys(LossFunction); let optionName of Object.values(LossFunction)"
+                            [value]="option">
+                            {{ optionName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-3 mt-2">
+                    <label for="type" class="form-check-label">Nasumičan redosled podataka?</label>
+                    <input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="newModel.randomOrder" type="checkbox" value="" checked>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="inputLayerActivationFunction" class="col-form-label">Funkcija aktivacije ulaznog sloja:</label>
+                </div>
+                <div class="col-2">
+                    <select id=inputLayerActivationFunctionOptions class="form-control" name="inputLayerActivationFunction"
+                    [(ngModel)]="newModel.inputLayerActivationFunction">
+                    <option
+                        *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
+                        [value]="option">
+                        {{ optionName }}
+                    </option>
+                </select>
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-5">
+                    <label for="type" class="form-check-label">Podela test skupa:&nbsp;&nbsp;
+                        <input class="form-check-input" type="checkbox" [checked]="newModel.randomTestSet"
+                            (change)="newModel.randomTestSet = !newModel.randomTestSet">
+                    </label> &nbsp;&nbsp;&nbsp;&nbsp;
+                    test
+                    <mat-slider min="0.1" max="0.9" step="0.1" value="0.2" name="randomTestSetDistribution" thumbLabel
+                    [disabled]="!newModel.randomTestSet" [(ngModel)]="newModel.randomTestSetDistribution">
+                    </mat-slider>
+                    trening
+                </div>
+                <div class="col">
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="hiddenLayerActivationFunction" class="col-form-label">Funkcija aktivacije skrivenih slojeva:</label>
+                </div>
+                <div class="col-2">
+                    <select id=hiddenLayerActivationFunctionOptions class="form-control" name="hiddenLayerActivationFunction"
+                    [(ngModel)]="newModel.hiddenLayerActivationFunction">
+                    <option
+                        *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
+                        [value]="option">
+                        {{ optionName }}
+                    </option>
+                    </select>
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-1">
+                </div>
+                <div class="col-3">
+                    <label for="outputLayerActivationFunction" class="col-form-label">Funkcija aktivacije izlaznog sloja:</label>
+                </div>
+                <div class="col-2">
+                    <select id=outputLayerActivationFunctionOptions class="form-control" name="outputLayerActivationFunction"
+                        [(ngModel)]="newModel.outputLayerActivationFunction">
+                        <option
+                            *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
+                            [value]="option">
+                            {{ optionName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+            </div>
+        </div>
+
+
+        <br><br>
+        <div class="form-group row mt-5 mb-3">
+            <div class="col"></div>
+            <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="addModel();">Sačuvaj model</button>
+            <div class="col"></div>
+            <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="trainModel();">Treniraj model</button>
+            <div class="col"></div>
+        </div>
+
+    </div>
+</div>
+
+

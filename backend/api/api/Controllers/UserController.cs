@@ -1,5 +1,6 @@
 ﻿using api.Models;
 using api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -72,6 +73,7 @@ namespace api.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "User")]
         public ActionResult Put(string id, [FromBody] User user)
         {
             var existingUser = userService.Get(id);
@@ -86,6 +88,7 @@ namespace api.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "User")]
         public ActionResult Delete(string id)
         {
             var user = userService.Get(id);

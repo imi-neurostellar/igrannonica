@@ -3,11 +3,13 @@ export default class Model {
         public name: string = 'Novi model',
         public description: string = '',
         public dateCreated: Date = new Date(),
-        public datasetId?: number,
+        public lastUpdated: Date = new Date(),
+        public datasetId: string = '',
 
-        //Test set settings
-        public inputColumns: number[] = [0],
-        public columnToPredict: number = 1,
+        // Test set settings
+        public inputColumns: string[] = [],
+        public columnToPredict: string = '',
+        public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.10, //0.1-0.9 (10% - 90%)
 
@@ -31,6 +33,8 @@ export enum ANNType {
     Convolutional = 'konvoluciona'
 }
 
+// replaceMissing srednja vrednost mean, median, najcesca vrednost (mode)
+// removeOutliers
 export enum Encoding {
     Label = 'label',
     OneHot = 'one hot'

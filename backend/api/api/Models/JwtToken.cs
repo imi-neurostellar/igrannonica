@@ -23,7 +23,7 @@ namespace api.Models
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("name", user.UserName),
                                                     new Claim("role", "User")}),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -33,13 +33,25 @@ namespace api.Models
 
         public string RenewToken(string existingToken)
         {
-            if (existingToken == null)
+            var userName = TokenToUsername(existingToken);
+            if (userName == null)
+                return null;
+            var authUser = new AuthRequest();
+            authUser.UserName = userName;
+
+            return GenToken(authUser);
+
+        }
+
+        public string TokenToUsername(string token)
+        {
+            if (token == null)
                 return null;
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key= Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
+            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
             try
             {
-                tokenHandler.ValidateToken(existingToken, new TokenValidationParameters
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -48,11 +60,7 @@ namespace api.Models
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userName =jwtToken.Claims.First(x => x.Type == "name").Value;
-                var authUser = new AuthRequest();
-                authUser.UserName = userName;
-
-                return GenToken(authUser);
+                return jwtToken.Claims.First(x => x.Type == "name").Value;
             }
             catch
             {
