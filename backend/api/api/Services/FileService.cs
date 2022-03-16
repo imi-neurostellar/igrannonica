@@ -23,5 +23,12 @@ namespace api.Services
             return file;
 
         }
+        public string GetFilePath(string id, string username)
+        {
+            FileModel file = _file.Find(x => x._id == id && x.username == username).FirstOrDefault();
+            if (file == null)
+                return null;
+            return file.path;
+        }
     }
 }

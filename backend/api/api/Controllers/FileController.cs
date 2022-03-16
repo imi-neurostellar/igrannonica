@@ -78,6 +78,35 @@ namespace api.Controllers
 
             return Ok(fileModel);
         }
+
+        [HttpGet("Download")]
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult> DownloadFile(string id)
+        {
+            //Get Username
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = _token.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            string filePath = _fileservice.GetFilePath(id, username);
+            if (filePath == null)
+                return BadRequest();
+
+            return File(System.IO.File.ReadAllBytes(filePath),"application/octet-stream", Path.GetFileName(filePath));
+
+        }
+
+
+
     }
 }
-
