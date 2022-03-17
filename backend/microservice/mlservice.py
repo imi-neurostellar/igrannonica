@@ -11,7 +11,7 @@ from sklearn.preprocessing import LabelEncoder
 import csv
 import json
 class Response:
-    def __init__(self,tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse,fpr,tpr):
+    def __init__(self,tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse):
 
         self.tacnost=tacnost
         self.preciznost=preciznost
@@ -22,8 +22,7 @@ class Response:
         self.mae=mae
         self.mape=mape
         self.rmse=rmse
-        self.fpr=fpr
-        self.tpr=tpr
+  
 class fCallback(tf.keras.callbacks.Callback):
     def __init__(self, x_test, y_test):
         self.x_test = x_test
@@ -102,6 +101,8 @@ def obuka(dataunos,params):
                     elif(tippodataka==np.object_):
                         najcescavrednost=kolona.value_counts().index[0]
                         data[kolone[i]]=data[kolone[i]].fillna(najcescavrednost)
+    
+    kolone=data.columns
  
     ### 3)Izbacivanje kolona koje ne uticu na rezultat PART2
     nredova=data.shape[0]
@@ -234,7 +235,7 @@ def obuka(dataunos,params):
     optimizator=params["optimizer"]
 
     ### 13.1)Izbor metrike za kompajler PART2
-    metrike=['mae','mse','accuracy']
+    metrike=params['metrics']
     #metrike=[]
     lossf=params["lossFunction"]
     '''
@@ -346,8 +347,9 @@ def obuka(dataunos,params):
     plt.show()
     '''
 
-    r=Response(tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse,fpr,tpr)
-    
+    r=Response(float(tacnost),float(preciznost),float(recall),float(spec),float(f1),float(mse),float(mae),float(mape),float(rmse))
+    import jsonpickle
+    return  json.dumps(json.loads(jsonpickle.encode(r)), indent=2)
     return "Done"
 
 
