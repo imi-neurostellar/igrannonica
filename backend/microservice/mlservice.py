@@ -3,7 +3,7 @@ import pandas as pd
 import tensorflow as tf
 import keras
 import numpy as np
-
+import matplotlib.pyplot as plt
 from copyreg import constructor
 import flask
 from flask import request, jsonify, render_template
@@ -31,8 +31,8 @@ class fCallback(tf.keras.callbacks.Callback):
 
         
     def on_epoch_end(self, epoch, logs=None):
-        print('Evaluation: ', self.model.evaluate(self.x_test))
-
+        print('Evaluation: ', self.model.evaluate(self.x_test,self.y_test),"\n")#broj parametara zavisi od izabranih metrika loss je default
+        
     
 def obuka(dataunos,params):
     import numpy as np
@@ -208,7 +208,7 @@ def obuka(dataunos,params):
 
     classifier.add(tf.keras.layers.Dense(units=brojnu,activation=aktivacijau,input_dim=x_train.shape[1]))
 
-    ### 11)Dodavanje drugog, skrivenog sloja
+    ### 11)Dodavanje drugog, skrivenog sloja ###PART2###
     #aktivacijas=input("UNETI ŽELJENU AKTIVACIONU FUNKCIJU SKRIVENOG SLOJA ")
     #brojns=int(input("UNETI BROJ NEURONA SKRIVENOG SLOJA "))
 
@@ -234,7 +234,8 @@ def obuka(dataunos,params):
     optimizator=params["optimizer"]
 
     ### 13.1)Izbor metrike za kompajler PART2
-    metrike=['mae','mse']
+    metrike=['mae','mse','accuracy']
+    #metrike=[]
     lossf=params["lossFunction"]
     '''
     while(1):
@@ -243,7 +244,7 @@ def obuka(dataunos,params):
         if(m=='KRAJ'):
             break   
         metrike.append(m)'''
-    classifier.compile(optimizer=optimizator, loss=lossf,metrics =metrike)
+    classifier.compile(optimizer=optimizator, loss=lossf,metrics=metrike)
     performance_simple = fCallback(x_test, y_test)
     ### 14) 
     #uzorci=int(input("UNETI KOLIKO UZORAKA ĆE BITI UNETO U ISTO VREME "))
@@ -258,7 +259,7 @@ def obuka(dataunos,params):
         metrikedf[metrike[i]]=history.history[metrike[i]]
         #print(history.history[metrike[i]])
         #plt.plot(history.history[metrike[i]])
-    #plt.show()
+    plt.show()
 
     #print(metrikedf)
 
