@@ -12,7 +12,7 @@ export default class Model {
         public columnToPredict: string = '',
         public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
-        public randomTestSetDistribution: number = 0.10, //0.1-0.9 (10% - 90%)
+        public randomTestSetDistribution: number = 10, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
 
         // Neural net training settings
         public type: ANNType = ANNType.FullyConnected,

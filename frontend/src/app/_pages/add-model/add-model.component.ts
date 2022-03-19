@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import Model from 'src/app/_data/Model';
 import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
@@ -26,6 +25,8 @@ export class AddModelComponent implements OnInit {
   Optimizer = Optimizer;
   Object = Object;
   shared = shared;
+
+  selectedOutputColumnVal: string = '';
 
   constructor(private models: ModelsService) {
     this.newModel = new Model();
@@ -59,6 +60,7 @@ export class AddModelComponent implements OnInit {
             this.models.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
               console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ', dataset._id);
               this.newModel.datasetId = dataset._id;
+              this.newModel.randomTestSetDistribution = 1 - Math.round(this.newModel.randomTestSetDistribution / 100 * 10) / 10;
               this.newModel.username = shared.username;
               this.models.addModel(this.newModel).subscribe((response) => {
                 console.log('ADD MODEL: DONE! REPLY:\n', response);
@@ -76,7 +78,7 @@ export class AddModelComponent implements OnInit {
 
     for (let i = 0; i < checkboxes.length; i++) {
       let thatCb = <HTMLInputElement>checkboxes[i];
-      if (thatCb.checked)
+      if (thatCb.checked == true && thatCb.disabled == false)
         this.newModel.inputColumns.push(thatCb.value);
     }
     //console.log(this.checkedInputCols);
@@ -95,8 +97,16 @@ export class AddModelComponent implements OnInit {
     //console.log(this.checkedOutputCol);
   }
   validationInputsOutput(): boolean {
-    if (this.newModel.inputColumns.length == 0) {
+    if (this.newModel.inputColumns.length == 0 && this.newModel.columnToPredict == '') {
+      alert("Molimo Vas da izaberete ulazne i izlazne kolone za mrežu.")
+      return false;
+    }
+    else if (this.newModel.inputColumns.length == 0) {
       alert("Molimo Vas da izaberete ulaznu kolonu/kolone za mrežu.")
+      return false;
+    }
+    else if (this.newModel.columnToPredict == '') {
+      alert("Molimo Vas da izaberete izlaznu kolonu za mrežu.")
       return false;
     }
     for (let i = 0; i < this.newModel.inputColumns.length; i++) {
