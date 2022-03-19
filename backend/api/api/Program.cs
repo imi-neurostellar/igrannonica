@@ -30,6 +30,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMlConnectionService, MlConnectionService>();
 builder.Services.AddScoped<IModelService, ModelService>();
+builder.Services.AddScoped<IPredictorService, PredictorService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 

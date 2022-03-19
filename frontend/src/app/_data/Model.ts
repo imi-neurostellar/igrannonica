@@ -1,4 +1,5 @@
 export default class Model {
+    _id: string = '';
     constructor(
         public name: string = 'Novi model',
         public description: string = '',
@@ -24,7 +25,8 @@ export default class Model {
         public batchSize: number = 5,
         public inputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public hiddenLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
-        public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid
+        public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
+        public username: string = ''
     ) { }
 }
 

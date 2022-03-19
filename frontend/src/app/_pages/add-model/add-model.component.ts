@@ -4,6 +4,7 @@ import Model from 'src/app/_data/Model';
 import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
+import shared from 'src/app/Shared';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class AddModelComponent implements OnInit {
   LossFunction = LossFunction;
   Optimizer = Optimizer;
   Object = Object;
+  shared = shared;
 
   constructor(private models: ModelsService) {
     this.newModel = new Model();
@@ -35,23 +37,37 @@ export class AddModelComponent implements OnInit {
   addModel() {
     this.saveModel(false); //trajno cuvanje
   }
+
   trainModel() {
-    this.saveModel(true).subscribe((modelId : any) => {
+    this.saveModel(true).subscribe((modelId: any) => {
       if (modelId)
         this.models.trainModel(modelId);
     }); //privremeno cuvanje modela => vraca id sacuvanog modela koji cemo da treniramo sad
   }
-  saveModel(temporary: boolean) : any {
-    if (this.datasetLoadComponent)
-      this.models.addDataset(this.datasetLoadComponent?.dataset).subscribe((response) => {//id dataseta je response
-        this.newModel.datasetId = response;
 
-        this.getCheckedInputCols();
-        this.getCheckedOutputCol();
-        if (this.validationInputsOutput()) 
-          return this.models.addModel(this.newModel); //id modela
-        return of(null);
-      });
+  saveModel(temporary: boolean): any {
+    this.getCheckedInputCols();
+    this.getCheckedOutputCol();
+    if (this.validationInputsOutput()) {
+      console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
+      if (this.datasetLoadComponent) {
+        this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {
+          console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+          if (this.datasetLoadComponent) {
+            this.datasetLoadComponent.dataset.fileId = file._id;
+            this.datasetLoadComponent.dataset.username = shared.username;
+            this.models.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
+              console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ', dataset._id);
+              this.newModel.datasetId = dataset._id;
+              this.newModel.username = shared.username;
+              this.models.addModel(this.newModel).subscribe((response) => {
+                console.log('ADD MODEL: DONE! REPLY:\n', response);
+              });
+            });
+          }
+        });
+      }
+    }
   }
 
   getCheckedInputCols() {
@@ -73,17 +89,17 @@ export class AddModelComponent implements OnInit {
       let thatRb = <HTMLInputElement>radiobuttons[i];
       if (thatRb.checked) {
         this.newModel.columnToPredict = thatRb.value;
-        break; 
+        break;
       }
     }
     //console.log(this.checkedOutputCol);
   }
-  validationInputsOutput() : boolean {
+  validationInputsOutput(): boolean {
     if (this.newModel.inputColumns.length == 0) {
       alert("Molimo Vas da izaberete ulaznu kolonu/kolone za mrežu.")
       return false;
-    } 
-    for (let i = 0; i < this.newModel.inputColumns.length; i++) {  
+    }
+    for (let i = 0; i < this.newModel.inputColumns.length; i++) {
       if (this.newModel.inputColumns[i] == this.newModel.columnToPredict) {
         let colName = this.newModel.columnToPredict;
         alert("Izabrali ste istu kolonu (" + colName + ") kao ulaznu i izlaznu iz mreže. Korigujte izbor.");

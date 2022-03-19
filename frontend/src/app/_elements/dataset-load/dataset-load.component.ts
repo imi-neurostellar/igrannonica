@@ -19,7 +19,7 @@ export class DatasetLoadComponent {
   slice: string = "";
 
   csvRecords: any[] = [];
-  files: any[] = [];
+  files: File[] = [];
   rowsNumber: number = 0;
   colsNumber: number = 0;
 
@@ -33,6 +33,7 @@ export class DatasetLoadComponent {
 
   changeListener($event: any): void {
     this.files = $event.srcElement.files;
+    console.log(this.files);
     this.update();
   }
 
@@ -41,25 +42,25 @@ export class DatasetLoadComponent {
     if (this.files.length < 1)
       return;
 
-    this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.delimiter == "razmak") ? " " : (this.delimiter == "") ? "," : this.delimiter})
-    .pipe().subscribe((result) => {
+    this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.delimiter == "razmak") ? " " : (this.delimiter == "") ? "," : this.delimiter })
+      .pipe().subscribe((result) => {
 
-      console.log('Result', result);
-      if (result.constructor === Array) {
-        this.csvRecords = result;
-        if (this.hasHeader)
-          this.rowsNumber = this.csvRecords.length - 1;
-        else 
-          this.rowsNumber = this.csvRecords.length;
-        this.colsNumber = this.csvRecords[0].length;
+        console.log('Result', result);
+        if (result.constructor === Array) {
+          this.csvRecords = result;
+          if (this.hasHeader)
+            this.rowsNumber = this.csvRecords.length - 1;
+          else
+            this.rowsNumber = this.csvRecords.length;
+          this.colsNumber = this.csvRecords[0].length;
 
-        this.dataset.header = this.csvRecords[0];
+          this.dataset.header = this.csvRecords[0];
 
-        this.loaded.emit("loaded");
-      }
-    }, (error: NgxCSVParserError) => {
-      console.log('Error', error);
-    });
+          this.loaded.emit("loaded");
+        }
+      }, (error: NgxCSVParserError) => {
+        console.log('Error', error);
+      });
   }
 
 }

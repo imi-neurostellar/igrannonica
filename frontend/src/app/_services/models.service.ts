@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import Model from '../_data/Model';
 import { AuthService } from './auth.service';
 import { API_SETTINGS } from 'src/config';
 import Dataset from '../_data/Dataset';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -13,13 +14,28 @@ export class ModelsService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  addModel(model: Model) {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader(), responseType: 'text' });
+  uploadData(file: File): Observable<any> {
+    let formData = new FormData();
+    formData.append('file', file, file.name);
+
+    let params = new HttpParams();
+
+    const options = {
+      params: params,
+      reportProgress: false,
+      headers: this.authService.authHeader()
+    };
+
+    return this.http.post(`${API_SETTINGS.apiURL}/file/csv`, formData, options);
   }
-  addDataset(dataset: Dataset) {
-    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader(), responseType: 'text' });
+
+  addModel(model: Model): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }
-  trainModel(modelId: string) {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader(), responseType: 'text' });
+  addDataset(dataset: Dataset): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
+  }
+  trainModel(modelId: string): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader() });
   }
 }

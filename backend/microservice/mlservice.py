@@ -33,12 +33,27 @@ class fCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         print('Evaluation: ', self.model.evaluate(self.x_test))
 
-    ### 1)Ucitavanje vrednosti
-def obuka(data,params):
+    
+def obuka(dataunos,params):
     import numpy as np
     import pandas as pd
     import tensorflow as tf
-    import matplotlib.pyplot as plt   
+    import matplotlib.pyplot as plt
+
+    ### 0) Pretvaranje data seta u novi, sa kolonama koje je korisnik izabrao za obuku
+ 
+    data=pd.DataFrame()
+    zeljenekolone=params["inputColumns"]
+    for i in range(len(zeljenekolone)):
+        data[zeljenekolone[i]]=dataunos[zeljenekolone[i]]
+    #print(data.head(10))
+
+    #predvidetikol=input("UNETI NAZIV KOLONE ČIJU VREDNOST TREBA PREDVIDETI ")
+    ###sta se cuva od promenjivih broj kolone ili naziv kolone???
+    predvidetikol=params["columnToPredict"]
+
+    data[predvidetikol]=dataunos[predvidetikol]
+    ### 1)Ucitavanje vrednosti 
     #print(1)
     #data1=pd.read_csv('titanic.csv')
     #data=data1.copy()
@@ -134,9 +149,6 @@ def obuka(data,params):
 
     ### 7)Podela skupa na skup za trening i skup za testiranje
 
-    #predvidetikol=input("UNETI NAZIV KOLONE ČIJU VREDNOST TREBA PREDVIDETI ")
-    ###sta se cuva od promenjivih broj kolone ili naziv kolone???
-    predvidetikol=params["columnToPredict"]
 
     xkolone=[]
     for k in range(len(kolone)):
@@ -223,6 +235,7 @@ def obuka(data,params):
 
     ### 13.1)Izbor metrike za kompajler PART2
     metrike=['mae','mse']
+    lossf=params["lossFunction"]
     '''
     while(1):
         m=params['lossFunction']
@@ -230,7 +243,7 @@ def obuka(data,params):
         if(m=='KRAJ'):
             break   
         metrike.append(m)'''
-    classifier.compile(optimizer=optimizator, loss='binary_crossentropy',metrics =metrike)
+    classifier.compile(optimizer=optimizator, loss=lossf,metrics =metrike)
     performance_simple = fCallback(x_test, y_test)
     ### 14) 
     #uzorci=int(input("UNETI KOLIKO UZORAKA ĆE BITI UNETO U ISTO VREME "))

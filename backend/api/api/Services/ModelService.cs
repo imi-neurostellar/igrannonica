@@ -27,11 +27,16 @@ namespace api.Services
             _model.DeleteOne(model => (model.username == username && model.name == name));
         }
 
-        public List<Model> GetAllModels(string username)
+        public List<Model> GetMyModels(string username)
         {
             return _model.Find(model => model.username == username).ToList();
         }
-
+        /*
+        public List<Model> GetPublicModels()
+        {
+            return _model.Find(model => model.isPublic == true).ToList();
+        }
+        */
         public Model GetOneModel(string username, string name)
         {
             return _model.Find(model => model.username == username && model.name == name).FirstOrDefault();

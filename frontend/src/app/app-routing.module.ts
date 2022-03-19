@@ -14,16 +14,16 @@ import { ProfileComponent } from './_pages/profile/profile.component';
 import { PredictComponent } from './_pages/predict/predict.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'add-model', component: AddModelComponent },
-  { path: 'my-datasets', component: MyDatasetsComponent, canActivate: [AuthGuardService] },
-  { path: 'my-models', component: MyModelsComponent, canActivate: [AuthGuardService] },
-  { path: 'my-predictors', component: MyPredictorsComponent, canActivate: [AuthGuardService] },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService] },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
-  { path: 'browse-datasets', component: BrowseDatasetsComponent },
-  { path: 'browse-predictors', component: BrowsePredictorsComponent },
-  { path: 'predict', component: PredictComponent }
+  { path: '', component: HomeComponent, data: { title: 'Početna strana' } },
+  { path: 'add-model', component: AddModelComponent, data: { title: 'Dodaj model' } },
+  { path: 'my-datasets', component: MyDatasetsComponent, canActivate: [AuthGuardService], data: { title: 'Moji izvori podataka' } },
+  { path: 'my-models', component: MyModelsComponent, canActivate: [AuthGuardService], data: { title: 'Moji modeli' } },
+  { path: 'my-predictors', component: MyPredictorsComponent, canActivate: [AuthGuardService], data: { title: 'Moji trenirani modeli' } },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService], data: { title: 'Podešavanja' } },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService], data: { title: 'Profil' } },
+  { path: 'browse-datasets', component: BrowseDatasetsComponent, data: { title: 'Javni izvori podataka' } },
+  { path: 'browse-predictors', component: BrowsePredictorsComponent, data: { title: 'Javni trenirani modeli' } },
+  { path: 'predict', component: PredictComponent, data: { title: 'Predvidi vrednosti' } }
 ];
 
 @NgModule({
