@@ -40,7 +40,7 @@ namespace api.Services
             List<FileModel> files = _file.Find(file => file.username == "").ToList();
             foreach (var file in files)
             {
-                if ((DateTime.Now.ToUniversalTime() - file.date).TotalMinutes >= 2)
+                if ((DateTime.Now.ToUniversalTime() - file.date).TotalDays >= 1)
                 {
                     Delete(file._id);
                     if (File.Exists(file.path))

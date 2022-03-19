@@ -14,7 +14,7 @@ namespace api.Services
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(RemoveTempFiles,null,TimeSpan.Zero,TimeSpan.FromMinutes(1));
+            _timer = new Timer(RemoveTempFiles,null,TimeSpan.Zero,TimeSpan.FromHours(3));
 
 
             return Task.CompletedTask;
