@@ -8,6 +8,7 @@ import keras
 import csv
 import json
 import mlservice
+import h5py
 from mlservice import obuka
 
 app = flask.Flask(__name__)
@@ -21,8 +22,14 @@ def index():
 @app.route('/data', methods = ['GET', 'POST'])
 def data():
     if request.method == 'POST':
-        f = request.json['filepath']  
-        data = pd.read_csv(f)
-        print(data)
-        return obuka(data,request.json)
+        print(request.json['filepath'])
+        f = request.json['filepath']
+
+        data1 = pd.read_csv(f)
+
+        m=request.json['modelpath']
+        model=tf.keras.models.load_model(m)
+        
+        #print(data)
+        return obuka(data1,request.json,model)
 app.run()

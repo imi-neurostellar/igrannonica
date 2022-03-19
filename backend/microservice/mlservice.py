@@ -1,3 +1,4 @@
+from statistics import mode
 from typing_extensions import Self
 import pandas as pd
 import tensorflow as tf
@@ -10,6 +11,7 @@ from flask import request, jsonify, render_template
 from sklearn.preprocessing import LabelEncoder
 import csv
 import json
+import h5py
 class Response:
     def __init__(self,tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse):
 
@@ -33,12 +35,16 @@ class fCallback(tf.keras.callbacks.Callback):
         print('Evaluation: ', self.model.evaluate(self.x_test,self.y_test),"\n")#broj parametara zavisi od izabranih metrika loss je default
         
     
-def obuka(dataunos,params):
+def obuka(dataunos,params,modelunos):
     import numpy as np
     import pandas as pd
     import tensorflow as tf
     import matplotlib.pyplot as plt
-
+    ### -1) Ucitavanje h5 modela PART3
+    if(modelunos!=None):
+       # print("Model je unet")
+    model=modelunos
+    
     ### 0) Pretvaranje data seta u novi, sa kolonama koje je korisnik izabrao za obuku
  
     data=pd.DataFrame()
@@ -47,6 +53,7 @@ def obuka(dataunos,params):
         data[zeljenekolone[i]]=dataunos[zeljenekolone[i]]
     #print(data.head(10))
 
+   
     #predvidetikol=input("UNETI NAZIV KOLONE ČIJU VREDNOST TREBA PREDVIDETI ")
     ###sta se cuva od promenjivih broj kolone ili naziv kolone???
     predvidetikol=params["columnToPredict"]
@@ -346,10 +353,13 @@ def obuka(dataunos,params):
     plt.ylabel('True Positive Rate')
     plt.show()
     '''
-
+    ##### H5 CUVANJE ##### PART3
+    nazivmodela=params['h5ModelName']
+    classifier.save(nazivmodela, save_format='h5')
+    
     r=Response(float(tacnost),float(preciznost),float(recall),float(spec),float(f1),float(mse),float(mae),float(mape),float(rmse))
     import jsonpickle
-    return  json.dumps(json.loads(jsonpickle.encode(r)), indent=2)
+    return json.dumps(json.loads(jsonpickle.encode(r)), indent=2)
     return "Done"
 
 
