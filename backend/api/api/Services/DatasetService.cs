@@ -1,4 +1,5 @@
-﻿using api.Interfaces;
+﻿using System.Linq;
+using api.Interfaces;
 using api.Models;
 using MongoDB.Driver;
 
@@ -30,6 +31,17 @@ namespace api.Services
         {
             return _dataset.Find(dataset => dataset.username == username).ToList();
         }
+
+        public List<Dataset> GetLatestDatasets(string username, int latest)
+        {
+            List<Dataset> list = _dataset.Find(dataset => dataset.username == username).ToList();
+
+
+         
+
+            return list;
+        }
+
         public List<Dataset> GetPublicDatesets()
         {
             return _dataset.Find(dataset => dataset.isPublic == true).ToList();
