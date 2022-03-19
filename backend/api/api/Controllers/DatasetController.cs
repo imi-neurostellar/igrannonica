@@ -24,9 +24,32 @@ namespace api.Controllers
 
 
         // GET: api/<DatasetController>/mydatasets
-        [HttpGet("/mydatasets")]
+        [HttpGet("mydatasets")]
         [Authorize(Roles = "User")]
         public ActionResult<List<Dataset>> Get()
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+            
+            //ako bude trebao ID, samo iz baze uzeti
+
+            return _datasetService.GetMyDatesets(username);
+        }
+
+        // GET: api/<DatasetController>/getlatestdataset/{number}
+        [HttpGet("getlatestdatasets/{latest}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Dataset>> GetLatestDatasets(int latest)
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -43,11 +66,51 @@ namespace api.Controllers
 
             //ako bude trebao ID, samo iz baze uzeti
 
-            return _datasetService.GetMyDatesets(username);
+            List<Dataset> lista = _datasetService.GetMyDatesets(username);
+
+            List<Dataset> novaLista = new List<Dataset>();
+
+            lista.Reverse();
+
+            for(int i = 0; i < latest; i++)
+                novaLista.Add(lista[i]);
+
+            return novaLista;
         }
 
+        // GET: api/<DatasetController>/getoldestdataset/{number}
+        [HttpGet("getoldestdatasets/{oldest}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Dataset>> GetOldestDatasets(int oldest)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            //ako bude trebao ID, samo iz baze uzeti
+
+            List<Dataset> lista = _datasetService.GetMyDatesets(username);
+
+            List<Dataset> novaLista = new List<Dataset>();
+
+            for (int i = 0; i < oldest; i++)
+                novaLista.Add(lista[i]);
+
+            return novaLista;
+        }
+
+
         // GET: api/<DatasetController>/publicdatasets
-        [HttpGet("/datasets")]
+        [HttpGet("publicdatasets")]
         public ActionResult<List<Dataset>> GetPublicDS()
         {
             return _datasetService.GetPublicDatesets();
@@ -55,7 +118,7 @@ namespace api.Controllers
 
         // GET api/<DatasetController>/{name}
         //get odredjeni dataset
-        [HttpGet("/{name}")]
+        [HttpGet("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult<Dataset> Get(string name)
         {
@@ -114,7 +177,7 @@ namespace api.Controllers
         }
 
         // PUT api/<DatasetController>/{name}
-        [HttpPut("/{name}")]
+        [HttpPut("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Put(string name, [FromBody] Dataset dataset)
         {
@@ -143,7 +206,7 @@ namespace api.Controllers
         }
 
         // DELETE api/<DatasetController>/name
-        [HttpDelete("/{name}")]
+        [HttpDelete("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)
         {
