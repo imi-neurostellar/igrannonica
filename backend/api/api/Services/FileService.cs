@@ -30,5 +30,23 @@ namespace api.Services
                 return null;
             return file.path;
         }
+        public void Delete(string id)
+        {
+            _file.DeleteOne(file => file._id == id);
+
+        }
+        public void DeleteTempFiles()
+        {
+            List<FileModel> files = _file.Find(file => file.username == "").ToList();
+            foreach (var file in files)
+            {
+                if ((DateTime.Now.ToUniversalTime() - file.date).TotalMinutes >= 2)
+                {
+                    Delete(file._id);
+                    if (File.Exists(file.path))
+                        File.Delete(file.path);
+                }
+            }
+        }
     }
 }

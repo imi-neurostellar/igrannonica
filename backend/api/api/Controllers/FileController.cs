@@ -74,7 +74,9 @@ namespace api.Controllers
             FileModel fileModel= new FileModel();
             fileModel.path=fullPath;
             fileModel.username=username;
-            fileModel=_fileservice.Create(fileModel);
+            fileModel.date = DateTime.Now.ToUniversalTime();
+            fileModel =_fileservice.Create(fileModel);
+            
 
             return Ok(fileModel);
         }
@@ -104,6 +106,53 @@ namespace api.Controllers
 
             return File(System.IO.File.ReadAllBytes(filePath),"application/octet-stream", Path.GetFileName(filePath));
 
+        }
+
+
+        [HttpPost("TempUpload")]
+        public async Task<ActionResult<string>> TempUpload([FromForm] IFormFile file)
+        {
+
+            //get username from jwtToken
+            string username = "";
+            //Check filetype
+            var filename = file.FileName;
+            var ext = Path.GetExtension(filename).ToLowerInvariant();
+            var name = Path.GetFileNameWithoutExtension(filename).ToLowerInvariant();
+            if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+            {
+                return BadRequest("Wrong file type");
+            }
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "TempFiles");
+            //Check Directory
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            //Index file if same filename
+            var fullPath = Path.Combine(folderPath, filename);
+            int i = 0;
+
+            while (System.IO.File.Exists(fullPath))
+            {
+                i++;
+                fullPath = Path.Combine(folderPath, name + i.ToString() + ext);
+            }
+
+
+            //Write file
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            FileModel fileModel = new FileModel();
+            fileModel.path = fullPath;
+            fileModel.username = username;
+            fileModel.date = DateTime.Now.ToUniversalTime();
+            fileModel = _fileservice.Create(fileModel);
+            
+
+            return Ok(fileModel);
         }
 
 

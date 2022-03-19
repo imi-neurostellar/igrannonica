@@ -5,6 +5,7 @@
 
 ##Ignore contents for UploadedFiles Folder
 UploadedFiles/*
+TempFiles/*
 
 # User-specific files
 *.rsuser
