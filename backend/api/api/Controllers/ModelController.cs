@@ -86,6 +86,8 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<Model> Post([FromBody] Model model)
         {
+            if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
+                return BadRequest("Bad parameters!");
             var existingModel = _modelService.GetOneModel(model.username, model.name);
 
             if (existingModel != null)

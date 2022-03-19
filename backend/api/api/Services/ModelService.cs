@@ -7,7 +7,6 @@ namespace api.Services
 {
 	public class ModelService : IModelService
     {
-
         private readonly IMongoCollection<Model> _model;
 
         public ModelService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
@@ -45,6 +44,17 @@ namespace api.Services
         public void Update(string username, string name, Model model)
         {
             _model.ReplaceOne(model => model.username == username && model.name == name, model);
+        }
+        //
+        public bool CheckHyperparameters(int inputNeurons, int hiddenLayerNeurons, int hiddenLayers, int outputNeurons)
+        {
+            if (hiddenLayers <= 0 || hiddenLayerNeurons <= 0)
+                return false;
+            if (hiddenLayers > inputNeurons)
+                return false;
+            if (hiddenLayerNeurons <= 2 * inputNeurons || hiddenLayerNeurons <= (2 / 3) * inputNeurons + outputNeurons || (hiddenLayerNeurons <= Math.Max(inputNeurons, outputNeurons) && hiddenLayerNeurons >= Math.Min(inputNeurons, outputNeurons)))
+                return true;
+            return false;
         }
         
     }
