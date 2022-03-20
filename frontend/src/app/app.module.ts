@@ -29,6 +29,7 @@ import { MyModelsComponent } from './_pages/my-models/my-models.component';
 import { BrowseDatasetsComponent } from './_pages/browse-datasets/browse-datasets.component';
 import { BrowsePredictorsComponent } from './_pages/browse-predictors/browse-predictors.component';
 import { PredictComponent } from './_pages/predict/predict.component';
+import { ChartsComponent } from './charts/charts.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { PredictComponent } from './_pages/predict/predict.component';
     MyModelsComponent,
     BrowseDatasetsComponent,
     BrowsePredictorsComponent,
-    PredictComponent
+    PredictComponent,
+    ChartsComponent
   ],
   imports: [
     BrowserModule,
