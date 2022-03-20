@@ -1,4 +1,4 @@
-from typing_extensions import Self
+#from typing_extensions import Self
 import pandas as pd
 import tensorflow as tf
 import keras
@@ -335,6 +335,11 @@ def obuka(dataunos,params):
     
     ### 27)ROC
     fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
+    # https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
+    # tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+    # Korelaciona matrica
+    # https://datatofish.com/correlation-matrix-pandas/
+    
     '''
     plt.plot(fpr, tpr, color='blue')
     plt.title('ROC')
