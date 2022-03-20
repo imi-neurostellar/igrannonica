@@ -48,6 +48,33 @@ namespace api.Controllers
             return _predictorService.GetPublicPredictors();
         }
 
+
+
+        //SEARCH za predictore (public ili private sa ovim imenom )
+        // GET api/<PredictorController>/search/{name}
+        [HttpGet("search/{name}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Predictor>> Search(string name)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            //ako bude trebao ID, samo iz baze uzeti
+
+            return _predictorService.SearchPredictors(name, username);
+        }
+
+        //da li da se odvoji search za public i posebno za private?
         // GET api/<PredictorController>/{name}
         [HttpGet("{name}")]
         [Authorize(Roles = "User")]
@@ -69,16 +96,19 @@ namespace api.Controllers
             var predictor = _predictorService.GetOnePredictor(username, name);
 
             if (predictor == null)
-                return NotFound($"Predictor with name = {name} or user with username = {username} not found");
+                return NotFound($"Predictor with name = {name} not found or predictor is not public");
 
             return predictor;
         }
         // moze da vraca sve modele pa da se ovde odradi orderByDesc
         //odraditi to i u Datasetove i Predictore
-        // GET: api/<PredictorController>/getlatestpredictors/{number}
-        [HttpGet("getlatestpredictors/{latest}")]
+        // GET: api/<PredictorController>/datesort/{ascdsc}/{latest}
+        //asc - rastuce 1
+        //desc - opadajuce 0
+        //ako se posalje 0 kao latest onda ce da izlista sve u nekom poretku
+        [HttpGet("datesort/{ascdsc}/{latest}")]
         [Authorize(Roles = "User")]
-        public ActionResult<List<Predictor>> GetLatestPredictors(int latest)
+        public ActionResult<List<Predictor>> SortPredictors(bool ascdsc, int latest)
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -95,14 +125,19 @@ namespace api.Controllers
 
             //ako bude trebao ID, samo iz baze uzeti
 
-            List<Predictor> lista = _predictorService.GetLatestPredictors(username);
+            List<Predictor> lista = _predictorService.SortPredictors(username, ascdsc, latest);
 
-            List<Predictor> novaLista = new List<Predictor>();
+            if(latest == 0)
+                return lista;
+            else
+            {
+                List<Predictor> novaLista = new List<Predictor>();
 
-            for (int i = 0; i < latest; i++)
-                novaLista.Add(lista[i]);
+                for (int i = 0; i < latest; i++)
+                    novaLista.Add(lista[i]);
 
-            return novaLista;
+                return novaLista;
+            }
         }
         // POST api/<PredictorController>/add
         [HttpPost("add")]

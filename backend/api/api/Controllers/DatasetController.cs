@@ -22,7 +22,6 @@ namespace api.Controllers
             jwtToken = new JwtToken(configuration);
         }
 
-
         // GET: api/<DatasetController>/mydatasets
         [HttpGet("mydatasets")]
         [Authorize(Roles = "User")]
@@ -43,13 +42,56 @@ namespace api.Controllers
 
             //ako bude trebao ID, samo iz baze uzeti
 
-            return _datasetService.GetMyDatesets(username);
+            return _datasetService.GetMyDatasets(username);
         }
 
-        // GET: api/<DatasetController>/getlatestdataset/{number}
-        [HttpGet("getlatestdatasets/{latest}")]
+        // GET: api/<DatasetController>/datesort/{ascdsc}/{latest}
+        //asc - rastuce 1
+        //desc - opadajuce 0
+        //ako se posalje 0 kao latest onda ce da izlista sve u nekom poretku
+        [HttpGet("datesort/{ascdsc}/{latest}")]
         [Authorize(Roles = "User")]
-        public ActionResult<List<Dataset>> GetLatestDatasets(int latest)
+        public ActionResult<List<Dataset>> SortDatasets(bool ascdsc, int latest)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            List<Dataset> lista = _datasetService.SortDatasets(username, ascdsc, latest);
+
+
+            if (latest == 0)
+                return lista;
+            else
+            {
+                List<Dataset> novaLista = new List<Dataset>();
+                for (int i = 0; i < latest; i++)
+                    novaLista.Add(lista[i]);
+                return novaLista;
+            }
+        }
+
+        // GET: api/<DatasetController>/publicdatasets
+        [HttpGet("publicdatasets")]
+        public ActionResult<List<Dataset>> GetPublicDS()
+        {
+            return _datasetService.GetPublicDatasets();
+        }
+
+        //SEARCH za datasets (public ili private sa ovim imenom )
+        // GET api/<DatasetController>/search/{name}
+        [HttpGet("search/{name}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Dataset>> Search(string name)
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -66,23 +108,9 @@ namespace api.Controllers
 
             //ako bude trebao ID, samo iz baze uzeti
 
-            List<Dataset> lista = _datasetService.GetLatestDatasets(username, latest);
-
-            List<Dataset> novaLista = new List<Dataset>();
-
-            for (int i = 0; i < latest; i++)
-                novaLista.Add(lista[i]);
-
-            return novaLista;
+            return _datasetService.SearchDatasets(name, username);
         }
 
-
-        // GET: api/<DatasetController>/publicdatasets
-        [HttpGet("publicdatasets")]
-        public ActionResult<List<Dataset>> GetPublicDS()
-        {
-            return _datasetService.GetPublicDatesets();
-        }
 
         // GET api/<DatasetController>/{name}
         //get odredjeni dataset
@@ -106,7 +134,7 @@ namespace api.Controllers
             var dataset = _datasetService.GetOneDataset(username, name);
 
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} or user with username = {username} not found");
+                return NotFound($"Dataset with name = {name} not found or dataset is not public");
 
             return dataset;
         }
@@ -167,6 +195,8 @@ namespace api.Controllers
             //ne mora da se proverava
             if (existingDataset == null)
                 return NotFound($"Dataset with name = {name} or user with username = {username} not found");
+
+            dataset.lastUpdated = DateTime.UtcNow;
 
             _datasetService.Update(username, name, dataset);
 

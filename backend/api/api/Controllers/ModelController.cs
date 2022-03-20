@@ -76,7 +76,7 @@ namespace api.Controllers
             var model = _modelService.GetOneModel(username, name);
 
             if (model == null)
-                return NotFound($"Model with name = {name} or user with username = {username} not found");
+                return NotFound($"Model with name = {name} not found");
 
             return model;
         }

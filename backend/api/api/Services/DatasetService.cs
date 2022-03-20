@@ -13,6 +13,12 @@ namespace api.Services
             var database = mongoClient.GetDatabase(settings.DatabaseName);
             _dataset = database.GetCollection<Dataset>(settings.DatasetCollectionName);
         }
+
+        public List<Dataset> SearchDatasets(string name, string username)
+        {
+            return _dataset.Find(dataset => dataset.name == name && dataset.isPublic == true).ToList();
+        }
+
         //kreiranje dataseta
         public Dataset Create(Dataset dataset)
         {
@@ -26,22 +32,25 @@ namespace api.Services
             _dataset.DeleteOne(dataset => (dataset.username == username && dataset.name == name)); 
         }
 
-        public List<Dataset> GetMyDatesets(string username)
+        public List<Dataset> GetMyDatasets(string username)
         {
             return _dataset.Find(dataset => dataset.username == username).ToList();
         }
 
         //poslednji datasetovi
-        public List<Dataset> GetLatestDatasets(string username, int latest)
+        public List<Dataset> SortDatasets(string username, bool ascdsc, int latest)
         {
             List<Dataset> list = _dataset.Find(dataset => dataset.username == username).ToList();
 
-            list = list.OrderByDescending(dataset => dataset.lastUpdated).ToList();
+            if(ascdsc)
+                list = list.OrderBy(dataset => dataset.lastUpdated).ToList();
+            else
+                list = list.OrderByDescending(dataset => dataset.lastUpdated).ToList();
 
             return list;
         }
 
-        public List<Dataset> GetPublicDatesets()
+        public List<Dataset> GetPublicDatasets()
         {
             return _dataset.Find(dataset => dataset.isPublic == true).ToList();
         }
@@ -57,5 +66,7 @@ namespace api.Services
         {
             _dataset.ReplaceOne(dataset => dataset.username == username && dataset.name == name, dataset);
         }
+
+        
     }
 }
