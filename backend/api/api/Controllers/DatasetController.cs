@@ -40,7 +40,7 @@ namespace api.Controllers
             }
             else
                 return BadRequest();
-            
+
             //ako bude trebao ID, samo iz baze uzeti
 
             return _datasetService.GetMyDatesets(username);
@@ -66,43 +66,11 @@ namespace api.Controllers
 
             //ako bude trebao ID, samo iz baze uzeti
 
-            List<Dataset> lista = _datasetService.GetMyDatesets(username);
+            List<Dataset> lista = _datasetService.GetLatestDatasets(username, latest);
 
             List<Dataset> novaLista = new List<Dataset>();
 
-            lista.Reverse();
-
-            for(int i = 0; i < latest; i++)
-                novaLista.Add(lista[i]);
-
-            return novaLista;
-        }
-
-        // GET: api/<DatasetController>/getoldestdataset/{number}
-        [HttpGet("getoldestdatasets/{oldest}")]
-        [Authorize(Roles = "User")]
-        public ActionResult<List<Dataset>> GetOldestDatasets(int oldest)
-        {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
-                return BadRequest();
-
-            //ako bude trebao ID, samo iz baze uzeti
-
-            List<Dataset> lista = _datasetService.GetMyDatesets(username);
-
-            List<Dataset> novaLista = new List<Dataset>();
-
-            for (int i = 0; i < oldest; i++)
+            for (int i = 0; i < latest; i++)
                 novaLista.Add(lista[i]);
 
             return novaLista;

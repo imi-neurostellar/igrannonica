@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using api.Interfaces;
+﻿using api.Interfaces;
 using api.Models;
 using MongoDB.Driver;
 
@@ -32,12 +31,12 @@ namespace api.Services
             return _dataset.Find(dataset => dataset.username == username).ToList();
         }
 
+        //poslednji datasetovi
         public List<Dataset> GetLatestDatasets(string username, int latest)
         {
             List<Dataset> list = _dataset.Find(dataset => dataset.username == username).ToList();
 
-
-         
+            list = list.OrderByDescending(dataset => dataset.lastUpdated).ToList();
 
             return list;
         }
