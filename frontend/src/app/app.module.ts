@@ -6,6 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
 
+import {NgChartsModule} from 'ng2-charts';
+
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.component';
@@ -29,6 +31,8 @@ import { MyModelsComponent } from './_pages/my-models/my-models.component';
 import { BrowseDatasetsComponent } from './_pages/browse-datasets/browse-datasets.component';
 import { BrowsePredictorsComponent } from './_pages/browse-predictors/browse-predictors.component';
 import { PredictComponent } from './_pages/predict/predict.component';
+import { ScatterchartComponent } from './scatterchart/scatterchart.component';
+import { BarchartComponent } from './barchart/barchart.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +53,9 @@ import { PredictComponent } from './_pages/predict/predict.component';
     MyModelsComponent,
     BrowseDatasetsComponent,
     BrowsePredictorsComponent,
-    PredictComponent
+    PredictComponent,
+    ScatterchartComponent,
+    BarchartComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +67,8 @@ import { PredictComponent } from './_pages/predict/predict.component';
     MaterialModule,
     ReactiveFormsModule,
     MatSliderModule,
-    MatIconModule
+    MatIconModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

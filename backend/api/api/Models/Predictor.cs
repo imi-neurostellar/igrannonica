@@ -16,7 +16,7 @@ namespace api.Models
 		public string output { get; set; }
 		public bool isPublic { get; set; }
 		public bool accessibleByLink { get; set; }
-		public string dateCreated { get; set; }
+		public DateTime dateCreated { get; set; }
 	}
 }
 
