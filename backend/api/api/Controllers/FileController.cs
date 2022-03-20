@@ -155,6 +155,17 @@ namespace api.Controllers
             return Ok(fileModel);
         }
 
+        [HttpGet("DownloadTemp")]
+        public async Task<ActionResult> DownloadTemp(string id)
+        {
+            string filePath = _fileservice.GetFilePath(id,"");
+            if (filePath == null)
+                return BadRequest();
+
+            return File(System.IO.File.ReadAllBytes(filePath), "application/octet-stream", Path.GetFileName(filePath));
+
+        }
+
 
 
     }
