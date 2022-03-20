@@ -33,16 +33,16 @@ class fCallback(tf.keras.callbacks.Callback):
         
     def on_epoch_end(self, epoch, logs=None):
         print('Evaluation: ', self.model.evaluate(self.x_test,self.y_test),"\n")#broj parametara zavisi od izabranih metrika loss je default
-        
-    
+
 def obuka(dataunos,params,modelunos):
     import numpy as np
     import pandas as pd
     import tensorflow as tf
     import matplotlib.pyplot as plt
+    import keras
     ### -1) Ucitavanje h5 modela PART3
     if(modelunos!=None):
-       # print("Model je unet")
+       print("Model je unet")
     model=modelunos
     
     ### 0) Pretvaranje data seta u novi, sa kolonama koje je korisnik izabrao za obuku
@@ -287,13 +287,20 @@ def obuka(dataunos,params,modelunos):
 
     #print(y_test)
     ### 15.2) Kreiranje DataFrame-a u kom se nalaze kolone koje predstavljaju stvarne i predvidjene vrednosti, potrebne za iscrtavanje grafika i metrike PART2
-    #rezultat=pd.DataFrame({"Stvarna vrednost ":y_test,"Predvidjena vrednost":y_pred})
+    rezultatzametrike=pd.DataFrame({"Stvarna vrednost ":y_test,"Predvidjena vrednost":y_pred})
     #print(rezultat.head(20))
+
+       ##### H5 CUVANJE ##### PART3
+    nazivmodela=params['h5ModelName']
+    classifier.save(nazivmodela, save_format='h5')
+
+ 
+
 
     #####METRIKE##### PART2
 
     import  sklearn.metrics as sm
-            
+      
 
     ### 16)Tacnost
     tacnost=sm.accuracy_score(y_test,y_pred)
@@ -353,9 +360,7 @@ def obuka(dataunos,params,modelunos):
     plt.ylabel('True Positive Rate')
     plt.show()
     '''
-    ##### H5 CUVANJE ##### PART3
-    nazivmodela=params['h5ModelName']
-    classifier.save(nazivmodela, save_format='h5')
+ 
     
     r=Response(float(tacnost),float(preciznost),float(recall),float(spec),float(f1),float(mse),float(mae),float(mape),float(rmse))
     import jsonpickle
@@ -363,3 +368,89 @@ def obuka(dataunos,params,modelunos):
     return "Done"
 
 
+##### UCITAVANJE DRUGOG SETA PODATAKA ##### PART3
+def ucitavanjeipreprocesiranjedrugog(dataunosdrugog,params):
+    data2=dataunosdrugog.copy()
+
+
+    ### 1)Unos drugog seta i odstranjivanje nezeljenih kolona
+    data2=pd.DataFrame()
+    zeljenekolone2=params["inputColumns"]
+    for i in range(len(zeljenekolone2)):
+        data2[zeljenekolone2[i]]=dataunosdrugog[zeljenekolone2[i]]
+    
+    ### 2)Izbor kolona
+    kolone=data2.columns
+
+    ### 3)NULL vrednosti
+    brisanje='ne'
+    if(brisanje=='da'):
+        data2=data2.dropna(axis=1)
+    elif(brisanje=='ne'):
+    #   brisanjer=input("DA LI ZELITE DA IZBRISETE SVE REDOVE SA NULL VREDNOSTIMA? ")
+        brisanjer='ne'
+        if(brisanjer=='da'):
+            data2=data2.dropna()
+        elif(brisanjer=='ne'):
+
+            for i in range(len(kolone)):
+
+                if(data2[kolone[i]].isnull().any()):
+                    tippodataka=data2[kolone[i]].dtype
+                    kolona=data2[kolone[i]].copy()
+            
+                    if(tippodataka==np.float64 or tippodataka==np.int64):
+                        #popunjavanje=input("UNETI NACIN POPUNJAVANJA PROMENJIVIH SA NULL VREDNOSTIMA ")
+                        popunjavanje='medijana'
+                        if(popunjavanje=='medijana'):
+                            medijana=kolona.mean()
+                            data2[kolone[i]]=data2[kolone[i]].fillna(medijana)
+                        if(popunjavanje=='srednjavrednost'):
+                            sv=data2[kolone[i]].sum()/data2[kolone[i]].count()
+                            data2[kolone[i]]=sv
+                        if(popunjavanje=='brisanjekolone'):
+                            data2=data2.dropna(axis=1)
+
+                    elif(tippodataka==np.object_):
+                        najcescavrednost=kolona.value_counts().index[0]
+                        data2[kolone[i]]=data2[kolone[i]].fillna(najcescavrednost)
+    
+    kolone=data2.columns
+
+     ### 4)Enkodiranje
+    enc=params["encoding"]
+
+    ### 5)Label
+
+    if(enc=='label'):
+        from sklearn.preprocessing import LabelEncoder
+        encoder2=LabelEncoder()
+        for k in range(len(kolone)):
+            if(data2[kolone[k]].dtype==np.object_):
+                data2[kolone[k]]=encoder2.fit_transform(data2[kolone[k]])
+        #print(data.head(20))
+
+    ### 6)Onehot
+
+    elif(enc=='onehot'):
+        ### PART2###
+
+        kategorijskekolone=[]
+        for k in range(len(kolone)):
+            if(data2[kolone[k]].dtype==np.object_):
+                
+                kategorijskekolone.append(kolone[k]) ###U kategorijske kolone smestaju se nazivi svih kolona sa kategorijskim podacima
+        
+        #print(kategorijskekolone)
+
+        ### Enkodiranje 
+        data2=pd.get_dummies(data2,columns=kategorijskekolone,prefix=kategorijskekolone)
+        #print(data.head(10))
+    predvidetikol=params["columnToPredict"]
+    kolone=data2.columns ### Azuriranje kolona nakon moguceg dodavanja
+    xkolone=[]
+    for k in range(len(kolone)):
+            if(kolone[k]!=predvidetikol):
+                xkolone.append(kolone[k])
+
+    x2=data2[xkolone].values()
