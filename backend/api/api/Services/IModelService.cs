@@ -7,6 +7,7 @@ namespace api.Services
 	{
         Model GetOneModel(string username, string name);
         List<Model> GetMyModels(string username);
+        List<Model> GetLatestModels(string username);
         //List<Model> GetPublicModels();
         Model Create(Model model);
         void Update(string username, string name, Model model);

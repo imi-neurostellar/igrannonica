@@ -18,8 +18,8 @@ namespace api.Models
         public string extension { get; set; }
         public bool isPublic { get; set; }
         public bool accessibleByLink { get; set; }
-        public string dateCreated { get; set; }
-        public string lastUpdated { get; set; }
+        public DateTime dateCreated { get; set; }
+        public DateTime lastUpdated { get; set; }
     }
 }
 

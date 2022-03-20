@@ -35,6 +35,15 @@ namespace api.Services
             return _predictor.Find(predictor => predictor.username == username && predictor.name == name).FirstOrDefault();
 
         }
+        //last private models
+        public List<Predictor> GetLatestPredictors(string username)
+        {
+            List<Predictor> list = _predictor.Find(predictor => predictor.username == username).ToList();
+
+            list = list.OrderByDescending(predictor => predictor.dateCreated).ToList();
+
+            return list;
+        }
 
         public List<Predictor> GetPublicPredictors()
         {

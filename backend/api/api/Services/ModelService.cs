@@ -30,6 +30,15 @@ namespace api.Services
         {
             return _model.Find(model => model.username == username).ToList();
         }
+        public List<Model> GetLatestModels(string username)
+        {
+            List<Model> list = _model.Find(model => model.username == username).ToList();
+
+            list = list.OrderByDescending(model => model.lastUpdated).ToList();
+
+            return list;
+        }
+
         /*
         public List<Model> GetPublicModels()
         {
@@ -56,6 +65,7 @@ namespace api.Services
                 return true;
             return false;
         }
+
         
     }
 }
