@@ -83,9 +83,10 @@ namespace api.Controllers
 
         // POST api/<ModelController>/add
         [HttpPost("add")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<Model> Post([FromBody] Model model)
         {
+            //username="" ako je GUEST
             var existingModel = _modelService.GetOneModel(model.username, model.name);
 
             if (existingModel != null)

@@ -96,11 +96,12 @@ namespace api.Controllers
 
         // POST api/<DatasetController>/add
         [HttpPost("add")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<Dataset> Post([FromBody] Dataset dataset)
         {
             //da li ce preko tokena da se ubaci username ili front salje
             //dataset.username = usernameToken;
+            //username = "" ako je GUEST DODAO
             var existingDataset = _datasetService.GetOneDataset(dataset.username, dataset.name);
 
             if (existingDataset != null)
