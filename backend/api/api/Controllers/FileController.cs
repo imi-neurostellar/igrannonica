@@ -24,12 +24,13 @@ namespace api.Controllers
 
 
         [HttpPost("Csv")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<string>> CsvUpload([FromForm]IFormFile file)
         {
 
             //get username from jwtToken
             string username;
+            string folderName;
             var header = Request.Headers[HeaderNames.Authorization];
             if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
             {
@@ -41,6 +42,14 @@ namespace api.Controllers
                     return null;
             }else 
                 return BadRequest();
+            if (username == "")
+            {
+                folderName = "TempFiles";
+            }
+            else
+            {
+                folderName = "UploadedFiles";
+            }
             
 
             //Check filetype
@@ -50,7 +59,7 @@ namespace api.Controllers
             if (string.IsNullOrEmpty(ext) || ! permittedExtensions.Contains(ext)) {
                 return BadRequest("Wrong file type");
             }
-            var folderPath=Path.Combine(Directory.GetCurrentDirectory(),"UploadedFiles",username);
+            var folderPath=Path.Combine(Directory.GetCurrentDirectory(),folderName, username);
             //Check Directory
             if (!Directory.Exists(folderPath))
             {
@@ -82,7 +91,7 @@ namespace api.Controllers
         }
 
         [HttpGet("Download")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult> DownloadFile(string id)
         {
             //Get Username
@@ -107,66 +116,6 @@ namespace api.Controllers
             return File(System.IO.File.ReadAllBytes(filePath),"application/octet-stream", Path.GetFileName(filePath));
 
         }
-
-
-        [HttpPost("TempUpload")]
-        public async Task<ActionResult<string>> TempUpload([FromForm] IFormFile file)
-        {
-
-            //get username from jwtToken
-            string username = "";
-            //Check filetype
-            var filename = file.FileName;
-            var ext = Path.GetExtension(filename).ToLowerInvariant();
-            var name = Path.GetFileNameWithoutExtension(filename).ToLowerInvariant();
-            if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
-            {
-                return BadRequest("Wrong file type");
-            }
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "TempFiles");
-            //Check Directory
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            //Index file if same filename
-            var fullPath = Path.Combine(folderPath, filename);
-            int i = 0;
-
-            while (System.IO.File.Exists(fullPath))
-            {
-                i++;
-                fullPath = Path.Combine(folderPath, name + i.ToString() + ext);
-            }
-
-
-            //Write file
-            using (var stream = new FileStream(fullPath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            FileModel fileModel = new FileModel();
-            fileModel.path = fullPath;
-            fileModel.username = username;
-            fileModel.date = DateTime.Now.ToUniversalTime();
-            fileModel = _fileservice.Create(fileModel);
-            
-
-            return Ok(fileModel);
-        }
-
-        [HttpGet("DownloadTemp")]
-        public async Task<ActionResult> DownloadTemp(string id)
-        {
-            string filePath = _fileservice.GetFilePath(id,"");
-            if (filePath == null)
-                return BadRequest();
-
-            return File(System.IO.File.ReadAllBytes(filePath), "application/octet-stream", Path.GetFileName(filePath));
-
-        }
-
-
 
     }
 }
