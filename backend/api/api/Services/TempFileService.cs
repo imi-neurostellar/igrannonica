@@ -5,16 +5,16 @@ namespace api.Services
 {
     public class TempFileService : IHostedService
     {
-        private readonly FileService _fileService;
+        private readonly TempRemovalService _removalService;
         private Timer _timer;
 
         public TempFileService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
         {
-            _fileService = new FileService(settings,mongoClient);
+            _removalService = new TempRemovalService(settings, mongoClient);
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(RemoveTempFiles,null,TimeSpan.Zero,TimeSpan.FromHours(3));
+            _timer = new Timer(RemoveTempFiles,null,TimeSpan.Zero,TimeSpan.FromHours(6));
 
 
             return Task.CompletedTask;
@@ -27,7 +27,7 @@ namespace api.Services
         }
         private void RemoveTempFiles(object state)
         {
-            _fileService.DeleteTempFiles();
+            _removalService.DeleteTemps();
         }
     }
 }
