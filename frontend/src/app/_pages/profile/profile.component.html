@@ -1,1 +1,117 @@
-<p>profile works!</p>
+<div class="container-xl px-4 mt-4">
+    <hr class="mt-0 mb-4">
+
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Moj profil</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                    <!-- Profile picture upload button-->
+                    <button class="btn btn-primary" type="button">Upload new image</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Osnovni podaci</div>
+                <div class="card-body">
+                    <form>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (username)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputUsername">Korisničko ime (kako će ostali korisnici videti tvoje ime)</label>
+                                <input class="form-control" id="inputUsername" name="inputUsername" type="text" [(ngModel)]="this.username">
+                            </div>
+                            <!-- Form Group (email address)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputEmailAddress">Email adresa</label>
+                                <input class="form-control" id="inputEmailAddress" name="inputEmailAddress" type="email" [(ngModel)]="this.email">
+                            </div>
+                        </div>
+
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputFirstName">Ime</label>
+                                <input class="form-control" id="inputFirstName" name="inputFirstName" type="text" [(ngModel)]="this.firstName">
+                            </div>
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputLastName">Prezime</label>
+                                <input class="form-control" id="inputLastName" name="inputLastName" type="text" [(ngModel)]="this.lastName">
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-5">
+                            <div class="col text-center">
+                                <!-- Save changes button-->
+                                <button class="btn btn-primary text-center" type="button" (click)="saveInfoChanges()">Sačuvaj izmene</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="card mb-4">
+                <div class="card-header">Promena lozinke</div>
+                <div class="card-body">
+                    <form>
+
+                        <div class="row">
+                            <!-- Form Row-->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (password)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputPassword">Važeća lozinka</label>
+                                    <input class="form-control" id="inputPassword" name="inputPassword" type="password" [(ngModel)]="this.oldPass" placeholder="Trenutna lozinka">
+                                    <small *ngIf="wrongPassBool" class="form-text text-danger">Neispravna lozinka.</small>
+                                </div>
+                                <!-- Form Group (new password)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputNewPassword">Nova lozinka</label>
+                                    <input class="form-control" id="inputNewPassword" name="inputNewPassword" type="password" [(ngModel)]="this.newPass1" placeholder="Ukucaj novu lozinku">
+                                    <small *ngIf="wrongNewPassBool" class="form-text text-danger">Lozinke se ne podudaraju.</small>
+                                </div>
+                            </div>
+    
+                            <!-- Form Row-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <div class="col text-center">
+                                        <!-- Save changes button-->
+                                        <button class="btn btn-primary text-center mt-4" type="button" (click)="savePasswordChanges()">Promeni lozinku</button>
+                                    </div>
+                                </div>
+                                <!-- Form Group (new password again)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputNewPasswordAgain">Ponovo nova lozinka</label>
+                                    <input class="form-control" id="inputNewPasswordAgain" name="inputNewPasswordAgain" type="password" [(ngModel)]="this.newPass2" placeholder="Ukucaj novu lozinku">
+                                    <small *ngIf="wrongNewPassBool" class="form-text text-danger">Lozinke se ne podudaraju.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
