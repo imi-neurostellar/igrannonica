@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import Model from 'src/app/_data/Model';
-import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer } from 'src/app/_data/Model';
+import Model, { ReplaceWith } from 'src/app/_data/Model';
+import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
@@ -24,7 +24,10 @@ export class AddModelComponent implements OnInit {
   ActivationFunction = ActivationFunction;
   LossFunction = LossFunction;
   Optimizer = Optimizer;
+  NullValueOptions = NullValueOptions;
+  ReplaceWith = ReplaceWith;
   Object = Object;
+  document = document;
   shared = shared;
 
   selectedOutputColumnVal: string = '';
@@ -62,9 +65,9 @@ export class AddModelComponent implements OnInit {
 
   addModel() {
     if (!this.showMyDatasets)
-      this.saveModelWithNewDataset(); 
+      this.saveModelWithNewDataset();
     else
-      this.saveModelWithExistingDataset(); 
+      this.saveModelWithExistingDataset();
   }
 
   trainModel() {
@@ -124,14 +127,14 @@ export class AddModelComponent implements OnInit {
     if (this.selectedDataset) { //dataset je izabran
       this.getCheckedInputCols();
       this.getCheckedOutputCol();
-  
-      if (this.validationInputsOutput()) { 
+
+      if (this.validationInputsOutput()) {
         this.newModel.datasetId = this.selectedDataset._id;
-        
+
         this.newModel.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
         this.tempTestSetDistribution = 90;
         this.newModel.username = shared.username;
-        
+
         this.models.addModel(this.newModel).subscribe((response) => {
           console.log('ADD MODEL: DONE! REPLY:\n', response);
         }, (error) => {
@@ -150,8 +153,8 @@ export class AddModelComponent implements OnInit {
     if (this.showMyDatasets)
       checkboxes = document.getElementsByName("cbsExisting");
     else
-      checkboxes = document.getElementsByName("cbsNew"); 
-      
+      checkboxes = document.getElementsByName("cbsNew");
+
     for (let i = 0; i < checkboxes.length; i++) {
       let thatCb = <HTMLInputElement>checkboxes[i];
       if (thatCb.checked == true && thatCb.disabled == false)
@@ -165,7 +168,7 @@ export class AddModelComponent implements OnInit {
     if (this.showMyDatasets)
       radiobuttons = document.getElementsByName("rbsExisting");
     else
-      radiobuttons = document.getElementsByName("rbsNew"); 
+      radiobuttons = document.getElementsByName("rbsNew");
 
     for (let i = 0; i < radiobuttons.length; i++) {
       let thatRb = <HTMLInputElement>radiobuttons[i];
@@ -224,16 +227,16 @@ export class AddModelComponent implements OnInit {
   checkAllCbs() {
     let checkboxes: any;
     //if (this.showMyDatasets)
-      checkboxes = document.getElementsByName("cbsExisting");
+    checkboxes = document.getElementsByName("cbsExisting");
     //else
-      //checkboxes = document.getElementsByName("cbsNew"); 
-      
+    //checkboxes = document.getElementsByName("cbsNew"); 
+
     for (let i = 0; i < checkboxes.length; i++) {
       (<HTMLInputElement>checkboxes[i]).checked = true;
       (<HTMLInputElement>checkboxes[i]).disabled = false;
     }
 
-    checkboxes = document.getElementsByName("cbsNew"); 
+    checkboxes = document.getElementsByName("cbsNew");
     for (let i = 0; i < checkboxes.length; i++) {
       (<HTMLInputElement>checkboxes[i]).checked = true;
       (<HTMLInputElement>checkboxes[i]).disabled = false;
@@ -243,14 +246,14 @@ export class AddModelComponent implements OnInit {
     this.selectedOutputColumnVal = '';
     let radiobuttons: any;
     //if (this.showMyDatasets)
-      radiobuttons = document.getElementsByName("rbsExisting");
+    radiobuttons = document.getElementsByName("rbsExisting");
     //else
-      //radiobuttons = document.getElementsByName("rbsNew"); 
+    //radiobuttons = document.getElementsByName("rbsNew"); 
 
     for (let i = 0; i < radiobuttons.length; i++)
       (<HTMLInputElement>radiobuttons[i]).checked = false;
-      radiobuttons = document.getElementsByName("rbsNew"); 
-      for (let i = 0; i < radiobuttons.length; i++)
+    radiobuttons = document.getElementsByName("rbsNew");
+    for (let i = 0; i < radiobuttons.length; i++)
       (<HTMLInputElement>radiobuttons[i]).checked = false;
   }
 
@@ -260,4 +263,14 @@ export class AddModelComponent implements OnInit {
     });
   }
 
+  isNumber(value: string | number): boolean {
+    return ((value != null) &&
+      (value !== '') &&
+      !isNaN(Number(value.toString())));
+  }
+
+
+  getInputById(id: string): HTMLInputElement {
+    return document.getElementById(id) as HTMLInputElement;
+  }
 }

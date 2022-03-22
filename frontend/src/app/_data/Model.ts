@@ -26,7 +26,9 @@ export default class Model {
         public inputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public hiddenLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
-        public username: string = ''
+        public username: string = '',
+        public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
+        public nullValuesReplacers = []
     ) { }
 }
 
@@ -96,4 +98,16 @@ export enum Optimizer {
     SGD = 'SGD',
     SGDMomentum = 'SGDMomentum',
     RMSprop = 'RMSprop'
+}
+
+export enum NullValueOptions {
+    DeleteRows = 'delete_rows',
+    DeleteColumns = 'delete_columns',
+    Replace = 'replace'
+}
+
+export enum ReplaceWith {
+    None = '...',
+    Mean = 'Srednja vrednost',
+    Median = 'Medijana'
 }
