@@ -43,8 +43,7 @@ namespace api.Services
             List<Model> models1= _model.Find(model =>model.username == "").ToList();
             foreach(var model in models1)
             {
-                DateTime modelDate = DateTime.Parse(model.dateCreated);
-                if ((DateTime.Now.ToUniversalTime() - modelDate.ToUniversalTime()).TotalDays >= 1)
+                if ((DateTime.Now.ToUniversalTime() - model.dateCreated.ToUniversalTime()).TotalDays >= 1)
                 {
                     DeleteModel(model._id);
                 }
