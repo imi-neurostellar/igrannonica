@@ -13,7 +13,7 @@ export class LoginModalComponent implements OnInit {
   username: string = '';
   password: string = '';
 
-  public wrongCreds: boolean = false;      //RAZMOTRITI
+  wrongCreds: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -26,17 +26,26 @@ export class LoginModalComponent implements OnInit {
 
   doLogin() {
     if (this.username.length > 0 && this.password.length > 0) {
-      this.authService.login(this.username, this.password).subscribe((response) => { //ako nisu ok podaci, ne ide hide nego mora opet da ukucava!!!!podesi
+      this.authService.login(this.username, this.password).subscribe((response) => {
         console.log(response);
-        this.authService.authenticate(response);
-        (<HTMLSelectElement>document.getElementById('closeButton')).click();
-      }, error => {
-        console.warn(error); //NETACNI PODACI
+
+        if (response == "Username doesn't exist" || response == "Wrong password") {
+          this.wrongCreds = true;
+          this.password = '';
+        }
+        else {
+          this.authService.authenticate(response);
+          (<HTMLSelectElement>document.getElementById('closeButton')).click();
+        }
       });
     }
-    
+    else {
+      this.wrongCreds = true;
+      this.password = '';
+    }
   }
   resetData() {
+    this.wrongCreds = false;
     this.username = '';
     this.password = '';
   }

@@ -20,12 +20,12 @@
                 <input [(ngModel)]="password" name="password" type="password" id="password"
                     class="form-control form-control" placeholder="Unesite lozinku..." />
             </div>
-
-            <div class="text-center text-lg-start mt-5 pt-2">
-                <p *ngIf="wrongCreds" class="small fw-bold mt-2 pt-1 mb-0 text-danger">Lozinka ili e-mail su pogrešni
-                </p>
-            </div>
           </form>
+          
+          <div class="text-center text-lg-start mt-5">
+            <p *ngIf="wrongCreds" class="small fw-bold text-danger text-center">Unesite ispravan e-mail i lozinku.</p>
+          </div>
+
           <div class="col-md-12 d-flex justify-content-center">
             <button type="button" class="btn btn-lg" style="color:white; background-color: #003459; margin-right: 10px;" (click)="doLogin()">Prijavite se</button>
             <button type="button" class="btn btn-lg btn-outline-secondary" data-bs-dismiss="modal" (click)="resetData()">Odustanite</button>

@@ -1,4 +1,4 @@
-﻿using api.Models;
+using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +34,7 @@ namespace api.Controllers
         }
 
         // GET: api/<ModelController>/mymodels
-        [HttpGet("/mymodels")]
+        [HttpGet("mymodels")]
         [Authorize(Roles = "User")]
         public ActionResult<List<Model>> Get()
         {
@@ -54,9 +54,9 @@ namespace api.Controllers
             return _modelService.GetMyModels(username);
         }
 
-        // name modela
+        // vraca svoj model prema nekom imenu
         // GET api/<ModelController>/{name}
-        [HttpGet("/{name}")]
+        [HttpGet("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult<Model> Get(string name)
         {
@@ -76,10 +76,49 @@ namespace api.Controllers
             var model = _modelService.GetOneModel(username, name);
 
             if (model == null)
-                return NotFound($"Model with name = {name} or user with username = {username} not found");
+                return NotFound($"Model with name = {name} not found");
 
             return model;
         }
+
+        //odraditi da vraca modele prema nekom imenu
+
+
+
+        // moze da vraca sve modele pa da se ovde odradi orderByDesc
+        //odraditi to i u Datasetove i Predictore
+        // GET: api/<ModelController>/getlatestmodels/{number}
+        [HttpGet("getlatestmodels/{latest}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Model>> GetLatestModels(int latest)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            //ako bude trebao ID, samo iz baze uzeti
+
+            List<Model> lista = _modelService.GetLatestModels(username);
+
+            List<Model> novaLista = new List<Model>();
+
+            for (int i = 0; i < latest; i++)
+                novaLista.Add(lista[i]);
+
+            return novaLista;
+        }
+
+
+
 
         // POST api/<ModelController>/add
         [HttpPost("add")]
@@ -87,6 +126,9 @@ namespace api.Controllers
         public ActionResult<Model> Post([FromBody] Model model)
         {
             //username="" ako je GUEST
+            if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
+                return BadRequest("Bad parameters!");
+
             var existingModel = _modelService.GetOneModel(model.username, model.name);
 
             if (existingModel != null)
@@ -99,7 +141,7 @@ namespace api.Controllers
             }
         }
 
-        // PUT api/<ModelController>/{username}/{name}
+        // PUT api/<ModelController>/{name}
         [HttpPut("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Put(string name, [FromBody] Model model)
@@ -127,7 +169,7 @@ namespace api.Controllers
             return NoContent();
         }
 
-        // DELETE api/<ModelController>/username
+        // DELETE api/<ModelController>/name
         [HttpDelete("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)

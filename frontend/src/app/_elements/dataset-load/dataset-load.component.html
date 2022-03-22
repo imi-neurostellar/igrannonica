@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <div class="table-responsive">
+  <div class="table-responsive" *ngIf="hasInput">
     <table *ngIf="csvRecords.length > 0 && hasHeader" class="table table-bordered table-light mt-4">
       <thead>
         <tr>
@@ -53,7 +53,7 @@
     </table>
   </div>
 
-  <div *ngIf="csvRecords.length > 0" id="info">
+  <div *ngIf="csvRecords.length > 0 && hasInput" id="info">
     . . . <br>
     {{rowsNumber}} x {{colsNumber}}
   </div>

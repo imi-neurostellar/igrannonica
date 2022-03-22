@@ -14,6 +14,11 @@ namespace api.Services
             _predictor = database.GetCollection<Predictor>(settings.PredictorCollectionName);
         }
 
+        public List<Predictor> SearchPredictors(string name, string username)
+        {
+            return _predictor.Find(predictor => predictor.name == name && predictor.isPublic == true).ToList();
+        }
+
         public Predictor Create(Predictor predictor)
         {
             _predictor.InsertOne(predictor);
@@ -35,6 +40,18 @@ namespace api.Services
             return _predictor.Find(predictor => predictor.username == username && predictor.name == name).FirstOrDefault();
 
         }
+        //last private models
+        public List<Predictor> SortPredictors(string username, bool ascdsc, int latest)
+        {
+            List<Predictor> list = _predictor.Find(predictor => predictor.username == username).ToList();
+
+
+            if (ascdsc)
+                list = list.OrderBy(predictor => predictor.dateCreated).ToList();
+            else
+                list = list.OrderByDescending(predictor => predictor.dateCreated).ToList();
+            return list;
+        }
 
         public List<Predictor> GetPublicPredictors()
         {
@@ -46,5 +63,6 @@ namespace api.Services
             _predictor.ReplaceOne(predictor => predictor.username == username && predictor.name == name, predictor);
 
         }
+
     }
 }

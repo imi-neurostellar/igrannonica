@@ -2,7 +2,9 @@
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 //dovrsi kontroler
@@ -13,10 +15,12 @@ namespace api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+        private JwtToken jwtToken;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IConfiguration configuration)
         {
             this.userService = userService;
+            jwtToken = new JwtToken(configuration);
         }
 
         // GET: api/<UserController>
@@ -38,12 +42,29 @@ namespace api.Controllers
             
             return user;
         }
-        /*
+
+
+
+        
         // GET api/<UserController>/5
         //potrebno za profile page
-        [HttpGet("{id}")]
-        public ActionResult<User> GetUserUsername(string username)
+        [HttpGet("myprofile")]
+        [Authorize(Roles = "User")]
+        public ActionResult<User> MyProfilePage()
         {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
             var user = userService.GetUserUsername(username);
 
             if (user == null)
@@ -51,7 +72,7 @@ namespace api.Controllers
 
             return user;
         }
-        */
+        
         // POST api/<UserController>
         [HttpPost]
         public ActionResult<User> Post([FromBody] User user)

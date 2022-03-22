@@ -38,4 +38,8 @@ export class ModelsService {
   trainModel(modelId: string): Observable<any> {
     return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader() });
   }
+
+  getMyDatasets(): Observable<Dataset[]> {
+    return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/mydatasets`, { headers: this.authService.authHeader() });//responsetype text da l treba??
+  }
 }

@@ -12,7 +12,7 @@ export default class Model {
         public columnToPredict: string = '',
         public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
-        public randomTestSetDistribution: number = 0.10, //0.1-0.9 (10% - 90%)
+        public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
 
         // Neural net training settings
         public type: ANNType = ANNType.FullyConnected,
@@ -39,21 +39,61 @@ export enum ANNType {
 // removeOutliers
 export enum Encoding {
     Label = 'label',
-    OneHot = 'one hot'
+    OneHot = 'one hot',
+    BackwardDifference = 'backward difference',
+    BaseN = 'baseN',
+    Binary = 'binary',
+    CatBoost = 'cat boost',
+    Count = 'count',
+    GLMM = 'glmm',
+    Hashing = 'hashing',
+    Helmert = 'helmert',
+    JamesStein = 'james stein',
+    LeaveOneOut = 'leave one out',
+    MEstimate = 'MEstimate',
+    Ordinal = 'ordinal',
+    Sum = 'sum',
+    Polynomial = 'polynomial',
+    Target = 'target',
+    WOE = 'woe',
+    Quantile = 'quantile'
 }
 
 export enum ActivationFunction {
+    // linear
+    Binary_Step = 'binaryStep',
+    Linear = 'linear',
+    // non-linear
     Relu = 'relu',
+    Leaky_Relu = 'leakyRelu',
+    Parameterised_Relu = 'parameterisedRelu',
+    Exponential_Linear_Unit = 'exponentialLinearUnit',
+    Swish = 'swish',
     Sigmoid = 'sigmoid',
     Tanh = 'tanh',
-    Linear = 'linear'
+    Softmax = 'softmax'
 }
 
 export enum LossFunction {
+    // binary classification loss functions
     BinaryCrossEntropy = 'binary_crossentropy',
-    MeanSquaredError = 'mean_squared_error'
+    HingeLoss = 'hinge_loss',
+    // multi-class classiication loss functions
+    CategoricalCrossEntropy = 'categorical_crossentropy',
+    KLDivergence = 'kullback_leibler_divergence',
+    // regression loss functions
+    MeanSquaredError = 'mean_squared_error',
+    MeanAbsoluteError = 'mean_absolute_error',
+    HuberLoss = 'Huber',
 }
 
 export enum Optimizer {
-    Adam = 'adam'
+    Adam = 'Adam',
+    Adadelta = 'Adadelta',
+    Adagrad = 'Adagrad',
+    Ftrl = 'Ftrl',
+    Nadam = 'Nadam',
+    SGD = 'SGD',
+    SGDMomentum = 'SGDMomentum',
+    RMSprop = 'RMSprop'
 }

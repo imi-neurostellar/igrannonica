@@ -16,7 +16,7 @@ export class DatasetLoadComponent {
 
   hasHeader: boolean = true;
 
-  slice: string = "";
+  hasInput: boolean = false;
 
   csvRecords: any[] = [];
   files: File[] = [];
@@ -33,6 +33,15 @@ export class DatasetLoadComponent {
 
   changeListener($event: any): void {
     this.files = $event.srcElement.files;
+    if (this.files.length == 0 || this.files[0] == null) {
+      //console.log("NEMA FAJLA");
+      //this.loaded.emit("not loaded");
+      this.hasInput = false;
+      return;
+    }
+    else 
+      this.hasInput = true;
+
     console.log(this.files);
     this.update();
   }

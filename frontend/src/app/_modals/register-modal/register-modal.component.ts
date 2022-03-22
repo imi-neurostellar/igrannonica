@@ -136,15 +136,21 @@ export class RegisterModalComponent implements OnInit {
         .subscribe(
           (response) => {
             console.log(response);
-            if (response === 'User added') {
-              this.resetData();
-              (<HTMLSelectElement>document.getElementById('linkToLoginModal')).click();
+            if (response == 'User added') {
+              //nakon sto je registrovan, nek bude ulogovan
+              this.authService.login(this.username, this.pass1).subscribe((response) => {
+
+                this.authService.authenticate(response);
+                console.log("close button");
+                (<HTMLSelectElement>document.getElementById('closeButtonReg')).click();
+                //(<HTMLSelectElement>document.getElementById('linkToLoginModal')).click();
+              }, (error) => console.warn(error));             
             }
-            else if (response === 'Email Already Exists') {
+            else if (response == 'Email Already Exists') {
               alert('Nalog sa unetim email-om već postoji!');
               (<HTMLSelectElement>document.getElementById('email')).focus();
             }
-            else if (response === 'Username Already Exists') {
+            else if (response == 'Username Already Exists') {
               alert('Nalog sa unetim korisničkim imenom već postoji!');
               (<HTMLSelectElement>document.getElementById('username-register')).focus();
             }

@@ -22,9 +22,8 @@ namespace api.Controllers
             jwtToken = new JwtToken(configuration);
         }
 
-
         // GET: api/<DatasetController>/mydatasets
-        [HttpGet("/mydatasets")]
+        [HttpGet("mydatasets")]
         [Authorize(Roles = "User")]
         public ActionResult<List<Dataset>> Get()
         {
@@ -43,19 +42,79 @@ namespace api.Controllers
 
             //ako bude trebao ID, samo iz baze uzeti
 
-            return _datasetService.GetMyDatesets(username);
+            return _datasetService.GetMyDatasets(username);
+        }
+
+        // GET: api/<DatasetController>/datesort/{ascdsc}/{latest}
+        //asc - rastuce 1
+        //desc - opadajuce 0
+        //ako se posalje 0 kao latest onda ce da izlista sve u nekom poretku
+        [HttpGet("datesort/{ascdsc}/{latest}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Dataset>> SortDatasets(bool ascdsc, int latest)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            List<Dataset> lista = _datasetService.SortDatasets(username, ascdsc, latest);
+
+
+            if (latest == 0)
+                return lista;
+            else
+            {
+                List<Dataset> novaLista = new List<Dataset>();
+                for (int i = 0; i < latest; i++)
+                    novaLista.Add(lista[i]);
+                return novaLista;
+            }
         }
 
         // GET: api/<DatasetController>/publicdatasets
-        [HttpGet("/datasets")]
+        [HttpGet("publicdatasets")]
         public ActionResult<List<Dataset>> GetPublicDS()
         {
-            return _datasetService.GetPublicDatesets();
+            return _datasetService.GetPublicDatasets();
         }
+
+        //SEARCH za datasets (public ili private sa ovim imenom )
+        // GET api/<DatasetController>/search/{name}
+        [HttpGet("search/{name}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Dataset>> Search(string name)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            //ako bude trebao ID, samo iz baze uzeti
+
+            return _datasetService.SearchDatasets(name, username);
+        }
+
 
         // GET api/<DatasetController>/{name}
         //get odredjeni dataset
-        [HttpGet("/{name}")]
+        [HttpGet("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult<Dataset> Get(string name)
         {
@@ -75,7 +134,7 @@ namespace api.Controllers
             var dataset = _datasetService.GetOneDataset(username, name);
 
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} or user with username = {username} not found");
+                return NotFound($"Dataset with name = {name} not found or dataset is not public");
 
             return dataset;
         }
@@ -115,7 +174,7 @@ namespace api.Controllers
         }
 
         // PUT api/<DatasetController>/{name}
-        [HttpPut("/{name}")]
+        [HttpPut("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Put(string name, [FromBody] Dataset dataset)
         {
@@ -138,13 +197,15 @@ namespace api.Controllers
             if (existingDataset == null)
                 return NotFound($"Dataset with name = {name} or user with username = {username} not found");
 
+            dataset.lastUpdated = DateTime.UtcNow;
+
             _datasetService.Update(username, name, dataset);
 
             return Ok($"Dataset with name = {name} updated");
         }
 
         // DELETE api/<DatasetController>/name
-        [HttpDelete("/{name}")]
+        [HttpDelete("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)
         {
