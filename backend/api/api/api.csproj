@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="TempFiles\" />
     <Folder Include="UploadedFiles\" />
-    <Folder Include="UploadedFiles\tester1\" />
   </ItemGroup>
 
 </Project>

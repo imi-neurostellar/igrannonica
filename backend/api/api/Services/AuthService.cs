@@ -57,6 +57,11 @@ namespace api.Services
             return null;
         }
 
+        public string GuestToken()
+        {
+            return _jwt.GenGuestToken();
+        }
+
 
     }
 }

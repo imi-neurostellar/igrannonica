@@ -40,6 +40,6 @@ export class ModelsService {
   }
 
   getMyDatasets(): Observable<Dataset[]> {
-    return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/mydatasets`, { headers: this.authService.authHeader() });//responsetype text da l treba??
+    return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/mydatasets`, { headers: this.authService.authHeader() });
   }
 }

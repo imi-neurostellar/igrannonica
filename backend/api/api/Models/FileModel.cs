@@ -10,5 +10,7 @@ namespace api.Models
         public string _id { get; set; }
         public string username { get; set; }
         public string path { get; set; }
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+        public DateTime date { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using api.Models;
+using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -122,9 +122,10 @@ namespace api.Controllers
 
         // POST api/<ModelController>/add
         [HttpPost("add")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<Model> Post([FromBody] Model model)
         {
+            //username="" ako je GUEST
             if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
                 return BadRequest("Bad parameters!");
 
