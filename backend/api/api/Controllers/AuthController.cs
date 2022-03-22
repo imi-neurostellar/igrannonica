@@ -30,6 +30,12 @@ namespace api.Controllers
             
             return Ok(_auth.Login(user));
         }
+        [HttpPost("guestToken")]
+        public async Task<ActionResult<string>> guestToken()
+        {
+
+            return Ok(_auth.GuestToken());
+        }
 
         [HttpGet("Auth")]
         [Authorize(Roles ="User")]

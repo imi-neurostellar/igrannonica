@@ -24,12 +24,13 @@ namespace api.Controllers
 
 
         [HttpPost("Csv")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<string>> CsvUpload([FromForm]IFormFile file)
         {
 
             //get username from jwtToken
             string username;
+            string folderName;
             var header = Request.Headers[HeaderNames.Authorization];
             if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
             {
@@ -41,6 +42,14 @@ namespace api.Controllers
                     return null;
             }else 
                 return BadRequest();
+            if (username == "")
+            {
+                folderName = "TempFiles";
+            }
+            else
+            {
+                folderName = "UploadedFiles";
+            }
             
 
             //Check filetype
@@ -50,7 +59,7 @@ namespace api.Controllers
             if (string.IsNullOrEmpty(ext) || ! permittedExtensions.Contains(ext)) {
                 return BadRequest("Wrong file type");
             }
-            var folderPath=Path.Combine(Directory.GetCurrentDirectory(),"UploadedFiles",username);
+            var folderPath=Path.Combine(Directory.GetCurrentDirectory(),folderName, username);
             //Check Directory
             if (!Directory.Exists(folderPath))
             {
@@ -74,13 +83,15 @@ namespace api.Controllers
             FileModel fileModel= new FileModel();
             fileModel.path=fullPath;
             fileModel.username=username;
-            fileModel=_fileservice.Create(fileModel);
+            fileModel.date = DateTime.Now.ToUniversalTime();
+            fileModel =_fileservice.Create(fileModel);
+            
 
             return Ok(fileModel);
         }
 
         [HttpGet("Download")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult> DownloadFile(string id)
         {
             //Get Username
@@ -105,8 +116,6 @@ namespace api.Controllers
             return File(System.IO.File.ReadAllBytes(filePath),"application/octet-stream", Path.GetFileName(filePath));
 
         }
-
-
 
     }
 }

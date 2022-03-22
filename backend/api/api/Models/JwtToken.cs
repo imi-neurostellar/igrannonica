@@ -69,6 +69,22 @@ namespace api.Models
 
         }
 
+        public string GenGuestToken()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("name",""),
+                                                    new Claim("role", "Guest")}),
+                Expires = DateTime.UtcNow.AddMinutes(20),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+
+        }
+
 
 
     }

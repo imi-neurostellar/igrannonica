@@ -34,6 +34,8 @@ builder.Services.AddScoped<IPredictorService, PredictorService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 
+builder.Services.AddHostedService<TempFileService>();
+
 //Add Authentication
 builder.Services.AddAuthentication(
     JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
