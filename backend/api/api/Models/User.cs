@@ -24,5 +24,7 @@ namespace api.Models
         [BsonElement("lastName")]
         public string LastName { get; set; }
         
+        public string photoId { get; set; }
+        
     }
 }

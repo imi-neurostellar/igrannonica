@@ -29,22 +29,6 @@ namespace api.Controllers
         {
             return userService.Get();
         }
-
-        // GET api/<UserController>/5
-        //potrebno za profile page
-        [HttpGet("{id}")]
-        public ActionResult<User> Get(string id)
-        {
-            var user = userService.Get(id);
-            
-            if (user == null)
-                return NotFound($"User with Id = {id} not found");
-            
-            return user;
-        }
-
-
-
         
         // GET api/<UserController>/5
         //potrebno za profile page
@@ -92,43 +76,90 @@ namespace api.Controllers
             }
         }
 
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
+        // PUT api/<UserController>/changepass 
+        [HttpPut("changepass")]
         [Authorize(Roles = "User")]
-        public ActionResult Put(string id, [FromBody] User user)
+        public ActionResult PutPass([FromBody] string oldPassword, [FromBody] string newPassword)
         {
-            var existingUser = userService.Get(id);
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
 
-            //ne mora da se proverava
-            if(existingUser == null)
-                return NotFound($"User with Id = {id} not found");
 
-            userService.Update(id, user);
+
+            User user = new User();
+
+            user = userService.GetUserUsername(username);
+
+            string oldPass = PasswordCrypt.hashPassword(oldPassword);
+            string newPass = PasswordCrypt.hashPassword(newPassword);
+
+            if (oldPass != user.Password)
+                return BadRequest($"Wrong old password!");
+            else if (oldPass == newPassword)
+                return BadRequest($"Identical password!");
+            else if (oldPass == user.Password)
+            {
+                user.Password = newPass;
+                userService.Update(username, user);
+                return Ok($"Succeful password change!");
+            }
+
+            return NoContent();
+        }
+
+        // PUT api/<UserController>/5
+        [HttpPut("changeinfo")]
+        public ActionResult Put([FromBody] User user)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            userService.Update(username, user);
             return NoContent();
         }
 
         // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteprofile")]
         [Authorize(Roles = "User")]
-        public ActionResult Delete(string id)
+        public ActionResult Delete()
         {
-            var user = userService.Get(id);
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
 
-            if (user == null)
-                return NotFound($"User with Id = {id} not found");
+            var user = userService.GetUserUsername(username);
 
             userService.Delete(user._id);
-            return Ok($"Student with Id = {id} deleted");
+            return Ok($"Profile with username = {username} deleted!");
         }
     }
 }
-/*
-{
-  "_id": "",
-  "username" : "ivan996sk",
-  "email" : "ivan996sk@gmail.com",
-  "password" : "proba",
-  "firstName" : "Ivan",
-  "lastName" : "Ljubisavljevic"
-}
-*/
