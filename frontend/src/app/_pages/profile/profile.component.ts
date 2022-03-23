@@ -1,9 +1,10 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import User from 'src/app/_data/User';
 import { UserInfoService } from 'src/app/_services/user-info.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { Router } from '@angular/router';
+import { PICTURES } from 'src/app/_data/ProfilePictures';
+import { Picture } from 'src/app/_data/ProfilePictures';
 
 @Component({
   selector: 'app-profile',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
 
   user: User = new User();
+  pictures: Picture[] = PICTURES;
 
   username: string = '';
   email: string = '';
@@ -22,9 +24,25 @@ export class ProfileComponent implements OnInit {
   newPass1: string = '';
   newPass2: string = '';
   photoId: string = '';
+  photoPath: string = '';
 
   wrongPassBool: boolean = false;
   wrongNewPassBool: boolean = false;
+
+  wrongFirstNameBool: boolean = false;
+  wrongLastNameBool: boolean = false;
+  wrongUsernameBool: boolean = false;
+  wrongEmailBool: boolean = false;
+  wrongOldPassBool: boolean = false;
+  wrongNewPass1Bool: boolean = false;
+  wrongNewPass2Bool: boolean = false;
+
+  pattName: RegExp = /^[a-zA-ZšŠđĐčČćĆžŽ]+([ \-][a-zA-ZšŠđĐčČćĆžŽ]+)*$/;
+  pattUsername: RegExp = /^[a-zA-Z0-9]{6,18}$/;
+  pattTwoSpaces: RegExp = /  /;
+  pattEmail: RegExp = /^[a-zA-Z0-9]+([\.\-\+][a-zA-Z0-9]+)*\@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/;
+  pattPassword: RegExp = /.{6,30}$/;
+
 
   constructor(private userInfoService: UserInfoService, private authService: AuthService, private router: Router) { }
 
@@ -38,6 +56,13 @@ export class ProfileComponent implements OnInit {
       this.firstName = this.user.firstName;
       this.lastName = this.user.lastName;
       this.photoId = this.user.photoId;
+
+      for (let i = 0; i < this.pictures.length; i++) {
+        if (this.pictures[i].photoId.toString() === this.photoId) {
+          this.photoPath = this.pictures[i].path;
+          break;
+        }
+      }
       console.log(this.user);
     });
   }
@@ -50,7 +75,7 @@ export class ProfileComponent implements OnInit {
       password: this.user.password,
       firstName: this.firstName,
       lastName: this.lastName,
-      photoId: "1"
+      photoId: this.photoId
     }
 
     this.userInfoService.changeUserInfo(editedUser).subscribe((response: any) =>{
@@ -63,8 +88,14 @@ export class ProfileComponent implements OnInit {
       }
       this.user = editedUser;
       console.log(this.user);
+      this.resetInfo();
     }, (error: any) =>{
-      console.log(error);
+      if (error.error == "Username already exists!") {
+        alert("Ukucano korisničko ime je već zauzeto!\nIzaberite neko drugo.");
+        (<HTMLSelectElement>document.getElementById("inputUsername")).focus();
+        //poruka obavestenja ispod inputa
+        this.resetInfo();
+      }
     });
   }
 
@@ -72,6 +103,7 @@ export class ProfileComponent implements OnInit {
     if (this.newPass1 == '' && this.newPass2 == '') //ne zeli da promeni lozinku
       return;
     console.log("zeli da promeni lozinku");
+
     if (this.newPass1 != this.newPass2) { //netacno ponovio novu lozinku
       this.wrongNewPassBool = true;
       this.resetNewPassInputs();
@@ -109,5 +141,21 @@ export class ProfileComponent implements OnInit {
     this.newPass1 = '';
     this.newPass2 = '';
   }
+
+  resetInfo() {
+    this.username = this.user.username;
+    this.email = this.user.email;
+    this.firstName = this.user.firstName;
+    this.lastName = this.user.lastName;
+    this.photoId = this.user.photoId;
+
+    for (let i = 0; i < this.pictures.length; i++) {
+      if (this.pictures[i].photoId.toString() === this.photoId) {
+        this.photoPath = this.pictures[i].path;
+        break;
+      }
+    }
+  }
+  
 
 }
