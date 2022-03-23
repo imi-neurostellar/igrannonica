@@ -15,4 +15,10 @@ export class DatasetsService {
   getPublicDatasets(): Observable<Dataset[]> {
     return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/Dataset/publicdatasets`, { headers: this.authService.authHeader() });
   }
+
+  addDataset(dataset:Dataset):any{
+    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
+  }
+
+
 }

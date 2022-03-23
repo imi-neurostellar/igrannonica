@@ -9,11 +9,11 @@ import {Router} from '@angular/router'
 })
 export class BrowsePredictorsComponent implements OnInit {
 
-  myPredictors? :Predictor[];
+  publicPredictors? :Predictor[];
   term: string="";
   constructor(private predictors: PredictorsService,private router:Router) {
     this.predictors.getPublicPredictors().subscribe((predictors) => {
-      this.myPredictors = predictors;
+      this.publicPredictors = predictors;
     });
   }
 

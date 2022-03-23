@@ -31,5 +31,9 @@ export class FilterDatasetsComponent implements OnInit {
     dataset.isPublic = false;
     dataset.lastUpdated = new Date();
     dataset.username = decodedToken.name;
+    this.datasets.addDataset(dataset).subscribe((response:string)=>{
+      console.log(response);
+    });
   };
+
 }

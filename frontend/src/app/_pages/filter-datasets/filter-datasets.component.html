@@ -14,7 +14,7 @@
                     <div class="card-body">
                       <h3 class="card-title"><b>{{dataset.name}}</b></h3>
                       <p class="card-text">{{dataset.description}}</p>
-                      <a  class="btn btn-primary" (click)="addDataset(dataset)">Dodaj dataset:</a>
+                      <a  class="btn btn-primary" (click)="addDataset(dataset)">Dodaj dataset</a>
                     </div>
                     <div class="card-footer text-muted">
                         Kreirao: {{dataset.username}} <br>
@@ -25,7 +25,7 @@
                
 
               </div>
-              <div class="text-center"*ngIf="(publicDatasets|filter:term).length === 0">
+              <div class="text-center"*ngIf="( publicDatasets != undefined && publicDatasets|filter:term).length === 0">
                 <h2>Nema rezultata</h2>
             </div>
         </div>

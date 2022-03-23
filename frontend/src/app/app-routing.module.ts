@@ -12,6 +12,7 @@ import { BrowseDatasetsComponent } from './_pages/browse-datasets/browse-dataset
 import { SettingsComponent } from './_pages/settings/settings.component';
 import { ProfileComponent } from './_pages/profile/profile.component';
 import { PredictComponent } from './_pages/predict/predict.component';
+import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-datasets.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Početna strana' } },
@@ -23,7 +24,8 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService], data: { title: 'Profil' } },
   { path: 'browse-datasets', component: BrowseDatasetsComponent, data: { title: 'Javni izvori podataka' } },
   { path: 'browse-predictors', component: BrowsePredictorsComponent, data: { title: 'Javni trenirani modeli' } },
-  { path: 'predict', component: PredictComponent, data: { title: 'Predvidi vrednosti' } }
+  { path: 'predict', component: PredictComponent, data: { title: 'Predvidi vrednosti' } },
+  { path: 'filter-datasets', component: FilterDatasetsComponent, data: { title: 'Filter datasets' } }
 ];
 
 @NgModule({
