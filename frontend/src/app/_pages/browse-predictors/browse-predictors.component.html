@@ -9,7 +9,7 @@
     </div>
 
             <div class="row">
-                <div class="col-sm-4" style="margin-bottom: 10px;" *ngFor="let predictor of myPredictors | filter:term">
+                <div class="col-sm-4" style="margin-bottom: 10px;" *ngFor="let predictor of publicPredictors | filter:term">
                   <div class="card h-100">
                     <div class="card-body">
                       <h3 class="card-title"><b>{{predictor.name}}</b></h3>
@@ -25,7 +25,7 @@
                
 
               </div>
-              <div class="text-center"*ngIf="(myPredictors|filter:term).length === 0">
+              <div class="text-center"*ngIf="( publicPredictors != undefined && publicPredictors|filter:term).length === 0">
                 <h2>Nema rezultata</h2>
             </div>
         </div>

@@ -104,7 +104,7 @@
                                     <div class="row overflow-auto" style="max-height: 200px;">
                                         <div class="card col-md-3" *ngFor="let picture of this.pictures" (click)="this.photoId = picture.photoId.toString()"
                                             [ngClass]="{'selectedPicture': this.photoId == picture.photoId.toString()}">
-                                            <img class="card-img-top" src="{{picture.path}}">
+                                            <img src="{{picture.path}}">
                                         </div>
                                     </div>
                                 </div>

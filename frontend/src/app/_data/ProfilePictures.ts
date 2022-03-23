@@ -59,13 +59,5 @@ export const PICTURES = [
     {
         photoId: 14,
         path: "/assets/profilePictures/14.png"
-    },
-    {
-        photoId: 15,
-        path: "/assets/profilePictures/15.png"
-    },
-    {
-        photoId: 16,
-        path: "/assets/profilePictures/16.png"
     }
 ]
