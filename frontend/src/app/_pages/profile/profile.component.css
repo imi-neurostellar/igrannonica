@@ -4,12 +4,10 @@ color:#69707a;
 }
 .img-account-profile {
     height: 10rem;
+    border: 1px solid lightgray;
 }
 .rounded-circle {
     border-radius: 50% !important;
-}
-.card {
-    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
 }
 .card .card-header {
     font-weight: 500;
@@ -39,4 +37,8 @@ color:#69707a;
     appearance: none;
     border-radius: 0.35rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.selectedPicture {
+    border: 2px solid darkgray;
 }
