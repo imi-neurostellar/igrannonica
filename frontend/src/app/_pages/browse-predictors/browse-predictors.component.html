@@ -12,7 +12,7 @@
                 <div class="col-sm-4" style="margin-bottom: 10px;" *ngFor="let predictor of myPredictors | filter:term">
                   <div class="card h-100">
                     <div class="card-body">
-                      <h5 class="card-title">{{predictor.name}}</h5>
+                      <h3 class="card-title"><b>{{predictor.name}}</b></h3>
                       <p class="card-text">{{predictor.description}}</p>
                       <a  class="btn btn-primary" (click)="openPredictor(predictor._id)">Otvori</a>
                     </div>
@@ -25,20 +25,14 @@
                
 
               </div>
-
-
-              
-
-
-
-
-
-
-
-
-
-
-
+              <div class="text-center"*ngIf="(myPredictors|filter:term).length === 0">
+                <h2>Nema rezultata</h2>
+            </div>
         </div>
+        
     </div>
+    
+
+
+
 </div>
