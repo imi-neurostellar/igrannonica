@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { DatasetsService } from 'src/app/_services/datasets.service';
+import Dataset from 'src/app/_data/Dataset';
+import {Router} from '@angular/router'
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-filter-datasets',
@@ -7,9 +12,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FilterDatasetsComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  publicDatasets?: Dataset[];
+  term: string = "";
+  constructor(private datasets: DatasetsService,private router:Router, private cookie: CookieService) {
+    this.datasets.getPublicDatasets().subscribe((datasets) => {
+      this.publicDatasets = datasets;
+    });
   }
 
+  ngOnInit(): void {
+
+  }
+  addDataset(dataset: Dataset):void{
+    //this.router.navigateByUrl('/predict?id='+id);
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(this.cookie.get("token"));
+    dataset._id = "";
+    dataset.isPublic = false;
+    dataset.lastUpdated = new Date();
+    dataset.username = decodedToken.name;
+  };
 }
