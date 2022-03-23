@@ -5,6 +5,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { Router } from '@angular/router';
 import { PICTURES } from 'src/app/_data/ProfilePictures';
 import { Picture } from 'src/app/_data/ProfilePictures';
+import shared from '../../Shared';
+
 
 @Component({
   selector: 'app-profile',
@@ -50,6 +52,7 @@ export class ProfileComponent implements OnInit {
     this.userInfoService.getUserInfo().subscribe((response) => {
 
       this.user = response;
+      shared.photoId = this.user.photoId;
 
       this.username = this.user.username;
       this.email = this.user.email;
@@ -155,6 +158,7 @@ export class ProfileComponent implements OnInit {
         break;
       }
     }
+    shared.photoId = this.photoId;
   }
   
 
