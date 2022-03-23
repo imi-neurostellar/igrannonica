@@ -7,7 +7,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
 
 import {NgChartsModule} from 'ng2-charts';
-
+import { Ng2SearchPipe, Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.component';
@@ -68,7 +68,8 @@ import { BarchartComponent } from './barchart/barchart.component';
     ReactiveFormsModule,
     MatSliderModule,
     MatIconModule,
-    NgChartsModule
+    NgChartsModule,
+    Ng2SearchPipeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
