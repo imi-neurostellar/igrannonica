@@ -1,6 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import User from 'src/app/_data/User';
 import { UserInfoService } from 'src/app/_services/user-info.service';
+import { AuthService } from 'src/app/_services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -23,14 +26,12 @@ export class ProfileComponent implements OnInit {
   wrongPassBool: boolean = false;
   wrongNewPassBool: boolean = false;
 
-  constructor(private userInfoService: UserInfoService) { }
+  constructor(private userInfoService: UserInfoService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.userInfoService.getUsersInfo().subscribe((response) => {
+    this.userInfoService.getUserInfo().subscribe((response) => {
 
       this.user = response;
-
-      this.user.password = 'sonja123';
 
       this.username = this.user.username;
       this.email = this.user.email;
@@ -53,6 +54,13 @@ export class ProfileComponent implements OnInit {
     }
 
     this.userInfoService.changeUserInfo(editedUser).subscribe((response: any) =>{
+      if (this.user.username != editedUser.username) { //promenio username, ide logout
+        this.user = editedUser;
+        alert("Nakon promene korisničkog imena, moraćete ponovo da se ulogujete.");
+        this.authService.logOut();
+        this.router.navigate(['']);
+        return;
+      }
       this.user = editedUser;
       console.log(this.user);
     }, (error: any) =>{
@@ -66,8 +74,7 @@ export class ProfileComponent implements OnInit {
     console.log("zeli da promeni lozinku");
     if (this.newPass1 != this.newPass2) { //netacno ponovio novu lozinku
       this.wrongNewPassBool = true;
-      this.newPass1 = '';
-      this.newPass2 = '';
+      this.resetNewPassInputs();
       console.log("Netacno ponovljena lozinka");
       return;
     }
@@ -75,12 +82,32 @@ export class ProfileComponent implements OnInit {
     this.wrongPassBool = false;
     this.wrongNewPassBool = false;
 
-    this.userInfoService.changeUserPassword(this.oldPass, this.newPass1).subscribe((response) => {
-      this.user = response;
-      console.log(this.user);
+    let passwordArray: string[] = [this.oldPass, this.newPass1];
+    this.userInfoService.changeUserPassword(passwordArray).subscribe((response: any) => {
+      console.log("PROMENIO LOZINKU");
+      this.resetNewPassInputs();
+      alert("Nakon promene lozinke, moraćete ponovo da se ulogujete.");
+      this.authService.logOut();
+      this.router.navigate(['']);
     }, (error: any) => {
-
+      console.log("error poruka: ", error.error);
+      if (error.error == 'Wrong old password!') {
+        this.wrongPassBool = true;
+        (<HTMLSelectElement>document.getElementById("inputPassword")).focus();
+        return;
+      }
+      else if (error.error == 'Identical password!') {
+        alert("Stara i nova lozinka su identične.");
+        this.resetNewPassInputs();
+        (<HTMLSelectElement>document.getElementById("inputNewPassword")).focus();
+        return;
+      }
     });
+  }
+
+  resetNewPassInputs() {
+    this.newPass1 = '';
+    this.newPass2 = '';
   }
 
 }
