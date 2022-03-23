@@ -79,7 +79,7 @@ namespace api.Controllers
         // PUT api/<UserController>/changepass 
         [HttpPut("changepass")]
         [Authorize(Roles = "User")]
-        public ActionResult PutPass([FromBody] string oldPassword, [FromBody] string newPassword)
+        public ActionResult PutPass([FromBody] string[] Password)
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -99,20 +99,21 @@ namespace api.Controllers
             User user = new User();
 
             user = userService.GetUserUsername(username);
-
-            string oldPass = PasswordCrypt.hashPassword(oldPassword);
-            string newPass = PasswordCrypt.hashPassword(newPassword);
-
-            if (oldPass != user.Password)
-                return BadRequest($"Wrong old password!");
-            else if (oldPass == newPassword)
-                return BadRequest($"Identical password!");
-            else if (oldPass == user.Password)
+            
+            if(PasswordCrypt.checkPassword(Password[0], user.Password))
             {
-                user.Password = newPass;
+                if(PasswordCrypt.checkPassword(Password[1], user.Password))
+                {
+                    return BadRequest($"Identical password!");
+                }
+
+                user.Password = PasswordCrypt.hashPassword(Password[1]);
                 userService.Update(username, user);
                 return Ok($"Succeful password change!");
             }
+            else
+                return BadRequest($"Wrong old password!");
+
 
             return NoContent();
         }

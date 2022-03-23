@@ -28,6 +28,7 @@ namespace api.Services
         }
         public void Update(string username, User user)
         {
+            //username koji postoji u bazi
             _users.ReplaceOne(user => user.Username == username, user);
         }
         public void Delete(string username)
