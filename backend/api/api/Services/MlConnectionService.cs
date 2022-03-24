@@ -1,4 +1,6 @@
 ﻿using RestSharp;
+using System.Net.WebSockets;
+using System.Text;
 
 namespace api.Services
 {
@@ -11,7 +13,6 @@ namespace api.Services
             request.AddJsonBody(model);
             var result = await client.ExecuteAsync(request);
             return result.Content;//Response od ML microservisa
-
         }
     }
 }

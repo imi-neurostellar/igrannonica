@@ -33,6 +33,10 @@ builder.Services.AddScoped<IModelService, ModelService>();
 builder.Services.AddScoped<IPredictorService, PredictorService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+var mlwss = new MLWebSocketService();
+
+builder.Services.AddSingleton<IMLWebSocketService>(mlwss);
+builder.Services.AddHostedService(_ => mlwss);
 
 builder.Services.AddHostedService<TempFileService>();
 
@@ -54,6 +58,12 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2)
+};
+
+app.UseWebSockets(webSocketOptions);
 
 //Add Cors
 app.UseCors(
