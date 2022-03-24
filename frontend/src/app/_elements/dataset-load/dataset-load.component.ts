@@ -70,4 +70,9 @@ export class DatasetLoadComponent {
       });
   }
 
+  checkAccessible() {
+    if (this.dataset.isPublic)
+      this.dataset.accessibleByLink = true;
+  }
+
 }
