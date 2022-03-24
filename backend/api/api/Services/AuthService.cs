@@ -36,6 +36,7 @@ namespace api.Services
             u.Password = PasswordCrypt.hashPassword(user.password);
             u.FirstName = user.firstName;
             u.LastName = user.lastName;
+            u.photoId = "1";
             if (_users.Find(user => user.Username == u.Username).FirstOrDefault() != null)
                 return "Username Already Exists";
             if (_users.Find(user => user.Email == u.Email).FirstOrDefault() != null)
