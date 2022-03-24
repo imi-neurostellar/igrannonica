@@ -23,9 +23,11 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.updateUser();
-    this.userInfoService.getUserInfo().subscribe((response) => {
-      shared.photoId = response.photoId;
-    });
+    if (this.auth.isAuthenticated() != false) {
+      this.userInfoService.getUserInfo().subscribe((response) => {
+        shared.photoId = response.photoId;
+      });
+    }
   }
 
   logOut() {
