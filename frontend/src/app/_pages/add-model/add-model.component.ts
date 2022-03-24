@@ -6,7 +6,9 @@ import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
 import Dataset from 'src/app/_data/Dataset';
 import { DatatableComponent } from 'src/app/_elements/datatable/datatable.component';
-
+import { DatasetsService } from 'src/app/_services/datasets.service';
+import { NgxCsvParser } from 'ngx-csv-parser';
+import { CsvParseService } from 'src/app/_services/csv-parse.service';
 
 @Component({
   selector: 'app-add-model',
@@ -38,12 +40,14 @@ export class AddModelComponent implements OnInit {
   myDatasets?: Dataset[];
   existingDatasetSelected: boolean = false;
   selectedDataset?: Dataset;
+  otherDataset?: Dataset;
+  otherDatasetFile?: any[];
   datasetFile?: any[];
   datasetHasHeader?: boolean = true;
 
   tempTestSetDistribution: number = 90;
 
-  constructor(private models: ModelsService) {
+  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
     this.newModel = new Model();
 
     this.models.getMyDatasets().subscribe((datasets) => {
@@ -213,14 +217,23 @@ export class AddModelComponent implements OnInit {
 
 
     //this.datasetFile = csvRecords;
+    this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
+      if (file) {
+        this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
+      }
+    });
     this.datasetHasHeader = false;
 
     this.resetCbsAndRbs();
   }
 
   resetSelectedDataset(): boolean {
-    this.existingDatasetSelected = false;
-    this.selectedDataset = undefined;
+    const temp = this.selectedDataset;
+    this.selectedDataset = this.otherDataset;
+    this.otherDataset = temp;
+    const tempFile = this.datasetFile;
+    this.datasetFile = this.otherDatasetFile;
+    this.otherDatasetFile = tempFile;
     return true;
   }
   resetCbsAndRbs(): boolean {

@@ -2,7 +2,7 @@
     <img src="../../../assets/svg/logo.svg" class="bi me-2" width="256" height="256" role="img">
     <div *ngIf="shared.loggedIn" class="d-flex flex-column align-items-center">
         <h2 class="my-4">Započnite sa treniranjem!</h2>
-        <div id="cards" class="row align-items-center justify-content-center">
+        <div id="cards" class="row align-items-stretch justify-content-center">
             <div class="card shadow col-3 m-1" style="width: 18rem;">
                 <div class="card-body">
                     <mat-icon width="48px" height="48px"
@@ -46,7 +46,7 @@
     </div>
     <h2 class="my-4">Pogledajte javne izvore podataka!</h2>
     <app-carousel [items]="publicDatasets">
-        
+
     </app-carousel>
     <h3><a routerLink="browse-datasets">Pogledaj sve javne izvore podataka...</a></h3>
     <h2 class="my-4">Iskoristite već trenirane modele!</h2>

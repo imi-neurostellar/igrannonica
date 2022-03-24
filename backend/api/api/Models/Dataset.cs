@@ -20,6 +20,7 @@ namespace api.Models
         public bool accessibleByLink { get; set; }
         public DateTime dateCreated { get; set; }
         public DateTime lastUpdated { get; set; }
+        public string delimiter { get; set; }
     }
 }
 

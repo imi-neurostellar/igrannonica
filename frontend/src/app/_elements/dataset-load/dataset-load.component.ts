@@ -11,7 +11,6 @@ export class DatasetLoadComponent {
 
   @Output() loaded = new EventEmitter<string>();
 
-  delimiter: string = "";
   delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
 
   hasHeader: boolean = true;
@@ -49,7 +48,7 @@ export class DatasetLoadComponent {
     if (this.files.length < 1)
       return;
 
-    this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.delimiter == "razmak") ? " " : (this.delimiter == "") ? "," : this.delimiter })
+    this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter })
       .pipe().subscribe((result) => {
 
         console.log('Result', result);
