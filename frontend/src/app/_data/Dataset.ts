@@ -10,6 +10,7 @@ export default class Dataset {
         public accessibleByLink: boolean = false,
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
-        public username: string = 'tester1'
+        public username: string = '',
+        public delimiter: string = ''
     ) { }
 }

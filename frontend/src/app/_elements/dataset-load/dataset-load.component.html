@@ -15,7 +15,7 @@
     </div>
     <div class="col-4 mt-4">
       <input list=delimiterOptions placeholder="Izaberite ili ukucajte delimiter za .csv fajl" class="form-control mt-2"
-        [(ngModel)]="delimiter" (input)="update()">
+        [(ngModel)]="dataset.delimiter" (input)="update()">
       <datalist id=delimiterOptions>
         <option *ngFor="let option of delimiterOptions">{{option}}</option>
       </datalist>

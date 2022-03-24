@@ -13,12 +13,14 @@ export class DatasetsService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getPublicDatasets(): Observable<Dataset[]> {
-    return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/Dataset/publicdatasets`, { headers: this.authService.authHeader() });
+    return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/publicdatasets`, { headers: this.authService.authHeader() });
   }
 
-  addDataset(dataset:Dataset):any{
+  addDataset(dataset: Dataset): any {
     return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
   }
 
-
+  getDatasetFile(fileId: any): any {
+    return this.http.get(`${API_SETTINGS.apiURL}/file/download?id=${fileId}`, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
 }
