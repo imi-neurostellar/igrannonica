@@ -5,6 +5,7 @@ import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-loa
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
 import Dataset from 'src/app/_data/Dataset';
+import { DatatableComponent } from 'src/app/_elements/datatable/datatable.component';
 
 
 @Component({
@@ -15,6 +16,7 @@ import Dataset from 'src/app/_data/Dataset';
 export class AddModelComponent implements OnInit {
 
   @ViewChild(DatasetLoadComponent) datasetLoadComponent?: DatasetLoadComponent;
+  @ViewChild(DatatableComponent) datatable?: DatatableComponent;
   datasetLoaded: boolean = false;
 
   newModel: Model;
@@ -36,6 +38,8 @@ export class AddModelComponent implements OnInit {
   myDatasets?: Dataset[];
   existingDatasetSelected: boolean = false;
   selectedDataset?: Dataset;
+  datasetFile?: any[];
+  datasetHasHeader?: boolean = true;
 
   tempTestSetDistribution: number = 90;
 
@@ -150,10 +154,8 @@ export class AddModelComponent implements OnInit {
   getCheckedInputCols() {
     this.newModel.inputColumns = [];
     let checkboxes: any;
-    if (this.showMyDatasets)
-      checkboxes = document.getElementsByName("cbsExisting");
-    else
-      checkboxes = document.getElementsByName("cbsNew");
+
+    checkboxes = document.getElementsByName("cbsNew");
 
     for (let i = 0; i < checkboxes.length; i++) {
       let thatCb = <HTMLInputElement>checkboxes[i];
@@ -165,10 +167,8 @@ export class AddModelComponent implements OnInit {
   getCheckedOutputCol() {
     this.newModel.columnToPredict = '';
     let radiobuttons: any;
-    if (this.showMyDatasets)
-      radiobuttons = document.getElementsByName("rbsExisting");
-    else
-      radiobuttons = document.getElementsByName("rbsNew");
+
+    radiobuttons = document.getElementsByName("rbsNew");
 
     for (let i = 0; i < radiobuttons.length; i++) {
       let thatRb = <HTMLInputElement>radiobuttons[i];
@@ -211,6 +211,10 @@ export class AddModelComponent implements OnInit {
       if (datasets[i]._id == dataset._id)
     }*/
 
+
+    //this.datasetFile = csvRecords;
+    this.datasetHasHeader = false;
+
     this.resetCbsAndRbs();
   }
 
@@ -226,15 +230,6 @@ export class AddModelComponent implements OnInit {
   }
   checkAllCbs() {
     let checkboxes: any;
-    //if (this.showMyDatasets)
-    checkboxes = document.getElementsByName("cbsExisting");
-    //else
-    //checkboxes = document.getElementsByName("cbsNew"); 
-
-    for (let i = 0; i < checkboxes.length; i++) {
-      (<HTMLInputElement>checkboxes[i]).checked = true;
-      (<HTMLInputElement>checkboxes[i]).disabled = false;
-    }
 
     checkboxes = document.getElementsByName("cbsNew");
     for (let i = 0; i < checkboxes.length; i++) {
@@ -245,13 +240,7 @@ export class AddModelComponent implements OnInit {
   uncheckRbs() {
     this.selectedOutputColumnVal = '';
     let radiobuttons: any;
-    //if (this.showMyDatasets)
-    radiobuttons = document.getElementsByName("rbsExisting");
-    //else
-    //radiobuttons = document.getElementsByName("rbsNew"); 
 
-    for (let i = 0; i < radiobuttons.length; i++)
-      (<HTMLInputElement>radiobuttons[i]).checked = false;
     radiobuttons = document.getElementsByName("rbsNew");
     for (let i = 0; i < radiobuttons.length; i++)
       (<HTMLInputElement>radiobuttons[i]).checked = false;

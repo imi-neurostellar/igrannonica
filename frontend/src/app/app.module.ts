@@ -33,6 +33,8 @@ import { BrowsePredictorsComponent } from './_pages/browse-predictors/browse-pre
 import { PredictComponent } from './_pages/predict/predict.component';
 import { ScatterchartComponent } from './scatterchart/scatterchart.component';
 import { BarchartComponent } from './barchart/barchart.component';
+import { NotificationsComponent } from './_elements/notifications/notifications.component';
+import { DatatableComponent } from './_elements/datatable/datatable.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { BarchartComponent } from './barchart/barchart.component';
     BrowsePredictorsComponent,
     PredictComponent,
     ScatterchartComponent,
-    BarchartComponent
+    BarchartComponent,
+    NotificationsComponent,
+    DatatableComponent
   ],
   imports: [
     BrowserModule,

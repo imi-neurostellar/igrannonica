@@ -3,9 +3,7 @@
 </div>
 
 <div id="wrapper">
-
     <div id="container" class="container p-5" style="background-color: white; min-height: 100%;">
-
         <div class="form-group row mt-3 mb-2 d-flex justify-content-center">
             <!--justify-content-center-->
             <h2 class="col-2"> Nov model: </h2>
@@ -43,9 +41,6 @@
                 </button>
             </div>
 
-            <!-- POSTOJECI ILI NOVI DATASET -->
-
-            <!-- POSTOJECI -->
             <div class="px-5">
                 <div *ngIf="showMyDatasets" class="overflow-auto" style="max-height: 500px;">
                     <ul class="list-group">
@@ -58,56 +53,20 @@
                 </div>
             </div>
 
-            <!-- NOVI -->
-            <app-dataset-load *ngIf="!showMyDatasets" id="dataset" (loaded)="datasetLoaded = true"></app-dataset-load>
+            <app-dataset-load *ngIf="!showMyDatasets" id="dataset"
+                (loaded)="datasetLoaded = true; selectedDataset = datasetLoadComponent?.dataset; datasetFile = datasetLoadComponent?.csvRecords; datasetHasHeader = datasetLoadComponent?.hasHeader">
+            </app-dataset-load>
+            <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
         </div>
 
-
-        <!-- ULAZNE/IZLAZNE KOLONE - POSTOJECI DATASET -->
-        <div *ngIf="showMyDatasets && this.selectedDataset" class="mt-4">
-            <h2 class="text-center">
-                Izabrali ste dataset: <span
-                    style="color: #003459; font-weight: bold">{{this.selectedDataset.name}}</span>
-            </h2>
-            <div class="row mt-5">
+        <!-- ULAZNE/IZLAZNE KOLONE -->
+        <div *ngIf="selectedDataset">
+            <div class="row">
                 <div class="col d-flex justify-content-center">
                     <h3>Izaberite ulazne kolone:</h3>
                     <div id="divInputs" class="form-check mt-2">
                         <br>
-                        <div *ngFor="let item of this.selectedDataset.header; let i = index">
-                            <input class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}"
-                                name="cbsExisting" checked [disabled]="this.selectedOutputColumnVal == item">&nbsp;
-                            <label class="form-check-label" for="cb_{{item}}">
-                                {{item}}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col d-flex justify-content-left">
-                    <h3>Izaberite izlaznu kolonu:</h3>
-                    <div id="divOutputs" class="form-check mt-2">
-                        <br>
-                        <div *ngFor="let item of this.selectedDataset.header; let i = index">
-                            <input class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}"
-                                name="rbsExisting" (change)="this.selectedOutputColumnVal = item">&nbsp;
-                            <label class="form-check-label" for="rb_{{item}}">
-                                {{item}}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ULAZNE/IZLAZNE KOLONE - NOVI DATASET-->
-        <div *ngIf="!showMyDatasets && datasetLoaded">
-            <div *ngIf="datasetLoadComponent && datasetLoadComponent.files[0]" class="row">
-                <div class="col d-flex justify-content-center">
-                    <h3>Izaberite ulazne kolone:</h3>
-                    <div id="divInputs" class="form-check mt-2">
-                        <br>
-                        <div *ngFor="let item of datasetLoadComponent.dataset.header; let i = index">
+                        <div *ngFor="let item of selectedDataset.header; let i = index">
                             <input class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}"
                                 name="cbsNew" checked [disabled]="this.selectedOutputColumnVal == item">&nbsp;
                             <label class="form-check-label" for="cb_{{item}}">
@@ -120,7 +79,7 @@
                     <h3>Izaberite izlaznu kolonu:</h3>
                     <div id="divOutputs" class="form-check mt-2">
                         <br>
-                        <div *ngFor="let item of datasetLoadComponent.dataset.header; let i = index">
+                        <div *ngFor="let item of selectedDataset.header; let i = index">
                             <input class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbsNew"
                                 (change)="this.selectedOutputColumnVal = item">&nbsp;
                             <label class="form-check-label" for="rb_{{item}}">
@@ -131,7 +90,7 @@
                 </div>
 
 
-                <div class="my-2">
+                <div class="my-2" *ngIf="datasetFile">
                     <h2>Popunjavanje nedostajućih vrednosti:</h2>
                     <div class="form-check">
                         <input type="radio" [(ngModel)]="newModel.nullValues" [value]="NullValueOptions.DeleteRows"
@@ -153,15 +112,14 @@
                             <div>
                                 <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
                                 <div id="columnReplacers">
-                                    <div *ngFor="let column of datasetLoadComponent.dataset.header; let i = index"
-                                        class="my-3">
+                                    <div *ngFor="let column of selectedDataset.header; let i = index" class="my-3">
                                         <div class="input-group row" *ngIf="getInputById('cb_'+column).checked">
                                             <span class="input-group-text col-4 text-center">
                                                 {{column}}
                                             </span>
                                             <input type="text" class="form-control col-4">
                                             <select [id]="'replaceOptions'+i" class="form-control col-4"
-                                                *ngIf="isNumber(datasetLoadComponent.csvRecords[1][i])">
+                                                *ngIf="isNumber(datasetFile[1][i])">
                                                 <option
                                                     *ngFor="let option of Object.keys(ReplaceWith); let optionName of Object.values(ReplaceWith)"
                                                     [value]="option">

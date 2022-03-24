@@ -15,7 +15,6 @@ export class DatasetLoadComponent {
   delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
 
   hasHeader: boolean = true;
-
   hasInput: boolean = false;
 
   csvRecords: any[] = [];
@@ -39,10 +38,9 @@ export class DatasetLoadComponent {
       this.hasInput = false;
       return;
     }
-    else 
+    else
       this.hasInput = true;
 
-    console.log(this.files);
     this.update();
   }
 

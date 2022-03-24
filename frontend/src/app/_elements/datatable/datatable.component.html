@@ -1,0 +1,29 @@
+<div *ngIf="data">
+    <div class="table-responsive">
+        <table *ngIf="hasHeader" class="table table-bordered table-light mt-4">
+            <thead>
+                <tr>
+                    <th *ngFor="let item of data[0]; let i = index">{{item}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of data | slice:1:11">
+                    <td *ngFor="let col of row">{{col}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table *ngIf="data.length > 0 && !hasHeader" class="table table-bordered table-light mt-4">
+            <tbody>
+                <tr *ngFor="let row of data | slice:0:10">
+                    <td *ngFor="let col of row">{{col}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="info">
+        . . . <br>
+        {{data.length}} x {{data[0].length}}
+    </div>
+</div>
