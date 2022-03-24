@@ -22,10 +22,9 @@ const routes: Routes = [
   { path: 'my-predictors', component: MyPredictorsComponent, canActivate: [AuthGuardService], data: { title: 'Moji trenirani modeli' } },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService], data: { title: 'Podešavanja' } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService], data: { title: 'Profil' } },
-  { path: 'browse-datasets', component: BrowseDatasetsComponent, data: { title: 'Javni izvori podataka' } },
+  { path: 'browse-datasets', component: FilterDatasetsComponent, data: { title: 'Javni izvori podataka' } },
   { path: 'browse-predictors', component: BrowsePredictorsComponent, data: { title: 'Javni trenirani modeli' } },
-  { path: 'predict', component: PredictComponent, data: { title: 'Predvidi vrednosti' } },
-  { path: 'filter-datasets', component: FilterDatasetsComponent, data: { title: 'Filter datasets' } }
+  { path: 'predict', component: PredictComponent, data: { title: 'Predvidi vrednosti' } }
 ];
 
 @NgModule({
