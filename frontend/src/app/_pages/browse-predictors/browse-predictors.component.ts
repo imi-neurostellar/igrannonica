@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { PredictorsService } from 'src/app/_services/predictors.service';
+import Predictor from 'src/app/_data/Predictor';
+import {Router} from '@angular/router'
 @Component({
   selector: 'app-browse-predictors',
   templateUrl: './browse-predictors.component.html',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BrowsePredictorsComponent implements OnInit {
 
-  constructor() { }
+  publicPredictors? :Predictor[];
+  term: string="";
+  constructor(private predictors: PredictorsService,private router:Router) {
+    this.predictors.getPublicPredictors().subscribe((predictors) => {
+      this.publicPredictors = predictors;
+    });
+  }
 
   ngOnInit(): void {
   }
+  openPredictor(id:string):void{
+    this.router.navigateByUrl('/predict?id='+id);
+  };
 
 }

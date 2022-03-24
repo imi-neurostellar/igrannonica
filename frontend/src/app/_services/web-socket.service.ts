@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ConstantBackoff, Websocket, WebsocketBuilder } from 'websocket-ts';
 import { API_SETTINGS } from 'src/config';
-import { ConstantBackoff, Websocket, WebsocketBuilder } from 'websocket-ts/lib';
 
 @Injectable({
   providedIn: 'root'

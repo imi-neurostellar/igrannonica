@@ -12,15 +12,19 @@ export class UserInfoService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getUsersInfo(): Observable<User> {
+  getUserInfo(): Observable<User> {
     return this.http.get<User>(`${API_SETTINGS.apiURL}/user/myprofile`, { headers: this.authService.authHeader() });
   }
 
   changeUserInfo(user: User): any {
-    return this.http.put(`${API_SETTINGS.apiURL}/user/${user._id}`, user, { headers: this.authService.authHeader() });
+    return this.http.put(`${API_SETTINGS.apiURL}/user/changeinfo`, user, { headers: this.authService.authHeader() });
   }
 
-  changeUserPassword(oldPassword: string, newPassword: string): Observable<User> {
-    return this.http.put<User>(`${API_SETTINGS.apiURL}/user/`, { oldPassword, newPassword }, { headers: this.authService.authHeader() });
+  changeUserPassword(passwordArray: string[]): any {
+    return this.http.put(`${API_SETTINGS.apiURL}/user/changepass`, passwordArray, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+
+  deleteUser(): any {
+    return this.http.delete(`${API_SETTINGS.apiURL}/user/deleteprofile`, { headers: this.authService.authHeader() });
   }
 }

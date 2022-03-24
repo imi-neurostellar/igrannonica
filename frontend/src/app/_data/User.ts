@@ -1,5 +1,5 @@
 export default class User {
-    _id: string = '';
+    _id?: string = '';
     constructor(
         public username: string = '',
         public email: string = '',

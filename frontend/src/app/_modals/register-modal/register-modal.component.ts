@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
+import User from 'src/app/_data/User';
 
 @Component({
   selector: 'app-register-modal',
@@ -124,12 +125,13 @@ export class RegisterModalComponent implements OnInit {
     if (!(this.wrongFirstNameBool || this.wrongLastNameBool || this.wrongUsernameBool ||
       this.wrongEmailBool || this.wrongPass1Bool || this.wrongPass2Bool)) { //sve ok, registruj ga
 
-      let user = {
+      let user: User = {
         firstName: this.firstName,
         lastName: this.lastName,
         username: this.username,
         password: this.pass1,
-        email: this.email
+        email: this.email,
+        photoId: "1"
       }
 
       this.authService.register(user)

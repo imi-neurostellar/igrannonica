@@ -61,8 +61,10 @@ export class AuthService {
   updateUser() {
     if (this.cookie.check('token')) {
       const token = this.cookie.get('token');
+      const decodedToken = jwtHelper.decodeToken(token);
+      console.log("decoded:", decodedToken);
       this.shared.loggedIn = this.isAuthenticated();
-      this.shared.username = jwtHelper.decodeToken(token).name;
+      this.shared.username = decodedToken.name;
       this.enableAutoRefresh();
     }
   }

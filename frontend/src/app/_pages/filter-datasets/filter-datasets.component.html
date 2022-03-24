@@ -9,23 +9,23 @@
     </div>
 
             <div class="row">
-                <div class="col-sm-4" style="margin-bottom: 10px;" *ngFor="let predictor of publicPredictors | filter:term">
+                <div class="col-sm-4" style="margin-bottom: 10px;" *ngFor="let dataset of publicDatasets | filter:term">
                   <div class="card h-100">
                     <div class="card-body">
-                      <h3 class="card-title"><b>{{predictor.name}}</b></h3>
-                      <p class="card-text">{{predictor.description}}</p>
-                      <a  class="btn btn-primary" (click)="openPredictor(predictor._id)">Otvori</a>
+                      <h3 class="card-title"><b>{{dataset.name}}</b></h3>
+                      <p class="card-text">{{dataset.description}}</p>
+                      <a  class="btn btn-primary" (click)="addDataset(dataset)">Dodaj dataset</a>
                     </div>
                     <div class="card-footer text-muted">
-                        Kreirao: {{predictor.username}} <br>
-                        Datum kreiranja: {{predictor.dateCreated |date}}
+                        Kreirao: {{dataset.username}} <br>
+                        Datum kreiranja: {{dataset.dateCreated |date}}
                       </div>
                   </div>
                 </div>
                
 
               </div>
-              <div class="text-center"*ngIf="( publicPredictors != undefined && publicPredictors|filter:term).length === 0">
+              <div class="text-center"*ngIf="( publicDatasets != undefined && publicDatasets|filter:term).length === 0">
                 <h2>Nema rezultata</h2>
             </div>
         </div>
