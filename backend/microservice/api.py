@@ -8,7 +8,9 @@ import keras
 import csv
 import json
 import mlservice
-from mlservice import obuka
+import h5py
+from mlservice2 import unositok
+
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -21,8 +23,17 @@ def index():
 @app.route('/data', methods = ['GET', 'POST'])
 def data():
     if request.method == 'POST':
-        f = request.json['filepath']  
-        data = pd.read_csv(f)
-        print(data)
-        return obuka(data,request.json)
+        print(request.json['filepath'])
+        f = request.json['filepath']
+
+        data1 = pd.read_csv(f)
+
+        d2=request.json['filepath2']
+        data2=pd.read_csv(d2)
+        
+        m=request.json['modelpath']
+        model=tf.keras.models.load_model(m)
+        
+        #print(data)
+        return unositok(data1,data2,request.json,model)
 app.run()
