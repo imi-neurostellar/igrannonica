@@ -271,8 +271,9 @@ export class AddModelComponent implements OnInit {
       !isNaN(Number(value.toString())));
   }
 
-
   getInputById(id: string): HTMLInputElement {
     return document.getElementById(id) as HTMLInputElement;
   }
+
+  arrayColumn = (arr: any[][], n: number) => [...new Set(arr.map(x => x[n]))];
 }
