@@ -8,11 +8,13 @@ namespace api.Services
     {
 
         private readonly IMongoCollection<FileModel> _file;
+        private readonly IMongoCollection<Dataset> _dataset;
 
         public FileService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
         {
             var database = mongoClient.GetDatabase(settings.DatabaseName);
             _file = database.GetCollection<FileModel>(settings.FilesCollectionName);
+            _dataset = database.GetCollection<Dataset>(settings.DatasetCollectionName);
         }
 
         public FileModel Create(FileModel file)
@@ -25,7 +27,11 @@ namespace api.Services
         }
         public string GetFilePath(string id, string username)
         {
-            FileModel file = _file.Find(x => x._id == id && x.username == username).FirstOrDefault();
+            FileModel file;
+            if (_dataset.Find(x=>x.fileId==id && x.isPublic==true).FirstOrDefault()!=null)
+                file = _file.Find(x => x._id == id).FirstOrDefault();
+            else
+                file = _file.Find(x => x._id == id && x.username == username).FirstOrDefault();
             if (file == null)
                 return null;
             return file.path;
