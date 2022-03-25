@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { UserInfoService } from 'src/app/_services/user-info.service';
+import shared from '../../Shared';
 
 @Component({
   selector: 'app-login-modal',
@@ -18,7 +20,8 @@ export class LoginModalComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private cookie: CookieService,
-    private router: Router
+    private router: Router,
+    private userInfoService: UserInfoService
   ) { }
 
   ngOnInit(): void {
@@ -36,6 +39,9 @@ export class LoginModalComponent implements OnInit {
         else {
           this.authService.authenticate(response);
           (<HTMLSelectElement>document.getElementById('closeButton')).click();
+          this.userInfoService.getUserInfo().subscribe((response) => {
+            shared.photoId = response.photoId;
+          });
         }
       });
     }

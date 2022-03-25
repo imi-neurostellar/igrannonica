@@ -96,12 +96,12 @@
                         <input type="radio" [(ngModel)]="newModel.nullValues" [value]="NullValueOptions.DeleteRows"
                             class="form-check-input" value="deleteRows" name="fillMissing" id="delRows" checked
                             data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
-                        <label for="delRows" class="form-check-label">Obriši
+                        <label for="delRows" class="form-check-label">Obriši sve
                             redove sa nedostajućim vrednostima</label><br>
                         <input type="radio" [(ngModel)]="newModel.nullValues" [value]="NullValueOptions.DeleteColumns"
                             class="form-check-input" value="deleteCols" name="fillMissing" id="delCols"
                             data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
-                        <label for="delCols" class="form-check-label">Obriši
+                        <label for="delCols" class="form-check-label">Obriši sve
                             kolone sa nedostajućim vrednostima</label><br>
                         <input type="radio" [(ngModel)]="newModel.nullValues" [value]="NullValueOptions.Replace"
                             class="form-check-input" name="fillMissing" id="replace" data-bs-toggle="collapse"
@@ -114,11 +114,11 @@
                                 <div id="columnReplacers">
                                     <div *ngFor="let column of selectedDataset.header; let i = index" class="my-3">
                                         <div class="input-group row" *ngIf="getInputById('cb_'+column).checked">
-                                            <span class="input-group-text col-4 text-center">
+                                            <span class="input-group-text col-2 text-center">
                                                 {{column}}
                                             </span>
-                                            <input type="text" class="form-control col-4">
-                                            <select [id]="'replaceOptions'+i" class="form-control col-4"
+                                            <input type="text" class="form-control col-2">
+                                            <select [id]="'replaceOptions'+i" class="form-control col-2"
                                                 *ngIf="isNumber(datasetFile[1][i])">
                                                 <option
                                                     *ngFor="let option of Object.keys(ReplaceWith); let optionName of Object.values(ReplaceWith)"
@@ -126,6 +126,19 @@
                                                     {{ optionName }}
                                                 </option>
                                             </select>
+                                            <select [id]="'replaceOptions'+i" class="form-control col-2"
+                                                *ngIf="!isNumber(datasetFile[1][i])">
+                                                <option *ngFor="let option of arrayColumn(datasetFile, i)"
+                                                    [value]="option">
+                                                    {{ option }}
+                                                </option>
+                                            </select>
+                                            <label class="form-control col-2" [for]="'delCol_'+column">Izbriši kolonu
+                                                <input type="radio" [id]="'delCol_'+column"
+                                                    [name]="'delOp_'+column"></label>
+                                            <label class="form-control col-2" [for]="'delRows_'+column">Izbriši redove
+                                                <input type="radio" [id]="'delRows_'+column" [name]="'delOp_'+column"
+                                                    checked></label>
                                         </div>
                                     </div>
                                 </div>

@@ -1,17 +1,19 @@
-#from typing_extensions import Self
+from statistics import mode
+from typing_extensions import Self
 import pandas as pd
 import tensorflow as tf
 import keras
 import numpy as np
-
+import matplotlib.pyplot as plt
 from copyreg import constructor
 import flask
 from flask import request, jsonify, render_template
 from sklearn.preprocessing import LabelEncoder
 import csv
 import json
+import h5py
 class Response:
-    def __init__(self,tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse,fpr,tpr):
+    def __init__(self,tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse):
 
         self.tacnost=tacnost
         self.preciznost=preciznost
@@ -22,8 +24,7 @@ class Response:
         self.mae=mae
         self.mape=mape
         self.rmse=rmse
-        self.fpr=fpr
-        self.tpr=tpr
+  
 class fCallback(tf.keras.callbacks.Callback):
     def __init__(self, x_test, y_test):
         self.x_test = x_test
@@ -31,15 +32,20 @@ class fCallback(tf.keras.callbacks.Callback):
 
         
     def on_epoch_end(self, epoch, logs=None):
-        print('Evaluation: ', self.model.evaluate(self.x_test))
+        print('Evaluation: ', self.model.evaluate(self.x_test,self.y_test),"\n")#broj parametara zavisi od izabranih metrika loss je default
 
-    
-def obuka(dataunos,params):
+def obuka(dataunos,params,modelunos,dataunosdrugog):
     import numpy as np
     import pandas as pd
     import tensorflow as tf
     import matplotlib.pyplot as plt
-
+    import keras
+    ### -1) Ucitavanje h5 modela PART3
+    
+    if(modelunos!=None):
+       print("Model je unet")
+    model=modelunos
+    
     ### 0) Pretvaranje data seta u novi, sa kolonama koje je korisnik izabrao za obuku
  
     data=pd.DataFrame()
@@ -48,6 +54,7 @@ def obuka(dataunos,params):
         data[zeljenekolone[i]]=dataunos[zeljenekolone[i]]
     #print(data.head(10))
 
+   
     #predvidetikol=input("UNETI NAZIV KOLONE ČIJU VREDNOST TREBA PREDVIDETI ")
     ###sta se cuva od promenjivih broj kolone ili naziv kolone???
     predvidetikol=params["columnToPredict"]
@@ -69,7 +76,7 @@ def obuka(dataunos,params):
     ### 2)Proveravanje svih kolona za null vrednosti i popunjavanje medijanom ili srednjom vrednosti ili birisanje
 
     #####Part2 #####
-    
+    '''
     #brisanje=input("DA LI ZELITE DA IZBRSETE SVE KOLONE SA NULL VREDNOSTIMA? ")
     brisanje='ne'
     if(brisanje=='da'):
@@ -102,37 +109,97 @@ def obuka(dataunos,params):
                     elif(tippodataka==np.object_):
                         najcescavrednost=kolona.value_counts().index[0]
                         data[kolone[i]]=data[kolone[i]].fillna(najcescavrednost)
- 
+    '''
+
+    nullreplace=[
+        {"column":"Embarked","value":"C","deleteRow":"0","deleteCol":"0"},
+        {"column": "Cabin","value":"C123","deleteRow":"0","deleteCol":"0"}]
+        
+   
+    nullopt=params["NullValueOptions"]
+    
+    zamena=nullreplace
+    
+    nulldf=pd.DataFrame(zamena)
+    nulldf=nulldf.transpose()
+    nredova=data.shape[0]
+    if(nullopt=='replace'):
+        
+        
+        p=0
+
+        while(1):
+            if(p in nulldf.columns):
+                print("3")
+                parametri=nulldf[p]
+                print(parametri)
+                #print(data[parametri['column']])
+                col=parametri['column']
+                print(col)
+                val=parametri['value']
+                print(val)
+                if(data[col].isnull().any()):
+                    
+                    if(parametri['value']!='0'):
+                        
+                        print(data[parametri['column']])
+                        data[parametri['column']]=data[parametri['column']].fillna(val)
+                        print(data[parametri['column']])
+                    elif(parametri['deleteRow']==1):
+                        data=data.dropna(subset=[col])
+                        print("brisi")
+                        
+
+                    elif(parametri['deleteCol']==1): 
+                        data.pop(col)       
+                p+=1
+                continue
+            else:
+                break
+    
+    elif(nullopt=='deleteRow'):
+        data=data.dropna()
+
+    elif(nullopt=='deleteCol'):
+        data=data.dropna()
+            
+    print(data.isnull().any())
+
+
+    kolone=data.columns
+    print("null done")
     ### 3)Izbacivanje kolona koje ne uticu na rezultat PART2
     nredova=data.shape[0]
+    
     for i in range(len(kolone)):
-        if((data[kolone[i]].nunique()>(nredova/2)) and( data[kolone[i]].dtype==np.object_)):
+        if((data[kolone[i]].nunique()==(nredova)) and( data[kolone[i]].dtype==np.object_)):
             data.pop(kolone[i])
 
     #print(data.head(10))
 
     ### 4)izbor tipa enkodiranja
     kolone=data.columns ### Azuriranje postojecih kolona nakon moguceg brisanja
-
+   
     #enc=input("UNETI TIP ENKODIRANJA ")
     enc=params["encoding"]
-    onehot=0
-
+    
+    
     ### 5)Enkodiranje svih kategorijskih promenjivih label-encode metodom
-
+    
     if(enc=='label'):
+        
         from sklearn.preprocessing import LabelEncoder
         encoder=LabelEncoder()
         for k in range(len(kolone)):
             if(data[kolone[k]].dtype==np.object_):
                 data[kolone[k]]=encoder.fit_transform(data[kolone[k]])
         #print(data.head(20))
-
+    
     ### 6)Enkodiranje svih kategorijskih promenjivih onehot metodom
 
     elif(enc=='onehot'):
-        ### PART2###
-        onehot==1
+        ### PART2 ###
+        
         kategorijskekolone=[]
         for k in range(len(kolone)):
             if(data[kolone[k]].dtype==np.object_):
@@ -140,7 +207,7 @@ def obuka(dataunos,params):
                 kategorijskekolone.append(kolone[k]) ###U kategorijske kolone smestaju se nazivi svih kolona sa kategorijskim podacima
         
         #print(kategorijskekolone)
-
+       
         ### Enkodiranje 
         data=pd.get_dummies(data,columns=kategorijskekolone,prefix=kategorijskekolone)
         #print(data.head(10))
@@ -191,8 +258,10 @@ def obuka(dataunos,params):
     x_test=scaler.transform(x_test)
     x_train=scaler.transform(x_train)
 
+    ### 9)CUVANJE IZLAZNIH PODATAKA PART3
+   
     #####ZAVRSENA PRIPREMA PODATAKA#####
-
+    
     #####OBUCAVANJE MODELA#####
 
     ### 9)Inicijalizacija vestacke neuronske mreze
@@ -208,7 +277,7 @@ def obuka(dataunos,params):
 
     classifier.add(tf.keras.layers.Dense(units=brojnu,activation=aktivacijau,input_dim=x_train.shape[1]))
 
-    ### 11)Dodavanje drugog, skrivenog sloja
+    ### 11)Dodavanje drugog, skrivenog sloja ###PART2###
     #aktivacijas=input("UNETI ŽELJENU AKTIVACIONU FUNKCIJU SKRIVENOG SLOJA ")
     #brojns=int(input("UNETI BROJ NEURONA SKRIVENOG SLOJA "))
 
@@ -234,16 +303,11 @@ def obuka(dataunos,params):
     optimizator=params["optimizer"]
 
     ### 13.1)Izbor metrike za kompajler PART2
-    metrike=['mae','mse']
+    metrike=params['metrics']
+    #metrike=[]
     lossf=params["lossFunction"]
-    '''
-    while(1):
-        m=params['lossFunction']
-        
-        if(m=='KRAJ'):
-            break   
-        metrike.append(m)'''
-    classifier.compile(optimizer=optimizator, loss=lossf,metrics =metrike)
+
+    classifier.compile(optimizer=optimizator, loss=lossf,metrics=metrike)
     performance_simple = fCallback(x_test, y_test)
     ### 14) 
     #uzorci=int(input("UNETI KOLIKO UZORAKA ĆE BITI UNETO U ISTO VREME "))
@@ -251,14 +315,14 @@ def obuka(dataunos,params):
     uzorci=params["batchSize"]
     epohe=params["epochs"]
     history=classifier.fit(x_train,y_train,batch_size=uzorci,epochs=epohe,callbacks=[performance_simple],validation_split=0.2)
-
+    
     ### 14.1)Parametri grafika iz history PART2
     metrikedf=pd.DataFrame() ###DataFrame u kom se nalaze podaci o rezultatima metrika za iscrtavanje na grafiku. Svaka kolona sadrzi vrednost metrike po epohama
     for i in range(len(metrike)):
         metrikedf[metrike[i]]=history.history[metrike[i]]
         #print(history.history[metrike[i]])
         #plt.plot(history.history[metrike[i]])
-    #plt.show()
+    plt.show()
 
     #print(metrikedf)
 
@@ -278,13 +342,20 @@ def obuka(dataunos,params):
 
     #print(y_test)
     ### 15.2) Kreiranje DataFrame-a u kom se nalaze kolone koje predstavljaju stvarne i predvidjene vrednosti, potrebne za iscrtavanje grafika i metrike PART2
-    #rezultat=pd.DataFrame({"Stvarna vrednost ":y_test,"Predvidjena vrednost":y_pred})
+    rezultatzametrike=pd.DataFrame({"Stvarna vrednost ":y_test,"Predvidjena vrednost":y_pred})
     #print(rezultat.head(20))
+
+       ##### H5 CUVANJE ##### PART3
+    nazivmodela=params['h5ModelName']
+    classifier.save(nazivmodela, save_format='h5')
+
+ 
+
 
     #####METRIKE##### PART2
 
     import  sklearn.metrics as sm
-            
+      
 
     ### 16)Tacnost
     tacnost=sm.accuracy_score(y_test,y_pred)
@@ -349,9 +420,128 @@ def obuka(dataunos,params):
     plt.ylabel('True Positive Rate')
     plt.show()
     '''
-
-    r=Response(tacnost,preciznost,recall,spec,f1,mse,mae,mape,rmse,fpr,tpr)
+   
     
-    return "Done"
+    
+    r=Response(float(tacnost),float(preciznost),float(recall),float(spec),float(f1),float(mse),float(mae),float(mape),float(rmse))
+    import jsonpickle
+    return json.dumps(json.loads(jsonpickle.encode(r)), indent=2)
+#####KRAJ OBUKE JEDNOG#####
 
 
+##### UCITAVANJE I OBUKA DRUGOG SETA PODATAKA ##### PART3
+def ucitavanjeipreprocesiranjedrugog(dataunosdrugog,params):
+    data2=dataunosdrugog.copy()
+
+
+    ### 1)Unos drugog seta i odstranjivanje nezeljenih kolona
+    data2=pd.DataFrame()
+    zeljenekolone2=params["inputColumns"]
+    for i in range(len(zeljenekolone2)):
+        data2[zeljenekolone2[i]]=dataunosdrugog[zeljenekolone2[i]]
+    
+    ### 2)Izbor kolona
+    kolone=data2.columns
+
+    ### 3)NULL vrednosti
+    nullreplace=[
+        {"column":"Embarked","value":"C","deleteRow":"0","deleteCol":"0"},
+        {"column": "Cabin","value":"C123","deleteRow":"0","deleteCol":"0"}]
+        
+   
+    nullopt=params["NullValueOptions"]
+    
+    zamena=nullreplace
+    
+    nulldf=pd.DataFrame(zamena)
+    nulldf=nulldf.transpose()
+    
+    if(nullopt=='replace'):
+        
+        
+        p=0
+
+        while(1):
+            if(p in nulldf.columns):
+                print("3")
+                parametri=nulldf[p]
+                print(parametri)
+                #print(data[parametri['column']])
+                col=parametri['column']
+                print(col)
+               
+                if(data2[col].isnull().any()):
+                    
+                    #print(parametri['value'])
+                    if(parametri['value']!=''):
+                        data2[col]=data2[col].fillna(parametri["value"])
+
+                    elif(parametri['deleteRow']==1):
+                        data2=data2.dropna(subset=[col])
+                        print("brisi")
+                        
+
+                    elif(parametri['deleteCol']==1): 
+                        data2.pop(col)       
+                p+=1
+                continue
+            else:
+                break
+
+    elif(nullopt=='deleteRow'):
+        data2=data2.dropna()
+
+    elif(nullopt=='deleteCol'):
+        data2=data2.dropna()
+            
+    kolone=data2.columns
+
+     ### 4)Enkodiranje
+    enc=params["encoding"]
+
+    ### 5)Label
+
+    if(enc=='label'):
+        from sklearn.preprocessing import LabelEncoder
+        encoder2=LabelEncoder()
+        for k in range(len(kolone)):
+            if(data2[kolone[k]].dtype==np.object_):
+                data2[kolone[k]]=encoder2.fit_transform(data2[kolone[k]])
+        #print(data.head(20))
+
+    ### 6)Onehot
+
+    elif(enc=='onehot'):
+        ### PART2###
+
+        kategorijskekolone=[]
+        for k in range(len(kolone)):
+            if(data2[kolone[k]].dtype==np.object_):
+                
+                kategorijskekolone.append(kolone[k]) ###U kategorijske kolone smestaju se nazivi svih kolona sa kategorijskim podacima
+        
+        #print(kategorijskekolone)
+
+        ### Enkodiranje 
+        data2=pd.get_dummies(data2,columns=kategorijskekolone,prefix=kategorijskekolone)
+        #print(data.head(10))
+    predvidetikol=params["columnToPredict"]
+    kolone=data2.columns ### Azuriranje kolona nakon moguceg dodavanja
+    xkolone=[]
+    for k in range(len(kolone)):
+            if(kolone[k]!=predvidetikol):
+                xkolone.append(kolone[k])
+
+    x2=data2[xkolone].values()
+    print(x2)
+    return x2
+    #####OBUCAVANJE MODELA#####
+
+
+def unositok(dataunos,dataunosdrugi,params,model):
+        data=obuka(dataunos,params,model,dataunosdrugi)
+        return(data)
+
+
+   
+    

@@ -36,6 +36,7 @@ import { BarchartComponent } from './barchart/barchart.component';
 import { NotificationsComponent } from './_elements/notifications/notifications.component';
 import { DatatableComponent } from './_elements/datatable/datatable.component';
 import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-datasets.component';
+import { ItemModelComponent } from './_elements/item-model/item-model.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-dataset
     BarchartComponent,
     NotificationsComponent,
     DatatableComponent,
-    FilterDatasetsComponent
+    FilterDatasetsComponent,
+    ItemModelComponent
   ],
   imports: [
     BrowserModule,

@@ -107,7 +107,7 @@ export enum NullValueOptions {
 }
 
 export enum ReplaceWith {
-    None = '...',
+    None = 'Popuni...',
     Mean = 'Srednja vrednost',
     Median = 'Medijana'
 }

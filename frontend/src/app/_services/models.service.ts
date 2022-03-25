@@ -42,4 +42,8 @@ export class ModelsService {
   getMyDatasets(): Observable<Dataset[]> {
     return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/mydatasets`, { headers: this.authService.authHeader() });
   }
+  
+  getMyModels(): Observable<Model[]> {
+    return this.http.get<Model[]>(`${API_SETTINGS.apiURL}/model/mymodels`, { headers: this.authService.authHeader() });
+  }
 }
