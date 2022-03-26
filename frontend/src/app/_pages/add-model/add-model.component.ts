@@ -221,6 +221,8 @@ export class AddModelComponent implements OnInit {
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
+        this.datasetFile.length = this.datasetFile.length - 1;
+        console.log(this.datasetFile);
       }
     });
     //this.datasetHasHeader = false;

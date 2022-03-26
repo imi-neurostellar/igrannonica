@@ -56,7 +56,9 @@
             <app-dataset-load *ngIf="!showMyDatasets" id="dataset"
                 (loaded)="datasetLoaded = true; selectedDataset = datasetLoadComponent?.dataset; datasetFile = datasetLoadComponent?.csvRecords; datasetHasHeader = datasetLoadComponent?.dataset!.hasHeader">
             </app-dataset-load>
-            <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
+            <div class="px-5 mt-5">
+                <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
+            </div>
         </div>
 
         <!-- ULAZNE/IZLAZNE KOLONE -->

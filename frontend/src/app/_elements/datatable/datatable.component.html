@@ -1,21 +1,21 @@
 <div *ngIf="data">
-    <div class="table-responsive">
-        <table *ngIf="hasHeader" class="table table-bordered table-light mt-4">
+    <div class="table-responsive" style="max-height: 50vh; max-width: 100%; overflow: scroll;">
+        <table *ngIf="hasHeader" class="table table-bordered table-light">
             <thead>
                 <tr>
                     <th *ngFor="let item of data[0]; let i = index">{{item}}</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of data | slice:1:11">
+                <tr *ngFor="let row of data | slice:1">
                     <td *ngFor="let col of row">{{col}}</td>
                 </tr>
             </tbody>
         </table>
 
-        <table *ngIf="data.length > 0 && !hasHeader" class="table table-bordered table-light mt-4">
+        <table *ngIf="data.length > 0 && !hasHeader" class="table table-bordered table-light">
             <tbody>
-                <tr *ngFor="let row of data | slice:0:10">
+                <tr *ngFor="let row of data">
                     <td *ngFor="let col of row">{{col}}</td>
                 </tr>
             </tbody>
@@ -23,7 +23,8 @@
     </div>
 
     <div id="info">
-        . . . <br>
-        {{data.length}} x {{data[0].length}}
+        <br>
+        <span *ngIf="hasHeader">{{data.length - 1}} x {{data[0].length}}</span>
+        <span *ngIf="!hasHeader">{{data.length}} x {{data[0].length}}</span>
     </div>
 </div>
