@@ -1,1 +1,16 @@
-<p>my-predictors works!</p>
+<div id="header">
+    <h1>Trenirani modeli</h1>
+</div>
+<div id="container" style="background-color:rgba(255, 255, 255, 0.747);">
+<div class="row" *ngFor="let predictor of predictors">
+    <div class="left">
+        <app-item-predictor [predictor]="predictor"></app-item-predictor>
+    </div>
+    <div>
+        <button (click)="delete()" mat-raised-button color="warn" style="min-width: 15rem;float: right" ><mat-icon>delete</mat-icon></button>
+    </div>
+    
+</div>
+
+</div>
+
