@@ -11,6 +11,7 @@ export default class Dataset {
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
         public username: string = '',
-        public delimiter: string = ''
+        public delimiter: string = '',
+        public hasHeader: boolean = true
     ) { }
 }

@@ -209,6 +209,7 @@ export class AddModelComponent implements OnInit {
   selectThisDataset(dataset: Dataset) {
     this.selectedDataset = dataset;
     this.existingDatasetSelected = true;
+    this.datasetHasHeader = this.selectedDataset.hasHeader;
 
     /*let datasets = document.getElementsByClassName("usersDataset") as HTMLCollection;
     for (let i = 0; i < datasets.length; i++) {
@@ -222,7 +223,7 @@ export class AddModelComponent implements OnInit {
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
       }
     });
-    this.datasetHasHeader = false;
+    //this.datasetHasHeader = false;
 
     this.resetCbsAndRbs();
   }
