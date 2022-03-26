@@ -126,6 +126,7 @@ namespace api.Controllers
         public ActionResult<Model> Post([FromBody] Model model)
         {
             //username="" ako je GUEST
+            model.inputNeurons = model.inputColumns.Length;
             if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
                 return BadRequest("Bad parameters!");
 
