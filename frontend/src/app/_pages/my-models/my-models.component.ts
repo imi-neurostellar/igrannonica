@@ -1,22 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 import Model from 'src/app/_data/Model';
+import { ModelsService } from 'src/app/_services/models.service';
 
 @Component({
   selector: 'app-my-models',
   templateUrl: './my-models.component.html',
   styleUrls: ['./my-models.component.css']
 })
-export class MyModelsComponent /*implements OnInit*/ {
-  myModels: Model[];
+export class MyModelsComponent implements OnInit {
+  myModels: Model[] = [];
+  //myModel: Model;
 
-  constructor() {
-    this.myModels = [
-    new Model('Titanik', 'Opis titanik'),
-    new Model('Neki drugi set', 'opis'),
-    new Model('Treci set', 'opis')
-  ]; }
+  constructor(private modelsS : ModelsService) {
 
-  /*ngOnInit(): void {
+    
+
+     }
+
+  ngOnInit(): void {
+    this.getAllMyModels();
+
+  }
+/*
+  editModel(): void{
+    this.modelsS.editModel().subscribe(m => {
+      this.myModel = m;
+
+    })
   }
 */
+
+deleteThisModel(model: Model): void{
+  console.log("OK");
+  this.modelsS.deleteModel(model).subscribe((response) => {
+    console.log("OBRISANOOO JEE", response);
+    //na kraju uspesnog
+    this.getAllMyModels();
+  }, (error) =>{
+      if (error.error == "Model with name = {name} deleted") {
+        alert("Greška pri brisanju modela!");
+      }
+    });
+
+}
+
+  getAllMyModels(): void{
+    this.modelsS.getMyModels().subscribe(m => {
+      
+      this.myModels = m;
+      console.log(this.myModels);
+    });
+  }
+
 }

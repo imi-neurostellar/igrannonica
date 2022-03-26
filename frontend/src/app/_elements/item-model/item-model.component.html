@@ -1,26 +1,14 @@
-<!--
+
 <div class="card" style="min-width: 12rem;">
     <div class="card-header">
         {{model.name}}
     </div>
-    <div class="card-body">
+    <div class="card-body overflow-hidden">
         <p class="card-text">
-            {{model.description}}
+            {{"Opis: "+ model.description}}<br>
+            {{"Datum kreiranja:" + model.dateCreated}}<br>
+            {{"Poslednje ažuriranje:" + model.lastUpdated}}<br>
         </p>
-        <div class="d-flex flex-column align-items-center">
-            <table class="table table-bordered table-sm">
-                <thead>
-                    <th class="text-center" *ngFor="let column of model.inputs">{{column}}</th>
-                </thead>
-            </table>
-            <mat-icon>arrow_downward</mat-icon>
-            <p>
-                {{model.output}}
-            </p>
-        </div>
-    </div>
-    <div class="card-footer text-center">
-        <a routerLink="predict" mat-raised-button color="primary">Iskoristi</a>
+        
     </div>
 </div>
--->
