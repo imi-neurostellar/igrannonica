@@ -24,10 +24,16 @@ export class AuthService {
     return this.http.post(`${API_SETTINGS.apiURL}/auth/register`, { ...user }, { responseType: 'text' });
   }
 
+  getGuestToken(){
+    return this.http.post(`${API_SETTINGS.apiURL}/auth/guestToken`, {}, { responseType: 'text' });
+  }
+
   isAuthenticated(): boolean {
     if (this.cookie.check('token')) {
       var token = this.cookie.get('token');
-      return !jwtHelper.isTokenExpired(token);
+      var property=jwtHelper.decodeToken(this.cookie.get('token'));
+      var username=property['name'];
+      return !jwtHelper.isTokenExpired(token) && username!="";
     }
     return false;
   }
@@ -41,12 +47,30 @@ export class AuthService {
     if (!exp) {
       exp = new Date();
     }
-    this.refresher = setTimeout(() => {
-      console.log('refreshing token!');
-      this.http.post(`${API_SETTINGS.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
-        this.authenticate(response);
-      });
-    }, exp.getTime() - new Date().getTime() - 60000);
+    var property=jwtHelper.decodeToken(this.cookie.get('token'));
+    var username=property['name'];
+    if(username!=""){
+      this.refresher = setTimeout(() => {
+        console.log('refreshing token!');
+        this.http.post(`${API_SETTINGS.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
+          this.authenticate(response);
+        });
+      }, exp.getTime() - new Date().getTime() - 60000);
+    }
+    else{
+      this.refresher = setTimeout(() => {
+        console.log('refreshing token!');
+        this.getGuestToken().subscribe((response) => {
+          this.authenticate(response);
+        });
+      }, exp.getTime() - new Date().getTime() - 60000);
+    }
+  }
+
+  addGuestToken(){
+    this.getGuestToken().subscribe((token)=>{
+      this.authenticate(token);
+    });
   }
 
   authenticate(token: string) {
@@ -74,6 +98,7 @@ export class AuthService {
     if (this.refresher)
       clearTimeout(this.refresher);
     this.shared.loggedIn = false;
+    this.addGuestToken();
   }
 
   authHeader() {
