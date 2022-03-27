@@ -93,7 +93,7 @@ export class AddModelComponent implements OnInit {
     if (this.validationInputsOutput()) {
       console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
       if (this.datasetLoadComponent) {
-
+        console.log("this.datasetLoadComponent.files:", this.datasetLoadComponent.files);
         this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {
           console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
           if (this.datasetLoadComponent) {
@@ -216,18 +216,31 @@ export class AddModelComponent implements OnInit {
       if (datasets[i]._id == dataset._id)
     }*/
 
-
     //this.datasetFile = csvRecords;
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
-        this.datasetFile.length = this.datasetFile.length - 1;
+        for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
+          if (this.datasetFile[i].length != this.datasetFile[0].length)
+            this.datasetFile[i].pop();
+          else 
+            break; //nema potrebe dalje
+        }
         console.log(this.datasetFile);
       }
     });
     //this.datasetHasHeader = false;
 
     this.resetCbsAndRbs();
+  }
+
+  scrollToNextForm() {
+    console.log("USAO U SCROLL");
+    (<HTMLSelectElement>document.getElementById("selectInAndOuts")).scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest"
+    });
   }
 
   resetSelectedDataset(): boolean {
