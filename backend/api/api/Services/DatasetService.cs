@@ -36,6 +36,13 @@ namespace api.Services
         {
             return _dataset.Find(dataset => dataset.username == username).ToList();
         }
+        public List<Dataset> GetGuestDatasets()
+        {
+            //Join Igranonica public datasetove sa svim temp uploadanim datasetovima
+            List<Dataset> datasets= _dataset.Find(dataset => dataset.username == "Igrannonica" && dataset.isPublic == true).ToList();
+            datasets.AddRange(_dataset.Find(dataset => dataset.username == "").ToList());
+            return datasets;
+        }
 
         //poslednji datasetovi
         public List<Dataset> SortDatasets(string username, bool ascdsc, int latest)
