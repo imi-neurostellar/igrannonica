@@ -40,11 +40,11 @@
                     Dodajte novi dataset
                 </button>
             </div>
-
+            <input type="text" class="form-control" placeholder="Pretraga" [(ngModel)]="term">
             <div class="px-5">
                 <div *ngIf="showMyDatasets" class="overflow-auto" style="max-height: 500px;">
                     <ul class="list-group">
-                        <li class="list-group-item p-3" *ngFor="let dataset of myDatasets"
+                        <li class="list-group-item p-3" *ngFor="let dataset of myDatasets|filter:term"
                             [ngClass]="{'selectedDatasetClass': this.selectedDataset == dataset}">
                             <app-item-dataset name="usersDataset" [dataset]="dataset"
                                 (click)="scrollToNextForm(); selectThisDataset(dataset);"></app-item-dataset>
@@ -71,7 +71,7 @@
                         <br>
                         <div *ngFor="let item of selectedDataset.header; let i = index">
                             <input class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}"
-                                name="cbsNew" checked [disabled]="this.selectedOutputColumnVal == item">&nbsp;
+                                name="cbsNew" [checked] = "this.selectedOutputColumnVal != item" [disabled]="this.selectedOutputColumnVal == item">&nbsp;
                             <label class="form-check-label" for="cb_{{item}}">
                                 {{item}}
                             </label>
@@ -159,11 +159,11 @@
                 <div class="col-1">
                 </div>
                 <div class="col-3">
-                    <label for="type" class="col-form-label">Tip mreže: </label>
+                    <label for="type" class="col-form-label">Tip problema: </label>
                 </div>
                 <div class="col-2">
                     <select id=typeOptions class="form-control" name="type" [(ngModel)]="newModel.type">
-                        <option *ngFor="let option of Object.keys(ANNType); let optionName of Object.values(ANNType)"
+                        <option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
                             [value]="option">
                             {{ optionName }}
                         </option>
@@ -258,12 +258,14 @@
             </div>
 
             <div class="row p-2">
-                <div class="col-1">
+                
+                 <!--   <div class="col-1">
                 </div>
                 <div class="col-3">
                     <label for="inputLayerActivationFunction" class="col-form-label">Funkcija aktivacije ulaznog
                         sloja:</label>
                 </div>
+               
                 <div class="col-2">
                     <select id=inputLayerActivationFunctionOptions class="form-control"
                         name="inputLayerActivationFunction" [(ngModel)]="newModel.inputLayerActivationFunction">
@@ -276,6 +278,8 @@
                 </div>
                 <div class="col-1">
                 </div>
+                 -->
+                
                 <div class="col-5">
                     <label for="splitYesNo" class="form-check-label">Podela test skupa:&nbsp;&nbsp;
                         <input id="splitYesNo" class="form-check-input" type="checkbox"

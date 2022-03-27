@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import Model, { ReplaceWith } from 'src/app/_data/Model';
-import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
+import { ProblemType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
@@ -23,7 +23,7 @@ export class AddModelComponent implements OnInit {
 
   newModel: Model;
 
-  ANNType = ANNType;
+  ProblemType = ProblemType;
   Encoding = Encoding;
   ActivationFunction = ActivationFunction;
   LossFunction = LossFunction;
@@ -46,6 +46,9 @@ export class AddModelComponent implements OnInit {
   datasetHasHeader?: boolean = true;
 
   tempTestSetDistribution: number = 90;
+
+  //accepted: Boolean;
+  term: string = "";
 
   constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
     this.newModel = new Model();
