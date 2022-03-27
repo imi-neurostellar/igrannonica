@@ -37,6 +37,7 @@ import { NotificationsComponent } from './_elements/notifications/notifications.
 import { DatatableComponent } from './_elements/datatable/datatable.component';
 import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-datasets.component';
 import { ReactiveBackgroundComponent } from './_elements/reactive-background/reactive-background.component';
+import { ItemModelComponent } from './_elements/item-model/item-model.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { ReactiveBackgroundComponent } from './_elements/reactive-background/rea
     NotificationsComponent,
     DatatableComponent,
     FilterDatasetsComponent,
-    ReactiveBackgroundComponent
+    ReactiveBackgroundComponent,
+    ItemModelComponent
   ],
   imports: [
     BrowserModule,

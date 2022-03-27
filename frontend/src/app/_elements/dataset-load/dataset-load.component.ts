@@ -13,7 +13,7 @@ export class DatasetLoadComponent {
 
   delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
 
-  hasHeader: boolean = true;
+  //hasHeader: boolean = true;
   hasInput: boolean = false;
 
   csvRecords: any[] = [];
@@ -21,7 +21,7 @@ export class DatasetLoadComponent {
   rowsNumber: number = 0;
   colsNumber: number = 0;
 
-  dataset: Dataset;
+  dataset: Dataset; //dodaj ! potencijalno
 
   constructor(private ngxCsvParser: NgxCsvParser) {
     this.dataset = new Dataset();
@@ -54,13 +54,14 @@ export class DatasetLoadComponent {
         console.log('Result', result);
         if (result.constructor === Array) {
           this.csvRecords = result;
-          if (this.hasHeader)
+          if (this.dataset.hasHeader)
             this.rowsNumber = this.csvRecords.length - 1;
           else
             this.rowsNumber = this.csvRecords.length;
           this.colsNumber = this.csvRecords[0].length;
 
-          this.dataset.header = this.csvRecords[0];
+          if (this.dataset.hasHeader) //kasnije dodati opciju kada nema header da korisnik rucno unosi header-e
+            this.dataset.header = this.csvRecords[0];
 
           this.loaded.emit("loaded");
         }

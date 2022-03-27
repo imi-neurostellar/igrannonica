@@ -33,8 +33,8 @@ export class ReactiveBackgroundComponent implements OnInit {
   ngOnInit(): void {
 
     document.addEventListener('mousemove', (e) => {
-      this.mouseX = e.pageX / this.width;
-      this.mouseY = e.pageY / this.height;
+      this.mouseX = e.clientX / this.width;
+      this.mouseY = e.clientY / this.height;
     })
 
     this.canvas = (<HTMLCanvasElement>document.getElementById('bgCanvas'));

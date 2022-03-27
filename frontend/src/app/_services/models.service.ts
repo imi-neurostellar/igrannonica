@@ -42,4 +42,18 @@ export class ModelsService {
   getMyDatasets(): Observable<Dataset[]> {
     return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/mydatasets`, { headers: this.authService.authHeader() });
   }
+  
+  getMyModels(): Observable<Model[]> {
+    return this.http.get<Model[]>(`${API_SETTINGS.apiURL}/model/mymodels`, { headers: this.authService.authHeader() });
+  }
+
+  editModel(model:Model) : Observable<Model>
+  {
+    return this.http.put<Model>(`${API_SETTINGS.apiURL}/model/`, model, { headers: this.authService.authHeader() });
+  }
+
+  deleteModel(model:Model) : Observable<any>
+  {
+    return this.http.delete(`${API_SETTINGS.apiURL}/model/`+model.name, { headers: this.authService.authHeader() });
+  }
 }
