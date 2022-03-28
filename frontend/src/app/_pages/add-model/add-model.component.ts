@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import Model, { ReplaceWith } from 'src/app/_data/Model';
-import { ANNType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
+import { ProblemType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
@@ -23,7 +23,7 @@ export class AddModelComponent implements OnInit {
 
   newModel: Model;
 
-  ANNType = ANNType;
+  ProblemType = ProblemType;
   Encoding = Encoding;
   ActivationFunction = ActivationFunction;
   LossFunction = LossFunction;
@@ -46,6 +46,9 @@ export class AddModelComponent implements OnInit {
   datasetHasHeader?: boolean = true;
 
   tempTestSetDistribution: number = 90;
+
+  //accepted: Boolean;
+  term: string = "";
 
   constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
     this.newModel = new Model();
@@ -93,7 +96,7 @@ export class AddModelComponent implements OnInit {
     if (this.validationInputsOutput()) {
       console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
       if (this.datasetLoadComponent) {
-
+        console.log("this.datasetLoadComponent.files:", this.datasetLoadComponent.files);
         this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {
           console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
           if (this.datasetLoadComponent) {
@@ -216,18 +219,31 @@ export class AddModelComponent implements OnInit {
       if (datasets[i]._id == dataset._id)
     }*/
 
-
     //this.datasetFile = csvRecords;
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
-        this.datasetFile.length = this.datasetFile.length - 1;
+        for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
+          if (this.datasetFile[i].length != this.datasetFile[0].length)
+            this.datasetFile[i].pop();
+          else 
+            break; //nema potrebe dalje
+        }
         console.log(this.datasetFile);
       }
     });
     //this.datasetHasHeader = false;
 
     this.resetCbsAndRbs();
+  }
+
+  scrollToNextForm() {
+    console.log("USAO U SCROLL");
+    (<HTMLSelectElement>document.getElementById("selectInAndOuts")).scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest"
+    });
   }
 
   resetSelectedDataset(): boolean {

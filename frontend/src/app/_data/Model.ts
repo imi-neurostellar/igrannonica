@@ -15,7 +15,7 @@ export default class Model {
         public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
 
         // Neural net training settings
-        public type: ANNType = ANNType.FullyConnected,
+        public type: ProblemType = ProblemType.Regression,
         public encoding: Encoding = Encoding.Label,
         public optimizer: Optimizer = Optimizer.Adam,
         public lossFunction: LossFunction = LossFunction.MeanSquaredError,
@@ -23,8 +23,8 @@ export default class Model {
         public hiddenLayerNeurons: number = 1,
         public hiddenLayers: number = 1,
         public batchSize: number = 5,
-        public inputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
-        public hiddenLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
+        public hiddenLayerActivationFunction = [],
+        //public inputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public username: string = '',
         public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
@@ -32,9 +32,10 @@ export default class Model {
     ) { }
 }
 
-export enum ANNType {
-    FullyConnected = 'potpuno povezana',
-    Convolutional = 'konvoluciona'
+export enum ProblemType {
+    Regression = 'regresioni',
+    BinaryClassification = 'binarni-klasifikacioni',
+    MultiClassification = 'multi-klasifikacioni'
 }
 
 // replaceMissing srednja vrednost mean, median, najcesca vrednost (mode)
