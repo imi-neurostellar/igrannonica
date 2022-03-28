@@ -53,7 +53,7 @@ export class AddModelComponent implements OnInit {
   constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
     this.newModel = new Model();
 
-    this.models.getMyDatasets().subscribe((datasets) => {
+    this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;
     });
   }
@@ -103,7 +103,7 @@ export class AddModelComponent implements OnInit {
             this.datasetLoadComponent.dataset.fileId = file._id;
             this.datasetLoadComponent.dataset.username = shared.username;
 
-            this.models.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
+            this.datasets.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
               console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ', dataset._id);
               this.newModel.datasetId = dataset._id;
 
@@ -279,7 +279,7 @@ export class AddModelComponent implements OnInit {
   }
 
   refreshMyDatasetList() {
-    this.models.getMyDatasets().subscribe((datasets) => {
+    this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;
     });
   }

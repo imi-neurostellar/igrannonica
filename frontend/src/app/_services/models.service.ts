@@ -1,9 +1,8 @@
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import Model from '../_data/Model';
 import { AuthService } from './auth.service';
 import { API_SETTINGS } from 'src/config';
-import Dataset from '../_data/Dataset';
 import { Observable } from 'rxjs';
 
 
@@ -32,17 +31,11 @@ export class ModelsService {
   addModel(model: Model): Observable<any> {
     return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }
-  addDataset(dataset: Dataset): Observable<any> {
-    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
-  }
+  
   trainModel(modelId: string): Observable<any> {
     return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader() });
   }
 
-  getMyDatasets(): Observable<Dataset[]> {
-    return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/mydatasets`, { headers: this.authService.authHeader() });
-  }
-  
   getMyModels(): Observable<Model[]> {
     return this.http.get<Model[]>(`${API_SETTINGS.apiURL}/model/mymodels`, { headers: this.authService.authHeader() });
   }
