@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   constructor(private datasetsService: DatasetsService, private predictorsService: PredictorsService) {
     this.datasetsService.getPublicDatasets().subscribe((datasets) => {
       this.publicDatasets = datasets;
+      console.log(datasets);
     });
     this.predictorsService.getPublicPredictors().subscribe((predictors) => {
       this.publicPredictors = predictors;

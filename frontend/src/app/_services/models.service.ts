@@ -52,8 +52,8 @@ export class ModelsService {
     return this.http.put<Model>(`${API_SETTINGS.apiURL}/model/`, model, { headers: this.authService.authHeader() });
   }
 
-  deleteModel(model:Model) : Observable<any>
+  deleteModel(model:Model) 
   {
-    return this.http.delete(`${API_SETTINGS.apiURL}/model/`+model.name, { headers: this.authService.authHeader() });
+    return this.http.delete(`${API_SETTINGS.apiURL}/model/`+model.name, { headers: this.authService.authHeader(), responseType : "text" });
   }
 }

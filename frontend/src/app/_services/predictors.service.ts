@@ -15,7 +15,7 @@ export class PredictorsService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getPublicPredictors(): Observable<Predictor[]> {
-    return this.http.get<Predictor[]>(`${API_SETTINGS.apiURL}/Predictor/publicpredictors`, { headers: this.authService.authHeader() });
+    return this.http.get<Predictor[]>(`${API_SETTINGS.apiURL}/predictor/publicpredictors`, { headers: this.authService.authHeader() });
   }
 
 }

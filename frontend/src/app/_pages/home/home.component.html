@@ -45,12 +45,12 @@
 
     </div>
     <h2 class="my-4">Pogledajte javne izvore podataka!</h2>
-    <app-carousel [*nglf = "publicDatasets" items]="publicDatasets">
+    <app-carousel *ngIf = "publicDatasets" [items]="publicDatasets">
 
     </app-carousel>
     <h3><a routerLink="browse-datasets">Pogledaj sve javne izvore podataka...</a></h3>
     <h2 class="my-4">Iskoristite već trenirane modele!</h2>
-    <app-carousel [*nglf = "publicPredictors" items]="publicPredictors">
+    <app-carousel *ngIf = "publicPredictors" [items]="publicPredictors">
     </app-carousel>
     <h3><a routerLink="browse-predictors">Pogledaj sve javne trenirane modele...</a></h3>
 </div>
