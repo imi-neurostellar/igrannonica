@@ -40,7 +40,9 @@
                     Dodajte novi dataset
                 </button>
             </div>
-            <input type="text" class="form-control" placeholder="Pretraga" [(ngModel)]="term">
+            <div class="px-5 my-2">
+                <input *ngIf="showMyDatasets" type="text" class="form-control" placeholder="Pretraga" [(ngModel)]="term">
+            </div>
             <div class="px-5">
                 <div *ngIf="showMyDatasets" class="overflow-auto" style="max-height: 500px;">
                     <ul class="list-group">
@@ -71,7 +73,8 @@
                         <br>
                         <div *ngFor="let item of selectedDataset.header; let i = index">
                             <input class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}"
-                                name="cbsNew" [checked] = "this.selectedOutputColumnVal != item" [disabled]="this.selectedOutputColumnVal == item">&nbsp;
+                                name="cbsNew" [checked]="this.selectedOutputColumnVal != item"
+                                [disabled]="this.selectedOutputColumnVal == item">&nbsp;
                             <label class="form-check-label" for="cb_{{item}}">
                                 {{item}}
                             </label>
@@ -93,7 +96,7 @@
                 </div>
 
 
-                <div class="my-2" *ngIf="datasetFile">
+                <div class="mt-5" *ngIf="datasetFile">
                     <h2>Popunjavanje nedostajućih vrednosti:</h2>
                     <div class="form-check">
                         <input type="radio" [(ngModel)]="newModel.nullValues" [value]="NullValueOptions.DeleteRows"
@@ -163,7 +166,8 @@
                 </div>
                 <div class="col-2">
                     <select id=typeOptions class="form-control" name="type" [(ngModel)]="newModel.type">
-                        <option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
+                        <option
+                            *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
                             [value]="option">
                             {{ optionName }}
                         </option>
@@ -176,7 +180,8 @@
                 </div>
                 <div class="col-1">
                     <input type="number" min="1" class="form-control" name="hiddenLayers"
-                        [(ngModel)]="newModel.hiddenLayers">
+                        [(ngModel)]="newModel.hiddenLayers"
+                        (change)="newModel.hiddenLayerActivationFunctions = [].constructor(newModel.hiddenLayers).fill(newModel.hiddenLayerActivationFunctions[0])">
                 </div>
             </div>
 
@@ -258,55 +263,35 @@
             </div>
 
             <div class="row p-2">
-                
-                 <!--   <div class="col-1">
+                <div class="col-3"></div>
+                <div class="col-3">
+                    <label for="hiddenLayerActivationFunction" class="col-form-label">Funkcija aktivacije skrivenih
+                        slojeva:</label>
                 </div>
                 <div class="col-3">
-                    <label for="inputLayerActivationFunction" class="col-form-label">Funkcija aktivacije ulaznog
-                        sloja:</label>
+                    <div *ngFor="let item of [].constructor(newModel.hiddenLayers); let i = index">
+                        <select [id]="'hiddenLayerActivationFunctionOption_'+i" class="form-control"
+                            [(ngModel)]="newModel.hiddenLayerActivationFunctions[i]">
+                            <option
+                                *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
+                                [value]="option">
+                                {{ optionName }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-               
-                <div class="col-2">
-                    <select id=inputLayerActivationFunctionOptions class="form-control"
-                        name="inputLayerActivationFunction" [(ngModel)]="newModel.inputLayerActivationFunction">
-                        <option
-                            *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
-                            [value]="option">
-                            {{ optionName }}
-                        </option>
-                    </select>
-                </div>
-                <div class="col-1">
-                </div>
-                 -->
-                
-                <div class="col-5">
-                    <label for="splitYesNo" class="form-check-label">Podela test skupa:&nbsp;&nbsp;
-                        <input id="splitYesNo" class="form-check-input" type="checkbox"
-                            [checked]="newModel.randomTestSet"
-                            (change)="newModel.randomTestSet = !newModel.randomTestSet">
-                    </label>
-                </div>
-                <div class="col">
-                </div>
+                <div class="col-3"></div>
             </div>
 
             <div class="row p-2">
                 <div class="col-1">
                 </div>
                 <div class="col-3">
-                    <label for="hiddenLayerActivationFunction" class="col-form-label">Funkcija aktivacije skrivenih
-                        slojeva:</label>
-                </div>
-                <div class="col-2">
-                    <select id=hiddenLayerActivationFunctionOptions class="form-control"
-                        name="hiddenLayerActivationFunction" [(ngModel)]="newModel.hiddenLayerActivationFunction">
-                        <option
-                            *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
-                            [value]="option">
-                            {{ optionName }}
-                        </option>
-                    </select>
+                    <label for="splitYesNo" class="form-check-label">Podela test skupa:&nbsp;&nbsp;
+                        <input id="splitYesNo" class="form-check-input" type="checkbox"
+                            [checked]="newModel.randomTestSet"
+                            (change)="newModel.randomTestSet = !newModel.randomTestSet">
+                    </label>
                 </div>
                 <div class="col-1">
                 </div>
@@ -357,7 +342,7 @@
             <button class="btn btn-lg col-4" style="background-color:#003459; color:white;"
                 (click)="addModel();">Sačuvaj model</button>
             <div class="col"></div>
-            <button class="btn btn-lg col-4 disabled" style="background-color:#003459; color:white;"
+            <button class="btn btn-lg col-4" style="background-color:#003459; color:white;"
                 (click)="trainModel();">Treniraj model</button>
             <div class="col"></div>
         </div>

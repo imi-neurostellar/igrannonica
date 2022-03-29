@@ -14,22 +14,28 @@ namespace api.Controllers
     {
 
         private IMlConnectionService _mlService;
+        private readonly IDatasetService _datasetService;
+        private readonly IFileService _fileService;
         private readonly IModelService _modelService;
         private JwtToken jwtToken;
 
 
-        public ModelController(IMlConnectionService mlService, IModelService modelService, IConfiguration configuration)
+        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration)
         {
             _mlService = mlService;
             _modelService = modelService;
+            _datasetService = datasetService;
+            _fileService = fileService;
             jwtToken = new JwtToken(configuration);
         }
 
         [HttpPost("sendModel")]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult<string>> Test([FromBody] object model)
+        public async Task<ActionResult<string>> Test([FromBody] Model model)
         {
-            var result = await _mlService.SendModelAsync(model);
+            var dataset = _datasetService.GetOneDataset(model.datasetId);
+            var filepath = _fileService.GetFilePath(dataset.fileId, dataset.username);
+            var result = await _mlService.SendModelAsync(model, filepath);
             return Ok(result);
         }
 

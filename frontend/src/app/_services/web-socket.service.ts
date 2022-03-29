@@ -13,15 +13,15 @@ export class WebSocketService {
 
   constructor() {
     this.ws = new WebsocketBuilder(API_SETTINGS.apiWSUrl)
-      .withBackoff(new ConstantBackoff(30000))
-      .onOpen((i, e) => { console.log('WS: Connected to ' + API_SETTINGS.apiWSUrl) })
+      .withBackoff(new ConstantBackoff(120000))
+      .onOpen((i, e) => { /*console.log('WS: Connected to ' + API_SETTINGS.apiWSUrl)*/ })
       .onMessage((i, e) => {
         console.log('WS MESSAGE: ', e.data);
         this.handlers.forEach(handler => {
           handler(e.data);
         })
       })
-      .onClose((i, e) => { console.log('WS: Connection closed!') })
+      .onClose((i, e) => { /*console.log('WS: Connection closed!')*/ })
       .build();
   }
 

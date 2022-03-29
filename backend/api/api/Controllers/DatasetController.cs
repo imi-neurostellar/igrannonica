@@ -24,7 +24,7 @@ namespace api.Controllers
 
         // GET: api/<DatasetController>/mydatasets
         [HttpGet("mydatasets")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Dataset>> Get()
         {
             string username;
@@ -39,6 +39,9 @@ namespace api.Controllers
             }
             else
                 return BadRequest();
+            //U slucaju da je korisnik gost vrati dataSetove igrannonice
+            if (username == "")
+                return _datasetService.GetGuestDatasets();
 
             //ako bude trebao ID, samo iz baze uzeti
 

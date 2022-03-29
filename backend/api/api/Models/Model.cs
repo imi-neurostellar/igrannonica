@@ -38,10 +38,13 @@ namespace api.Models
         public int batchSize { get; set; }
         // na izlazu je moguce da bude vise neurona (klasifikacioni problem sa vise od 2 klase)
         public int outputNeurons { get; set; }
-        public string inputLayerActivationFunction { get; set; }
-        public string hiddenLayerActivationFunction { get; set; }
+        public string[] hiddenLayerActivationFunctions { get; set; }
         public string outputLayerActivationFunction { get; set; }
 
+        public string[] metrics { get; set; }
+        public int epochs { get; set; }
 
+        public string nullValues { get; set; }
+        public string[] nullValuesReplacers { get; set; }
     }
 }

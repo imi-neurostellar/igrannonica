@@ -135,8 +135,7 @@ namespace api.Controllers
             else
                 return BadRequest();
 
-            userService.Update(username, user);
-            return NoContent();
+            return Ok(userService.Update(username, user));
         }
 
         // DELETE api/<UserController>/5

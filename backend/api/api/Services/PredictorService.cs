@@ -40,6 +40,11 @@ namespace api.Services
             return _predictor.Find(predictor => predictor.username == username && predictor.name == name).FirstOrDefault();
 
         }
+        public Predictor GetPredictor(string username, string id)
+        {
+            return _predictor.Find(predictor => predictor.username == username && predictor._id == id).FirstOrDefault();
+
+        }
         //last private models
         public List<Predictor> SortPredictors(string username, bool ascdsc, int latest)
         {

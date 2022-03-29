@@ -7,18 +7,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReactiveBackgroundComponent implements OnInit {
 
-  numPoints: number = 400;
+  numPoints: number = 450;
   speed: number = 0.001; // 0-1
   rotateInterval: number = 1000;
   maxSize: number = 6;
 
-  minDistance: number = 0.1; //0-1
-  cursorDistance: number = 0.15;
+  minDistance: number = 0.07; //0-1
+  cursorDistance: number = 0.07;
 
   private points: Point[] = [];
 
   private width = 200;
   private height = 200;
+  private ratio = 1;
 
   private canvas?: HTMLCanvasElement;
   private ctx?: CanvasRenderingContext2D;
@@ -110,6 +111,7 @@ export class ReactiveBackgroundComponent implements OnInit {
   resize() {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
+    this.ratio = this.width / this.height;
 
     if (this.canvas) {
       this.canvas.width = this.width;
@@ -149,7 +151,7 @@ export class ReactiveBackgroundComponent implements OnInit {
   }
 
   distance(x1: number, y1: number, x2: number, y2: number): number {
-    return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    return Math.sqrt(((x2 - x1) ** 2) + ((y2 / this.ratio - y1 / this.ratio) ** 2));
   }
 }
 
