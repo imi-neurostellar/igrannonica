@@ -14,12 +14,15 @@ def get_or_create_eventloop():
 # create handler for each connection
 async def handler(websocket, path):
     #data = json.loads(await websocket.recv())
-    #reply = f"Data recieved as:  {data}!"
     #print(data['test'])
     msg = await websocket.recv()
-    await websocket.send("[" + msg + "]")
+    print(msg)
 
-start_server = websockets.serve(handler, "localhost", 5027)
+async def start():
+    start_server = websockets.serve(handler, "localhost", 5027)
+    print('Websocket starting...')
+    get_or_create_eventloop().run_until_complete(start_server)
+    get_or_create_eventloop().run_forever()
 
-get_or_create_eventloop().run_until_complete(start_server)
-get_or_create_eventloop().run_forever()
+async def send(msg):
+    await websocket.send(msg)

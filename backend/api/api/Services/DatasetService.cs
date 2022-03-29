@@ -61,6 +61,11 @@ namespace api.Services
         }
         //odraditi za pretragu getOne
 
+        public Dataset GetOneDataset(string id)
+        {
+            return _dataset.Find(dataset => dataset._id == id).FirstOrDefault();
+        }
+
         //ako je potrebno da se zameni name  ili ekstenzija
         public void Update(string username, string name, Dataset dataset)
         {

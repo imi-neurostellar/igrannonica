@@ -76,19 +76,28 @@ export class AddModelComponent implements OnInit {
 
   addModel() {
     if (!this.showMyDatasets)
-      this.saveModelWithNewDataset();
+      this.saveModelWithNewDataset(_ => { console.log('MODEL ADDED (with new dataset).') });
     else
-      this.saveModelWithExistingDataset();
+      this.saveModelWithExistingDataset(_ => { console.log('MODEL ADDED (with existing dataset).') });
   }
 
   trainModel() {
-    this.saveModelWithNewDataset().subscribe((modelId: any) => {
-      if (modelId)
-        this.models.trainModel(modelId);
-    }); //privremeno cuvanje modela => vraca id sacuvanog modela koji cemo da treniramo sad
+    let saveFunc;
+
+    if (!this.showMyDatasets)
+      saveFunc = (x: (arg0: any) => void) => { this.saveModelWithNewDataset(x) };
+    else
+      saveFunc = (x: (arg0: any) => void) => { this.saveModelWithExistingDataset(x) };
+
+    saveFunc(((model: any) => {
+      console.log('Saved, training model...', model);
+      this.models.trainModel(model).subscribe(response => {
+        console.log('Train model complete!', response);
+      });
+    })); //privremeno cuvanje modela => vraca id sacuvanog modela koji cemo da treniramo sad
   }
 
-  saveModelWithNewDataset(): any {
+  saveModelWithNewDataset(callback: ((arg0: any) => void)) {
 
     this.getCheckedInputCols();
     this.getCheckedOutputCol();
@@ -117,7 +126,7 @@ export class AddModelComponent implements OnInit {
               this.newModel.username = shared.username;
 
               this.models.addModel(this.newModel).subscribe((response) => {
-                console.log('ADD MODEL: DONE! REPLY:\n', response);
+                callback(response);
               }, (error) => {
                 alert("Model sa unetim nazivom već postoji u Vašoj kolekciji.\nPromenite naziv modela i nastavite sa kreiranim datasetom.");
               }); //kraj addModel subscribe
@@ -133,8 +142,7 @@ export class AddModelComponent implements OnInit {
     } //kraj prvog ifa
   }
 
-  saveModelWithExistingDataset(): any {
-
+  saveModelWithExistingDataset(callback: ((arg0: any) => void)): any {
     if (this.selectedDataset) { //dataset je izabran
       this.getCheckedInputCols();
       this.getCheckedOutputCol();
@@ -147,7 +155,7 @@ export class AddModelComponent implements OnInit {
         this.newModel.username = shared.username;
 
         this.models.addModel(this.newModel).subscribe((response) => {
-          console.log('ADD MODEL: DONE! REPLY:\n', response);
+          callback(response);
         }, (error) => {
           alert("Model sa unetim nazivom već postoji u Vašoj kolekciji.\nPromenite naziv modela i nastavite sa kreiranim datasetom.");
         });
@@ -226,7 +234,7 @@ export class AddModelComponent implements OnInit {
         for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
           if (this.datasetFile[i].length != this.datasetFile[0].length)
             this.datasetFile[i].pop();
-          else 
+          else
             break; //nema potrebe dalje
         }
         console.log(this.datasetFile);

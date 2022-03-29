@@ -4,6 +4,7 @@ import Model from '../_data/Model';
 import { AuthService } from './auth.service';
 import { API_SETTINGS } from 'src/config';
 import { Observable } from 'rxjs';
+import Dataset from '../_data/Dataset';
 
 
 @Injectable({
@@ -31,22 +32,26 @@ export class ModelsService {
   addModel(model: Model): Observable<any> {
     return this.http.post(`${API_SETTINGS.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }
-  
-  trainModel(modelId: string): Observable<any> {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/train`, modelId, { headers: this.authService.authHeader() });
+  addDataset(dataset: Dataset): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
+  }
+  trainModel(model: Model): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/model/sendmodel`, model, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+
+  getMyDatasets(): Observable<Dataset[]> {
+    return this.http.get<Dataset[]>(`${API_SETTINGS.apiURL}/dataset/mydatasets`, { headers: this.authService.authHeader() });
   }
 
   getMyModels(): Observable<Model[]> {
     return this.http.get<Model[]>(`${API_SETTINGS.apiURL}/model/mymodels`, { headers: this.authService.authHeader() });
   }
 
-  editModel(model:Model) : Observable<Model>
-  {
+  editModel(model: Model): Observable<Model> {
     return this.http.put<Model>(`${API_SETTINGS.apiURL}/model/`, model, { headers: this.authService.authHeader() });
   }
 
-  deleteModel(model:Model) 
-  {
-    return this.http.delete(`${API_SETTINGS.apiURL}/model/`+model.name, { headers: this.authService.authHeader(), responseType : "text" });
+  deleteModel(model: Model) {
+    return this.http.delete(`${API_SETTINGS.apiURL}/model/` + model.name, { headers: this.authService.authHeader(), responseType: "text" });
   }
 }
