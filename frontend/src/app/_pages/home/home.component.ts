@@ -13,32 +13,19 @@ import { PredictorsService } from 'src/app/_services/predictors.service';
 })
 export class HomeComponent implements OnInit {
 
-  publicDatasets: Dataset[];
-  publicPredictors: Predictor[];
+  publicDatasets?: Dataset[];
+  publicPredictors?: Predictor[];
 
   shared = shared;
 
-  constructor() {
-    this.publicDatasets = [
-      new Dataset('Titanik', 'Titanik', ['Kolona1', 'Kolona2', 'Ime', 'OsobaJePreživela']),
-      new Dataset('Drugi Dataset', 'Lorem ipsum dolor sir amet', ['jabuka', 'kruska', 'jagoda']),
-      new Dataset('Dataset III', 'Kratak opis izvora podataka', ['c1', 'c2', 'c3', 'c4', 'c5']),
-      new Dataset('Drugi Dataset', 'Lorem ipsum dolor sir amet', ['jabuka', 'kruska', 'jagoda']),
-      new Dataset('Dataset III', 'Kratak opis izvora podataka', ['c1', 'c2', 'c3', 'c4', 'c5']),
-      new Dataset('Drugi Dataset', 'Lorem ipsum dolor sir amet', ['jabuka', 'kruska', 'jagoda']),
-      new Dataset('Dataset III', 'Kratak opis izvora podataka', ['c1', 'c2', 'c3', 'c4', 'c5']),
-      new Dataset('Dataset III', 'Kratak opis izvora podataka', ['c1', 'c2', 'c3', 'c4', 'c5'])
-    ]
-    this.publicPredictors = [
-      new Predictor('Preživeli', 'Za uneto ime osobe, predvidja da li je ta osoba preživela ili ne.', ['Ime'], 'OsobaJePreživela'),
-      new Predictor('Drugi model', 'Lorem ipsum dolor sir amet', ['kruska'], 'jagoda'),
-      new Predictor('Treći model', 'Kratak opis modela', ['c1', 'c2', 'c3'], 'c5'),
-      new Predictor('Drugi model', 'Lorem ipsum dolor sir amet', ['kruska'], 'jagoda'),
-      new Predictor('Treći model', 'Kratak opis modela', ['c1', 'c2', 'c3'], 'c5'),
-      new Predictor('Drugi model', 'Lorem ipsum dolor sir amet', ['kruska'], 'jagoda'),
-      new Predictor('Treći model', 'Kratak opis modela', ['c1', 'c2', 'c3'], 'c5'),
-      new Predictor('Treći model', 'Kratak opis modela', ['c1', 'c2', 'c3'], 'c5')
-    ]
+  constructor(private datasetsService: DatasetsService, private predictorsService: PredictorsService) {
+    this.datasetsService.getPublicDatasets().subscribe((datasets) => {
+      this.publicDatasets = datasets;
+      console.log(datasets);
+    });
+    this.predictorsService.getPublicPredictors().subscribe((predictors) => {
+      this.publicPredictors = predictors;
+    });
   }
 
   ngOnInit(): void {

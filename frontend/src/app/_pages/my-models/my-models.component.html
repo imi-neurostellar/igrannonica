@@ -9,7 +9,9 @@
                 <div class="col-sm-4" style="margin-bottom: 10px;" *ngFor="let model of myModels">
                 <app-item-model [model]="model"></app-item-model>
                 <div style="width: 25%; margin: auto;">
-                    <button (click)="deleteThisModel(model)" style="margin-top: 3px; width: 100%;">Obriši</button>
+                    <button mat-raised-button color="primary" (click)="deleteThisModel(model)" style="margin-top: 3px; width: 100%;">Obriši</button>
+                    
+                    <button mat-raised-button color="primary" (click)="deleteThisModel(model)" style="margin-top: 3px; width: 100%;">Koristi</button>
                 </div>
                 </div>
             </div>
