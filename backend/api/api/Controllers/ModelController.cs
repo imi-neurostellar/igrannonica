@@ -30,7 +30,7 @@ namespace api.Controllers
         }
 
         [HttpPost("sendModel")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<string>> Test([FromBody] Model model)
         {
             var dataset = _datasetService.GetOneDataset(model.datasetId);
