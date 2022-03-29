@@ -6,6 +6,7 @@ namespace api.Services
 	public interface IModelService
 	{
         Model GetOneModel(string username, string name);
+        Model GetOneModel(string id);
         List<Model> GetMyModels(string username);
         List<Model> GetLatestModels(string username);
         //List<Model> GetPublicModels();

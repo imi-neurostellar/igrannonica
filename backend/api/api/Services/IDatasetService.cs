@@ -6,6 +6,7 @@ namespace api.Services
     public interface IDatasetService
     {
         Dataset GetOneDataset(string username, string name);
+        Dataset GetOneDataset(string id);
         List<Dataset> SearchDatasets(string name, string username);
         List<Dataset> GetMyDatasets(string username);
         List<Dataset> SortDatasets(string username, bool ascdsc, int latest);

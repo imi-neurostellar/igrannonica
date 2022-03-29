@@ -23,12 +23,14 @@ export default class Model {
         public hiddenLayerNeurons: number = 1,
         public hiddenLayers: number = 1,
         public batchSize: number = 5,
-        public hiddenLayerActivationFunction = [],
+        public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
         //public inputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public username: string = '',
         public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
-        public nullValuesReplacers = []
+        public nullValuesReplacers = [],
+        public metrics: Metric[] = [], // TODO add to add-model form
+        public epochs: number = 5 // TODO add to add-model form
     ) { }
 }
 
@@ -111,4 +113,11 @@ export enum ReplaceWith {
     None = 'Popuni...',
     Mean = 'Srednja vrednost',
     Median = 'Medijana'
+}
+
+export enum Metric {
+    MSE = 'mse',
+    MAE = 'mae',
+    RMSE = 'rmse'
+    //...
 }

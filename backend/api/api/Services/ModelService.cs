@@ -50,6 +50,11 @@ namespace api.Services
             return _model.Find(model => model.username == username && model.name == name).FirstOrDefault();
         }
 
+        public Model GetOneModel(string id)
+        {
+            return _model.Find(model => model._id == id).FirstOrDefault();
+        }
+
         public void Update(string username, string name, Model model)
         {
             _model.ReplaceOne(model => model.username == username && model.name == name, model);
