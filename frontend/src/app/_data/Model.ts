@@ -28,7 +28,7 @@ export default class Model {
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public username: string = '',
         public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
-        public nullValuesReplacers = [],
+        public nullValuesReplacers: NullValReplacer[] = [],
         public metrics: Metric[] = [], // TODO add to add-model form
         public epochs: number = 5 // TODO add to add-model form
     ) { }
@@ -113,6 +113,12 @@ export enum ReplaceWith {
     None = 'Popuni...',
     Mean = 'Srednja vrednost',
     Median = 'Medijana'
+}
+
+export class NullValReplacer {
+    "column": string;
+    "option": NullValueOptions;
+    "value" : any;
 }
 
 export enum Metric {
