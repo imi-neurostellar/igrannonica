@@ -6,6 +6,7 @@ namespace api.Services
 	public interface IPredictorService
 	{
         Predictor GetOnePredictor(string username, string name);
+        Predictor GetPredictor(string username, string GetPredictor);
         List<Predictor> SearchPredictors(string name, string username);
         List<Predictor> GetMyPredictors(string username);
         List<Predictor> SortPredictors(string username, bool ascdsc, int latest);

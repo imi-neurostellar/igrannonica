@@ -74,6 +74,36 @@ namespace api.Controllers
             return _predictorService.SearchPredictors(name, username);
         }
 
+        //SEARCH za predictore (public ili private sa ovim imenom )
+        // GET api/<PredictorController>/search/{name}
+        [HttpGet("{id}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<Predictor> GetPredictor(string id)
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            //ako bude trebao ID, samo iz baze uzeti
+
+            Predictor predictor = _predictorService.GetPredictor(username, id);
+
+            if (predictor == null)
+                return NotFound($"Predictor with id = {id} not found");
+
+            return predictor;
+        }
+
+
         //da li da se odvoji search za public i posebno za private?
         // GET api/<PredictorController>/{name}
         [HttpGet("{name}")]
