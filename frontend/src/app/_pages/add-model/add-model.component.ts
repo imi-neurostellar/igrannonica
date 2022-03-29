@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import Model, { ReplaceWith } from 'src/app/_data/Model';
+import Model, { NullValReplacer, ReplaceWith } from 'src/app/_data/Model';
 import { ProblemType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
@@ -154,6 +154,8 @@ export class AddModelComponent implements OnInit {
         this.tempTestSetDistribution = 90;
         this.newModel.username = shared.username;
 
+        this.newModel.nullValuesReplacers = this.getNullValuesReplacersArray();
+
         this.models.addModel(this.newModel).subscribe((response) => {
           callback(response);
         }, (error) => {
@@ -174,7 +176,7 @@ export class AddModelComponent implements OnInit {
 
     for (let i = 0; i < checkboxes.length; i++) {
       let thatCb = <HTMLInputElement>checkboxes[i];
-      if (thatCb.checked == true && thatCb.disabled == false)
+      if (thatCb.checked == true) // && thatCb.disabled == false ne treba nam ovo vise
         this.newModel.inputColumns.push(thatCb.value);
     }
     //console.log(this.checkedInputCols);
@@ -231,22 +233,21 @@ export class AddModelComponent implements OnInit {
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
-        for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
+        /*for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
           if (this.datasetFile[i].length != this.datasetFile[0].length)
             this.datasetFile[i].pop();
           else
             break; //nema potrebe dalje
-        }
+        }*/
         console.log(this.datasetFile);
+        this.resetCbsAndRbs();
+        //this.refreshThreeNullValueRadioOptions();
       }
     });
     //this.datasetHasHeader = false;
-
-    this.resetCbsAndRbs();
   }
 
   scrollToNextForm() {
-    console.log("USAO U SCROLL");
     (<HTMLSelectElement>document.getElementById("selectInAndOuts")).scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -292,10 +293,114 @@ export class AddModelComponent implements OnInit {
     });
   }
 
+  refreshThreeNullValueRadioOptions() {
+    //console.log((<HTMLInputElement>document.getElementById("delRows")).checked);
+    const input = document.getElementById('delRows');
+  console.log(input); // 👉️ input#subscribe
+
+// ✅ Works
+    //input.checked = true;
+    (<HTMLInputElement>document.getElementById("delRows")).checked = true;
+    (<HTMLInputElement>document.getElementById("delCols")).checked = false;
+    (<HTMLInputElement>document.getElementById("replace")).checked = false;
+  }
+
+  isChecked(someId: string) { //proveri ako je element sa datim ID-em cekiran
+    //console.log(someId);
+    //console.log((<HTMLInputElement>document.getElementById(someId)).checked);
+    return (<HTMLInputElement>document.getElementById(someId)).checked;
+  }
+
   isNumber(value: string | number): boolean {
     return ((value != null) &&
       (value !== '') &&
       !isNaN(Number(value.toString())));
+  }
+
+  findIndexOfCol(colName: string) : number {
+    if (this.datasetFile) 
+      for (let i = 0; i < this.datasetFile[0].length; i++) 
+        if (colName === this.datasetFile[0][i]) 
+          return i;
+    return -1;
+  }
+  calculateSumOfNullValuesInCol(colName: string): number {
+    //console.log(this.datasetFile);
+    if (this.datasetFile) {
+      let colIndex = this.findIndexOfCol(colName);
+      let sumOfNulls = 0;
+      for (let i = 1; i < this.datasetFile.length; i++) 
+        if (this.datasetFile[i][colIndex] == '')
+          ++sumOfNulls;
+      //console.log(sumOfNulls);
+      return sumOfNulls;
+    }
+    return -1;
+  }
+  calculateMeanColValue(colName: string): number {
+    if (this.datasetFile) {
+      let colIndex = this.findIndexOfCol(colName);
+      let sum = 0;
+      let n = 0;
+      for (let i = 1; i < this.datasetFile.length; i++)
+        if (this.datasetFile[i][colIndex] != '') {
+          sum += Number(this.datasetFile[i][colIndex]);
+          ++n;
+        }
+        console.log(sum / n);
+      return sum / n;
+    }
+    return 0;
+  }
+  calculateMedianColValue(colName: string): number {
+    if (this.datasetFile) {
+      let array = [];
+      let colIndex = this.findIndexOfCol(colName);
+      for (let i = 1; i < this.datasetFile.length; i++)
+        if (this.datasetFile[i][colIndex] != '')
+          array.push(Number(this.datasetFile[i][colIndex]));
+          
+      array.sort();
+      if (array.length % 2 == 0)
+        return array[array.length / 2 - 1] / 2;
+      else
+        return array[(array.length - 1) / 2];
+    }
+    return 0;
+  }
+  
+  getNullValuesReplacersArray() : NullValReplacer[] {
+    /*let array: NullValReplacer[] = [];
+
+    //za svaku kolonu
+    if (this.datasetFile) {
+
+      if ((<HTMLInputElement>document.getElementById("delRows")).checked) { //obrisi sve redove
+        this.newModel.nullValues = NullValueOptions.DeleteRows;
+      }
+      else if ((<HTMLInputElement>document.getElementById("delCols")).checked) {
+        this.newModel.nullValues = NullValueOptions.DeleteColumns;
+      }
+      else if ((<HTMLInputElement>document.getElementById("replace")).checked) {
+        this.newModel.nullValues = NullValueOptions.Replace;*/
+
+        //for petlje
+        
+      //}
+
+      //proveri ova prva tri rba, ako je 3. cekiran, ide for petlja
+      //if ((<HTMLInputElement>document.getElementById("delCol_" + column)).checked)
+
+      //for (let i = 0; i < this.datasetFile[0].length; i++) { //svi hederi
+        //let column = this.datasetFile[0][i];
+
+        //if ((<HTMLInputElement>document.getElementById("delCol_" + column)).checked) //obrisi celu kolonu
+          //var e = (<HTMLInputElement>document.getElementById("organization")).value;
+      //}
+    //}
+    
+      
+    return [];
   }
 
   getInputById(id: string): HTMLInputElement {
