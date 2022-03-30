@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
+using System.Diagnostics;
 
 namespace api.Controllers
 {
@@ -74,8 +75,8 @@ namespace api.Controllers
             return _predictorService.SearchPredictors(name, username);
         }
 
-        // GET api/<PredictorController>/{name}
-        [HttpGet("{id}")]
+        // GET api/<PredictorController>/getpredictor/{name}
+        [HttpGet("getpredictor/{id}")]
         [Authorize(Roles = "User")]
         public ActionResult<Predictor> GetPredictor(string id)
         {
@@ -185,6 +186,31 @@ namespace api.Controllers
             }
         }
 
+        // POST api/<PredictorController>/usepredictor {predictor,inputs}
+        [HttpPost("usepredictor/{id}")]
+        [Authorize(Roles = "User")]
+        public ActionResult UsePredictor(String id, [FromBody] String[] inputs)
+        {
+
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            Predictor predictor = _predictorService.GetPredictor(username, id);
+            
+            foreach(String i in inputs)
+                Debug.WriteLine(i); 
+            return NoContent();
+        }
 
 
         // PUT api/<PredictorController>/{name}
