@@ -19,13 +19,13 @@ export class AnnvisualComponent implements OnInit {
     let hiddenlayerstring:string='';
     let digraphstring:string='digraph {';
 
-    for(let i=0;i<this.model.inputNeurons;i++)
+    for(let i=0;i<this.model.inputColumns.length;i++)
     {
       inputlayerstring=inputlayerstring+'i'+i+',';
     }
     inputlayerstring=inputlayerstring.slice(0,-1);
 
-    digraphstring=digraphstring+'->';
+    digraphstring=digraphstring+inputlayerstring+'->';
 
     for(let j=0;j<this.model.hiddenLayers;j++)
     {
@@ -33,15 +33,18 @@ export class AnnvisualComponent implements OnInit {
       {
         hiddenlayerstring=hiddenlayerstring+'h'+j+'_'+i+',';
       }
-      hiddenlayerstring=hiddenlayerstring.slice(0,1);
+      hiddenlayerstring=hiddenlayerstring.slice(0,-1);
       digraphstring=digraphstring+hiddenlayerstring+'->';
       hiddenlayerstring='';
     }
     digraphstring=digraphstring+'o}';
-    alert(digraphstring);
+    
     
     graphviz('#graph').renderDot(digraphstring);
     }
 
-
+    //'digraph {i0,i1,i2->h1,h2,h3->h21,h22,h23->o}'
 }
+
+
+
