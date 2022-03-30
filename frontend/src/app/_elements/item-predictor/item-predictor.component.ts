@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import Predictor from 'src/app/_data/Predictor';
 
 @Component({
@@ -10,13 +11,14 @@ export class ItemPredictorComponent implements OnInit {
 
   @Input() predictor: Predictor = new Predictor();
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
   openPredictor() {
-    console.log("iskoristi")
+    this.router.navigate(['predict/'+ '6244958a26cf2385bc29ba2c']);
+    //this.router.navigate(['predict'+this.predictor._id]);
     }
 
 }

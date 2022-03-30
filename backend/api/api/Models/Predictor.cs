@@ -20,3 +20,19 @@ namespace api.Models
 	}
 }
 
+/*
+{
+	"_id" : "6244950f26cf2385bc29ba28",
+		"username" : "ivan123",
+	  "name" : "Neki prediktor",
+		"description" : "Neki opis prediktora koji je unet tamo",
+		"inputs": ["proba",
+		  "proba2", 
+		  "proba3"
+		],
+		"output" : "",
+		"isPublic" : true,
+		"accessibleByLink" : false,
+		"dateCreated" : "232"
+}
+*/
