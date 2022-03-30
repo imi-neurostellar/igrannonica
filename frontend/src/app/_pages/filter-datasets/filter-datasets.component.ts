@@ -32,9 +32,18 @@ export class FilterDatasetsComponent implements OnInit {
     newDataset.isPublic = false;
     newDataset.lastUpdated = new Date();
     newDataset.username = decodedToken.name;
+    let name=prompt("Unesite naziv dataset-a",newDataset.name);
+    newDataset.name=name as string;
+    if(name!=null && name!="")
     this.datasets.addDataset(newDataset).subscribe((response:string)=>{
       console.log(response);
+      alert("Uspenso ste dodali dataset sa imenom "+newDataset.name);
+    },(error)=>{
+      alert("Vec imate dataset sa istim imenom molim vas unesite drugo ime");
+      
+
     });
+  
   };
 
 }
