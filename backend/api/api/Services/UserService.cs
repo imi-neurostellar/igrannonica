@@ -33,6 +33,14 @@ namespace api.Services
         {
             return _users.Find(user => true).ToList();
         }
+        public User GetUserByUsername(string username)
+        {
+            return _users.Find(user=>user.Username == username).FirstOrDefault();
+        }
+        public User GetUserById(string id)
+        {
+            return _users.Find(user => user._id == id).FirstOrDefault();
+        }
         public User GetUserUsername(string username)
         {
             return _users.Find(user => user.Username == username).FirstOrDefault();

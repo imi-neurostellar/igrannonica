@@ -17,16 +17,16 @@ namespace api.Controllers
         private readonly IDatasetService _datasetService;
         private readonly IFileService _fileService;
         private readonly IModelService _modelService;
-        private JwtToken jwtToken;
+        private IJwtToken jwtToken;
 
 
-        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration)
+        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token)
         {
             _mlService = mlService;
             _modelService = modelService;
             _datasetService = datasetService;
             _fileService = fileService;
-            jwtToken = new JwtToken(configuration);
+            jwtToken = token;
         }
 
         [HttpPost("sendModel")]

@@ -2,27 +2,33 @@
 using System.Security.Claims;
 using System.Text;
 using api.Models.Users;
+using api.Services;
 using Microsoft.IdentityModel.Tokens;
 
 namespace api.Models
 {
-    public class JwtToken
+    public class JwtToken : IJwtToken
     {
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public JwtToken(IConfiguration configuration)
+        public JwtToken(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
+            _userService = userService;
+
         }
-        
+
         public string GenToken(AuthRequest user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
+            var fullUser = _userService.GetUserByUsername(user.UserName);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("name", user.UserName),
-                                                    new Claim("role", "User")}),
+                Subject = new ClaimsIdentity(new[] { new Claim("name", fullUser.Username),
+                                                    new Claim("role", "User"),
+                                                    new Claim("id",fullUser._id)}),
                 Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -76,7 +82,8 @@ namespace api.Models
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("name",""),
-                                                    new Claim("role", "Guest")}),
+                                                    new Claim("role", "Guest"),
+                                                    new Claim("id","")}),
                 Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
