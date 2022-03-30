@@ -1,6 +1,7 @@
 using System.Text;
 using api.Data;
 using api.Interfaces;
+using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IMlConnectionService, MlConnectionService>();
 builder.Services.AddScoped<IModelService, ModelService>();
 builder.Services.AddScoped<IPredictorService, PredictorService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IJwtToken, JwtToken>();
 
 var mlwss = new MLWebSocketService();
 

@@ -15,12 +15,12 @@ namespace api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
-        private JwtToken jwtToken;
+        private IJwtToken jwtToken;
 
-        public UserController(IUserService userService, IConfiguration configuration)
+        public UserController(IUserService userService, IConfiguration configuration,IJwtToken token)
         {
             this.userService = userService;
-            jwtToken = new JwtToken(configuration);
+            jwtToken = token;
         }
 
         // GET: api/<UserController>

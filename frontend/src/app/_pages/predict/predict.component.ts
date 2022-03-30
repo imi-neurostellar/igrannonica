@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Predictor from 'src/app/_data/Predictor';
 
 @Component({
   selector: 'app-predict',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PredictComponent implements OnInit {
 
-  constructor() { }
+  predictor:Predictor;
+  constructor() {
+    this.predictor = new Predictor();
+   }
 
   ngOnInit(): void {
   }

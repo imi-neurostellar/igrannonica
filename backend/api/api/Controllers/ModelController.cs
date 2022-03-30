@@ -17,16 +17,16 @@ namespace api.Controllers
         private readonly IDatasetService _datasetService;
         private readonly IFileService _fileService;
         private readonly IModelService _modelService;
-        private JwtToken jwtToken;
+        private IJwtToken jwtToken;
 
 
-        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration)
+        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token)
         {
             _mlService = mlService;
             _modelService = modelService;
             _datasetService = datasetService;
             _fileService = fileService;
-            jwtToken = new JwtToken(configuration);
+            jwtToken = token;
         }
 
         [HttpPost("sendModel")]
@@ -129,8 +129,9 @@ namespace api.Controllers
         // POST api/<ModelController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult<Model> Post([FromBody] Model model)
+        public ActionResult<Model> Post([FromBody] Model model)//, bool overwrite)
         {
+            bool overwrite = false;
             //username="" ako je GUEST
             model.inputNeurons = model.inputColumns.Length;
             if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
@@ -138,11 +139,16 @@ namespace api.Controllers
 
             var existingModel = _modelService.GetOneModel(model.username, model.name);
 
-            if (existingModel != null)
+            if (existingModel != null && !overwrite)
                 return NotFound($"Model with name = {model.name} exisits");
             else
             {
-                _modelService.Create(model);
+                if (existingModel == null)
+                    _modelService.Create(model);
+                else
+                {
+                    _modelService.Replace(model);
+                }
 
                 return CreatedAtAction(nameof(Get), new { id = model._id }, model);
             }

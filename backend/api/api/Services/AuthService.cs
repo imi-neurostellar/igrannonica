@@ -8,13 +8,13 @@ namespace api.Services
 {
     public class AuthService : IAuthService
     {
-        private JwtToken _jwt;
+        private IJwtToken _jwt;
         private readonly IConfiguration _configuration;
         private readonly IMongoCollection<User> _users;
-        public AuthService(IConfiguration configuration, IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
+        public AuthService(IConfiguration configuration, IUserStoreDatabaseSettings settings, IMongoClient mongoClient,IJwtToken jwt)
         {
             _configuration = configuration;
-            _jwt = new JwtToken(_configuration);
+            _jwt = jwt;
             var database = mongoClient.GetDatabase(settings.DatabaseName);
             _users = database.GetCollection<User>(settings.CollectionName);
         }

@@ -12,12 +12,12 @@ namespace api.Controllers
     {
         private string[] permittedExtensions = { ".csv" };
         private readonly IConfiguration _configuration;
-        private JwtToken _token;
+        private IJwtToken _token;
         private IFileService _fileservice;
-        public FileController(IConfiguration configuration,IFileService fileService)
+        public FileController(IConfiguration configuration,IFileService fileService,IJwtToken token)
         {
             _configuration = configuration;
-            _token = new JwtToken(configuration);
+            _token = token;
             _fileservice = fileService;
 
         }

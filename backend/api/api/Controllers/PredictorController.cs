@@ -13,12 +13,12 @@ namespace api.Controllers
     public class PredictorController : Controller
     {
         private readonly IPredictorService _predictorService;
-        private JwtToken jwtToken;
+        private IJwtToken jwtToken;
 
-        public PredictorController(IPredictorService predictorService, IConfiguration configuration)
+        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token)
         {
             _predictorService = predictorService;
-            jwtToken = new JwtToken(configuration);
+            jwtToken = Token;
         }
 
         // GET: api/<PredictorController>/mypredictors
@@ -74,8 +74,7 @@ namespace api.Controllers
             return _predictorService.SearchPredictors(name, username);
         }
 
-        //SEARCH za predictore (public ili private sa ovim imenom )
-        // GET api/<PredictorController>/search/{name}
+        // GET api/<PredictorController>/{name}
         [HttpGet("{id}")]
         [Authorize(Roles = "User")]
         public ActionResult<Predictor> GetPredictor(string id)

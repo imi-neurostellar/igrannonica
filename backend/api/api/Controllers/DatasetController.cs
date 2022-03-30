@@ -14,12 +14,12 @@ namespace api.Controllers
     public class DatasetController : ControllerBase
     {
         private readonly IDatasetService _datasetService;
-        private JwtToken jwtToken;
+        private IJwtToken jwtToken;
 
-        public DatasetController(IDatasetService datasetService, IConfiguration configuration)
+        public DatasetController(IDatasetService datasetService, IConfiguration configuration,IJwtToken Token)
         {
             _datasetService = datasetService;
-            jwtToken = new JwtToken(configuration);
+            jwtToken = Token;
         }
 
         // GET: api/<DatasetController>/mydatasets

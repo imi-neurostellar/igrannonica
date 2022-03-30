@@ -1,3 +1,5 @@
+import { NgIf } from "@angular/common";
+
 export default class Model {
     _id: string = '';
     constructor(
@@ -45,6 +47,7 @@ export enum ProblemType {
 export enum Encoding {
     Label = 'label',
     OneHot = 'one hot',
+    /*
     BackwardDifference = 'backward difference',
     BaseN = 'baseN',
     Binary = 'binary',
@@ -62,34 +65,77 @@ export enum Encoding {
     Target = 'target',
     WOE = 'woe',
     Quantile = 'quantile'
+    */
 }
 
 export enum ActivationFunction {
     // linear
     Binary_Step = 'binaryStep',
-    Linear = 'linear',
     // non-linear
-    Relu = 'relu',
     Leaky_Relu = 'leakyRelu',
     Parameterised_Relu = 'parameterisedRelu',
     Exponential_Linear_Unit = 'exponentialLinearUnit',
     Swish = 'swish',
-    Sigmoid = 'sigmoid',
-    Tanh = 'tanh',
-    Softmax = 'softmax'
-}
+    //hiddenLayers
+    Relu='relu',
+    Sigmoid='sigmoid',
+    Tanh='tanh',
 
+    //outputLayer
+    Linear = 'linear',
+    //Sigmoid='sigmoid',
+    Softmax='softmax',
+
+}
+/*
+export enum ActivationFunctionHiddenLayer
+{
+    Relu='relu',
+    Sigmoid='sigmoid',
+    Tanh='tanh'
+}
+export enum ActivationFunctionOutputLayer
+{
+    Linear = 'linear',
+    Sigmoid='sigmoid',
+    Softmax='softmax'
+}
+*/
 export enum LossFunction {
     // binary classification loss functions
     BinaryCrossEntropy = 'binary_crossentropy',
+    SquaredHingeLoss='squared_hinge_loss',
     HingeLoss = 'hinge_loss',
     // multi-class classiication loss functions
     CategoricalCrossEntropy = 'categorical_crossentropy',
+    SparseCategoricalCrossEntropy='sparse_categorical_crosentropy',
     KLDivergence = 'kullback_leibler_divergence',
+    
     // regression loss functions
-    MeanSquaredError = 'mean_squared_error',
+    
     MeanAbsoluteError = 'mean_absolute_error',
-    HuberLoss = 'Huber',
+    MeanSquaredError = 'mean_squared_error',
+    MeanSquaredLogarithmicError='mean_squared_logarithmic_error',
+    HuberLoss = 'Huber'
+
+}
+export enum LossFunctionRegression
+{
+    MeanAbsoluteError = 'mean_absolute_error',
+    MeanSquaredError = 'mean_squared_error',
+    MeanSquaredLogarithmicError='mean_squared_logarithmic_error',
+}
+export enum LossFunctionBinaryClassification
+{
+    BinaryCrossEntropy = 'binary_crossentropy',
+    SquaredHingeLoss='squared_hinge_loss',
+    HingeLoss = 'hinge_loss',
+}
+export enum LossFunctionMultiClassification
+{
+    CategoricalCrossEntropy = 'categorical_crossentropy',
+    SparseCategoricalCrossEntropy='sparse_categorical_crosentropy',
+    KLDivergence = 'kullback_leibler_divergence',
 }
 
 export enum Optimizer {
