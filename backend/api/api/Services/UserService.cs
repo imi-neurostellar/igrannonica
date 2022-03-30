@@ -65,11 +65,9 @@ namespace api.Services
                     {
                         var builderModel = Builders<Model>.Update;
                         var builderDataset = Builders<Dataset>.Update;
-                        var builderFileModel = Builders<FileModel>.Update;
                         var builderPredictor = Builders<Predictor>.Update;
                         _models.UpdateMany(x => x.username == username, builderModel.Set(x => x.username, user.Username));
                         _datasets.UpdateMany(x => x.username == username, builderDataset.Set(x => x.username, user.Username));
-                        _fileModels.UpdateMany(x => x.username == username, builderFileModel.Set(x => x.username, user.Username));
                         _predictors.UpdateMany(x => x.username == username, builderPredictor.Set(x => x.username, user.Username));
                     }
 
