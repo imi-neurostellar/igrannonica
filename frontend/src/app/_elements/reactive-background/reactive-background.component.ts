@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-reactive-background',
@@ -7,13 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReactiveBackgroundComponent implements OnInit {
 
-  numPoints: number = 450;
-  speed: number = 0.001; // 0-1
-  rotateInterval: number = 1000;
-  maxSize: number = 6;
+  @Input() numPoints: number = 450;
+  @Input() speed: number = 0.001; // 0-1
+  @Input() maxSize: number = 6;
 
-  minDistance: number = 0.07; //0-1
-  cursorDistance: number = 0.07;
+  @Input() minDistance: number = 0.07; //0-1
+  @Input() cursorDistance: number = 0.07;
+
+  @Input() bgColor: string = '#222277';
+  @Input() lineColor: string = '#ffffff';
+  @Input() pointColor: string = '#ffffff';
+  @Input() cursorLineColor: string = '#ff0000';
 
   private points: Point[] = [];
 
@@ -68,7 +72,7 @@ export class ReactiveBackgroundComponent implements OnInit {
     if (!this.ctx || !this.canvas) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.fillStyle = "#222277";
+    this.ctx.fillStyle = this.bgColor;
     this.ctx.fillRect(0, 0, this.width, this.height);
 
     this.points.forEach((point, index) => {
@@ -90,7 +94,7 @@ export class ReactiveBackgroundComponent implements OnInit {
       const dist = this.distance(p.x, p.y, otherPoint.x, otherPoint.y);
       if (dist < this.minDistance) {
         const h = HEX[Math.round((1 - dist / this.minDistance) * 16)]
-        this.ctx!.strokeStyle = '#ffffff' + h + h;
+        this.ctx!.strokeStyle = this.lineColor + h + h;
         this.ctx!.beginPath();
         this.ctx!.moveTo(p.x * this.width, p.y * this.height);
         this.ctx!.lineTo(otherPoint.x * this.width, otherPoint.y * this.height);
@@ -102,7 +106,7 @@ export class ReactiveBackgroundComponent implements OnInit {
   }
 
   drawPoint(p: Point) {
-    this.ctx!.fillStyle = '#ffffff';
+    this.ctx!.fillStyle = this.pointColor;
     this.ctx!.beginPath();
     this.ctx!.arc(p.x * this.width, p.y * this.height, p.size, 0, 2 * Math.PI);
     this.ctx!.fill();
@@ -137,8 +141,8 @@ export class ReactiveBackgroundComponent implements OnInit {
       p.y -= ((my - p.y) / distToCursor) / 500;
 
       const grd = this.ctx!.createLinearGradient(p.x * this.width, p.y * this.height, mx * this.width, my * this.height);
-      grd.addColorStop(0, '#ff0000ff');
-      grd.addColorStop(1, '#ff000000');
+      grd.addColorStop(0, this.cursorLineColor + 'ff');
+      grd.addColorStop(1, this.cursorLineColor + '00');
       this.ctx!.strokeStyle = grd;
       this.ctx!.beginPath();
       this.ctx!.moveTo(p.x * this.width, p.y * this.height);
