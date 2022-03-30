@@ -125,6 +125,8 @@ export class AddModelComponent implements OnInit {
               this.tempTestSetDistribution = 90;
               this.newModel.username = shared.username;
 
+              this.newModel.nullValuesReplacers = this.getNullValuesReplacersArray();
+
               this.models.addModel(this.newModel).subscribe((response) => {
                 callback(response);
               }, (error) => {
@@ -317,46 +319,65 @@ export class AddModelComponent implements OnInit {
       !isNaN(Number(value.toString())));
   }
 
-  findIndexOfCol(colName: string) : number {
+  findColIndexByName(colName: string) : number {
     if (this.datasetFile) 
       for (let i = 0; i < this.datasetFile[0].length; i++) 
         if (colName === this.datasetFile[0][i]) 
           return i;
     return -1;
   }
+  findColNameByIndex(index: number) : string {
+    if (this.datasetFile) 
+      if (this.datasetHasHeader && index < this.datasetFile[0].length)
+        return this.datasetFile[0][index];
+    return '';
+  }
+  emptyFillTextInput(colName: string) {
+    (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = "";
+  }
+
+  checkFillColRadio(colName: string) {
+    (<HTMLInputElement>document.getElementById("fillCol_" + colName)).checked = true;
+  }
   calculateSumOfNullValuesInCol(colName: string): number {
     //console.log(this.datasetFile);
-    if (this.datasetFile) {
-      let colIndex = this.findIndexOfCol(colName);
+    if (this.datasetFile) { 
+      let colIndex = this.findColIndexByName(colName);
       let sumOfNulls = 0;
-      for (let i = 1; i < this.datasetFile.length; i++) 
-        if (this.datasetFile[i][colIndex] == '')
+
+      let startValue = (this.datasetLoadComponent?.dataset.hasHeader) ? 1 : 0;
+      for (let i = startValue; i < this.datasetFile.length; i++) {
+        if (this.datasetFile[i][colIndex] == "" || this.datasetFile[i][colIndex] == undefined)
           ++sumOfNulls;
-      //console.log(sumOfNulls);
+      }
       return sumOfNulls;
     }
     return -1;
   }
   calculateMeanColValue(colName: string): number {
     if (this.datasetFile) {
-      let colIndex = this.findIndexOfCol(colName);
+      let colIndex = this.findColIndexByName(colName);
       let sum = 0;
       let n = 0;
-      for (let i = 1; i < this.datasetFile.length; i++)
+
+      let startValue = (this.datasetLoadComponent?.dataset.hasHeader) ? 1 : 0;
+      for (let i = startValue; i < this.datasetFile.length; i++)
         if (this.datasetFile[i][colIndex] != '') {
           sum += Number(this.datasetFile[i][colIndex]);
           ++n;
         }
         console.log(sum / n);
-      return sum / n;
+      return (sum != 0)? (sum / n) : 0;
     }
     return 0;
   }
   calculateMedianColValue(colName: string): number {
     if (this.datasetFile) {
       let array = [];
-      let colIndex = this.findIndexOfCol(colName);
-      for (let i = 1; i < this.datasetFile.length; i++)
+      let colIndex = this.findColIndexByName(colName);
+
+      let startValue = (this.datasetHasHeader) ? 1 : 0;
+      for (let i = startValue; i < this.datasetFile.length; i++)
         if (this.datasetFile[i][colIndex] != '')
           array.push(Number(this.datasetFile[i][colIndex]));
           
@@ -368,39 +389,76 @@ export class AddModelComponent implements OnInit {
     }
     return 0;
   }
+  replaceWithSelectedString(event: Event) {
+    let value = (<HTMLInputElement>event.target).value;
+    let colIndex = Number(((<HTMLSelectElement>event.target).id).split("replaceOptions")[1]);
+    let colName = this.findColNameByIndex(colIndex);
+
+    (<HTMLInputElement>document.getElementById("fillCol_" + colName)).checked = true;
+
+    if (!this.datasetHasHeader)
+      (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = value;
+    else {
+      if (value == colName)
+        (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = "";
+      else 
+        (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = value;
+    }
+  }
+  replaceWithSelectedNumber(event: Event) {
+    let option = (<HTMLInputElement>event.target).value;
+    let colIndex = Number(((<HTMLSelectElement>event.target).id).split("replaceOptions")[1]);
+    let colName = this.findColNameByIndex(colIndex);
+
+    (<HTMLInputElement>document.getElementById("fillCol_" + colName)).checked = true;
+
+    if (option == ReplaceWith.Mean)
+      (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = this.calculateMeanColValue(colName).toString();
+    else if (option == ReplaceWith.Median)
+      (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = this.calculateMedianColValue(colName).toString();
+    else if (option == ReplaceWith.None)
+      (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = "";
+  }
+
   
   getNullValuesReplacersArray() : NullValReplacer[] {
-    /*let array: NullValReplacer[] = [];
+    let array: NullValReplacer[] = [];
 
-    //za svaku kolonu
     if (this.datasetFile) {
 
-      if ((<HTMLInputElement>document.getElementById("delRows")).checked) { //obrisi sve redove
-        this.newModel.nullValues = NullValueOptions.DeleteRows;
+      if (this.newModel.nullValues == NullValueOptions.Replace) {
+
+        for (let i = 0; i < this.datasetFile[0].length; i++) {
+          let column = this.datasetFile[0][i];
+
+          if (this.calculateSumOfNullValuesInCol(column) > 0) { //ako kolona nema null vrednosti, ne dodajemo je u niz
+            if ((<HTMLInputElement>document.getElementById("delCol_" + column)).checked) {
+              array.push({
+                column: column,
+                option: NullValueOptions.DeleteColumns,
+                value: ""
+              });
+            }
+            else if ((<HTMLInputElement>document.getElementById("delRows_" + column)).checked) {
+              array.push({
+                column: column,
+                option: NullValueOptions.DeleteRows,
+                value: ""
+              });
+            }
+            else if (((<HTMLInputElement>document.getElementById("fillCol_" + column)).checked)) {
+              array.push({
+                column: column,
+                option: NullValueOptions.Replace,
+                value: (<HTMLInputElement>document.getElementById("fillText_" + column)).value
+              });
+            }
+          } 
+        }
       }
-      else if ((<HTMLInputElement>document.getElementById("delCols")).checked) {
-        this.newModel.nullValues = NullValueOptions.DeleteColumns;
-      }
-      else if ((<HTMLInputElement>document.getElementById("replace")).checked) {
-        this.newModel.nullValues = NullValueOptions.Replace;*/
-
-        //for petlje
-        
-      //}
-
-      //proveri ova prva tri rba, ako je 3. cekiran, ide for petlja
-      //if ((<HTMLInputElement>document.getElementById("delCol_" + column)).checked)
-
-      //for (let i = 0; i < this.datasetFile[0].length; i++) { //svi hederi
-        //let column = this.datasetFile[0][i];
-
-        //if ((<HTMLInputElement>document.getElementById("delCol_" + column)).checked) //obrisi celu kolonu
-          //var e = (<HTMLInputElement>document.getElementById("organization")).value;
-      //}
-    //}
-    
-      
-    return [];
+    }
+    console.log(array);
+    return array;
   }
 
   getInputById(id: string): HTMLInputElement {

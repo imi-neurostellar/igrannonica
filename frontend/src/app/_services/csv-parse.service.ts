@@ -45,7 +45,7 @@ export class CsvParseService {
         strMatchedValue = arrMatches[3];
       }
 
-      if (strMatchedValue.length > 0)
+      //if (strMatchedValue.length > 0)
         arrData[arrData.length - 1].push(strMatchedValue);
     }
 

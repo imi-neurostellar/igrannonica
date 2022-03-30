@@ -118,7 +118,7 @@ export enum ReplaceWith {
 export class NullValReplacer {
     "column": string;
     "option": NullValueOptions;
-    "value" : any;
+    "value" : string;
 }
 
 export enum Metric {
