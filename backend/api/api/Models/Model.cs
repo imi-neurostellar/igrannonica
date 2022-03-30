@@ -46,5 +46,7 @@ namespace api.Models
 
         public string nullValues { get; set; }
         public string[] nullValuesReplacers { get; set; }
+
+        //public NullValues[] nullValues { get; set; }
     }
 }

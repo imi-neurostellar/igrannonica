@@ -17,5 +17,11 @@ export class PredictorsService {
   getPublicPredictors(): Observable<Predictor[]> {
     return this.http.get<Predictor[]>(`${API_SETTINGS.apiURL}/predictor/publicpredictors`, { headers: this.authService.authHeader() });
   }
+  getPredictor(id : String): Observable<Predictor> {
+    return this.http.get<Predictor>(`${API_SETTINGS.apiURL}/predictor/getpredictor/`+ id, { headers: this.authService.authHeader() });
+  }
 
+  usePredictor(predictor: Predictor, inputs : String[]) {
+    return this.http.post(`${API_SETTINGS.apiURL}/predictor/usepredictor/` + predictor._id, inputs, { headers: this.authService.authHeader() });
+  }
 }

@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService], data: { title: 'Profil' } },
   { path: 'browse-datasets', component: FilterDatasetsComponent, data: { title: 'Javni izvori podataka' } },
   { path: 'browse-predictors', component: BrowsePredictorsComponent, data: { title: 'Javni trenirani modeli' } },
-  { path: 'predict', component: PredictComponent, data: { title: 'Predvidi vrednosti' } }
+  { path: 'predict/:id', component: PredictComponent, data: { title: 'Predvidi vrednosti' } }
 ];
 
 @NgModule({
