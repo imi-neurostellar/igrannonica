@@ -74,6 +74,31 @@ namespace api.Models
             }
 
         }
+        public string TokenToId(string token)
+        {
+            if (token == null)
+                return null;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                return jwtToken.Claims.First(x => x.Type == "id").Value;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
 
         public string GenGuestToken()
         {
