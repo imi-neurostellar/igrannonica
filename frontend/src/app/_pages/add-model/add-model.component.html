@@ -65,7 +65,7 @@
 
         <!-- ULAZNE/IZLAZNE KOLONE -->
         <span id="selectInAndOuts"></span>
-        <div *ngIf="selectedDataset">
+        <div *ngIf="selectedDataset && (showMyDatasets || (!showMyDatasets && datasetLoaded))"> <!--postignuto da se kod newdataseta ucita tabela pa ulazi/izlazi. ostalo srediti to kod mydatasets(dopuna 2. uslova)-->
             <div class="row">
                 <div class="col d-flex justify-content-center">
                     <h3>Izaberite ulazne kolone:</h3>
@@ -118,12 +118,15 @@
                             <div>
                                 <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
                                 <div id="columnReplacers">
+                                    <!--Ulazne kolone - popunjavanje null vrednosti -->
                                     <div *ngFor="let column of selectedDataset.header; let i = index" class="my-3">
                                         <div class="input-group row" *ngIf="getInputById('cb_'+column).checked">
                                             <span class="input-group-text col-2 text-center">
-                                                {{column}}
+                                                {{column}}&nbsp;<span class="small" style="color:gray;">({{calculateSumOfNullValuesInCol(column)}} null)</span>
                                             </span>
-                                            <input type="text" class="form-control col-2">
+                                            <input type="text" class="form-control col-1" [id]="'fillText_'+column">
+                                            <input type="radio" [id]="'fillCol_'+column" class="col-1"  
+                                                [name]="'delOp_'+column">  <!--OVDE SREDI IZGLED-->
                                             <select [id]="'replaceOptions'+i" class="form-control col-2"
                                                 *ngIf="isNumber(datasetFile[1][i])">
                                                 <option
@@ -147,6 +150,39 @@
                                                     checked></label>
                                         </div>
                                     </div>
+                                    <!--Izlazna kolona - popunjavanje null vrednosti -->
+                                    <div *ngFor="let column of selectedDataset.header; let i = index" class="my-3"> <!--moze bez for petlje (this.selectedOutputColumnVal je id), al ne moze ova fja array column onda-->
+                                        <div class="input-group row" *ngIf="getInputById('rb_'+column).checked">
+                                            <span class="input-group-text col-2 text-center">
+                                                {{column}}&nbsp;<span class="small" style="color:gray;">({{calculateSumOfNullValuesInCol(column)}} null)</span>
+                                            </span>
+                                            <input type="text" class="form-control col-1" [id]="'fillText_'+column">
+                                            <input type="radio" [id]="'fillCol_'+column" class="col-1"  
+                                                [name]="'delOp_'+column">  <!--OVDE SREDI IZGLED-->
+                                            <select [id]="'replaceOptions'+i" class="form-control col-2"
+                                                *ngIf="isNumber(datasetFile[1][i])">
+                                                <option
+                                                    *ngFor="let option of Object.keys(ReplaceWith); let optionName of Object.values(ReplaceWith)"
+                                                    [value]="option">
+                                                    {{ optionName }}
+                                                </option>
+                                            </select>
+                                            <select [id]="'replaceOptions'+i" class="form-control col-2"
+                                                *ngIf="!isNumber(datasetFile[1][i])">
+                                                <option *ngFor="let option of arrayColumn(datasetFile, i)"
+                                                    [value]="option">
+                                                    {{ option }}
+                                                </option>
+                                            </select>
+                                            <label class="form-control col-2" [for]="'delCol_'+column">Izbriši kolonu
+                                                <input type="radio" [id]="'delCol_'+column"
+                                                    [name]="'delOp_'+column"></label>
+                                            <label class="form-control col-2" [for]="'delRows_'+column">Izbriši redove
+                                                <input type="radio" [id]="'delRows_'+column" [name]="'delOp_'+column"
+                                                    checked></label>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -349,3 +385,5 @@
 
     </div>
 </div>
+
+<button (click)="calculateMeanColValue('Age');calculateMedianColValue('Age');">DUGME</button>

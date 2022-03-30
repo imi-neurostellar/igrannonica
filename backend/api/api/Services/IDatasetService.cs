@@ -14,5 +14,6 @@ namespace api.Services
         Dataset Create(Dataset dataset);
         void Update(string username, string name, Dataset dataset);
         void Delete(string username, string name);
+        public List<Dataset> GetGuestDatasets();
     }
 }
