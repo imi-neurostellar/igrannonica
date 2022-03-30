@@ -20,6 +20,11 @@ namespace api.Services
             _model.InsertOne(model);
             return model;
         }
+        public Model Replace(Model model)
+        {
+            _model.ReplaceOne(m => m._id == model._id, model);
+            return model;
+        }
 
         public void Delete(string username, string name)
         {

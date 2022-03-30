@@ -15,4 +15,8 @@ export class ItemPredictorComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openPredictor() {
+    console.log("iskoristi")
+    }
+
 }

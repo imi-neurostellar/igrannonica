@@ -74,8 +74,7 @@ namespace api.Controllers
             return _predictorService.SearchPredictors(name, username);
         }
 
-        //SEARCH za predictore (public ili private sa ovim imenom )
-        // GET api/<PredictorController>/search/{name}
+        // GET api/<PredictorController>/{name}
         [HttpGet("{id}")]
         [Authorize(Roles = "User")]
         public ActionResult<Predictor> GetPredictor(string id)

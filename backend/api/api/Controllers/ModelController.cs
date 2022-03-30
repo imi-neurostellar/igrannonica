@@ -129,8 +129,9 @@ namespace api.Controllers
         // POST api/<ModelController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult<Model> Post([FromBody] Model model)
+        public ActionResult<Model> Post([FromBody] Model model)//, bool overwrite)
         {
+            bool overwrite = false;
             //username="" ako je GUEST
             model.inputNeurons = model.inputColumns.Length;
             if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
@@ -138,11 +139,16 @@ namespace api.Controllers
 
             var existingModel = _modelService.GetOneModel(model.username, model.name);
 
-            if (existingModel != null)
+            if (existingModel != null && !overwrite)
                 return NotFound($"Model with name = {model.name} exisits");
             else
             {
-                _modelService.Create(model);
+                if (existingModel == null)
+                    _modelService.Create(model);
+                else
+                {
+                    _modelService.Replace(model);
+                }
 
                 return CreatedAtAction(nameof(Get), new { id = model._id }, model);
             }
