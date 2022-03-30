@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import Model, { NullValReplacer, ReplaceWith } from 'src/app/_data/Model';
+import Model, { LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, NullValReplacer, ReplaceWith } from 'src/app/_data/Model';
 import { ProblemType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
@@ -26,7 +26,9 @@ export class AddModelComponent implements OnInit {
   ProblemType = ProblemType;
   Encoding = Encoding;
   ActivationFunction = ActivationFunction;
+  activationFunction:any=ActivationFunction
   LossFunction = LossFunction;
+  lossFunction : any = LossFunction;
   Optimizer = Optimizer;
   NullValueOptions = NullValueOptions;
   ReplaceWith = ReplaceWith;
@@ -50,6 +52,9 @@ export class AddModelComponent implements OnInit {
   //accepted: Boolean;
   term: string = "";
 
+  selectedProblemType:string='';
+  
+
   constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
     this.newModel = new Model();
 
@@ -61,6 +66,7 @@ export class AddModelComponent implements OnInit {
   ngOnInit(): void {
     (<HTMLInputElement>document.getElementById("btnMyDataset")).focus();
   }
+
 
   viewMyDatasetsForm() {
     this.showMyDatasets = true;
@@ -466,4 +472,24 @@ export class AddModelComponent implements OnInit {
   }
 
   arrayColumn = (arr: any[][], n: number) => [...new Set(arr.map(x => x[n]))];
+
+  problemtype:string='';
+
+  filterOptions(){
+    switch(this.problemtype){
+      case 'regresioni':
+        this.lossFunction=LossFunctionRegression;
+        break;
+      case 'binarni-klasifikacioni':
+        this.lossFunction=LossFunctionBinaryClassification;
+        break;
+      case 'multi-klasifikacioni':
+        this.lossFunction=LossFunctionMultiClassification;
+      break;
+      default:
+        break;
+    }
+  }
+
+  
 }
