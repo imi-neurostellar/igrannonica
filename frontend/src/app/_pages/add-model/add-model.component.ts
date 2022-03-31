@@ -467,9 +467,13 @@ export class AddModelComponent implements OnInit {
 
   arrayColumn = (arr: any[][], n: number) => [...this.dropEmptyString(new Set(arr.map(x => x[n])))];
 
-  dropEmptyString(set: Set<string>): Set<string> {
+  dropEmptyString(set: Set<any>): Set<string> {
     if (set.has(""))
       set.delete("");
+    if (set.has(null))
+      set.delete(null);
+    if (set.has(undefined))
+      set.delete(undefined);
     return set;
   }
 
