@@ -50,7 +50,7 @@
                         <li class="list-group-item p-3" *ngFor="let dataset of myDatasets|filter:term"
                             [ngClass]="{'selectedDatasetClass': this.selectedDataset == dataset}">
                             <app-item-dataset name="usersDataset" [dataset]="dataset"
-                                (click)="scrollToNextForm(); selectThisDataset(dataset);"></app-item-dataset>
+                                (click)="selectThisDataset(dataset);"></app-item-dataset>
                         </li>
                     </ul>
                 </div>
@@ -66,7 +66,8 @@
 
         <!-- ULAZNE/IZLAZNE KOLONE -->
         <span id="selectInAndOuts"></span>
-        <div *ngIf="selectedDataset && (showMyDatasets || (!showMyDatasets && datasetLoaded))">
+        <div
+            *ngIf="selectedDataset && ((showMyDatasets && selectedDatasetLoaded) || (!showMyDatasets && datasetLoaded))">
             <!--postignuto da se kod newdataseta ucita tabela pa ulazi/izlazi. ostalo srediti to kod mydatasets(dopuna 2. uslova)-->
             <div class="row">
                 <div class="col d-flex justify-content-center">

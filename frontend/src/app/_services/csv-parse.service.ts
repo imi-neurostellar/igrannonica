@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 @Injectable({ providedIn: 'root' })
 export class CsvParseService {
 
-  csvToArray(strData: string, strDelimiter: string): string[][] {
+  csvToArray(strData: string, strDelimiter: string): (string | null)[][] {
     strDelimiter = (strDelimiter || ",");
 
     let objPattern = new RegExp(
@@ -19,7 +19,7 @@ export class CsvParseService {
       "gi"
     );
 
-    let arrData: string[][] = [[]];
+    let arrData: (string | null)[][] = [[]];
 
     let arrMatches = null;
 
@@ -45,8 +45,10 @@ export class CsvParseService {
         strMatchedValue = arrMatches[3];
       }
 
-      //if (strMatchedValue.length > 0)
+      if (strMatchedValue.length > 0)
         arrData[arrData.length - 1].push(strMatchedValue);
+      else 
+        arrData[arrData.length - 1].push(null);
     }
 
     return (arrData);

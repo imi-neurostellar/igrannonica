@@ -20,6 +20,7 @@ export class AddModelComponent implements OnInit {
   @ViewChild(DatasetLoadComponent) datasetLoadComponent?: DatasetLoadComponent;
   @ViewChild(DatatableComponent) datatable?: DatatableComponent;
   datasetLoaded: boolean = false;
+  selectedDatasetLoaded: boolean = false;
 
   newModel: Model;
 
@@ -73,7 +74,7 @@ export class AddModelComponent implements OnInit {
   viewMyDatasetsForm() {
     this.showMyDatasets = true;
     this.resetSelectedDataset();
-    this.datasetLoaded = false;
+    //this.datasetLoaded = false;
     this.resetCbsAndRbs();
   }
   viewNewDatasetForm() {
@@ -233,15 +234,10 @@ export class AddModelComponent implements OnInit {
 
   selectThisDataset(dataset: Dataset) {
     this.selectedDataset = dataset;
+    this.selectedDatasetLoaded = false;
     this.existingDatasetSelected = true;
     this.datasetHasHeader = this.selectedDataset.hasHeader;
 
-    /*let datasets = document.getElementsByClassName("usersDataset") as HTMLCollection;
-    for (let i = 0; i < datasets.length; i++) {
-      if (datasets[i]._id == dataset._id)
-    }*/
-
-    //this.datasetFile = csvRecords;
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
@@ -251,9 +247,11 @@ export class AddModelComponent implements OnInit {
           else
             break; //nema potrebe dalje
         }*/
-        console.log(this.datasetFile);
+        //console.log(this.datasetFile);
         this.resetCbsAndRbs();
-        //this.refreshThreeNullValueRadioOptions();
+        this.refreshThreeNullValueRadioOptions();
+        this.selectedDatasetLoaded = true;
+        this.scrollToNextForm();
       }
     });
     //this.datasetHasHeader = false;
@@ -306,20 +304,10 @@ export class AddModelComponent implements OnInit {
   }
 
   refreshThreeNullValueRadioOptions() {
-    //console.log((<HTMLInputElement>document.getElementById("delRows")).checked);
-    const input = document.getElementById('delRows');
-    console.log(input); // 👉️ input#subscribe
-
-    // ✅ Works
-    //input.checked = true;
-    (<HTMLInputElement>document.getElementById("delRows")).checked = true;
-    (<HTMLInputElement>document.getElementById("delCols")).checked = false;
-    (<HTMLInputElement>document.getElementById("replace")).checked = false;
+    this.newModel.nullValues = NullValueOptions.DeleteRows;
   }
 
-  isChecked(someId: string) { //proveri ako je element sa datim ID-em cekiran
-    //console.log(someId);
-    //console.log((<HTMLInputElement>document.getElementById(someId)).checked);
+  isChecked(someId: string) { //proveri ako je element sa datim ID-em cek
     return (<HTMLInputElement>document.getElementById(someId)).checked;
   }
 
@@ -467,7 +455,7 @@ export class AddModelComponent implements OnInit {
         }
       }
     }
-    console.log(array);
+    //console.log(array);
     return array;
   }
 
@@ -475,7 +463,13 @@ export class AddModelComponent implements OnInit {
     return document.getElementById(id) as HTMLInputElement;
   }
 
-  arrayColumn = (arr: any[][], n: number) => [...new Set(arr.map(x => x[n]))];
+  arrayColumn = (arr: any[][], n: number) => [...this.dropEmptyString(new Set(arr.map(x => x[n])))];
+
+  dropEmptyString(set: Set<string>): Set<string> {
+    if (set.has(""))
+      set.delete("");
+    return set;
+  }
 
   filterOptions() {
     switch (this.newModel.type) {
