@@ -30,7 +30,7 @@ export class PredictComponent implements OnInit {
   usePredictor(): void{ 
     this.predictS.usePredictor(this.predictor, this.inputs).subscribe(p => {
       
-      alert("Uspesno ste poslali preditor!");
+      alert("Prediktor je uspesno poslat na treniranje!");
     })
     console.log(this.inputs);
   }
