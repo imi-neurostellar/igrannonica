@@ -31,6 +31,7 @@
     "csv-parser": "^3.0.0",
     "d3-graphviz": "^2.6.1",
     "mdb-angular-ui-kit": "^2.0.0",
+    "ng-multiselect-dropdown": "^0.3.8",
     "ng-uikit-pro-standard": "^1.0.0",
     "ng2-charts": "^3.0.8",
     "ng2-search-filter": "^0.5.1",
