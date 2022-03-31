@@ -25,13 +25,13 @@ namespace api.Services
             return file;
 
         }
-        public string GetFilePath(string id, string username)
+        public string GetFilePath(string id, string uploaderId)
         {
             FileModel file;
             if (_dataset.Find(x=>x.fileId==id && x.isPublic==true).FirstOrDefault()!=null)
                 file = _file.Find(x => x._id == id).FirstOrDefault();
             else
-                file = _file.Find(x => x._id == id && x.username == username).FirstOrDefault();
+                file = _file.Find(x => x._id == id && x.uploaderId == uploaderId).FirstOrDefault();
             if (file == null)
                 return null;
             return file.path;

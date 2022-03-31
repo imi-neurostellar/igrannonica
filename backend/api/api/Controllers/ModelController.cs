@@ -33,8 +33,20 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<string>> Test([FromBody] Model model)
         {
+            string uploaderId;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                uploaderId = jwtToken.TokenToId(parameter);
+                if (uploaderId == null)
+                    return null;
+            }
+            else
+                return BadRequest();
             var dataset = _datasetService.GetOneDataset(model.datasetId);
-            var filepath = _fileService.GetFilePath(dataset.fileId, dataset.username);
+            var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
             var result = await _mlService.SendModelAsync(model, filepath);
             return Ok(result);
         }

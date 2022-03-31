@@ -8,5 +8,6 @@ namespace api.Models
         string GenToken(AuthRequest user);
         string RenewToken(string existingToken);
         string TokenToUsername(string token);
+        public string TokenToId(string token);
     }
 }

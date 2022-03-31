@@ -45,7 +45,7 @@ namespace api.Models
         public int epochs { get; set; }
 
         public string nullValues { get; set; }
-        public string[] nullValuesReplacers { get; set; }
+        public NullValues[] nullValuesReplacers { get; set; }
 
         //public NullValues[] nullValues { get; set; }
     }

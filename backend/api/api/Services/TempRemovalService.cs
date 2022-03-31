@@ -19,7 +19,7 @@ namespace api.Services
         }
         public void DeleteTemps()
         {
-            List<FileModel> files = _file.Find(file => file.username == "").ToList();
+            List<FileModel> files = _file.Find(file => file.uploaderId == "").ToList();
             foreach (var file in files)
             {
                 if ((DateTime.Now.ToUniversalTime() - file.date).TotalDays >= 1)

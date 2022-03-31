@@ -29,7 +29,7 @@ namespace api.Controllers
         {
 
             //get username from jwtToken
-            string username;
+            string uploaderId;
             string folderName;
             var header = Request.Headers[HeaderNames.Authorization];
             if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
@@ -37,12 +37,12 @@ namespace api.Controllers
 
                 var scheme = headerValue.Scheme;
                 var parameter = headerValue.Parameter;
-                username = _token.TokenToUsername(parameter);
-                if (username == null)
+                uploaderId = _token.TokenToId(parameter);
+                if (uploaderId == null)
                     return null;
             }else 
                 return BadRequest();
-            if (username == "")
+            if (uploaderId == "")
             {
                 folderName = "TempFiles";
             }
@@ -59,7 +59,7 @@ namespace api.Controllers
             if (string.IsNullOrEmpty(ext) || ! permittedExtensions.Contains(ext)) {
                 return BadRequest("Wrong file type");
             }
-            var folderPath=Path.Combine(Directory.GetCurrentDirectory(),folderName, username);
+            var folderPath=Path.Combine(Directory.GetCurrentDirectory(),folderName, uploaderId);
             //Check Directory
             if (!Directory.Exists(folderPath))
             {
@@ -82,7 +82,7 @@ namespace api.Controllers
             }
             FileModel fileModel= new FileModel();
             fileModel.path=fullPath;
-            fileModel.username=username;
+            fileModel.uploaderId= uploaderId;
             fileModel.date = DateTime.Now.ToUniversalTime();
             fileModel =_fileservice.Create(fileModel);
             
@@ -95,21 +95,21 @@ namespace api.Controllers
         public async Task<ActionResult> DownloadFile(string id)
         {
             //Get Username
-            string username;
+            string uploaderId;
             var header = Request.Headers[HeaderNames.Authorization];
             if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
             {
 
                 var scheme = headerValue.Scheme;
                 var parameter = headerValue.Parameter;
-                username = _token.TokenToUsername(parameter);
-                if (username == null)
+                uploaderId = _token.TokenToId(parameter);
+                if (uploaderId == null)
                     return null;
             }
             else
                 return BadRequest();
 
-            string filePath = _fileservice.GetFilePath(id, username);
+            string filePath = _fileservice.GetFilePath(id, uploaderId);
             if (filePath == null)
                 return BadRequest();
 
