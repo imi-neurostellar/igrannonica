@@ -46,7 +46,7 @@ export enum ProblemType {
 // removeOutliers
 export enum Encoding {
     Label = 'label',
-    OneHot = 'one hot',
+    OneHot = 'onehot',
     /*
     BackwardDifference = 'backward difference',
     BaseN = 'baseN',
@@ -77,14 +77,14 @@ export enum ActivationFunction {
     Exponential_Linear_Unit = 'exponentialLinearUnit',
     Swish = 'swish',
     //hiddenLayers
-    Relu='relu',
-    Sigmoid='sigmoid',
-    Tanh='tanh',
+    Relu = 'relu',
+    Sigmoid = 'sigmoid',
+    Tanh = 'tanh',
 
     //outputLayer
     Linear = 'linear',
     //Sigmoid='sigmoid',
-    Softmax='softmax',
+    Softmax = 'softmax',
 
 }
 /*
@@ -104,37 +104,34 @@ export enum ActivationFunctionOutputLayer
 export enum LossFunction {
     // binary classification loss functions
     BinaryCrossEntropy = 'binary_crossentropy',
-    SquaredHingeLoss='squared_hinge_loss',
+    SquaredHingeLoss = 'squared_hinge_loss',
     HingeLoss = 'hinge_loss',
     // multi-class classiication loss functions
     CategoricalCrossEntropy = 'categorical_crossentropy',
-    SparseCategoricalCrossEntropy='sparse_categorical_crosentropy',
+    SparseCategoricalCrossEntropy = 'sparse_categorical_crosentropy',
     KLDivergence = 'kullback_leibler_divergence',
-    
+
     // regression loss functions
-    
+
     MeanAbsoluteError = 'mean_absolute_error',
     MeanSquaredError = 'mean_squared_error',
-    MeanSquaredLogarithmicError='mean_squared_logarithmic_error',
+    MeanSquaredLogarithmicError = 'mean_squared_logarithmic_error',
     HuberLoss = 'Huber'
 
 }
-export enum LossFunctionRegression
-{
+export enum LossFunctionRegression {
     MeanAbsoluteError = 'mean_absolute_error',
     MeanSquaredError = 'mean_squared_error',
-    MeanSquaredLogarithmicError='mean_squared_logarithmic_error',
+    MeanSquaredLogarithmicError = 'mean_squared_logarithmic_error',
 }
-export enum LossFunctionBinaryClassification
-{
+export enum LossFunctionBinaryClassification {
     BinaryCrossEntropy = 'binary_crossentropy',
-    SquaredHingeLoss='squared_hinge_loss',
+    SquaredHingeLoss = 'squared_hinge_loss',
     HingeLoss = 'hinge_loss',
 }
-export enum LossFunctionMultiClassification
-{
+export enum LossFunctionMultiClassification {
     CategoricalCrossEntropy = 'categorical_crossentropy',
-    SparseCategoricalCrossEntropy='sparse_categorical_crosentropy',
+    SparseCategoricalCrossEntropy = 'sparse_categorical_crosentropy',
     KLDivergence = 'kullback_leibler_divergence',
 }
 
@@ -164,7 +161,7 @@ export enum ReplaceWith {
 export class NullValReplacer {
     "column": string;
     "option": NullValueOptions;
-    "value" : string;
+    "value": string;
 }
 
 export enum Metric {

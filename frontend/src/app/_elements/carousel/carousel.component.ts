@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CarouselComponent {
 
   @Input() items: any[] = [];
+  @Input() type: string = "Object";
 
   constructor() { }
 

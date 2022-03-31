@@ -26,9 +26,9 @@ export class AddModelComponent implements OnInit {
   ProblemType = ProblemType;
   Encoding = Encoding;
   ActivationFunction = ActivationFunction;
-  activationFunction:any=ActivationFunction
+  activationFunction: any = ActivationFunction
   LossFunction = LossFunction;
-  lossFunction : any = LossFunction;
+  lossFunction: any = LossFunction;
   Optimizer = Optimizer;
   NullValueOptions = NullValueOptions;
   ReplaceWith = ReplaceWith;
@@ -52,8 +52,10 @@ export class AddModelComponent implements OnInit {
   //accepted: Boolean;
   term: string = "";
 
-  selectedProblemType:string='';
-  
+  selectedProblemType: string = '';
+
+  trainingResult: string | undefined;
+
 
   constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
     this.newModel = new Model();
@@ -89,6 +91,7 @@ export class AddModelComponent implements OnInit {
 
   trainModel() {
     let saveFunc;
+    this.trainingResult = undefined;
 
     if (!this.showMyDatasets)
       saveFunc = (x: (arg0: any) => void) => { this.saveModelWithNewDataset(x) };
@@ -99,6 +102,7 @@ export class AddModelComponent implements OnInit {
       console.log('Saved, training model...', model);
       this.models.trainModel(model).subscribe(response => {
         console.log('Train model complete!', response);
+        this.trainingResult = response;
       });
     })); //privremeno cuvanje modela => vraca id sacuvanog modela koji cemo da treniramo sad
   }
@@ -304,9 +308,9 @@ export class AddModelComponent implements OnInit {
   refreshThreeNullValueRadioOptions() {
     //console.log((<HTMLInputElement>document.getElementById("delRows")).checked);
     const input = document.getElementById('delRows');
-  console.log(input); // 👉️ input#subscribe
+    console.log(input); // 👉️ input#subscribe
 
-// ✅ Works
+    // ✅ Works
     //input.checked = true;
     (<HTMLInputElement>document.getElementById("delRows")).checked = true;
     (<HTMLInputElement>document.getElementById("delCols")).checked = false;
@@ -325,15 +329,15 @@ export class AddModelComponent implements OnInit {
       !isNaN(Number(value.toString())));
   }
 
-  findColIndexByName(colName: string) : number {
-    if (this.datasetFile) 
-      for (let i = 0; i < this.datasetFile[0].length; i++) 
-        if (colName === this.datasetFile[0][i]) 
+  findColIndexByName(colName: string): number {
+    if (this.datasetFile)
+      for (let i = 0; i < this.datasetFile[0].length; i++)
+        if (colName === this.datasetFile[0][i])
           return i;
     return -1;
   }
-  findColNameByIndex(index: number) : string {
-    if (this.datasetFile) 
+  findColNameByIndex(index: number): string {
+    if (this.datasetFile)
       if (this.datasetHasHeader && index < this.datasetFile[0].length)
         return this.datasetFile[0][index];
     return '';
@@ -347,7 +351,7 @@ export class AddModelComponent implements OnInit {
   }
   calculateSumOfNullValuesInCol(colName: string): number {
     //console.log(this.datasetFile);
-    if (this.datasetFile) { 
+    if (this.datasetFile) {
       let colIndex = this.findColIndexByName(colName);
       let sumOfNulls = 0;
 
@@ -372,8 +376,8 @@ export class AddModelComponent implements OnInit {
           sum += Number(this.datasetFile[i][colIndex]);
           ++n;
         }
-        console.log(sum / n);
-      return (sum != 0)? (sum / n) : 0;
+      console.log(sum / n);
+      return (sum != 0) ? (sum / n) : 0;
     }
     return 0;
   }
@@ -386,7 +390,7 @@ export class AddModelComponent implements OnInit {
       for (let i = startValue; i < this.datasetFile.length; i++)
         if (this.datasetFile[i][colIndex] != '')
           array.push(Number(this.datasetFile[i][colIndex]));
-          
+
       array.sort();
       if (array.length % 2 == 0)
         return array[array.length / 2 - 1] / 2;
@@ -407,7 +411,7 @@ export class AddModelComponent implements OnInit {
     else {
       if (value == colName)
         (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = "";
-      else 
+      else
         (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = value;
     }
   }
@@ -426,8 +430,8 @@ export class AddModelComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("fillText_" + colName)).value = "";
   }
 
-  
-  getNullValuesReplacersArray() : NullValReplacer[] {
+
+  getNullValuesReplacersArray(): NullValReplacer[] {
     let array: NullValReplacer[] = [];
 
     if (this.datasetFile) {
@@ -459,7 +463,7 @@ export class AddModelComponent implements OnInit {
                 value: (<HTMLInputElement>document.getElementById("fillText_" + column)).value
               });
             }
-          } 
+          }
         }
       }
     }
@@ -473,23 +477,21 @@ export class AddModelComponent implements OnInit {
 
   arrayColumn = (arr: any[][], n: number) => [...new Set(arr.map(x => x[n]))];
 
-  problemtype:string='';
-
-  filterOptions(){
-    switch(this.problemtype){
+  filterOptions() {
+    switch (this.newModel.type) {
       case 'regresioni':
-        this.lossFunction=LossFunctionRegression;
+        this.lossFunction = LossFunctionRegression;
         break;
       case 'binarni-klasifikacioni':
-        this.lossFunction=LossFunctionBinaryClassification;
+        this.lossFunction = LossFunctionBinaryClassification;
         break;
       case 'multi-klasifikacioni':
-        this.lossFunction=LossFunctionMultiClassification;
-      break;
+        this.lossFunction = LossFunctionMultiClassification;
+        break;
       default:
         break;
     }
   }
 
-  
+
 }

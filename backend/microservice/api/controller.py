@@ -16,6 +16,7 @@ class train_callback(tf.keras.callbacks.Callback):
     #
     def on_epoch_end(self, epoch, logs=None):
         print(epoch)
+        ml_socket.send(epoch)
         #print('Evaluation: ', self.model.evaluate(self.x_test,self.y_test),"\n") #broj parametara zavisi od izabranih metrika loss je default
 
 @app.route('/train', methods = ['POST'])

@@ -13,15 +13,17 @@ import { PredictorsService } from 'src/app/_services/predictors.service';
 })
 export class HomeComponent implements OnInit {
 
-  publicDatasets?: Dataset[];
-  publicPredictors?: Predictor[];
+  publicDatasets: Dataset[] = [];
+  publicPredictors: Predictor[] = [];
 
   shared = shared;
 
   constructor(private datasetsService: DatasetsService, private predictorsService: PredictorsService) {
     this.datasetsService.getPublicDatasets().subscribe((datasets) => {
       this.publicDatasets = datasets;
-      console.log(datasets);
+      this.publicDatasets.forEach((element, index) => {
+        this.publicDatasets[index] = (<Dataset>element);
+      })
     });
     this.predictorsService.getPublicPredictors().subscribe((predictors) => {
       this.publicPredictors = predictors;

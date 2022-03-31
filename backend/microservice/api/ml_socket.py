@@ -25,4 +25,6 @@ async def start():
     get_or_create_eventloop().run_forever()
 
 async def send(msg):
+    print("WS sending message:")
+    print(msg)
     await websocket.send(msg)

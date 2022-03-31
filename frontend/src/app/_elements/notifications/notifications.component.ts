@@ -8,6 +8,8 @@ import { WebSocketService } from 'src/app/_services/web-socket.service';
 })
 export class NotificationsComponent implements OnInit {
 
+  notifications?: any[];
+
   constructor(private wsService: WebSocketService) { }
 
   ngOnInit(): void {
