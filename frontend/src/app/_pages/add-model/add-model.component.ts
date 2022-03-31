@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import Model, { LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, NullValReplacer, ReplaceWith } from 'src/app/_data/Model';
-import { ProblemType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions } from 'src/app/_data/Model';
+import { ProblemType, Encoding, ActivationFunction, LossFunction, Optimizer, NullValueOptions, Metrics, MetricsRegression, MetricsBinaryClassification, MetricsMultiClassification } from 'src/app/_data/Model';
 import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-load.component';
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
@@ -9,6 +9,7 @@ import { DatatableComponent } from 'src/app/_elements/datatable/datatable.compon
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { NgxCsvParser } from 'ngx-csv-parser';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
+
 
 @Component({
   selector: 'app-add-model',
@@ -27,7 +28,7 @@ export class AddModelComponent implements OnInit {
   ProblemType = ProblemType;
   Encoding = Encoding;
   ActivationFunction = ActivationFunction;
-  activationFunction: any = ActivationFunction
+  metrics: any = Metrics;
   LossFunction = LossFunction;
   lossFunction: any = LossFunction;
   Optimizer = Optimizer;
@@ -54,9 +55,9 @@ export class AddModelComponent implements OnInit {
   term: string = "";
 
   selectedProblemType: string = '';
+  selectedMetrics = [];
 
   trainingResult: string | undefined;
-
 
   constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
     this.newModel = new Model();
@@ -112,6 +113,7 @@ export class AddModelComponent implements OnInit {
 
     this.getCheckedInputCols();
     this.getCheckedOutputCol();
+    this.getMetrics();
 
     if (this.validationInputsOutput()) {
       console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
@@ -159,7 +161,7 @@ export class AddModelComponent implements OnInit {
     if (this.selectedDataset) { //dataset je izabran
       this.getCheckedInputCols();
       this.getCheckedOutputCol();
-
+      this.getMetrics();
       if (this.validationInputsOutput()) {
         this.newModel.datasetId = this.selectedDataset._id;
 
@@ -475,17 +477,30 @@ export class AddModelComponent implements OnInit {
     switch (this.newModel.type) {
       case 'regresioni':
         this.lossFunction = LossFunctionRegression;
+        this.metrics = MetricsRegression;
         break;
       case 'binarni-klasifikacioni':
         this.lossFunction = LossFunctionBinaryClassification;
+        this.metrics = MetricsBinaryClassification;
         break;
       case 'multi-klasifikacioni':
         this.lossFunction = LossFunctionMultiClassification;
+        this.metrics = MetricsMultiClassification;
         break;
       default:
         break;
     }
   }
 
+  getMetrics() {
+    this.newModel.metrics = [];
+    let cb = document.getElementsByName("cbmetrics");
 
+    for (let i = 0; i < cb.length; i++) {
+      let chb = <HTMLInputElement>cb[i];
+      if (chb.checked == true)
+        this.newModel.metrics.push(chb.value);
+    }
+
+  }
 }

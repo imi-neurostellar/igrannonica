@@ -31,7 +31,7 @@ export default class Model {
         public username: string = '',
         public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
         public nullValuesReplacers: NullValReplacer[] = [],
-        public metrics: Metric[] = [], // TODO add to add-model form
+        public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5 // TODO add to add-model form
     ) { }
 }
@@ -164,9 +164,35 @@ export class NullValReplacer {
     "value": string;
 }
 
-export enum Metric {
+export enum Metrics {
     MSE = 'mse',
     MAE = 'mae',
     RMSE = 'rmse'
-    //...
+    
+}
+export enum MetricsRegression
+{
+    Mse = 'mse',
+    Mae = 'mae',
+    Mape = 'mape',
+    Msle='msle',
+    CosineProximity='cosine'
+}
+export enum MetricsBinaryClassification
+{
+    Accuracy='binary_accuracy',
+    Auc="AUC",
+    Precision='precision_score',
+    Recall='recall_score',
+    F1='f1_score',
+    
+
+}
+export enum MetricsMultiClassification
+{
+    Accuracy='categorical_accuracy',
+    Auc="AUC",
+    Precision='precision_score',
+    Recall='recall_score',
+    F1='f1_score',
 }

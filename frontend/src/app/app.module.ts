@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { NgChartsModule } from 'ng2-charts';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AppComponent } from './app.component';
@@ -39,6 +39,7 @@ import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-dataset
 import { ReactiveBackgroundComponent } from './_elements/reactive-background/reactive-background.component';
 import { ItemModelComponent } from './_elements/item-model/item-model.component';
 import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,7 +81,7 @@ import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
     MatSliderModule,
     MatIconModule,
     NgChartsModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
