@@ -134,10 +134,10 @@ def train(dataset, params, callback):
     test=params["randomTestSetDistribution"]
     randomOrder = params["randomOrder"]
     if(randomOrder):
-        random=50
+        random=123
     else:
         random=0
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, shuffle=params["shuffle"], random_state=random)
     #
     # Skaliranje vrednosti
     #
@@ -173,8 +173,8 @@ def train(dataset, params, callback):
     model_name = params['_id']
     #y_pred=classifier.predict(x_test)
     if(problem_type == "regresioni"):
-        print(classifier.evaluate(x_test, y_test))
         y_pred=classifier.predict(x_test)
+        print(classifier.evaluate(x_test, y_test))
     elif(problem_type == "binarni-klasifikacioni"):    
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
