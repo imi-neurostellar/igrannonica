@@ -9,7 +9,7 @@ import csv
 import json
 import mlservice
 import h5py
-from mlservice2 import unositok
+from mlservice import unositok
 
 
 app = flask.Flask(__name__)
