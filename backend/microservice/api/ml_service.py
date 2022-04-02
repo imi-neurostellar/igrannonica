@@ -13,7 +13,7 @@ from copyreg import constructor
 from flask import request, jsonify, render_template
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OrdinalEncoder
-import category_encoders as ce
+#import category_encoders as ce
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
@@ -98,6 +98,7 @@ def train(dataset, params, callback):
         for col in data.columns:
             if(data[col].dtype==np.object_):
                 data[col]=encoder.fit_transform(data[col])
+    '''
     elif(encoding=='hashing'):
         category_columns=[]
         for col in data.columns:
@@ -112,13 +113,14 @@ def train(dataset, params, callback):
                 category_columns.append(col)
         encoder=ce.BinaryEncoder(cols=category_columns, return_df=True)
         encoder.fit_transform(data)
+       
     elif(encoding=='baseN'):
         category_columns=[]
         for col in data.columns:
             if(data[col].dtype==np.object_):
                 category_columns.append(col)
         encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
-        encoder.fit_transform(data)
+        encoder.fit_transform(data)''' 
     #
     # Input - output
     #
@@ -151,22 +153,44 @@ def train(dataset, params, callback):
     #
     # Treniranje modela
     #
-    classifier=tf.keras.Sequential()
+    #  
     hidden_layer_neurons = params["hiddenLayerNeurons"]
-    for func in params["hiddenLayerActivationFunctions"]:
-        classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=func))
-    output_func = params["outputLayerActivationFunction"]
-    if(problem_type!="regresioni"):
-        classifier.add(tf.keras.layers.Dense(units=1,activation=output_func))
-    else:
-        classifier.add(tf.keras.layers.Dense(units=1))
-    optimizer = params["optimizer"]
-    metrics=params['metrics']
-    loss_func=params["lossFunction"]
-    classifier.compile(optimizer=optimizer, loss=loss_func,metrics=metrics)
-    batch_size = params["batchSize"]
-    epochs = params["epochs"]
-    history=classifier.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, callbacks=callback(x_test, y_test), validation_split=0.2) # TODO params["validationSplit"]
+
+    if(problem_type=='multi-klasifikacioni'):
+        func=params['hiddenLayerActivationFunctions']
+        funcFirst=func.pop(0)
+        inputDim = len(data.columns) - 1
+        classifier=tf.keras.Sequential(units=hidden_layer_neurons,input_dim=inputDim,activation=funcFirst)
+        for f in func:
+            classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=func))
+        output_func = params["outputLayerActivationFunction"]
+        numberofclasses=len(output_column.unique())
+        classifier.add(tf.keras.layers.Dense(units=numberofclasses,activation=output_func))
+
+        optimizer = params["optimizer"]
+        metrics=params['metrics']
+        loss_func=params["lossFunction"]
+        classifier.compile(optimizer=optimizer, loss=loss_func,metrics=metrics)
+        batch_size = params["batchSize"]
+        epochs = params["epochs"]
+        history=classifier.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, callbacks=callback(x_test, y_test))
+    else:    
+        classifier=tf.keras.Sequential()
+        
+        for func in params["hiddenLayerActivationFunctions"]:
+            classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=func))
+        output_func = params["outputLayerActivationFunction"]
+        if(problem_type!="regresioni"):
+            classifier.add(tf.keras.layers.Dense(units=1,activation=output_func))
+        else:
+            classifier.add(tf.keras.layers.Dense(units=1))
+        optimizer = params["optimizer"]
+        metrics=params['metrics']
+        loss_func=params["lossFunction"]
+        classifier.compile(optimizer=optimizer, loss=loss_func,metrics=metrics)
+        batch_size = params["batchSize"]
+        epochs = params["epochs"]
+        history=classifier.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, callbacks=callback(x_test, y_test), validation_split=0.2) # TODO params["validationSplit"]
     #
     # Test
     #
