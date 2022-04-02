@@ -1,3 +1,6 @@
+from cmath import nan
+from enum import unique
+from itertools import count
 import pandas as pd
 from sklearn import datasets
 import tensorflow as tf
@@ -13,12 +16,55 @@ from copyreg import constructor
 from flask import request, jsonify, render_template
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OrdinalEncoder
-#import category_encoders as ce
+import category_encoders as ce
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+import statistics as s
 
-'''
+def returnColumnsInfo(dataset):
+    dict=[]
+    datafront=dataset.copy()
+    svekolone=datafront.columns
+    kategorijskekolone=datafront.select_dtypes(include=['object']).columns
+    allNullCols=0
+    for kolona in svekolone:
+        if(kolona in kategorijskekolone):
+            uniquevalues=datafront[kolona].unique()
+            mean=0
+            median=0
+            nullCount=datafront[kolona].isnull().sum()
+            if(nullCount>0):
+                allNullCols=allNullCols+1
+            frontreturn={'columnName':kolona,
+                        'isNumber':False,
+                        'uniqueValues':uniquevalues.tolist(),
+                        'median':float(mean),
+                        'mean':float(median),
+                        'numNulls':float(nullCount)
+            }
+            dict.append(frontreturn)
+        else:
+            mean=datafront[kolona].mean()
+            median=s.median(datafront[kolona])
+            nullCount=datafront[kolona].isnull().sum()
+            if(nullCount>0):
+                allNullCols=allNullCols+1
+            frontreturn={'columnName':kolona,
+                        'isNumber':1,
+                        'uniqueValues':[],
+                        'mean':float(mean),
+                        'median':float(median),
+                        'numNulls':float(nullCount)
+            }
+            dict.append(frontreturn)
+        NullRows = datafront[datafront.isnull().any(axis=1)]
+        #print(NullRows)
+        #print(len(NullRows))
+        allNullRows=len(NullRows)
+
+    return {'columnInfo':dict,'allNullColl':allNullCols,'allNullRows':allNullRows}
+
 @dataclass
 class TrainingResultClassification:
     accuracy: float
@@ -34,18 +80,18 @@ class TrainingResultClassification:
     fpr: float
     tpr: float
     metrics: dict
-
+'''
 @datasets
 class TrainingResultRegression:
     mse: float
     mae: float
     mape: float
     rmse: float
-'''
+
 @dataclass
 class TrainingResult:
     metrics: dict
-
+'''
 def train(dataset, params, callback):
     problem_type = params["type"]
     data = pd.DataFrame()
@@ -98,7 +144,7 @@ def train(dataset, params, callback):
         for col in data.columns:
             if(data[col].dtype==np.object_):
                 data[col]=encoder.fit_transform(data[col])
-    '''
+ 
     elif(encoding=='hashing'):
         category_columns=[]
         for col in data.columns:
@@ -120,7 +166,7 @@ def train(dataset, params, callback):
             if(data[col].dtype==np.object_):
                 category_columns.append(col)
         encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
-        encoder.fit_transform(data)''' 
+        encoder.fit_transform(data)
     #
     # Input - output
     #
@@ -256,4 +302,4 @@ def train(dataset, params, callback):
             "adj_r2" : adj_r2
             }
     # TODO upload trenirani model nazad na backend
-    return TrainingResult(metrics)
+#return TrainingResult(metrics)

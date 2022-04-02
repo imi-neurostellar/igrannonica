@@ -38,6 +38,17 @@ def predict():
     #
     #model.predict?
 
+@app.route('/preprocess',methods=['POST'])
+def returnColumnsInfo():
+    f=request.json['filepathcolinfo']
+    dataset=pd.read_csv(f)
+    
+    result=ml_service.returnColumnsInfo(dataset)
+
+    return jsonify(result)
+    
+
+    
 print("App loaded.")
 ml_socket.start()
 app.run()
