@@ -54,6 +54,38 @@ def obuka(dataunos,params,modelunos,dataunosdrugog):
         data[zeljenekolone[i]]=dataunos[zeljenekolone[i]]
     #print(data.head(10))
 
+    ### 0.1) Povratne vrednosti statistike za front (za popunjavanje null vrednosti izabranih kolona) PART4
+    datafront=data.copy()
+    svekolone=datafront.columns
+    kategorijskekolone=datafront.select_dtypes(include=['object']).columns
+    #print(kategorijskekolone )
+    #kategorijskekolone=datacategorical.columns
+    #print(svekolone)
+    for i in range(len(svekolone)):
+        nazivkolone=svekolone[i]
+        if(nazivkolone in kategorijskekolone):
+            svekategorije=datafront[nazivkolone].unique()
+            medijana=None
+            srednjavrednost=None
+            frontreturn={'colName':nazivkolone,
+                        'colType':'categorical',
+                        'categoricalValues':svekategorije,
+                        'mean':medijana,
+                        'average':srednjavrednost
+            }
+        else:
+            svekategorije=None
+            medijana=datafront[nazivkolone].mean()
+            srednjavrednost=sum(datafront[nazivkolone])/len(datafront[nazivkolone])
+            frontreturn={'colName':nazivkolone,
+                        'colType':'noncategorical',
+                        'categoricalValues':svekategorije,
+                        'mean':medijana,
+                        'average':srednjavrednost
+            }
+
+        print(frontreturn)
+
    
     #predvidetikol=input("UNETI NAZIV KOLONE ČIJU VREDNOST TREBA PREDVIDETI ")
     ###sta se cuva od promenjivih broj kolone ili naziv kolone???

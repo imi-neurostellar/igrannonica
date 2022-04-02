@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn import datasets
 import tensorflow as tf
 import keras
 import numpy as np
@@ -11,12 +12,15 @@ from typing_extensions import Self
 from copyreg import constructor
 from flask import request, jsonify, render_template
 from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OrdinalEncoder
+import category_encoders as ce
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
+'''
 @dataclass
-class TrainingResult:
+class TrainingResultClassification:
     accuracy: float
     precision: float
     recall: float
@@ -26,12 +30,21 @@ class TrainingResult:
     tp: float
     specificity: float
     f1: float
+    logloss: float
+    fpr: float
+    tpr: float
+    metrics: dict
+
+@datasets
+class TrainingResultRegression:
     mse: float
     mae: float
     mape: float
     rmse: float
-    fpr: float
-    tpr: float
+'''
+@dataclass
+class TrainingResult:
+    metrics: dict
 
 def train(dataset, params, callback):
     problem_type = params["type"]
@@ -66,6 +79,7 @@ def train(dataset, params, callback):
             data.pop(col)
     #
     # Enkodiranje
+    # https://www.analyticsvidhya.com/blog/2020/08/types-of-categorical-data-encoding/
     #
     encoding=params["encoding"]
     if(encoding=='label'):
@@ -79,6 +93,32 @@ def train(dataset, params, callback):
             if(data[col].dtype==np.object_):
                 category_columns.append(col)
         data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
+    elif(encoding=='ordinal'):
+        encoder = OrdinalEncoder()
+        for col in data.columns:
+            if(data[col].dtype==np.object_):
+                data[col]=encoder.fit_transform(data[col])
+    elif(encoding=='hashing'):
+        category_columns=[]
+        for col in data.columns:
+            if(data[col].dtype==np.object_):
+                category_columns.append(col)
+        encoder=ce.HashingEncoder(cols=category_columns, n_components=len(category_columns))
+        encoder.fit_transform(data)
+    elif(encoding=='binary'):
+        category_columns=[]
+        for col in data.columns:
+            if(data[col].dtype==np.object_):
+                category_columns.append(col)
+        encoder=ce.BinaryEncoder(cols=category_columns, return_df=True)
+        encoder.fit_transform(data)
+    elif(encoding=='baseN'):
+        category_columns=[]
+        for col in data.columns:
+            if(data[col].dtype==np.object_):
+                category_columns.append(col)
+        encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
+        encoder.fit_transform(data)
     #
     # Input - output
     #
@@ -94,17 +134,20 @@ def train(dataset, params, callback):
     test=params["randomTestSetDistribution"]
     randomOrder = params["randomOrder"]
     if(randomOrder):
-        random=50
+        random=123
     else:
         random=0
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, shuffle=params["shuffle"], random_state=random)
     #
     # Skaliranje vrednosti
     #
+    '''
     scaler=StandardScaler()
     scaler.fit(x_train)
     x_test=scaler.transform(x_test)
     x_train=scaler.transform(x_train)
+    '''
+    
     #
     # Treniranje modela
     #
@@ -113,7 +156,10 @@ def train(dataset, params, callback):
     for func in params["hiddenLayerActivationFunctions"]:
         classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=func))
     output_func = params["outputLayerActivationFunction"]
-    classifier.add(tf.keras.layers.Dense(units=1,activation=output_func))
+    if(problem_type!="regresioni"):
+        classifier.add(tf.keras.layers.Dense(units=1,activation=output_func))
+    else:
+        classifier.add(tf.keras.layers.Dense(units=1))
     optimizer = params["optimizer"]
     metrics=params['metrics']
     loss_func=params["lossFunction"]
@@ -125,11 +171,14 @@ def train(dataset, params, callback):
     # Test
     #
     model_name = params['_id']
-    y_pred=classifier.predict(x_test)
+    #y_pred=classifier.predict(x_test)
     if(problem_type == "regresioni"):
-        classifier.evaluate(x_test, y_test)
-    elif(problem_type == "binarni-klasifikacioni"):
+        y_pred=classifier.predict(x_test)
+        print(classifier.evaluate(x_test, y_test))
+    elif(problem_type == "binarni-klasifikacioni"):    
+        y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
+        
     y_pred=y_pred.flatten()
     result=pd.DataFrame({"Actual":y_test,"Predicted":y_pred})
     classifier.save("temp/"+model_name, save_format='h5')
@@ -139,20 +188,48 @@ def train(dataset, params, callback):
     print("HELLO???")
     print(result)
     print("HELLO???")
-    accuracy = float(sm.accuracy_score(y_test,y_pred))
-    precision = float(sm.precision_score(y_test,y_pred))
-    recall = float(sm.recall_score(y_test,y_pred))
-    tn, fp, fn, tp = sm.confusion_matrix(y_test,y_pred).ravel()
-    specificity = float(tn / (tn+fp))
-    f1 = float(sm.f1_score(y_test,y_pred))
-    mse = float(sm.mean_squared_error(y_test,y_pred))
-    mae = float(sm.mean_absolute_error(y_test,y_pred))
-    mape = float(sm.mean_absolute_percentage_error(y_test,y_pred))
-    rmse = float(np.sqrt(sm.mean_squared_error(y_test,y_pred)))
-    fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
+    if(problem_type=="binarni-klasifikacioni"):
+        accuracy = float(sm.accuracy_score(y_test,y_pred))
+        precision = float(sm.precision_score(y_test,y_pred))
+        recall = float(sm.recall_score(y_test,y_pred))
+        tn, fp, fn, tp = sm.confusion_matrix(y_test,y_pred).ravel()
+        specificity = float(tn / (tn+fp))
+        f1 = float(sm.f1_score(y_test,y_pred))
+        fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
+        logloss = float(sm.log_loss(y_test, y_pred))
+        metrics= {"accuracy" : accuracy,
+            "precision" : precision,
+            "recall" : recall,
+            "specificity" : specificity,
+            "f1" : f1,
+            "tn" : float(tn),
+            "fp" : float(fp),
+            "fn" : float(fn),
+            "tp" : float(tp),
+            "fpr" : fpr.tolist(),
+            "tpr" : tpr.tolist(),
+            "logloss" : logloss
+            }
+    elif(problem_type=="regresioni"):
+        # https://www.analyticsvidhya.com/blog/2021/05/know-the-best-evaluation-metrics-for-your-regression-model/
+        mse = float(sm.mean_squared_error(y_test,y_pred))
+        mae = float(sm.mean_absolute_error(y_test,y_pred))
+        mape = float(sm.mean_absolute_percentage_error(y_test,y_pred))
+        rmse = float(np.sqrt(sm.mean_squared_error(y_test,y_pred)))
+        rmsle = float(np.sqrt(sm.mean_squared_error(y_test, y_pred)))
+        r2 = float(sm.r2_score(y_test, y_pred))
+        # n - num of observations
+        # k - num of independent variables
+        n = 40
+        k = 2
+        adj_r2 = float(1 - ((1-r2)*(n-1)/(n-k-1)))
+        metrics= {"mse" : mse,
+            "mae" : mae,
+            "mape" : mape,
+            "rmse" : rmse,
+            "rmsle" : rmsle,
+            "r2" : r2,
+            "adj_r2" : adj_r2
+            }
     # TODO upload trenirani model nazad na backend
-    return TrainingResult(accuracy, precision, recall, float(tn), float(fp), float(fn), float(tp), specificity, f1, mse, mae, mape, rmse, fpr.tolist(), tpr.tolist())
-
-
-
-    
+    return TrainingResult(metrics)
