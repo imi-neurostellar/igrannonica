@@ -18,5 +18,9 @@ namespace api.Services
             _experiment.InsertOne(experiment);
             return experiment;
         }
+        public Experiment Get(string id)
+        {
+            return _experiment.Find(exp=>exp._id == id).FirstOrDefault();
+        }
     }
 }

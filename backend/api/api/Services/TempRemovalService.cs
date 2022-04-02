@@ -9,6 +9,7 @@ namespace api.Services
         private readonly IMongoCollection<FileModel> _file;
         private readonly IMongoCollection<Model> _model;
         private readonly IMongoCollection<Dataset> _dataset;
+        private readonly IMongoCollection<Experiment> _experiment;
 
         public TempRemovalService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
         {
@@ -16,6 +17,7 @@ namespace api.Services
             _file = database.GetCollection<FileModel>(settings.FilesCollectionName);
             _model= database.GetCollection<Model>(settings.ModelCollectionName);
             _dataset = database.GetCollection<Dataset>(settings.DatasetCollectionName);
+            _experiment= database.GetCollection<Experiment>(settings.ExperimentCollectionName);
         }
         public void DeleteTemps()
         {

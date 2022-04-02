@@ -12,6 +12,9 @@ namespace api.Models
         public string datasetId { get; set; }
         public string[] inputColumns { get; set; }
         public string outputColumn { get; set; }
+        public bool randomOrder { get; set; }
+        public bool randomTestSet { get; set; }
+        public float randomTestSetDistribution { get; set; }
         public string nullValues { get; set; }
         public NullValues[] nullValuesReplacers { get; set; }
 
