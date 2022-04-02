@@ -34,6 +34,7 @@ builder.Services.AddScoped<IModelService, ModelService>();
 builder.Services.AddScoped<IPredictorService, PredictorService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
+builder.Services.AddScoped<IExperimentService, ExperimentService>();
 
 var mlwss = new MLWebSocketService();
 
