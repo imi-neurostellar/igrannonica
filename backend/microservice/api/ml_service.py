@@ -333,6 +333,9 @@ def train(dataset, params, callback):
             "adj_r2" : adj_r2
             }
     elif(problem_type=="multi-klasifikacioni"):
+        
+        cr=sm.classification_report(y_test, y_pred)
+        cm=sm.confusion_matrix(y_test,y_pred)
         # https://www.kaggle.com/code/nkitgupta/evaluation-metrics-for-multi-class-classification/notebook
         accuracy=metrics.accuracy_score(y_test, y_pred)
         macro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'macro')
