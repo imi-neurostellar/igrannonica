@@ -24,4 +24,12 @@ export class PredictorsService {
   usePredictor(predictor: Predictor, inputs : String[]) {
     return this.http.post(`${API_SETTINGS.apiURL}/predictor/usepredictor/` + predictor._id, inputs, { headers: this.authService.authHeader() });
   }
+
+  deletePredictor(predictor: Predictor) {
+    return this.http.delete(`${API_SETTINGS.apiURL}/predictor/` + predictor.name, { headers: this.authService.authHeader(), responseType: "text" });
+  }
+
+  getMyPredictors(): Observable<Predictor[]> {
+    return this.http.get<Predictor[]>(`${API_SETTINGS.apiURL}/predictor/mypredictors`, { headers: this.authService.authHeader() });
+  }
 }

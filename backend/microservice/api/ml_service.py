@@ -21,6 +21,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 import statistics as s
+from sklearn.metrics import roc_auc_score
 
 def returnColumnsInfo(dataset):
     dict=[]
@@ -252,6 +253,26 @@ def train(dataset, params, callback):
     y_pred=y_pred.flatten()
     result=pd.DataFrame({"Actual":y_test,"Predicted":y_pred})
     classifier.save("temp/"+model_name, save_format='h5')
+    # ROC multi-klasifikacioni
+    def roc_auc_score_multiclass(actual_class, pred_class, average = "macro"):
+    
+        #creating a set of all the unique classes using the actual class list
+        unique_class = set(actual_class)
+        roc_auc_dict = {}
+        for per_class in unique_class:
+            
+            #creating a list of all the classes except the current class 
+            other_class = [x for x in unique_class if x != per_class]
+
+            #marking the current class as 1 and all other classes as 0
+            new_actual_class = [0 if x in other_class else 1 for x in actual_class]
+            new_pred_class = [0 if x in other_class else 1 for x in pred_class]
+
+            #using the sklearn metrics method to calculate the roc_auc_score
+            roc_auc = roc_auc_score(new_actual_class, new_pred_class, average = average)
+            roc_auc_dict[per_class] = roc_auc
+
+        return roc_auc_dict
     #
     # Metrike
     #
@@ -301,5 +322,17 @@ def train(dataset, params, callback):
             "r2" : r2,
             "adj_r2" : adj_r2
             }
+    elif(problem_type=="multi-klasifikacioni"):
+        # https://www.kaggle.com/code/nkitgupta/evaluation-metrics-for-multi-class-classification/notebook
+        accuracy=metrics.accuracy_score(y_test, y_pred)
+        macro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'macro')
+        micro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'micro')
+        macro_averaged_recall=metrics.recall_score(y_test, y_pred, average = 'macro')
+        micro_averaged_recall=metrics.recall_score(y_test, y_pred, average = 'micro')
+        macro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'macro')
+        micro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'micro')
+        roc_auc_dict=roc_auc_score_multiclass(y_test, y_pred)
+
+
     # TODO upload trenirani model nazad na backend
-#return TrainingResult(metrics)
+    #return TrainingResult(metrics)
