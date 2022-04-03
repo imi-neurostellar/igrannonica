@@ -47,7 +47,8 @@ namespace api.Controllers
             }
             else
                 return BadRequest();
-            var dataset = _datasetService.GetOneDataset(model.datasetId);
+            var experiment=_experimentService.Get(model.experimentId);
+            var dataset = _datasetService.GetOneDataset(experiment.datasetId);
             var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
             var result = await _mlService.SendModelAsync(model, filepath);
             return Ok(result);

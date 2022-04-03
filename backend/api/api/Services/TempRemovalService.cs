@@ -31,11 +31,16 @@ namespace api.Services
                     foreach(var dataset in datasets)
                     {
                         DeleteDataset(dataset._id);
-                        List<Model> models = _model.Find(model => model.datasetId == dataset._id && model.username=="").ToList();
-                        foreach(var model in models)
+                        List<Experiment> experiments = _experiment.Find(experiment=>experiment.datasetId== dataset._id && experiment.uploaderId=="").ToList();
+                        foreach(var experiment in experiments)
                         {
-                            DeleteModel(model._id);
-                        }
+                            DeleteExperiment(experiment._id);
+                            List<Model> models = _model.Find(model => model.experimentId == experiment._id && model.username == "").ToList();
+                            foreach (var model in models)
+                            {
+                                DeleteModel(model._id);
+                            }
+                        }     
                     }
                     if (File.Exists(file.path))
                         File.Delete(file.path);
@@ -68,6 +73,10 @@ namespace api.Services
         public void DeleteDataset(string id)
         {
             _dataset.DeleteOne(dataset => dataset._id == id);
+        }
+        public void DeleteExperiment(string id)
+        {
+            _experiment.DeleteOne(experiment => experiment._id == id);
         }
 
 

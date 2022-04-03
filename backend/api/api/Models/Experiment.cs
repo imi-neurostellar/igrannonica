@@ -10,6 +10,7 @@ namespace api.Models
         public string _id { get; set; }
 
         public string datasetId { get; set; }
+        public string uploaderId { get; set; }
         public string[] inputColumns { get; set; }
         public string outputColumn { get; set; }
         public bool randomOrder { get; set; }
