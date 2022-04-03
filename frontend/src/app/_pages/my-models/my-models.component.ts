@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import shared from 'src/app/Shared';
 import Model from 'src/app/_data/Model';
 import { ModelsService } from 'src/app/_services/models.service';
 
@@ -38,7 +39,7 @@ deleteThisModel(model: Model): void{
     this.getAllMyModels();
   }, (error) =>{
       if (error.error == "Model with name = {name} deleted") {
-        alert("Greška pri brisanju modela!");
+        shared.openDialog("Obaveštenje", "Greška prilikom brisanja modela.");
       }
     });
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Predictor from 'src/app/_data/Predictor';
 import { PredictorsService } from 'src/app/_services/predictors.service';
+import shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-predict',
@@ -29,8 +30,7 @@ export class PredictComponent implements OnInit {
 
   usePredictor(): void{ 
     this.predictS.usePredictor(this.predictor, this.inputs).subscribe(p => {
-      
-      alert("Prediktor je uspesno poslat na treniranje!");
+      shared.openDialog("Obaveštenje", "Prediktor je uspešno poslat na probu."); //pisalo je "na treniranje" ??
     })
     console.log(this.inputs);
   }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -39,6 +39,7 @@ import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-dataset
 import { ReactiveBackgroundComponent } from './_elements/reactive-background/reactive-background.component';
 import { ItemModelComponent } from './_elements/item-model/item-model.component';
 import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
+import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
     FilterDatasetsComponent,
     ReactiveBackgroundComponent,
     ItemModelComponent,
-    AnnvisualComponent
+    AnnvisualComponent,
+    AlertDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -84,6 +86,8 @@ import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
     Ng2SearchPipeModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  entryComponents: [AlertDialogComponent]
 })
 export class AppModule { }
