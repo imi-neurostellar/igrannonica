@@ -14,11 +14,15 @@ namespace api.Controllers
     public class DatasetController : ControllerBase
     {
         private readonly IDatasetService _datasetService;
+        private readonly IMlConnectionService _mlConnectionService;
+        private readonly IFileService _fileService;
         private IJwtToken jwtToken;
 
-        public DatasetController(IDatasetService datasetService, IConfiguration configuration,IJwtToken Token)
+        public DatasetController(IDatasetService datasetService, IConfiguration configuration,IJwtToken Token,IMlConnectionService mlConnectionService, IFileService fileService)
         {
             _datasetService = datasetService;
+            _mlConnectionService = mlConnectionService;
+            _fileService = fileService;
             jwtToken = Token;
         }
 
@@ -159,7 +163,7 @@ namespace api.Controllers
         // POST api/<DatasetController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult<Dataset> Post([FromBody] Dataset dataset)
+        public async Task<ActionResult<Dataset>> Post([FromBody] Dataset dataset)
         {
             //da li ce preko tokena da se ubaci username ili front salje
             //dataset.username = usernameToken;
@@ -170,9 +174,13 @@ namespace api.Controllers
                 return NotFound($"Dateset with name = {dataset.name} exisits");
             else
             {
-                _datasetService.Create(dataset);
 
-                return CreatedAtAction(nameof(Get), new { id = dataset._id }, dataset);
+                FileModel fileModel = _fileService.getFile(dataset.fileId);
+                Dataset newDataset =await _mlConnectionService.PreProcess(dataset,fileModel.path);
+
+                _datasetService.Create(newDataset);
+
+                return CreatedAtAction(nameof(Get), new { id = newDataset._id }, newDataset);
             }
         }
 
