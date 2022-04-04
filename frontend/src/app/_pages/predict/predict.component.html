@@ -43,17 +43,20 @@
         </div>
         <br>
         <br>
-
+        <label for="type" class="form-check-label" ><b>Informacije o prediktoru</b></label>
         <div class="col-5 mt-2">
-            <label for="type" class="form-check-label">Da li je prediktor javan?</label>
-            <input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="predictor.isPublic"
-                type="checkbox" value="">
+            <label for="type" class="form-check-label"  *ngIf="predictor.isPublic">Prediktor je public.</label>
+            <label for="type" class="form-check-label"  *ngIf="!predictor.isPublic">Prediktor nije public.</label>
+            <!--<input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="predictor.isPublic"
+                type="checkbox" value="">-->
         </div>
         <div class="col-5 mt-2">
-            <label for="type" class="form-check-label">Da li je dostupan za deljenje?</label>
-            <input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="predictor.accessibleByLink"
-                type="checkbox" value="" >
+            <label for="type" class="form-check-label" *ngIf="predictor.accessibleByLink">Prediktor je dostupan za deljenje.</label>
+            <label for="type" class="form-check-label" *ngIf="!predictor.accessibleByLink">Prediktor nije dostupan za deljenje.</label>
+            <!--<input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="predictor.accessibleByLink"
+                type="checkbox" value="" >-->
         </div>
+        <br>
         <br>
         <div class="col-2">
             <label for="dateCreated" class="col-form-label">Datum:</label> 

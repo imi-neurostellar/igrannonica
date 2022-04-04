@@ -4,6 +4,7 @@ using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+
 namespace api.Controllers
 {
     [Route("api/[controller]")]
@@ -11,6 +12,7 @@ namespace api.Controllers
     public class FileController : ControllerBase
     {
         private string[] permittedExtensions = { ".csv" };
+        private string[] permittedExtensionsH5 = { ".h5" };//niz da bi dodali h4 itd
         private readonly IConfiguration _configuration;
         private IJwtToken _token;
         private IFileService _fileservice;
@@ -20,6 +22,77 @@ namespace api.Controllers
             _token = token;
             _fileservice = fileService;
 
+        }
+
+        [HttpPost("h5")]
+        [Authorize(Roles = "User,Guest")]
+        public async Task<ActionResult<string>> H5Upload([FromForm] IFormFile file)
+        {
+
+            //get username from jwtToken
+            string uploaderId;
+            string folderName;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                uploaderId = _token.TokenToId(parameter);
+                if (uploaderId == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+            if (uploaderId == "")
+            {
+                folderName = "TempFiles";
+            }
+            else
+            {
+                folderName = "UploadedFiles";
+            }
+
+
+            //Check filetype
+            var filename = file.FileName;
+            var ext = Path.GetExtension(filename).ToLowerInvariant();
+            var name = Path.GetFileNameWithoutExtension(filename).ToLowerInvariant();
+            if (string.IsNullOrEmpty(ext) || !permittedExtensionsH5.Contains(ext))
+            {
+                return BadRequest("Wrong file type");
+            }
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, uploaderId);
+            //Check Directory
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            //Index file if same filename
+            var fullPath = Path.Combine(folderPath, filename);
+            int i = 0;
+
+            while (System.IO.File.Exists(fullPath))
+            {
+                i++;
+                fullPath = Path.Combine(folderPath, name + i.ToString() + ext);
+            }
+
+
+            //Write file
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            FileModel fileModel = new FileModel();
+            fileModel.type = "h5";
+            fileModel.path = fullPath;
+            fileModel.uploaderId = uploaderId;
+            fileModel.date = DateTime.Now.ToUniversalTime();
+            fileModel = _fileservice.Create(fileModel);
+
+
+            return Ok(fileModel);
         }
 
 
@@ -81,6 +154,7 @@ namespace api.Controllers
                 await file.CopyToAsync(stream);
             }
             FileModel fileModel= new FileModel();
+            fileModel.type = "csv";
             fileModel.path=fullPath;
             fileModel.uploaderId= uploaderId;
             fileModel.date = DateTime.Now.ToUniversalTime();
@@ -88,6 +162,35 @@ namespace api.Controllers
             
 
             return Ok(fileModel);
+        }
+
+
+        //msm generalno moze da se koristi Download samo
+        [HttpGet("downloadh5")]
+        [Authorize(Roles = "User,Guest")]
+        public async Task<ActionResult> DownloadH5(string id)
+        {
+            //Get Username
+            string uploaderId;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                uploaderId = _token.TokenToId(parameter);
+                if (uploaderId == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            string filePath = _fileservice.GetFilePath(id, uploaderId);
+            if (filePath == null)
+                return BadRequest();
+
+            return File(System.IO.File.ReadAllBytes(filePath), "application/octet-stream", Path.GetFileName(filePath));
+
         }
 
         [HttpGet("Download")]

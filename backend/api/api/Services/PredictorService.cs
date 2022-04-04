@@ -42,7 +42,7 @@ namespace api.Services
         }
         public Predictor GetPredictor(string username, string id)
         {
-            return _predictor.Find(predictor => predictor.username == username && predictor._id == id).FirstOrDefault();
+            return _predictor.Find(predictor => predictor._id == id && (predictor.username == username || predictor.isPublic == true)).FirstOrDefault();
 
         }
         //last private models
