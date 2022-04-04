@@ -34,9 +34,8 @@ def predict():
     f = request.json['filepath']
     dataset = pd.read_csv(f)
     m = request.json['modelpath']
-    #model = tf.keras.models.load_model(m)
-    #
-    #model.predict?
+    model = tf.keras.models.load_model(m)
+    h5=ml_service.manageH5(dataset,request.json,model,train_callback)
 
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
