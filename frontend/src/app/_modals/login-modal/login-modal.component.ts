@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { UserInfoService } from 'src/app/_services/user-info.service';
 import shared from '../../Shared';
+import {AfterViewInit, ElementRef} from '@angular/core';
 
 @Component({
   selector: 'app-login-modal',
@@ -11,6 +12,8 @@ import shared from '../../Shared';
   styleUrls: ['./login-modal.component.css']
 })
 export class LoginModalComponent implements OnInit {
+
+  @ViewChild('closeButton') closeButton?: ElementRef;
 
   username: string = '';
   password: string = '';
@@ -38,7 +41,7 @@ export class LoginModalComponent implements OnInit {
         }
         else {
           this.authService.authenticate(response);
-          (<HTMLSelectElement>document.getElementById('closeButton')).click();
+          (<HTMLSelectElement>this.closeButton?.nativeElement).click();
           this.userInfoService.getUserInfo().subscribe((response) => {
             shared.photoId = response.photoId;
           });

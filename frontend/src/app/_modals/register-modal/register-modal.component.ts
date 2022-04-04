@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
 import User from 'src/app/_data/User';
+import { DOCUMENT } from '@angular/common';
+import { Inject }  from '@angular/core';
+import shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-register-modal',
@@ -29,8 +32,11 @@ export class RegisterModalComponent implements OnInit {
   pattEmail: RegExp = /^[a-zA-Z0-9]+([\.\-\+][a-zA-Z0-9]+)*\@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/;
   pattPassword: RegExp = /.{6,30}$/;
 
+  shared = shared;
+
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    @Inject(DOCUMENT) document: Document
   ) { }
 
   ngOnInit(): void {
@@ -149,11 +155,11 @@ export class RegisterModalComponent implements OnInit {
               }, (error) => console.warn(error));             
             }
             else if (response == 'Email Already Exists') {
-              alert('Nalog sa unetim email-om već postoji!');
+              shared.openDialog("Greška!", "Nalog sa unetim email-om već postoji!");
               (<HTMLSelectElement>document.getElementById('email')).focus();
             }
             else if (response == 'Username Already Exists') {
-              alert('Nalog sa unetim korisničkim imenom već postoji!');
+              shared.openDialog("Greška!", "Nalog sa unetim korisničkim imenom već postoji!");
               (<HTMLSelectElement>document.getElementById('username-register')).focus();
             }
           }

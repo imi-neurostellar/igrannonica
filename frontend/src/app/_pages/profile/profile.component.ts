@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { PICTURES } from 'src/app/_data/ProfilePictures';
 import { Picture } from 'src/app/_data/ProfilePictures';
 import shared from '../../Shared';
+import { share } from 'rxjs';
 
 
 @Component({
@@ -14,8 +15,6 @@ import shared from '../../Shared';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-
-
 
   user: User = new User();
   pictures: Picture[] = PICTURES;
@@ -90,18 +89,18 @@ export class ProfileComponent implements OnInit {
       if (this.user.username != editedUser.username) { //promenio username, ide logout
         this.user = editedUser;
         this.resetInfo();
-        alert("Nakon promene korisničkog imena, moraćete ponovo da se ulogujete.");
+        shared.openDialog("Obaveštenje", "Nakon promene korisničkog imena, moraćete ponovo da se ulogujete.");
         this.authService.logOut();
         this.router.navigate(['']);
         return;
       }
-      alert("Podaci su uspešno promenjeni.");
+      shared.openDialog("Obaveštenje", "Podaci su uspešno promenjeni.");
       this.user = editedUser;
       console.log(this.user);
       this.resetInfo();
     }, (error: any) =>{
       if (error.error == "Username already exists!") {
-        alert("Ukucano korisničko ime je već zauzeto!\nIzaberite neko drugo.");
+        shared.openDialog("Obaveštenje", "Ukucano korisničko ime je već zauzeto! Izaberite neko drugo.");
         //(<HTMLSelectElement>document.getElementById("inputUsername")).focus();
         //poruka obavestenja ispod inputa
         this.resetInfo();
@@ -131,7 +130,7 @@ export class ProfileComponent implements OnInit {
     this.userInfoService.changeUserPassword(passwordArray).subscribe((response: any) => {
       //console.log("PROMENIO LOZINKU");
       this.resetNewPassInputs();
-      alert("Nakon promene lozinke, moraćete ponovo da se ulogujete.");
+      shared.openDialog("Obaveštenje", "Nakon promene lozinke, moraćete ponovo da se ulogujete.");
       this.authService.logOut();
       this.router.navigate(['']);
     }, (error: any) => {
@@ -142,7 +141,7 @@ export class ProfileComponent implements OnInit {
         return;
       }
       else if (error.error == 'Identical password!') {
-        alert("Stara i nova lozinka su identične.");
+        shared.openDialog("Obaveštenje", "Stara i nova lozinka su identične."); 
         this.resetNewPassInputs();
         //(<HTMLSelectElement>document.getElementById("inputNewPassword")).focus();
         return;

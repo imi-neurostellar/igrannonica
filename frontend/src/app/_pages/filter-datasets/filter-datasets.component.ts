@@ -4,6 +4,7 @@ import Dataset from 'src/app/_data/Dataset';
 import {Router} from '@angular/router'
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
+import shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-filter-datasets',
@@ -12,6 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class FilterDatasetsComponent implements OnInit {
 
+  shared = shared;
   publicDatasets?: Dataset[];
   term: string = "";
   constructor(private datasets: DatasetsService,private router:Router, private cookie: CookieService) {
@@ -37,11 +39,9 @@ export class FilterDatasetsComponent implements OnInit {
     if(name!=null && name!="")
     this.datasets.addDataset(newDataset).subscribe((response:string)=>{
       console.log(response);
-      alert("Uspenso ste dodali dataset sa imenom "+newDataset.name);
+      shared.openDialog("Obaveštenje", "Uspešno ste dodali dataset sa nazivom " + newDataset.name);
     },(error)=>{
-      alert("Vec imate dataset sa istim imenom molim vas unesite drugo ime");
-      
-
+      shared.openDialog("Obaveštenje", "U svojoj kolekciji već imate dataset sa ovim imenom. Molimo Vas da unesete drugo ime.");
     });
   
   };

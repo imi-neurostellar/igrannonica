@@ -143,14 +143,14 @@ export class AddModelComponent implements OnInit {
               this.models.addModel(this.newModel).subscribe((response) => {
                 callback(response);
               }, (error) => {
-                alert("Model sa unetim nazivom već postoji u Vašoj kolekciji.\nPromenite naziv modela i nastavite sa kreiranim datasetom.");
+                shared.openDialog("Neuspeo pokušaj!", "Model sa unetim nazivom već postoji u Vašoj kolekciji. Promenite naziv modela i nastavite sa kreiranim datasetom.");
               }); //kraj addModel subscribe
             }, (error) => {
-              alert("Dataset sa unetim nazivom već postoji u Vašoj kolekciji.\nIzmenite naziv ili iskoristite postojeći dataset.");
+              shared.openDialog("Neuspeo pokušaj!", "Dataset sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
             }); //kraj addDataset subscribe
           } //kraj treceg ifa
         }, (error) => {
-          //alert("greska uploadData");
+          
         }); //kraj uploadData subscribe
 
       } //kraj drugog ifa
@@ -174,12 +174,12 @@ export class AddModelComponent implements OnInit {
         this.models.addModel(this.newModel).subscribe((response) => {
           callback(response);
         }, (error) => {
-          alert("Model sa unetim nazivom već postoji u Vašoj kolekciji.\nPromenite naziv modela i nastavite sa kreiranim datasetom.");
+          shared.openDialog("Neuspeo pokušaj!", "Model sa unetim nazivom već postoji u Vašoj kolekciji. Promenite naziv modela i nastavite sa kreiranim datasetom.");
         });
       }
     }
     else {
-      alert("Molimo Vas da izaberete neki dataset iz kolekcije.");
+      shared.openDialog("Obaveštenje", "Molimo Vas da izaberete neki dataset iz kolekcije.");
     }
   }
 
@@ -213,21 +213,21 @@ export class AddModelComponent implements OnInit {
   }
   validationInputsOutput(): boolean {
     if (this.newModel.inputColumns.length == 0 && this.newModel.columnToPredict == '') {
-      alert("Molimo Vas da izaberete ulazne i izlazne kolone za mrežu.");
+      shared.openDialog("Neuspeo pokušaj!", "Molimo Vas da izaberete ulazne i izlazne kolone za mrežu.");
       return false;
     }
     else if (this.newModel.inputColumns.length == 0) {
-      alert("Molimo Vas da izaberete ulaznu kolonu/kolone za mrežu.");
+      shared.openDialog("Neuspeo pokušaj!", "Molimo Vas da izaberete ulaznu kolonu/kolone za mrežu.");
       return false;
     }
     else if (this.newModel.columnToPredict == '') {
-      alert("Molimo Vas da izaberete izlaznu kolonu za mrežu.");
+      shared.openDialog("Neuspeo pokušaj!", "Molimo Vas da izaberete izlaznu kolonu za mrežu.");
       return false;
     }
     for (let i = 0; i < this.newModel.inputColumns.length; i++) {
       if (this.newModel.inputColumns[i] == this.newModel.columnToPredict) {
         let colName = this.newModel.columnToPredict;
-        alert("Izabrali ste istu kolonu (" + colName + ") kao ulaznu i izlaznu iz mreže. Korigujte izbor.");
+        shared.openDialog("Neuspeo pokušaj!", "Izabrali ste istu kolonu (" + colName + ") kao ulaznu i izlaznu iz mreže. Korigujte izbor.");
         return false;
       }
     }

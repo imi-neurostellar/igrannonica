@@ -205,21 +205,26 @@ def train(dataset, params, callback):
 
     if(problem_type=='multi-klasifikacioni'):
         func=params['hiddenLayerActivationFunctions']
-        funcFirst=func.pop(0)
-        inputDim = len(data.columns) - 1
-        classifier=tf.keras.Sequential(units=hidden_layer_neurons,input_dim=inputDim,activation=funcFirst)
-        for f in func:
-            classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=func))
         output_func = params["outputLayerActivationFunction"]
-        numberofclasses=len(output_column.unique())
-        classifier.add(tf.keras.layers.Dense(units=numberofclasses,activation=output_func))
-
         optimizer = params["optimizer"]
         metrics=params['metrics']
         loss_func=params["lossFunction"]
-        classifier.compile(optimizer=optimizer, loss=loss_func,metrics=metrics)
         batch_size = params["batchSize"]
         epochs = params["epochs"]
+        inputDim = len(data.columns) - 1
+
+        classifier=tf.keras.Sequential()
+
+        classifier.add(tf.keras.layers.Dense(units=len(data.columns),input_dim=inputDim))#input layer
+        
+        for f in func:#hidden layers
+            classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=f))
+        
+        numberofclasses=len(output_column.unique())
+        classifier.add(tf.keras.layers.Dense(units=numberofclasses,activation=output_func))#output layer
+
+        classifier.compile(optimizer=optimizer, loss=loss_func,metrics=metrics)
+        
         history=classifier.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, callbacks=callback(x_test, y_test))
     else:    
         classifier=tf.keras.Sequential()
@@ -227,10 +232,12 @@ def train(dataset, params, callback):
         for func in params["hiddenLayerActivationFunctions"]:
             classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=func))
         output_func = params["outputLayerActivationFunction"]
+
         if(problem_type!="regresioni"):
             classifier.add(tf.keras.layers.Dense(units=1,activation=output_func))
         else:
             classifier.add(tf.keras.layers.Dense(units=1))
+
         optimizer = params["optimizer"]
         metrics=params['metrics']
         loss_func=params["lossFunction"]
@@ -249,7 +256,10 @@ def train(dataset, params, callback):
     elif(problem_type == "binarni-klasifikacioni"):    
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
-        
+    elif(problem_type=='multi-klasifikacioni'):
+        y_pred=classifier.predict(x_test)
+        y_pred=np.argmax(y_pred,axis=1)
+
     y_pred=y_pred.flatten()
     result=pd.DataFrame({"Actual":y_test,"Predicted":y_pred})
     classifier.save("temp/"+model_name, save_format='h5')
@@ -323,6 +333,9 @@ def train(dataset, params, callback):
             "adj_r2" : adj_r2
             }
     elif(problem_type=="multi-klasifikacioni"):
+        
+        cr=sm.classification_report(y_test, y_pred)
+        cm=sm.confusion_matrix(y_test,y_pred)
         # https://www.kaggle.com/code/nkitgupta/evaluation-metrics-for-multi-class-classification/notebook
         accuracy=metrics.accuracy_score(y_test, y_pred)
         macro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'macro')
