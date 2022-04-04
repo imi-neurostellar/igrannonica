@@ -25,6 +25,7 @@ namespace api.Models
 
         public ColumnInfo[] columnInfo { get; set; }
         public int totalNulls;
+        public bool isPreProcess { get; set; }
 
     }
 }

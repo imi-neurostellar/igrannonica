@@ -139,9 +139,8 @@ namespace api.Controllers
                 return BadRequest();
 
             var dataset = _datasetService.GetOneDataset(username, name);
-
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} not found or dataset is not public");
+                return NotFound($"Dataset with name = {name} not found or dataset is not public or not preprocessed");
 
             return dataset;
         }
@@ -176,11 +175,10 @@ namespace api.Controllers
             {
 
                 FileModel fileModel = _fileService.getFile(dataset.fileId);
-                Dataset newDataset =await _mlConnectionService.PreProcess(dataset,fileModel.path);
-
-                _datasetService.Create(newDataset);
-
-                return CreatedAtAction(nameof(Get), new { id = newDataset._id }, newDataset);
+                dataset.isPreProcess = false;
+                _datasetService.Create(dataset);
+                _mlConnectionService.PreProcess(dataset,fileModel.path);
+                return Ok();
             }
         }
 
