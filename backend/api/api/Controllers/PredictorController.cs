@@ -189,7 +189,7 @@ namespace api.Controllers
         // POST api/<PredictorController>/usepredictor {predictor,inputs}
         [HttpPost("usepredictor/{id}")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult UsePredictor(String id, [FromBody] String[] inputs)
+        public ActionResult UsePredictor(String id, [FromBody] PredictorColumns[] inputs)
         {
 
             string username;
@@ -207,8 +207,8 @@ namespace api.Controllers
 
             Predictor predictor = _predictorService.GetPredictor(username, id);
             
-            foreach(String i in inputs)
-                Debug.WriteLine(i); 
+            foreach(PredictorColumns i in inputs)
+                Debug.WriteLine(i.value.ToString()); 
             return NoContent();
         }
 

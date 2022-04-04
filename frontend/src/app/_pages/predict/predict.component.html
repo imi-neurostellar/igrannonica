@@ -18,7 +18,24 @@
             <div>
                 <label for="output" class="col-sm-5 col-form-label">Opis prediktora: <b>{{predictor.description}}</b></label>
             </div>
+
+            
         </div>
+    <br>
+        <label for="type" class="form-check-label" ><b>Informacije o prediktoru</b></label>
+        <div class="col-5 mt-2">
+            <label for="type" class="form-check-label"  >Prediktor {{predictor.isPublic?"je":"nije"}} javni.</label>
+        </div>
+        <div class="col-5 mt-2">
+            <label for="type" class="form-check-label" >Prediktor {{predictor.accessibleByLink?"je":"nije"}} dostupan za deljenje.</label>
+        </div>
+        <br>
+        <div class="col-2">
+            <label for="dateCreated" class="col-form-label">Datum:</label> 
+            <input type="text" class="form-control-plaintext" id="dateCreated" placeholder="--/--/--"
+                value="{{predictor.dateCreated | date: 'dd/MM/yyyy'}}" readonly>
+        </div>
+
 
         <br>
         <div >
@@ -28,7 +45,7 @@
                 <div *ngIf="predictor" class="form-group row mt-3 mb-2 d-flex justify-content-left">
                     <div *ngFor="let input of predictor.inputs; let i = index">
                         <label for="{{input}}" class="col-sm-2 col-form-label"><b>{{input}}</b></label>
-                        <input name="{{input}}"  type="text"  [(ngModel)]="inputs[i]" >
+                        <input name="{{input}}"  type="text"  [(ngModel)]="inputs[i].value" >
 
                     </div>
                     
@@ -41,31 +58,7 @@
         <div>
             <label for="output" class="col-sm-2 col-form-label">Izlaz: <b>{{predictor.output}}</b></label>
         </div>
-        <br>
-        <br>
-        <label for="type" class="form-check-label" ><b>Informacije o prediktoru</b></label>
-        <div class="col-5 mt-2">
-            <label for="type" class="form-check-label"  *ngIf="predictor.isPublic">Prediktor je public.</label>
-            <label for="type" class="form-check-label"  *ngIf="!predictor.isPublic">Prediktor nije public.</label>
-            <!--<input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="predictor.isPublic"
-                type="checkbox" value="">-->
-        </div>
-        <div class="col-5 mt-2">
-            <label for="type" class="form-check-label" *ngIf="predictor.accessibleByLink">Prediktor je dostupan za deljenje.</label>
-            <label for="type" class="form-check-label" *ngIf="!predictor.accessibleByLink">Prediktor nije dostupan za deljenje.</label>
-            <!--<input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="predictor.accessibleByLink"
-                type="checkbox" value="" >-->
-        </div>
-        <br>
-        <br>
-        <div class="col-2">
-            <label for="dateCreated" class="col-form-label">Datum:</label> 
-            <input type="text" class="form-control-plaintext" id="dateCreated" placeholder="--/--/--"
-                value="{{predictor.dateCreated | date: 'dd/MM/yyyy'}}" readonly>
-        </div>
-
         
-        <br><br>
         <div class="form-group row mt-5 mb-3">
             <div class="col"></div>
             <button class="btn btn-lg col-4" style="background-color:#003459; color:white;"

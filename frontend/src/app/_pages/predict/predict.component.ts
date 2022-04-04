@@ -11,7 +11,8 @@ import shared from 'src/app/Shared';
 })
 export class PredictComponent implements OnInit {
 
-  inputs : String[] = [];
+  inputs : Column[] = [];
+
 
   predictor:Predictor;
   constructor(private predictS : PredictorsService, private route: ActivatedRoute) {
@@ -23,6 +24,7 @@ export class PredictComponent implements OnInit {
       this.predictS.getPredictor(url["id"]).subscribe(p => {
       
         this.predictor = p;
+        this.predictor.inputs.forEach((p,index)=> this.inputs[index] = new Column(p, ""));
         console.log(this.predictor);
       })
     });
@@ -33,5 +35,13 @@ export class PredictComponent implements OnInit {
       shared.openDialog("Obaveštenje", "Prediktor je uspešno poslat na probu."); //pisalo je "na treniranje" ??
     })
     console.log(this.inputs);
+  }
+}
+
+
+export class Column {
+  constructor(
+    public name : string, 
+    public value : (number | string)){
   }
 }
