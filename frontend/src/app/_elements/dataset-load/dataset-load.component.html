@@ -1,44 +1,42 @@
 <div>
 
-  <div class="row mb-4">
-    <div class="col-2">
-    </div>
-    <div class="col-3">
-      <label for="name" class="col-form-label">Naziv dataseta:</label>
-      <input type="text" class="form-control mb-1" name="name" placeholder="Naziv..." [(ngModel)]="dataset.name">
+  <!--Sklonjeno ucitavanje novog dataseta i sve opcije u vezi sa tim, premesteno u add-new-dataset-->
 
-      <label for="desc" class="col-sm-2 col-form-label">Opis:</label>
-      <div>
-        <textarea class="form-control" name="desc" rows="3" [(ngModel)]="dataset.description"></textarea>
-      </div>
-
-      <label for="checkboxIsPublic" class="form-check-label mt-3 mb-1">Želite li da dataset bude javan?
-        <input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="dataset.isPublic" (change)="checkAccessible()" type="checkbox"
-          value="" id="checkboxIsPublic">
-      </label>    
-      
-      <label for="checkboxAccessibleByLink" class="form-check-label">Želite li da bude deljiv linkom? &nbsp;
-        <input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="dataset.accessibleByLink" type="checkbox"
-          value="" id="checkboxAccessibleByLink">
-      </label>
-    </div>
+  <div class="col-12 d-flex my-5">
+    <h2 class="">Izvor podataka:</h2>
     <div class="col-1">
     </div>
-    <div class="col-4 mt-4">
-
-      <input list=delimiterOptions placeholder="Izaberite ili ukucajte delimiter za .csv fajl" class="form-control mt-2"
-        [(ngModel)]="dataset.delimiter" (input)="update()">
-      <datalist id=delimiterOptions>
-        <option *ngFor="let option of delimiterOptions">{{option}}</option>
-      </datalist>
-
-      <label for="type" class="form-check-label my-5">Da li .csv ima header?
-        <input class="mx-3 form-check-input" type="checkbox" (input)="update()" [(ngModel)]="dataset.hasHeader" type="checkbox"
-          value="" id="checkboxHeader" checked>
-      </label>
-      <br>
-      <input id="fileInput" class="form-control" type="file" class="upload" (change)="changeListener($event)"
-        accept=".csv">
-    </div>
+    <button type="button" id="btnMyDataset" class="btn" (click)="viewMyDatasetsForm()"
+        [ngClass]="{'btnType1': showMyDatasets, 'btnType2': !showMyDatasets}">
+        Izaberite dataset iz kolekcije
+    </button>
+    <h3 class="mt-3 mx-3">ili</h3>
+    <button type="button" id="btnNewDataset" class="btn" (click)="viewNewDatasetForm()"
+        [ngClass]="{'btnType1': !showMyDatasets, 'btnType2': showMyDatasets}">
+        Dodajte novi dataset
+    </button>
   </div>
+  <div class="px-5 my-2">
+      <input *ngIf="showMyDatasets" type="text" class="form-control" placeholder="Pretraga"
+          [(ngModel)]="term">
+  </div>
+  <div class="px-5">
+      <div *ngIf="showMyDatasets" class="overflow-auto" style="max-height: 500px;">
+          <ul class="list-group">
+              <li class="list-group-item p-3" *ngFor="let dataset of myDatasets|filter:term"
+                  [ngClass]="{'selectedDatasetClass': this.selectedDataset == dataset}">
+                  <app-item-dataset name="usersDataset" [dataset]="dataset"
+                      (click)="selectThisDataset(dataset);"></app-item-dataset>
+              </li>
+          </ul>
+      </div>
+  </div>
+
+  <app-add-new-dataset [style]="(showMyDatasets)?'display:none;visibility:hidden;':''" id="dataset"
+      (loaded)="datasetLoaded = true; selectedDataset = addNewDatasetComponent?.dataset; datasetFile = addNewDatasetComponent?.csvRecords; datasetHasHeader = addNewDatasetComponent?.dataset!.hasHeader">
+  </app-add-new-dataset>
+  <div class="px-5 mt-5">
+      <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
+  </div>
+
 </div>

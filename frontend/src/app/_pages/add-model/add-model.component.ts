@@ -5,9 +5,7 @@ import { DatasetLoadComponent } from 'src/app/_elements/dataset-load/dataset-loa
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
 import Dataset from 'src/app/_data/Dataset';
-import { DatatableComponent } from 'src/app/_elements/datatable/datatable.component';
 import { DatasetsService } from 'src/app/_services/datasets.service';
-import { NgxCsvParser } from 'ngx-csv-parser';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 
 
@@ -17,11 +15,6 @@ import { CsvParseService } from 'src/app/_services/csv-parse.service';
   styleUrls: ['./add-model.component.css']
 })
 export class AddModelComponent implements OnInit {
-
-  @ViewChild(DatasetLoadComponent) datasetLoadComponent?: DatasetLoadComponent;
-  @ViewChild(DatatableComponent) datatable?: DatatableComponent;
-  datasetLoaded: boolean = false;
-  selectedDatasetLoaded: boolean = false;
 
   newModel: Model;
 
@@ -71,8 +64,13 @@ export class AddModelComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("btnMyDataset")).focus();
   }
 
+  datasetHasChanged(selectedDataset: Dataset) {
+    this.selectedDataset = selectedDataset;
+    this.resetCbsAndRbs();
+    this.refreshThreeNullValueRadioOptions();
+  }
 
-  viewMyDatasetsForm() {
+  /*viewMyDatasetsForm() {
     this.showMyDatasets = true;
     this.resetSelectedDataset();
     //this.datasetLoaded = false;
@@ -82,7 +80,7 @@ export class AddModelComponent implements OnInit {
     this.showMyDatasets = false;
     this.resetSelectedDataset();
     this.resetCbsAndRbs();
-  }
+  }*/
 
   addModel() {
     if (!this.showMyDatasets)
@@ -117,20 +115,20 @@ export class AddModelComponent implements OnInit {
 
     if (this.validationInputsOutput()) {
       console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
-      if (this.datasetLoadComponent) {
-        console.log("this.datasetLoadComponent.files:", this.datasetLoadComponent.files);
-        this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {
+      if (this.selectedDataset) {
+        //console.log("this.datasetLoadComponent.files:", this.datasetLoadComponent.files);
+        /*this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {   ZAKOMENTARISANO ZBOG KOMPAJLERSKE GRESKE TOKOM REORGANIZACIJE
           console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
-          if (this.datasetLoadComponent) {
-            this.datasetLoadComponent.dataset.fileId = file._id;
-            this.datasetLoadComponent.dataset.username = shared.username;
+          if (this.selectedDataset) {
+            this.selectedDataset!.fileId = file._id;
+            this.selectedDataset!.username = shared.username;
 
-            this.datasets.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
+            this.datasets.addDataset(this.selectedDataset!).subscribe((dataset) => {
               console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ', dataset._id);
               this.newModel.datasetId = dataset._id;
 
               //da se doda taj dataset u listu postojecih, da bude izabran 
-              this.refreshMyDatasetList();
+              this.refreshMyDatasetList();  MORA OVO
               this.showMyDatasets = true;
               this.selectThisDataset(dataset);
 
@@ -151,7 +149,7 @@ export class AddModelComponent implements OnInit {
           } //kraj treceg ifa
         }, (error) => {
           
-        }); //kraj uploadData subscribe
+        }); //kraj uploadData subscribe*/
 
       } //kraj drugog ifa
     } //kraj prvog ifa
@@ -234,30 +232,30 @@ export class AddModelComponent implements OnInit {
     return true;
   }
 
-  selectThisDataset(dataset: Dataset) {
+  /*selectThisDataset(dataset: Dataset) {
     this.selectedDataset = dataset;
-    this.selectedDatasetLoaded = false;
+    //this.selectedDatasetLoaded = false;
     this.existingDatasetSelected = true;
     this.datasetHasHeader = this.selectedDataset.hasHeader;
 
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
-        /*for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
-          if (this.datasetFile[i].length != this.datasetFile[0].length)
-            this.datasetFile[i].pop();
-          else
-            break; //nema potrebe dalje
-        }*/
+        //for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
+          //if (this.datasetFile[i].length != this.datasetFile[0].length)
+            //this.datasetFile[i].pop();
+          //else
+          //  break; //nema potrebe dalje
+        //}
         //console.log(this.datasetFile);
         this.resetCbsAndRbs();
         this.refreshThreeNullValueRadioOptions();
-        this.selectedDatasetLoaded = true;
+        //this.selectedDatasetLoaded = true;
         this.scrollToNextForm();
       }
     });
     //this.datasetHasHeader = false;
-  }
+  }*/
 
   scrollToNextForm() {
     (<HTMLSelectElement>document.getElementById("selectInAndOuts")).scrollIntoView({
@@ -267,7 +265,7 @@ export class AddModelComponent implements OnInit {
     });
   }
 
-  resetSelectedDataset(): boolean {
+  /*resetSelectedDataset(): boolean {
     const temp = this.selectedDataset;
     this.selectedDataset = this.otherDataset;
     this.otherDataset = temp;
@@ -275,7 +273,7 @@ export class AddModelComponent implements OnInit {
     this.datasetFile = this.otherDatasetFile;
     this.otherDatasetFile = tempFile;
     return true;
-  }
+  }*/
   resetCbsAndRbs(): boolean {
     this.uncheckRbs();
     this.checkAllCbs();
@@ -345,7 +343,7 @@ export class AddModelComponent implements OnInit {
       let colIndex = this.findColIndexByName(colName);
       let sumOfNulls = 0;
 
-      let startValue = (this.datasetLoadComponent?.dataset.hasHeader) ? 1 : 0;
+      let startValue = (this.selectedDataset!.hasHeader) ? 1 : 0;
       for (let i = startValue; i < this.datasetFile.length; i++) {
         if (this.datasetFile[i][colIndex] == "" || this.datasetFile[i][colIndex] == undefined)
           ++sumOfNulls;
@@ -360,7 +358,7 @@ export class AddModelComponent implements OnInit {
       let sum = 0;
       let n = 0;
 
-      let startValue = (this.datasetLoadComponent?.dataset.hasHeader) ? 1 : 0;
+      let startValue = (this.selectedDataset!.hasHeader) ? 1 : 0;
       for (let i = startValue; i < this.datasetFile.length; i++)
         if (this.datasetFile[i][colIndex] != '') {
           sum += Number(this.datasetFile[i][colIndex]);
