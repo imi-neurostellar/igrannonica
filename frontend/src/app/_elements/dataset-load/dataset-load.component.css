@@ -1,6 +1,13 @@
-#divInputs {
-    margin-left: 20px;
+.btnType1 {
+    background-color: #003459;
+    color: white;
 }
-#divOutputs {
-    margin-left: 20px;
+.btnType2 {
+    background-color: white;
+    color: #003459;
+    border-color: #003459;
+}
+.selectedDatasetClass {
+    /*border-color: 2px solid #003459;*/
+    background-color: lightblue;
 }

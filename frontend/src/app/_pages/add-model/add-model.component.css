@@ -33,3 +33,10 @@
 ul li:hover {
     background-color: lightblue;
 }
+
+#divInputs {
+    margin-left: 20px;
+}
+#divOutputs {
+    margin-left: 20px;
+}

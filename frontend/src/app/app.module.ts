@@ -40,6 +40,7 @@ import { ReactiveBackgroundComponent } from './_elements/reactive-background/rea
 import { ItemModelComponent } from './_elements/item-model/item-model.component';
 import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
 import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.component';
+import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-dataset.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.compon
     ReactiveBackgroundComponent,
     ItemModelComponent,
     AnnvisualComponent,
-    AlertDialogComponent
+    AlertDialogComponent,
+    AddNewDatasetComponent
   ],
   imports: [
     BrowserModule,

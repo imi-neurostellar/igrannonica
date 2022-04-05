@@ -1,6 +1,12 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AddNewDatasetComponent } from '../add-new-dataset/add-new-dataset.component';
+import { ModelsService } from 'src/app/_services/models.service';
+import shared from 'src/app/Shared';
 import Dataset from 'src/app/_data/Dataset';
+import { DatatableComponent } from 'src/app/_elements/datatable/datatable.component';
+import { DatasetsService } from 'src/app/_services/datasets.service';
+import { CsvParseService } from 'src/app/_services/csv-parse.service';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-dataset-load',
@@ -9,70 +15,77 @@ import Dataset from 'src/app/_data/Dataset';
 })
 export class DatasetLoadComponent {
 
-  @Output() loaded = new EventEmitter<string>();
+  @Output() selectedDatasetChangeEvent = new EventEmitter<Dataset>();
 
-  delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
+  @ViewChild(AddNewDatasetComponent) addNewDatasetComponent?: AddNewDatasetComponent;
+  @ViewChild(AddNewDatasetComponent) datatable?: DatatableComponent;
+  datasetLoaded: boolean = false;
+  selectedDatasetLoaded: boolean = false;
 
-  //hasHeader: boolean = true;
-  hasInput: boolean = false;
+  showMyDatasets: boolean = true;
+  myDatasets?: Dataset[];
+  existingDatasetSelected: boolean = false;
+  selectedDataset?: Dataset;
+  otherDataset?: Dataset;
+  otherDatasetFile?: any[];
+  datasetFile?: any[];
+  datasetHasHeader?: boolean = true;
 
-  csvRecords: any[] = [];
-  files: File[] = [];
-  rowsNumber: number = 0;
-  colsNumber: number = 0;
+  term: string = "";
 
-  dataset: Dataset; //dodaj ! potencijalno
-
-  constructor(private ngxCsvParser: NgxCsvParser) {
-    this.dataset = new Dataset();
+  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
+    this.datasets.getMyDatasets().subscribe((datasets) => {
+      this.myDatasets = datasets;
+    });
   }
 
-  @ViewChild('fileImportInput', { static: false }) fileImportInput: any;
-
-  changeListener($event: any): void {
-    this.files = $event.srcElement.files;
-    if (this.files.length == 0 || this.files[0] == null) {
-      //console.log("NEMA FAJLA");
-      //this.loaded.emit("not loaded");
-      this.hasInput = false;
-      return;
-    }
-    else
-      this.hasInput = true;
-
-    this.update();
+  viewMyDatasetsForm() {
+    this.showMyDatasets = true;
+    this.resetSelectedDataset();
+    //this.resetCbsAndRbs();        //TREBA DA SE DESI
+  }
+  viewNewDatasetForm() {
+    this.showMyDatasets = false;
+    this.resetSelectedDataset();
+    //this.resetCbsAndRbs();        //TREBA DA SE DESI
   }
 
-  update() {
+  selectThisDataset(dataset: Dataset) {
+    this.selectedDataset = dataset;
+    this.selectedDatasetLoaded = false;
+    this.existingDatasetSelected = true;
+    this.datasetHasHeader = this.selectedDataset.hasHeader;
 
-    if (this.files.length < 1)
-      return;
-
-    this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter })
-      .pipe().subscribe((result) => {
-
-        console.log('Result', result);
-        if (result.constructor === Array) {
-          this.csvRecords = result;
-          if (this.dataset.hasHeader)
-            this.rowsNumber = this.csvRecords.length - 1;
+    this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
+      if (file) {
+        this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
+        /*for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
+          if (this.datasetFile[i].length != this.datasetFile[0].length)
+            this.datasetFile[i].pop();
           else
-            this.rowsNumber = this.csvRecords.length;
-          this.colsNumber = this.csvRecords[0].length;
-
-          if (this.dataset.hasHeader) //kasnije dodati opciju kada nema header da korisnik rucno unosi header-e
-            this.dataset.header = this.csvRecords[0];
-
-          this.loaded.emit("loaded");
-        }
-      }, (error: NgxCSVParserError) => {
-        console.log('Error', error);
-      });
+            break; //nema potrebe dalje
+        }*/
+        //console.log(this.datasetFile);
+        //this.resetCbsAndRbs();                        //TREBA DA SE DESI
+        //this.refreshThreeNullValueRadioOptions();       //TREBA DA SE DESI
+        this.selectedDatasetLoaded = true;
+        //this.scrollToNextForm();
+      }
+    });
   }
 
-  checkAccessible() {
-    if (this.dataset.isPublic)
-      this.dataset.accessibleByLink = true;
+  resetSelectedDataset(): boolean {
+    const temp = this.selectedDataset;
+    this.selectedDataset = this.otherDataset;
+    this.otherDataset = temp;
+    const tempFile = this.datasetFile;
+    this.datasetFile = this.otherDatasetFile;
+    this.otherDatasetFile = tempFile;
+
+    this.selectedDatasetChangeEvent.emit(this.selectedDataset);
+
+    return true;
   }
+
 
 }
