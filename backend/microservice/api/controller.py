@@ -1,7 +1,7 @@
 import flask
 from flask import request, jsonify
 import ml_socket
-import ml_service
+import newmlservice
 import tensorflow as tf
 import pandas as pd
 
@@ -25,7 +25,7 @@ def train():
     f = request.json["dataset"]
     dataset = pd.read_csv(f)
     #
-    result = ml_service.train(dataset, request.json["model"], train_callback)
+    result = newmlservice.train(dataset, request.json["model"], train_callback)
     print(result)
     return jsonify(result)
 
@@ -35,14 +35,16 @@ def predict():
     dataset = pd.read_csv(f)
     m = request.json['modelpath']
     model = tf.keras.models.load_model(m)
-    h5=ml_service.manageH5(dataset,request.json,model,train_callback)
+    print("********************************model loaded*******************************")
+    newmlservice.manageH5(dataset,request.json['model'],model)
+    return "done"
 
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
     f=request.json['filepathcolinfo']
     dataset=pd.read_csv(f)
     
-    result=ml_service.returnColumnsInfo(dataset)
+    result=newmlservice.returnColumnsInfo(dataset)
 
     return jsonify(result)
     
