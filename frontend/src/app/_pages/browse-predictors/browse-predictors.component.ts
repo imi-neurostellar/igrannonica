@@ -20,7 +20,7 @@ export class BrowsePredictorsComponent implements OnInit {
   ngOnInit(): void {
   }
   openPredictor(id:string):void{
-    this.router.navigateByUrl('/predict?id='+id);
+    this.router.navigate(['predict/'+id]);
   };
 
 }

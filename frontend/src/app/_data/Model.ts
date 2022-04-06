@@ -45,22 +45,22 @@ export enum ProblemType {
 export enum Encoding {
     Label = 'label',
     OneHot = 'onehot',
+    Ordinal = 'ordinal',
+    Hashing = 'hashing',
+    Binary = 'binary',
+    BaseN = 'baseN'
     /*
     BackwardDifference = 'backward difference',
-    BaseN = 'baseN',
-    Binary = 'binary',
     CatBoost = 'cat boost',
     Count = 'count',
     GLMM = 'glmm',
-    Hashing = 'hashing',
+    Target = 'target',
     Helmert = 'helmert',
     JamesStein = 'james stein',
     LeaveOneOut = 'leave one out',
     MEstimate = 'MEstimate',
-    Ordinal = 'ordinal',
     Sum = 'sum',
     Polynomial = 'polynomial',
-    Target = 'target',
     WOE = 'woe',
     Quantile = 'quantile'
     */
@@ -104,7 +104,7 @@ export enum LossFunction {
     BinaryCrossEntropy = 'binary_crossentropy',
     SquaredHingeLoss = 'squared_hinge_loss',
     HingeLoss = 'hinge_loss',
-    // multi-class classiication loss functions
+    // multi-class classification loss functions
     CategoricalCrossEntropy = 'categorical_crossentropy',
     SparseCategoricalCrossEntropy = 'sparse_categorical_crosentropy',
     KLDivergence = 'kullback_leibler_divergence',

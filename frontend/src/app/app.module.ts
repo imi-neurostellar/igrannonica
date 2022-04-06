@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -42,6 +42,8 @@ import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
 import { ExperimentComponent } from './experiment/experiment.component';
 import { LoadingComponent } from './_elements/loading/loading.component';
 import { ModelLoadComponent } from './_elements/model-load/model-load.component';
+import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.component';
+import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-dataset.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,9 @@ import { ModelLoadComponent } from './_elements/model-load/model-load.component'
     AnnvisualComponent,
     ExperimentComponent,
     LoadingComponent,
-    ModelLoadComponent
+    ModelLoadComponent,
+    AlertDialogComponent,
+    AddNewDatasetComponent
   ],
   imports: [
     BrowserModule,
@@ -90,6 +94,8 @@ import { ModelLoadComponent } from './_elements/model-load/model-load.component'
     Ng2SearchPipeModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  entryComponents: [AlertDialogComponent]
 })
 export class AppModule { }

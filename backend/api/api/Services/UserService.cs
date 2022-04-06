@@ -50,7 +50,7 @@ namespace api.Services
             //username koji postoji u bazi
             using (var session =  _client.StartSession())
             {
-                
+                if(username!=user.Username)
                 if(_users.Find(u => u.Username == user.Username).FirstOrDefault()!=null)
                 {
                     return false;

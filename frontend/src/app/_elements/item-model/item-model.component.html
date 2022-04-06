@@ -6,9 +6,9 @@
     <div class="card-body overflow-hidden">
         <p class="card-text">
             {{"Opis: "+ model.description}}<br>
-            {{"Datum kreiranja:" + model.dateCreated}}<br>
-            {{"Poslednje ažuriranje:" + model.lastUpdated}}<br>
+            {{"Datum kreiranja: " + model.dateCreated}}<br>
+            {{"Poslednje ažuriranje: " + model.lastUpdated}}<br>
         </p>
-        
+        <app-annvisual class="align-items-center"  [model]="model" style="width: 12rem"></app-annvisual>
     </div>
 </div>

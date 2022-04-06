@@ -17,8 +17,7 @@ export class ItemPredictorComponent implements OnInit {
   }
 
   openPredictor() {
-    this.router.navigate(['predict/'+ '6244958a26cf2385bc29ba2c']);
-    //this.router.navigate(['predict'+this.predictor._id]);
+    this.router.navigate(['predict/'+ this.predictor._id]);
     }
 
 }
