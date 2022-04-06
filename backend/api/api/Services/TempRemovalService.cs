@@ -9,6 +9,7 @@ namespace api.Services
         private readonly IMongoCollection<FileModel> _file;
         private readonly IMongoCollection<Model> _model;
         private readonly IMongoCollection<Dataset> _dataset;
+        private readonly IMongoCollection<Experiment> _experiment;
 
         public TempRemovalService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
         {
@@ -16,6 +17,7 @@ namespace api.Services
             _file = database.GetCollection<FileModel>(settings.FilesCollectionName);
             _model= database.GetCollection<Model>(settings.ModelCollectionName);
             _dataset = database.GetCollection<Dataset>(settings.DatasetCollectionName);
+            _experiment= database.GetCollection<Experiment>(settings.ExperimentCollectionName);
         }
         public void DeleteTemps()
         {
@@ -29,11 +31,16 @@ namespace api.Services
                     foreach(var dataset in datasets)
                     {
                         DeleteDataset(dataset._id);
-                        List<Model> models = _model.Find(model => model.datasetId == dataset._id && model.username=="").ToList();
-                        foreach(var model in models)
+                        List<Experiment> experiments = _experiment.Find(experiment=>experiment.datasetId== dataset._id && experiment.uploaderId=="").ToList();
+                        foreach(var experiment in experiments)
                         {
-                            DeleteModel(model._id);
-                        }
+                            DeleteExperiment(experiment._id);
+                            List<Model> models = _model.Find(model => model.experimentId == experiment._id && model.username == "").ToList();
+                            foreach (var model in models)
+                            {
+                                DeleteModel(model._id);
+                            }
+                        }     
                     }
                     if (File.Exists(file.path))
                         File.Delete(file.path);
@@ -66,6 +73,10 @@ namespace api.Services
         public void DeleteDataset(string id)
         {
             _dataset.DeleteOne(dataset => dataset._id == id);
+        }
+        public void DeleteExperiment(string id)
+        {
+            _experiment.DeleteOne(experiment => experiment._id == id);
         }
 
 

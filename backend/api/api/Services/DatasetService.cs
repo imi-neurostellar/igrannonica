@@ -16,7 +16,7 @@ namespace api.Services
 
         public List<Dataset> SearchDatasets(string name, string username)
         {
-            return _dataset.Find(dataset => dataset.name == name && dataset.isPublic == true).ToList();
+            return _dataset.Find(dataset => dataset.name == name && dataset.isPublic == true && dataset.isPreProcess).ToList();
         }
 
         //kreiranje dataseta
@@ -34,12 +34,12 @@ namespace api.Services
 
         public List<Dataset> GetMyDatasets(string username)
         {
-            return _dataset.Find(dataset => dataset.username == username).ToList();
+            return _dataset.Find(dataset => dataset.username == username && dataset.isPreProcess).ToList();
         }
         public List<Dataset> GetGuestDatasets()
         {
             //Join Igranonica public datasetove sa svim temp uploadanim datasetovima
-            List<Dataset> datasets= _dataset.Find(dataset => dataset.username == "Igrannonica" && dataset.isPublic == true).ToList();
+            List<Dataset> datasets= _dataset.Find(dataset => dataset.username == "Igrannonica" && dataset.isPublic == true && dataset.isPreProcess).ToList();
             datasets.AddRange(_dataset.Find(dataset => dataset.username == "").ToList());
             return datasets;
         }
@@ -47,7 +47,7 @@ namespace api.Services
         //poslednji datasetovi
         public List<Dataset> SortDatasets(string username, bool ascdsc, int latest)
         {
-            List<Dataset> list = _dataset.Find(dataset => dataset.username == username).ToList();
+            List<Dataset> list = _dataset.Find(dataset => dataset.username == username && dataset.isPreProcess).ToList();
 
             if(ascdsc)
                 list = list.OrderBy(dataset => dataset.lastUpdated).ToList();
@@ -59,24 +59,28 @@ namespace api.Services
 
         public List<Dataset> GetPublicDatasets()
         {
-            return _dataset.Find(dataset => dataset.isPublic == true).ToList();
+            return _dataset.Find(dataset => dataset.isPublic == true && dataset.isPreProcess).ToList();
         }
 
         public Dataset GetOneDataset(string username, string name)
         {
-            return _dataset.Find(dataset => dataset.username == username && dataset.name == name).FirstOrDefault();
+            return _dataset.Find(dataset => dataset.username == username && dataset.name == name && dataset.isPreProcess).FirstOrDefault();
         }
         //odraditi za pretragu getOne
 
         public Dataset GetOneDataset(string id)
         {
-            return _dataset.Find(dataset => dataset._id == id).FirstOrDefault();
+            return _dataset.Find(dataset => dataset._id == id && dataset.isPreProcess).FirstOrDefault();
         }
 
         //ako je potrebno da se zameni name  ili ekstenzija
-        public void Update(string username, string name, Dataset dataset)
+        public void Update(string username, string name, Dataset dataset )
         {
             _dataset.ReplaceOne(dataset => dataset.username == username && dataset.name == name, dataset);
+        }
+        public void Update(Dataset dataset)
+        {
+            _dataset.ReplaceOne(x=>x._id==dataset._id, dataset);
         }
 
         

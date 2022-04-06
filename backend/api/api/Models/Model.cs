@@ -18,14 +18,8 @@ namespace api.Models
         public DateTime dateCreated { get; set; }
         public DateTime lastUpdated { get; set; }
         //proveriti id
-        public string datasetId { get; set; }
+        public string experimentId { get; set; }
 
-        //Test set settings
-        public string[] inputColumns { get; set; }
-        public string columnToPredict { get; set; }
-        public bool randomOrder {get;set;}
-        public bool randomTestSet { get; set; }
-        public float randomTestSetDistribution { get; set; }
 
         //Neural net training
         public string type { get; set; }
@@ -44,8 +38,6 @@ namespace api.Models
         public string[] metrics { get; set; }
         public int epochs { get; set; }
 
-        public string nullValues { get; set; }
-        public NullValues[] nullValuesReplacers { get; set; }
 
         //public NullValues[] nullValues { get; set; }
     }

@@ -13,5 +13,6 @@ namespace api.Data
         public string PredictorCollectionName { get; set; } = String.Empty;
         public string ModelCollectionName { get; set; } = String.Empty;
         public string FilesCollectionName { get; set; } = String.Empty;
+        public string ExperimentCollectionName { get; set; } = String.Empty;
     }
 }

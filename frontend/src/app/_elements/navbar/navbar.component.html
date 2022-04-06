@@ -8,8 +8,9 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a routerLink="" class="nav-link px-2"
                         [class]="(currentUrl === '') ? 'text-secondary' : 'text-white'">Početna</a></li>
-                <li><a routerLink="add-model" class="nav-link px-2"
-                        [class]="(currentUrl === '/add-model') ? 'text-secondary' : 'text-white'">Dodaj model</a></li>
+                <li><a routerLink="experiment" class="nav-link px-2"
+                        [class]="(currentUrl === '/add-model') ? 'text-secondary' : 'text-white'">Eksperimentiši</a>
+                </li>
                 <li><a routerLink="my-predictors" class="nav-link px-2"
                         [class]="(currentUrl === '/my-predictors') ? 'text-secondary' : 'text-white' + (shared.loggedIn) ? '' : 'disabled'">Predvidi</a>
                 </li>
@@ -18,7 +19,8 @@
             <div *ngIf="shared.loggedIn" class="dropdown text-end">
                 <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser1"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                    <img [src]="'/assets/profilePictures/'+ shared.photoId +'.png'" alt="mdo" width="32" height="32" class="rounded-circle">
+                    <img [src]="'/assets/profilePictures/'+ shared.photoId +'.png'" alt="mdo" width="32" height="32"
+                        class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1"
                     style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 34px);"

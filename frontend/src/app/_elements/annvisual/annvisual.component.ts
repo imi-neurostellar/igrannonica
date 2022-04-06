@@ -18,7 +18,7 @@ export class AnnvisualComponent implements OnInit {
     let hiddenlayerstring: string = '';
     let digraphstring: string = 'digraph {';
 
-    for (let i = 0; i < this.model.inputColumns.length; i++) {
+    for (let i = 0; i < /*this.model.inputColumns.length*/ 10; i++) {
       inputlayerstring = inputlayerstring + 'i' + i + ',';
     }
     inputlayerstring = inputlayerstring.slice(0, -1);
@@ -34,7 +34,6 @@ export class AnnvisualComponent implements OnInit {
       hiddenlayerstring = '';
     }
     digraphstring = digraphstring + 'o}';
-
 
     graphviz('#graph').renderDot(digraphstring);
   }

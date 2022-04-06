@@ -7,11 +7,9 @@ export default class Model {
         public description: string = '',
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
-        public datasetId: string = '',
+        public experimentId: string = '',
 
         // Test set settings
-        public inputColumns: string[] = [],
-        public columnToPredict: string = '',
         public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
@@ -26,11 +24,8 @@ export default class Model {
         public hiddenLayers: number = 1,
         public batchSize: number = 5,
         public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
-        //public inputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public username: string = '',
-        public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
-        public nullValuesReplacers: NullValReplacer[] = [],
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5 // TODO add to add-model form
     ) { }
@@ -85,7 +80,6 @@ export enum ActivationFunction {
     Linear = 'linear',
     //Sigmoid='sigmoid',
     Softmax = 'softmax',
-
 }
 /*
 export enum ActivationFunctionHiddenLayer
@@ -117,7 +111,6 @@ export enum LossFunction {
     MeanSquaredError = 'mean_squared_error',
     MeanSquaredLogarithmicError = 'mean_squared_logarithmic_error',
     HuberLoss = 'Huber'
-
 }
 export enum LossFunctionRegression {
     MeanAbsoluteError = 'mean_absolute_error',
@@ -168,31 +161,28 @@ export enum Metrics {
     MSE = 'mse',
     MAE = 'mae',
     RMSE = 'rmse'
-    
+
 }
-export enum MetricsRegression
-{
+export enum MetricsRegression {
     Mse = 'mse',
     Mae = 'mae',
     Mape = 'mape',
-    Msle='msle',
-    CosineProximity='cosine'
+    Msle = 'msle',
+    CosineProximity = 'cosine'
 }
-export enum MetricsBinaryClassification
-{
-    Accuracy='binary_accuracy',
-    Auc="AUC",
-    Precision='precision_score',
-    Recall='recall_score',
-    F1='f1_score',
-    
+export enum MetricsBinaryClassification {
+    Accuracy = 'binary_accuracy',
+    Auc = "AUC",
+    Precision = 'precision_score',
+    Recall = 'recall_score',
+    F1 = 'f1_score',
+
 
 }
-export enum MetricsMultiClassification
-{
-    Accuracy='categorical_accuracy',
-    Auc="AUC",
-    Precision='precision_score',
-    Recall='recall_score',
-    F1='f1_score',
+export enum MetricsMultiClassification {
+    Accuracy = 'categorical_accuracy',
+    Auc = "AUC",
+    Precision = 'precision_score',
+    Recall = 'recall_score',
+    F1 = 'f1_score',
 }
