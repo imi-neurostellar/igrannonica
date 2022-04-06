@@ -23,19 +23,13 @@ export class MyDatasetsComponent implements OnInit {
      ngOnInit(): void {
 
       this.datasetsS.getMyDatasets().subscribe((response) => {
-  
         this.myDatasets = response;
-  
-      }, (error: HttpErrorResponse) => {
-  
-        if (error.error == "Model with") {
-  
+      }, (error) => {
+        if (error.error == "Dataset with...") {
           shared.openDialog("Greska", "Niste dobro uneli nesto");
-  
         }
-  
       });
-  
+    }  
     
 /*
   editModel(): void{
