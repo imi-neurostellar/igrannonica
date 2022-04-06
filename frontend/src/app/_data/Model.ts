@@ -24,11 +24,8 @@ export default class Model {
         public hiddenLayers: number = 1,
         public batchSize: number = 5,
         public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
-        //public inputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public username: string = '',
-        public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
-        public nullValuesReplacers: NullValReplacer[] = [],
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5 // TODO add to add-model form
     ) { }
@@ -83,7 +80,6 @@ export enum ActivationFunction {
     Linear = 'linear',
     //Sigmoid='sigmoid',
     Softmax = 'softmax',
-
 }
 /*
 export enum ActivationFunctionHiddenLayer
@@ -115,7 +111,6 @@ export enum LossFunction {
     MeanSquaredError = 'mean_squared_error',
     MeanSquaredLogarithmicError = 'mean_squared_logarithmic_error',
     HuberLoss = 'Huber'
-
 }
 export enum LossFunctionRegression {
     MeanAbsoluteError = 'mean_absolute_error',

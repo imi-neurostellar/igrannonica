@@ -11,7 +11,6 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.component';
-import { AddModelComponent } from './_pages/add-model/add-model.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModalComponent } from './_modals/login-modal/login-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -49,7 +48,6 @@ import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-data
   declarations: [
     AppComponent,
     DatasetLoadComponent,
-    AddModelComponent,
     LoginModalComponent,
     RegisterModalComponent,
     HomeComponent,
