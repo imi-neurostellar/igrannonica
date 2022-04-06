@@ -110,55 +110,55 @@ export class AddModelComponent implements OnInit {
   }
 
   saveModelWithNewDataset(callback: ((arg0: any) => void)) {
-
-    this.getCheckedInputCols();
-    this.getCheckedOutputCol();
-    this.getMetrics();
-
-    if (this.validationInputsOutput()) {
-      console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
-      if (this.datasetLoadComponent) {
-        console.log("this.datasetLoadComponent.files:", this.datasetLoadComponent.files);
-        this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {
-          console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+    /*
+        this.getCheckedInputCols();
+        this.getCheckedOutputCol();
+        this.getMetrics();
+    
+        if (this.validationInputsOutput()) {
+          console.log('ADD MODEL: STEP 1 - UPLOAD FILE');
           if (this.datasetLoadComponent) {
-            this.datasetLoadComponent.dataset.fileId = file._id;
-            this.datasetLoadComponent.dataset.username = shared.username;
-
-            this.datasets.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
-              console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ', dataset._id);
-              this.newModel.datasetId = dataset._id;
-
-              //da se doda taj dataset u listu postojecih, da bude izabran 
-              this.refreshMyDatasetList();
-              this.showMyDatasets = true;
-              this.selectThisDataset(dataset);
-
-              this.newModel.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
-              this.tempTestSetDistribution = 90;
-              this.newModel.username = shared.username;
-
-              this.newModel.nullValuesReplacers = this.getNullValuesReplacersArray();
-
-              this.models.addModel(this.newModel).subscribe((response) => {
-                callback(response);
-              }, (error) => {
-                alert("Model sa unetim nazivom već postoji u Vašoj kolekciji.\nPromenite naziv modela i nastavite sa kreiranim datasetom.");
-              }); //kraj addModel subscribe
+            console.log("this.datasetLoadComponent.files:", this.datasetLoadComponent.files);
+            this.models.uploadData(this.datasetLoadComponent.files[0]).subscribe((file) => {
+              console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+              if (this.datasetLoadComponent) {
+                this.datasetLoadComponent.dataset.fileId = file._id;
+                this.datasetLoadComponent.dataset.username = shared.username;
+    
+                this.datasets.addDataset(this.datasetLoadComponent.dataset).subscribe((dataset) => {
+                  console.log('ADD MODEL: STEP 3 - ADD MODEL WITH DATASET ID ', dataset._id);
+                  this.newModel.datasetId = dataset._id;
+    
+                  //da se doda taj dataset u listu postojecih, da bude izabran 
+                  this.refreshMyDatasetList();
+                  this.showMyDatasets = true;
+                  this.selectThisDataset(dataset);
+    
+                  this.newModel.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
+                  this.tempTestSetDistribution = 90;
+                  this.newModel.username = shared.username;
+    
+                  this.newModel.nullValuesReplacers = this.getNullValuesReplacersArray();
+    
+                  this.models.addModel(this.newModel).subscribe((response) => {
+                    callback(response);
+                  }, (error) => {
+                    alert("Model sa unetim nazivom već postoji u Vašoj kolekciji.\nPromenite naziv modela i nastavite sa kreiranim datasetom.");
+                  }); //kraj addModel subscribe
+                }, (error) => {
+                  alert("Dataset sa unetim nazivom već postoji u Vašoj kolekciji.\nIzmenite naziv ili iskoristite postojeći dataset.");
+                }); //kraj addDataset subscribe
+              } //kraj treceg ifa
             }, (error) => {
-              alert("Dataset sa unetim nazivom već postoji u Vašoj kolekciji.\nIzmenite naziv ili iskoristite postojeći dataset.");
-            }); //kraj addDataset subscribe
-          } //kraj treceg ifa
-        }, (error) => {
-          //alert("greska uploadData");
-        }); //kraj uploadData subscribe
-
-      } //kraj drugog ifa
-    } //kraj prvog ifa
+              //alert("greska uploadData");
+            }); //kraj uploadData subscribe
+    
+          } //kraj drugog ifa
+        } //kraj prvog ifa*/
   }
 
   saveModelWithExistingDataset(callback: ((arg0: any) => void)): any {
-    if (this.selectedDataset) { //dataset je izabran
+    /*if (this.selectedDataset) { //dataset je izabran
       this.getCheckedInputCols();
       this.getCheckedOutputCol();
       this.getMetrics();
@@ -180,11 +180,11 @@ export class AddModelComponent implements OnInit {
     }
     else {
       alert("Molimo Vas da izaberete neki dataset iz kolekcije.");
-    }
+    }*/
   }
 
   getCheckedInputCols() {
-    this.newModel.inputColumns = [];
+    /*this.newModel.inputColumns = [];
     let checkboxes: any;
 
     checkboxes = document.getElementsByName("cbsNew");
@@ -193,11 +193,11 @@ export class AddModelComponent implements OnInit {
       let thatCb = <HTMLInputElement>checkboxes[i];
       if (thatCb.checked == true) // && thatCb.disabled == false ne treba nam ovo vise
         this.newModel.inputColumns.push(thatCb.value);
-    }
+    }*/
     //console.log(this.checkedInputCols);
   }
   getCheckedOutputCol() {
-    this.newModel.columnToPredict = '';
+    /*this.newModel.columnToPredict = '';
     let radiobuttons: any;
 
     radiobuttons = document.getElementsByName("rbsNew");
@@ -208,11 +208,11 @@ export class AddModelComponent implements OnInit {
         this.newModel.columnToPredict = thatRb.value;
         break;
       }
-    }
+    }*/
     //console.log(this.checkedOutputCol);
   }
-  validationInputsOutput(): boolean {
-    if (this.newModel.inputColumns.length == 0 && this.newModel.columnToPredict == '') {
+  validationInputsOutput() {
+    /*if (this.newModel.inputColumns.length == 0 && this.newModel.columnToPredict == '') {
       alert("Molimo Vas da izaberete ulazne i izlazne kolone za mrežu.");
       return false;
     }
@@ -231,7 +231,7 @@ export class AddModelComponent implements OnInit {
         return false;
       }
     }
-    return true;
+    return true;*/
   }
 
   selectThisDataset(dataset: Dataset) {

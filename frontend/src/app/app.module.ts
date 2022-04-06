@@ -39,6 +39,9 @@ import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-dataset
 import { ReactiveBackgroundComponent } from './_elements/reactive-background/reactive-background.component';
 import { ItemModelComponent } from './_elements/item-model/item-model.component';
 import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
+import { ExperimentComponent } from './experiment/experiment.component';
+import { LoadingComponent } from './_elements/loading/loading.component';
+import { ModelLoadComponent } from './_elements/model-load/model-load.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,10 @@ import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
     FilterDatasetsComponent,
     ReactiveBackgroundComponent,
     ItemModelComponent,
-    AnnvisualComponent
+    AnnvisualComponent,
+    ExperimentComponent,
+    LoadingComponent,
+    ModelLoadComponent
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,10 @@
-<div id="header">
+<!--<div id="header">
     <h1>Napravite svoj model veštačke neuronske mreže</h1>
 </div>
 
 <div id="wrapper">
     <div id="container" class="container p-5" style="background-color: white; min-height: 100%;">
         <div class="form-group row mt-3 mb-2 d-flex justify-content-center">
-            <!--justify-content-center-->
             <h2 class="col-2"> Nov model: </h2>
             <div class="col-3">
                 <label for="name" class="col-form-label">Naziv modela:</label>
@@ -63,12 +62,9 @@
                 <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
             </div>
         </div>
-
-        <!-- ULAZNE/IZLAZNE KOLONE -->
         <span id="selectInAndOuts"></span>
         <div
             *ngIf="selectedDataset && ((showMyDatasets && selectedDatasetLoaded) || (!showMyDatasets && datasetLoaded))">
-            <!--postignuto da se kod newdataseta ucita tabela pa ulazi/izlazi. ostalo srediti to kod mydatasets(dopuna 2. uslova)-->
             <div class="row">
                 <div class="col d-flex justify-content-center">
                     <h3>Izaberite ulazne kolone:</h3>
@@ -121,7 +117,6 @@
                             <div>
                                 <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
                                 <div id="columnReplacers">
-                                    <!--Ulazne kolone - popunjavanje null vrednosti -->
                                     <div *ngFor="let column of selectedDataset.header; let i = index" class="my-3">
                                         <div *ngIf="getInputById('cb_'+column).checked" class="">
                                             <span class="w-20 mx-3">
@@ -198,9 +193,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--Izlazna kolona - popunjavanje null vrednosti -->
                                     <div *ngFor="let column of selectedDataset.header; let i = index" class="my-3">
-                                        <!--moze bez for petlje (this.selectedOutputColumnVal je id), al ne moze ova fja array column onda-->
                                         <div class="input-group row" *ngIf="getInputById('rb_'+column).checked">
                                             <span class="input-group-text col-2 text-center">
                                                 {{column}}&nbsp;<span class="small"
@@ -212,7 +205,6 @@
 
                                             <input *ngIf="calculateSumOfNullValuesInCol(column)!=0" type="radio"
                                                 [id]="'fillCol_'+column" class="col-1 mt-2" [name]="'delOp_'+column">
-                                            <!--OVDE SREDI IZGLED-->
                                             <select [id]="'replaceOptions'+i" class="form-control col-2"
                                                 *ngIf="isNumber(datasetFile[1][i]) && calculateSumOfNullValuesInCol(column)!=0"
                                                 (change)="replaceWithSelectedNumber($event);">
@@ -254,8 +246,6 @@
         </div>
 
         <h2 class="mt-5 mb-4">Parametri treniranja:</h2>
-
-        <!--**********************************************************TIP*********************************************************-->
         <div>
             <div class="row p-2">
                 <div class="col-1">
@@ -273,7 +263,6 @@
                         </option>
                     </select>
                 </div>
-                <!--******************************************************************************************************************-->
                 <div class="col-1">
                 </div>
                 <div class="col-3">
@@ -287,8 +276,6 @@
             </div>
 
             <div class="row p-2">
-                <!--***********************************ENKODER*********************************************-->
-
                 <div class="col-1">
                 </div>
                 <div class="col-3">
@@ -303,8 +290,6 @@
                     </select>
                 </div>
 
-                <!--***********************************BROJ NEURONA SKRIVENOG SLOJA*********************************************-->
-
                 <div class="col-1">
                 </div>
                 <div class="col-3">
@@ -315,7 +300,6 @@
                         [(ngModel)]="newModel.hiddenLayerNeurons">
                 </div>
             </div>
-            <!--***********************************OPTIMIZACIJA*********************************************-->
 
             <div class="row p-2">
                 <div class="col-1">
@@ -364,7 +348,6 @@
                         type="checkbox" value="" checked>
                 </div>
             </div>
-            <!--************************************************************************************************* -->
             <div class="border m-3">
                 <div class="row p-2 m-2">
                     <div class="col-4">
@@ -397,8 +380,6 @@
                     </div>
                 </div>
             </div>
-
-            <!--***********************************AKTIVACIONE FUNKCIJE*********************************************-->
             <h3>Aktivacione funkcije:</h3>
 
             <div class="row p-2 m-2" style="align-self: center;">
@@ -443,10 +424,7 @@
                 </div>
             </div>
         </div>
-
         <br><br>
-        <!--**********************************************METRIKE ZA KOMPAJLER I GRAFIKE***********************************************-->
-
         <hr>
         <div class="form-check form-check-inline overflow-auto " style="width: max-content;">
             <h3>Izaberite metrike:</h3>
@@ -463,7 +441,6 @@
                 </div>
             </div>
         </div>
-        <!--<app-annvisual [model]="newModel"></app-annvisual>-->
         <div class="form-group row mt-5 mb-3">
             <div class="col"></div>
             <button class="btn btn-lg col-4" style="background-color:#003459; color:white;"
@@ -482,6 +459,4 @@
         </div>
     </div>
 </div>
-
-<!--<button
-    (click)="calculateSumOfNullValuesInCol('Embarked'); calculateMeanColValue('Age');calculateMedianColValue('Age'); getNullValuesReplacersArray();">DUGME</button>-->
+-->

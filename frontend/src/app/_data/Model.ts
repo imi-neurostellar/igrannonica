@@ -7,11 +7,9 @@ export default class Model {
         public description: string = '',
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
-        public datasetId: string = '',
+        public experimentId: string = '',
 
         // Test set settings
-        public inputColumns: string[] = [],
-        public columnToPredict: string = '',
         public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
@@ -168,31 +166,28 @@ export enum Metrics {
     MSE = 'mse',
     MAE = 'mae',
     RMSE = 'rmse'
-    
+
 }
-export enum MetricsRegression
-{
+export enum MetricsRegression {
     Mse = 'mse',
     Mae = 'mae',
     Mape = 'mape',
-    Msle='msle',
-    CosineProximity='cosine'
+    Msle = 'msle',
+    CosineProximity = 'cosine'
 }
-export enum MetricsBinaryClassification
-{
-    Accuracy='binary_accuracy',
-    Auc="AUC",
-    Precision='precision_score',
-    Recall='recall_score',
-    F1='f1_score',
-    
+export enum MetricsBinaryClassification {
+    Accuracy = 'binary_accuracy',
+    Auc = "AUC",
+    Precision = 'precision_score',
+    Recall = 'recall_score',
+    F1 = 'f1_score',
+
 
 }
-export enum MetricsMultiClassification
-{
-    Accuracy='categorical_accuracy',
-    Auc="AUC",
-    Precision='precision_score',
-    Recall='recall_score',
-    F1='f1_score',
+export enum MetricsMultiClassification {
+    Accuracy = 'categorical_accuracy',
+    Auc = "AUC",
+    Precision = 'precision_score',
+    Recall = 'recall_score',
+    F1 = 'f1_score',
 }
