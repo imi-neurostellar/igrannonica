@@ -4,6 +4,10 @@ using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using CsvHelper;
+using System.IO;
+using System.Globalization;
+using System.Linq;
 
 namespace api.Controllers
 {
@@ -14,6 +18,7 @@ namespace api.Controllers
         private string[] permittedExtensions = { ".csv",".json",".xls",".xlsx" };
         private string[] permittedExtensionsH5 = { ".h5" };//niz da bi dodali h4 itd
         private readonly IConfiguration _configuration;
+        private readonly IFileService _fileService;
         private IJwtToken _token;
         private IFileService _fileservice;
         public FileController(IConfiguration configuration,IFileService fileService,IJwtToken token)
@@ -95,6 +100,37 @@ namespace api.Controllers
             return Ok(fileModel);
         }
 
+        [HttpGet("csvread/{hasheader}/{fileid}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<List<string>> CsvRead(bool hasHeader, string fileId)
+        {
+
+            string uploaderId;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                uploaderId = _token.TokenToId(parameter);
+                if (uploaderId == null)
+                    return null;
+            }
+            else
+                return BadRequest();
+
+            //String csvContent = System.IO.File.ReadAllText(fileModel.path);
+            string filePath = _fileService.GetFilePath(fileId, uploaderId);
+
+           
+
+            if(hasHeader)
+                return System.IO.File.ReadLines(filePath).Take(11).ToList();
+            else
+                return  System.IO.File.ReadLines(filePath).Take(10).ToList();
+        }
+
+
 
         [HttpPost("Csv")]
         [Authorize(Roles = "User,Guest")]
@@ -159,9 +195,19 @@ namespace api.Controllers
             fileModel.uploaderId= uploaderId;
             fileModel.date = DateTime.Now.ToUniversalTime();
             fileModel =_fileservice.Create(fileModel);
-            
 
-            return Ok(fileModel);
+            
+            /*
+            using (var streamReader = new StreamReader(fullPath))
+            {
+                using(var csvReader=new CsvReader(streamReader, CultureInfo.InvariantCulture))
+                {
+                    var records = csvReader.GetRecords<dynamic>().ToList();
+                }
+            }
+            */
+
+                return Ok(fileModel);
         }
 
 
