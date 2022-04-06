@@ -12,7 +12,7 @@ namespace api.Controllers
     [ApiController]
     public class FileController : ControllerBase
     {
-        private string[] permittedExtensions = { ".csv" };
+        private string[] permittedExtensions = { ".csv",".json",".xls",".xlsx" };
         private string[] permittedExtensionsH5 = { ".h5" };//niz da bi dodali h4 itd
         private readonly IConfiguration _configuration;
         private IJwtToken _token;
@@ -186,7 +186,7 @@ namespace api.Controllers
                 await file.CopyToAsync(stream);
             }
             FileModel fileModel= new FileModel();
-            fileModel.type = "csv";
+            fileModel.type = ext;
             fileModel.path=fullPath;
             fileModel.uploaderId= uploaderId;
             fileModel.date = DateTime.Now.ToUniversalTime();
