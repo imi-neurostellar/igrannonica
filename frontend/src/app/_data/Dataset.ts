@@ -12,6 +12,22 @@ export default class Dataset {
         public lastUpdated: Date = new Date(),
         public username: string = '',
         public delimiter: string = '',
-        public hasHeader: boolean = true
+        public hasHeader: boolean = true,
+
+        public columnInfo: ColumnInfo[] = [],
+        public preview: string[][] = [[]]
+    ) { }
+}
+
+export class ColumnInfo {
+    constructor(
+        public name: string = '',
+        public isNumber: boolean = false,
+        public numNull: number = 0,
+        public uniqueValues?: string[],
+        public median?: number,
+        public mean?: number,
+        public min?: number,
+        public max?: number
     ) { }
 }

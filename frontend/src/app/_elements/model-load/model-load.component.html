@@ -1,0 +1,221 @@
+<div>
+    <div class="form-group row mt-3 mb-2 d-flex justify-content-center">
+        <h2 class="col-2"> Nov model: </h2>
+        <div class="col-3">
+            <label for="name" class="col-form-label">Naziv modela:</label>
+            <input type="text" class="form-control" name="name" placeholder="Naziv..." [(ngModel)]="newModel.name">
+        </div>
+        <div class="col-5">
+            <label for="desc" class="col-sm-2 col-form-label">Opis:</label>
+            <div>
+                <textarea class="form-control" name="desc" rows="3" [(ngModel)]="newModel.description"></textarea>
+            </div>
+        </div>
+        <div class="col-2">
+            <label for="dateCreated" class="col-form-label">Datum:</label> &nbsp;&nbsp;
+            <input type="text" class="form-control-plaintext" id="dateCreated" placeholder="--/--/--"
+                value="{{newModel.dateCreated | date: 'dd/MM/yyyy'}}" readonly>
+        </div>
+    </div>
+    <h2 class="mt-5 mb-4">Parametri treniranja:</h2>
+    <div>
+        <div class="row p-2">
+            <div class="col-1">
+            </div>
+            <div class="col-3">
+                <label for="type" class="col-form-label">Tip problema: </label>
+            </div>
+            <div class="col-2">
+                <select id=typeOptions class="form-control" name="type" [(ngModel)]="newModel.type"
+                    (change)="filterOptions()">
+                    <option
+                        *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
+                        [value]="option">
+                        {{ optionName }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-3">
+                <label for="hiddenLayers" class="col-form-label">Broj skrivenih slojeva: </label>
+            </div>
+            <div class="col-1">
+                <input type="number" min="1" class="form-control" name="hiddenLayers"
+                    [(ngModel)]="newModel.hiddenLayers"
+                    (change)="newModel.hiddenLayerActivationFunctions = [].constructor(newModel.hiddenLayers).fill(newModel.hiddenLayerActivationFunctions[0])">
+            </div>
+        </div>
+
+        <div class="row p-2">
+            <div class="col-1">
+            </div>
+            <div class="col-3">
+                <label for="encoding" class="col-form-label">Enkoding: </label>
+            </div>
+            <div class="col-2">
+                <select id=encodingOptions class="form-control" name="encoding" [(ngModel)]="newModel.encoding">
+                    <option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)"
+                        [value]="option">
+                        {{ optionName }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-1">
+            </div>
+            <div class="col-3">
+                <label for="hiddenLayerNeurons" class="col-form-label">Broj neurona skrivenih slojeva: </label>
+            </div>
+            <div class="col-1">
+                <input type="number" min="1" class="form-control" name="hiddenLayerNeurons"
+                    [(ngModel)]="newModel.hiddenLayerNeurons">
+            </div>
+        </div>
+
+        <div class="row p-2">
+            <div class="col-1">
+            </div>
+            <div class="col-3">
+                <label for="optimizer" class="col-form-label">Optimizacija: </label>
+            </div>
+            <div class="col-2">
+                <select id=optimizerOptions class="form-control" name="optimizer" [(ngModel)]="newModel.optimizer">
+                    <option *ngFor="let option of Object.keys(Optimizer); let optionName of Object.values(Optimizer)"
+                        [value]="option">
+                        {{ optionName }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-3">
+                <label for="batchSize" class="col-form-label">Broj uzorka po iteraciji: </label>
+            </div>
+            <div class="col-1">
+                <input type="number" min="1" class="form-control" name="batchSize" [(ngModel)]="newModel.batchSize">
+            </div>
+        </div>
+        <div class="row p-2">
+            <div class="col-1">
+            </div>
+            <div class="col-3">
+                <label for="lossFunction" class="col-form-label">Funkcija obrade gubitka: </label>
+            </div>
+            <div class="col-2">
+                <select id=lossFunctionOptions class="form-control" name="lossFunction"
+                    [(ngModel)]="newModel.lossFunction" aria-checked="true">
+                    <option
+                        *ngFor="let option of Object.keys(lossFunction); let optionName of Object.values(lossFunction)"
+                        [value]="option">
+                        {{ optionName }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3 mt-2">
+                <label for="type" class="form-check-label">Nasumičan redosled podataka?</label>
+                <input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="newModel.randomOrder" type="checkbox"
+                    value="" checked>
+            </div>
+        </div>
+        <div class="border m-3">
+            <div class="row p-2 m-2">
+                <div class="col-4">
+                    <label for="splitYesNo" class="form-check-label">
+                        <h3>Podela test skupa:&nbsp;&nbsp;
+                            <input id="splitYesNo" class="form-check-input" type="checkbox"
+                                [checked]="newModel.randomTestSet"
+                                (change)="newModel.randomTestSet = !newModel.randomTestSet">
+                        </h3>
+                    </label>
+                </div>
+                <div class="col-8">
+                    trening
+                    <mat-slider style="width: 85%;" min="10" max="90" step="10" value="10"
+                        name="randomTestSetDistribution" thumbLabel [disabled]="!newModel.randomTestSet"
+                        [(ngModel)]="tempTestSetDistribution">
+                    </mat-slider>
+                    test
+                </div>
+            </div>
+
+            <div class="row p-2 mx-2">
+                <div class="col-4">
+                    <label for="percentage" class="form-label">Procenat podataka koji se uzima za trening
+                        skup:</label>
+                </div>
+                <div class="col-2">
+                    <input id="percentage" type="number" class="form-control" min="10" max="90" step="10" value="90"
+                        [(ngModel)]="tempTestSetDistribution" [disabled]="!newModel.randomTestSet">
+                </div>
+            </div>
+        </div>
+        <h3>Aktivacione funkcije:</h3>
+
+        <div class="row p-2 m-2" style="align-self: center;">
+            <div class="col-3">
+                <label for="hiddenLayerActivationFunction" class="col-form-label" style="text-align: center;">Funkcija
+                    aktivacije skrivenih
+                    slojeva:</label>
+            </div>
+            <div class="col-3">
+                <div *ngFor="let item of [].constructor(newModel.hiddenLayers); let i = index">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">#{{i+1}}</span>
+                        </div>
+                        <select [id]="'hiddenLayerActivationFunctionOption_'+i" class="form-control"
+                            [(ngModel)]="newModel.hiddenLayerActivationFunctions[i]">
+                            <option
+                                *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
+                                [value]="option">
+                                {{ optionName }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <label for="outputLayerActivationFunction" class="col-form-label" style="text-align: center;">Funkcija
+                    aktivacije izlaznog
+                    sloja:</label>
+            </div>
+            <div class="col-3">
+                <select id=outputLayerActivationFunctionOptions class="form-control"
+                    name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction">
+                    <option
+                        *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
+                        [value]="option">
+                        {{ optionName }}
+                    </option>
+                </select>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <hr>
+    <div class="form-check form-check-inline overflow-auto " style="width: max-content;">
+        <h3>Izaberite metrike:</h3>
+        <div id="divMetricsinput">
+
+            <div *ngFor="let option of Object.keys(metrics); let optionName of Object.values(metrics) "
+                class="form-check form-check-inline">
+
+                <input name="cbmetrics" class="form-check-input" type="checkbox" value="{{option}}"
+                    id="metrics_{{option}}" style="float: left;">
+                <label class="form-check-label" for="metrics_{{option}}" for="inlineCheckbox2">
+                    {{optionName}}
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row mt-5 mb-3">
+        <div class="col"></div>
+        <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="addModel();">Sačuvaj
+            model</button>
+        <div class="col"></div>
+    </div>
+</div>

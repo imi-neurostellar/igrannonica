@@ -22,6 +22,11 @@ namespace api.Models
         public DateTime lastUpdated { get; set; }
         public string delimiter { get; set; }
         public bool hasHeader { get; set; }
+
+        public ColumnInfo[] columnInfo { get; set; }
+        public int totalNulls;
+        public bool isPreProcess { get; set; }
+
     }
 }
 

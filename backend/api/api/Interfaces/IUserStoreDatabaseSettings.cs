@@ -9,5 +9,6 @@
         string PredictorCollectionName { get; set; }
         string ModelCollectionName { get; set; }
         string FilesCollectionName { get; set; }
+        string ExperimentCollectionName { get; set; }
     }
 }

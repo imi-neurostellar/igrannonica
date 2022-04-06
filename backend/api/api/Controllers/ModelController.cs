@@ -17,15 +17,17 @@ namespace api.Controllers
         private readonly IDatasetService _datasetService;
         private readonly IFileService _fileService;
         private readonly IModelService _modelService;
+        private readonly IExperimentService _experimentService;
         private IJwtToken jwtToken;
 
 
-        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token)
+        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token,IExperimentService experiment)
         {
             _mlService = mlService;
             _modelService = modelService;
             _datasetService = datasetService;
             _fileService = fileService;
+            _experimentService = experiment;
             jwtToken = token;
         }
 
@@ -45,7 +47,8 @@ namespace api.Controllers
             }
             else
                 return BadRequest();
-            var dataset = _datasetService.GetOneDataset(model.datasetId);
+            var experiment=_experimentService.Get(model.experimentId);
+            var dataset = _datasetService.GetOneDataset(experiment.datasetId);
             var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
             var result = await _mlService.SendModelAsync(model, filepath);
             return Ok(result);
@@ -145,7 +148,8 @@ namespace api.Controllers
         {
             bool overwrite = false;
             //username="" ako je GUEST
-            model.inputNeurons = model.inputColumns.Length;
+            Experiment e = _experimentService.Get(model.experimentId);
+            model.inputNeurons = e.inputColumns.Length;
             if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
                 return BadRequest("Bad parameters!");
 

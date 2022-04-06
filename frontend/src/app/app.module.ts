@@ -11,7 +11,6 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatasetLoadComponent } from './_elements/dataset-load/dataset-load.component';
-import { AddModelComponent } from './_pages/add-model/add-model.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModalComponent } from './_modals/login-modal/login-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -39,6 +38,9 @@ import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-dataset
 import { ReactiveBackgroundComponent } from './_elements/reactive-background/reactive-background.component';
 import { ItemModelComponent } from './_elements/item-model/item-model.component';
 import { AnnvisualComponent } from './_elements/annvisual/annvisual.component';
+import { ExperimentComponent } from './experiment/experiment.component';
+import { LoadingComponent } from './_elements/loading/loading.component';
+import { ModelLoadComponent } from './_elements/model-load/model-load.component';
 import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.component';
 import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-dataset.component';
 
@@ -46,7 +48,6 @@ import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-data
   declarations: [
     AppComponent,
     DatasetLoadComponent,
-    AddModelComponent,
     LoginModalComponent,
     RegisterModalComponent,
     HomeComponent,
@@ -70,6 +71,9 @@ import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-data
     ReactiveBackgroundComponent,
     ItemModelComponent,
     AnnvisualComponent,
+    ExperimentComponent,
+    LoadingComponent,
+    ModelLoadComponent,
     AlertDialogComponent,
     AddNewDatasetComponent
   ],

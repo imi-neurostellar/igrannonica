@@ -3,6 +3,7 @@
     padding-top: 30px;
     padding-bottom: 20px;
 }
+
 #header h1 {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     text-align: center;
@@ -21,22 +22,18 @@
     background-color: #003459;
     color: white;
 }
+
 .btnType2 {
     background-color: white;
     color: #003459;
     border-color: #003459;
 }
+
 .selectedDatasetClass {
     /*border-color: 2px solid #003459;*/
     background-color: lightblue;
 }
+
 ul li:hover {
     background-color: lightblue;
-}
-
-#divInputs {
-    margin-left: 20px;
-}
-#divOutputs {
-    margin-left: 20px;
 }

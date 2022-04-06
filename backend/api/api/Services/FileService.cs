@@ -36,6 +36,10 @@ namespace api.Services
                 return null;
             return file.path;
         }
+        public FileModel getFile(string id)
+        {
+            return _file.Find(x=>x._id==id).FirstOrDefault();
+        }
         
     }
 }

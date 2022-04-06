@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import Dataset from 'src/app/_data/Dataset';
+import { DatasetsService } from 'src/app/_services/datasets.service';
+import { ModelsService } from 'src/app/_services/models.service';
+import shared from 'src/app/Shared';
+import { DatatableComponent } from '../datatable/datatable.component';
 
 @Component({
   selector: 'app-add-new-dataset',
@@ -9,7 +13,8 @@ import Dataset from 'src/app/_data/Dataset';
 })
 export class AddNewDatasetComponent {
 
-  @Output() loaded = new EventEmitter<string>();
+  @Output() newDatasetAdded = new EventEmitter<string>();
+  @ViewChild(DatatableComponent) datatable?: DatatableComponent;
 
   delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
 
@@ -23,7 +28,7 @@ export class AddNewDatasetComponent {
 
   dataset: Dataset; //dodaj ! potencijalno
 
-  constructor(private ngxCsvParser: NgxCsvParser) {
+  constructor(private ngxCsvParser: NgxCsvParser, private modelsService: ModelsService, private datasetsService: DatasetsService) {
     this.dataset = new Dataset();
   }
 
@@ -48,6 +53,9 @@ export class AddNewDatasetComponent {
     if (this.files.length < 1)
       return;
 
+    this.datatable!.loaded = false;
+    this.datatable!.hasInput = this.hasInput;
+
     this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter })
       .pipe().subscribe((result) => {
 
@@ -60,10 +68,12 @@ export class AddNewDatasetComponent {
             this.rowsNumber = this.csvRecords.length;
           this.colsNumber = this.csvRecords[0].length;
 
-          if (this.dataset.hasHeader) //kasnije dodati opciju kada nema header da korisnik rucno unosi header-e
+          if (this.dataset.hasHeader) 
             this.dataset.header = this.csvRecords[0];
-
-          this.loaded.emit("loaded");
+          
+          this.datatable!.data = this.csvRecords;
+          this.datatable!.hasHeader = this.dataset.hasHeader;
+          this.datatable!.loaded = true;
         }
       }, (error: NgxCSVParserError) => {
         console.log('Error', error);
@@ -73,6 +83,28 @@ export class AddNewDatasetComponent {
   checkAccessible() {
     if (this.dataset.isPublic)
       this.dataset.accessibleByLink = true;
+  }
+
+  uploadDataset() {
+        this.modelsService.uploadData(this.files[0]).subscribe((file) => {
+          //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+            this.dataset.fileId = file._id;
+            this.dataset.username = shared.username;
+
+            this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
+             
+              this.newDatasetAdded.emit("added");
+              //this.refreshMyDatasetList(); refreshuj dataset listu u ds-load i selektuj taj ds
+              //this.showMyDatasets = true;
+              //this.selectThisDataset(dataset);
+
+              shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
+            }, (error) => {
+              shared.openDialog("Neuspeo pokušaj!", "Dataset sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
+            }); //kraj addDataset subscribe
+        }, (error) => {
+          
+        }); //kraj uploadData subscribe
   }
 
 }
