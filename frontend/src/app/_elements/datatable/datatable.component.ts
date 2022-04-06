@@ -11,6 +11,8 @@ export class DatatableComponent implements OnInit {
 
   @Input() data?: any[] = [];
 
+  loaded = false;
+
   constructor() { }
 
   ngOnInit(): void {
