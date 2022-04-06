@@ -33,6 +33,8 @@ def returnColumnsInfo(dataset):
             uniquevalues=datafront[kolona].unique()
             mean=0
             median=0
+            minimum=0
+            maximum=0
             nullCount=datafront[kolona].isnull().sum()
             if(nullCount>0):
                 allNullCols=allNullCols+1
@@ -41,10 +43,14 @@ def returnColumnsInfo(dataset):
                         'uniqueValues':uniquevalues.tolist(),
                         'median':float(mean),
                         'mean':float(median),
-                        'numNulls':float(nullCount)
+                        'numNulls':float(nullCount),
+                        'min':float(minimum),
+                        'max':float(maximum)
             }
             dict.append(frontreturn)
         else:
+            minimum=min(datafront[kolona])
+            maximum=max(datafront[kolona])
             mean=datafront[kolona].mean()
             median=s.median(datafront[kolona])
             nullCount=datafront[kolona].isnull().sum()
@@ -55,7 +61,9 @@ def returnColumnsInfo(dataset):
                         'uniqueValues':[],
                         'mean':float(mean),
                         'median':float(median),
-                        'numNulls':float(nullCount)
+                        'numNulls':float(nullCount),
+                        'min':float(minimum),
+                        'max':float(maximum)
             }
             dict.append(frontreturn)
         NullRows = datafront[datafront.isnull().any(axis=1)]
@@ -95,27 +103,35 @@ class TrainingResult:
 
 def train(dataset, params, callback):
     problem_type = params["type"]
-    print(problem_type)
+    #print(problem_type)
     data = pd.DataFrame()
-    print(data)
+    #print(data)
     for col in params["inputColumns"]:
-        print(col)
+        #print(col)
         data[col]=dataset[col]
     output_column = params["columnToPredict"]
     data[output_column] = dataset[output_column]
-    print(data)
+    #print(data)
 
     ###NULL
     null_value_options = params["nullValues"]
     null_values_replacers = params["nullValuesReplacers"]
     
     if(null_value_options=='replace'):
-        print("replace null") # TODO
+        #print("replace null") # TODO
+        dict=params['null_values_replacers']
+        while(len(dict)>0):
+            replace=dict.pop()
+            col=replace['column']
+            opt=replace['option']
+            if(opt=='replace'):
+                replacevalue=replace['value']
+                data[col]=data[col].fillna(replacevalue)
     elif(null_value_options=='delete_rows'):
         data=data.dropna()
     elif(null_value_options=='delete_columns'):
-        data=data.dropna()
-    print(data.shape)
+        data=data.dropna(axis=1)
+    #print(data.shape)
     
     #
     # Brisanje kolona koje ne uticu na rezultat
@@ -176,7 +192,7 @@ def train(dataset, params, callback):
     for col in data.columns:
         if(col!=output_column):
             x_columns.append(col)
-    print(x_columns)
+    #print(x_columns)
     x = data[x_columns].values
     y = data[output_column].values
 
@@ -190,7 +206,7 @@ def train(dataset, params, callback):
     else:
         random=0
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
-    print(x_train,x_test)
+    #print(x_train,x_test)
 
     #
     # Treniranje modela
@@ -215,7 +231,7 @@ def train(dataset, params, callback):
         #print(y_pred.flatten())
         #print(y_test)
         scores = classifier.evaluate(x_test, y_test)
-        print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
+        #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
         classifier.save("temp/"+params['name'], save_format='h5')
         #vizuelizacija u python-u
         #from ann_visualizer.visualize import ann_viz;
@@ -238,11 +254,11 @@ def train(dataset, params, callback):
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
 
-        print(y_pred.flatten())
-        print(y_test)
+        #print(y_pred.flatten())
+        #print(y_test)
         
         scores = classifier.evaluate(x_test, y_test)
-        print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
+        #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
         #ann_viz(classifier, title="My neural network")
         
         classifier.save("temp/"+params['name'], save_format='h5')
@@ -260,7 +276,7 @@ def train(dataset, params, callback):
 
         history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
         y_pred=classifier.predict(x_test)
-        print(classifier.evaluate(x_test, y_test))
+        #print(classifier.evaluate(x_test, y_test))
 
     def roc_auc_score_multiclass(actual_class, pred_class, average = "macro"):
     
@@ -346,11 +362,11 @@ def train(dataset, params, callback):
 
 def manageH5(dataset,params,h5model):
     problem_type = params["type"]
-    print(problem_type)
+    #print(problem_type)
     data = pd.DataFrame()
     #print(data)
     for col in params["inputColumns"]:
-        print(col)
+        #print(col)
         data[col]=dataset[col]
     output_column = params["columnToPredict"]
     data[output_column] = dataset[output_column]
@@ -361,12 +377,21 @@ def manageH5(dataset,params,h5model):
     null_values_replacers = params["nullValuesReplacers"]
     
     if(null_value_options=='replace'):
-        print("replace null") # TODO
+        #print("replace null") # TODO
+        dict=params['null_values_replacers']
+        while(len(dict)>0):
+            replace=dict.pop()
+            col=replace['column']
+            opt=replace['option']
+            if(opt=='replace'):
+                replacevalue=replace['value']
+                data[col]=data[col].fillna(replacevalue)
     elif(null_value_options=='delete_rows'):
         data=data.dropna()
     elif(null_value_options=='delete_columns'):
         data=data.dropna()
-    print(data.shape)
+    
+    #print(data.shape)
     
     #
     # Brisanje kolona koje ne uticu na rezultat
@@ -402,10 +427,10 @@ def manageH5(dataset,params,h5model):
             x_columns.append(col)
     #print(x_columns)
     x2 = data[x_columns]
-    print(x2)
-    print(x2.values)
+    #print(x2)
+    #print(x2.values)
     x2 = data[x_columns].values
-    print(x2)
+    #print(x2)
     y2 = data[output_column].values
     h5model.summary()
     ann_viz(h5model, title="My neural network")
@@ -419,6 +444,6 @@ def manageH5(dataset,params,h5model):
     y_pred2=np.argmax(y_pred2,axis=1)
     #y_pred=h5model.predict_classes(x)
     score = h5model.evaluate(x2,y_pred2, verbose=0)
-    print("%s: %.2f%%" % (h5model.metrics_names[1], score[1]*100))
-    print(y_pred2)
-    print( 'done')
+    #print("%s: %.2f%%" % (h5model.metrics_names[1], score[1]*100))
+    #print(y_pred2)
+    #print( 'done')
