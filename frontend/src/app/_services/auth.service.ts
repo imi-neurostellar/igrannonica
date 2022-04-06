@@ -33,6 +33,7 @@ export class AuthService {
       var token = this.cookie.get('token');
       var property=jwtHelper.decodeToken(this.cookie.get('token'));
       var username=property['name'];
+      var userId = property['id'];
       return !jwtHelper.isTokenExpired(token) && username!="";
     }
     return false;
@@ -89,6 +90,7 @@ export class AuthService {
       console.log("decoded:", decodedToken);
       this.shared.loggedIn = this.isAuthenticated();
       this.shared.username = decodedToken.name;
+      this.shared.userId = decodedToken.id;
       this.enableAutoRefresh();
     }
   }

@@ -7,6 +7,7 @@ class Shared {
     constructor(
         public loggedIn: boolean,
         public username: string = '',
+        public userId: string = '',
         public photoId: string = '1',
         public dialog?: MatDialog
         //public alertDialog?: ElementRef

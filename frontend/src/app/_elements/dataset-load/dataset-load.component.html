@@ -3,8 +3,7 @@
   <!--Sklonjeno ucitavanje novog dataseta i sve opcije u vezi sa tim, premesteno u add-new-dataset-->
 
   <div class="col-12 d-flex my-5">
-    <h2 class="">Izvor podataka:</h2>
-    <div class="col-1">
+    <div class="col-3">
     </div>
     <button type="button" id="btnMyDataset" class="btn" (click)="viewMyDatasetsForm()"
         [ngClass]="{'btnType1': showMyDatasets, 'btnType2': !showMyDatasets}">
@@ -22,21 +21,21 @@
   </div>
   <div class="px-5">
       <div *ngIf="showMyDatasets" class="overflow-auto" style="max-height: 500px;">
-          <ul class="list-group">
-              <li class="list-group-item p-3" *ngFor="let dataset of myDatasets|filter:term"
-                  [ngClass]="{'selectedDatasetClass': this.selectedDataset == dataset}">
-                  <app-item-dataset name="usersDataset" [dataset]="dataset"
-                      (click)="selectThisDataset(dataset);"></app-item-dataset>
-              </li>
-          </ul>
+            <ul class="list-group">
+                <li class="list-group-item p-3" *ngFor="let dataset of myDatasets|filter:term"
+                    [ngClass]="{'selectedDatasetClass': this.selectedDataset == dataset}">
+                    <app-item-dataset name="usersDataset" [dataset]="dataset"
+                        (click)="selectThisDataset(dataset);"></app-item-dataset>
+                </li>
+            </ul>
+            <div class="px-5 mt-5">
+                <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
+            </div>
       </div>
   </div>
 
   <app-add-new-dataset [style]="(showMyDatasets)?'display:none;visibility:hidden;':''" id="dataset"
-      (loaded)="datasetLoaded = true; selectedDataset = addNewDatasetComponent?.dataset; datasetFile = addNewDatasetComponent?.csvRecords; datasetHasHeader = addNewDatasetComponent?.dataset!.hasHeader">
+      (newDatasetAdded)="showMyDatasets = true">
   </app-add-new-dataset>
-  <div class="px-5 mt-5">
-      <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
-  </div>
 
 </div>
