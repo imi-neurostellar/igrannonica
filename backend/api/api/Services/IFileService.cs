@@ -6,5 +6,6 @@ namespace api.Services
     {
         FileModel Create(FileModel file);
         string GetFilePath(string id, string username);
+        public FileModel getFile(string id);
     }
 }
