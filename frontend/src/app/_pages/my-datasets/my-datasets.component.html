@@ -7,20 +7,17 @@
         
             <div class="row">
                 <div class="col-sm-4" style="margin-bottom: 10px;" *ngFor="let dataset of myDatasets">
-                <app-item-dataset [dataset]="dataset"></app-item-dataset>
-                
-                <div class="panel-footer row"><!-- panel-footer -->
-                    <div class="col-xs-6 text-center">
-                        <div>
-                          <button type="button" class="btn btn-default btn-lg" mat-raised-button color="primary" (click)="deleteThisDataset(dataset)">Obriši
-                            <span class="glyphicon glyphicon-chevron-right"></span>
-                        </button>
+                    <app-item-dataset [dataset]="dataset"></app-item-dataset>
+                    
+                    <div class="panel-footer row"><!-- panel-footer -->
+                        <div class="col-xs-6 text-center">
+                            <div>
+                            <button type="button" class="btn btn-default btn-lg" mat-raised-button color="primary" (click)="deleteThisDataset(dataset)">Obriši
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
+                            </div>
                         </div>
-                    </div>
-                </div><!-- end panel-footer -->
-
-                
-                
+                    </div><!-- end panel-footer -->
                 </div>
             </div>
         <div class="text-center" *ngIf="this.myDatasets.length == 0" >
