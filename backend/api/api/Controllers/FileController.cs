@@ -4,10 +4,7 @@ using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using CsvHelper;
-using System.IO;
-using System.Globalization;
-using System.Linq;
+
 
 namespace api.Controllers
 {
@@ -18,9 +15,8 @@ namespace api.Controllers
         private string[] permittedExtensions = { ".csv" };
         private string[] permittedExtensionsH5 = { ".h5" };//niz da bi dodali h4 itd
         private readonly IConfiguration _configuration;
-        private readonly IFileService _fileService;
         private IJwtToken _token;
-        private IFileService _fileservice;
+        private readonly IFileService _fileservice;
         public FileController(IConfiguration configuration,IFileService fileService,IJwtToken token)
         {
             _configuration = configuration;
@@ -100,7 +96,7 @@ namespace api.Controllers
             return Ok(fileModel);
         }
 
-        [HttpGet("csvread/{hasheader}/{fileid}")]
+        [HttpGet("csvread/{hasHeader}/{fileId}")]
         [Authorize(Roles = "User,Guest")]
         public ActionResult<List<string>> CsvRead(bool hasHeader, string fileId)
         {
@@ -120,7 +116,7 @@ namespace api.Controllers
                 return BadRequest();
 
             //String csvContent = System.IO.File.ReadAllText(fileModel.path);
-            string filePath = _fileService.GetFilePath(fileId, uploaderId);
+            string filePath = _fileservice.GetFilePath(fileId, uploaderId);
 
            
 

@@ -25,7 +25,7 @@ export class DatasetsService {
   }
 
   getDatasetFile(fileId: any): any {
-    return this.http.get(`${API_SETTINGS.apiURL}/file/download?id=${fileId}`, { headers: this.authService.authHeader(), responseType: 'text' });
+    return this.http.get(`${API_SETTINGS.apiURL}/file/csvRead/true/${fileId}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
 
   editDataset(dataset: Dataset): Observable<Dataset> {
