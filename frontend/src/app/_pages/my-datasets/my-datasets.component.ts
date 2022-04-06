@@ -4,6 +4,7 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
 import Dataset from 'src/app/_data/Dataset';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
+import shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-my-datasets',
@@ -19,10 +20,17 @@ export class MyDatasetsComponent implements OnInit {
 
      }
 
-  ngOnInit(): void {
-    this.datasetsS.getMyDatasets();
+     ngOnInit(): void {
 
-  }
+      this.datasetsS.getMyDatasets().subscribe((response) => {
+        this.myDatasets = response;
+      }, (error) => {
+        if (error.error == "Dataset with...") {
+          shared.openDialog("Greska", "Niste dobro uneli nesto");
+        }
+      });
+    }  
+    
 /*
   editModel(): void{
     this.modelsS.editModel().subscribe(m => {
