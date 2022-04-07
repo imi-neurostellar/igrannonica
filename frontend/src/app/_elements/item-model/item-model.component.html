@@ -1,4 +1,3 @@
-
 <div class="card" style="min-width: 12rem;">
     <div class="card-header">
         {{model.name}}
@@ -9,6 +8,6 @@
             {{"Datum kreiranja: " + model.dateCreated}}<br>
             {{"Poslednje ažuriranje: " + model.lastUpdated}}<br>
         </p>
-        <app-annvisual class="align-items-center"  [model]="model" style="width: 12rem"></app-annvisual>
+        <app-graph [model]="model"></app-graph>
     </div>
 </div>

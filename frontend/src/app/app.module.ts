@@ -43,6 +43,7 @@ import { LoadingComponent } from './_elements/loading/loading.component';
 import { ModelLoadComponent } from './_elements/model-load/model-load.component';
 import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.component';
 import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-dataset.component';
+import { GraphComponent } from './_elements/graph/graph.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-data
     LoadingComponent,
     ModelLoadComponent,
     AlertDialogComponent,
-    AddNewDatasetComponent
+    AddNewDatasetComponent,
+    GraphComponent
   ],
   imports: [
     BrowserModule,

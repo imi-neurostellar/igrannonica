@@ -43,7 +43,8 @@
             <div class="col-1">
                 <input type="number" min="1" class="form-control" name="hiddenLayers"
                     [(ngModel)]="newModel.hiddenLayers"
-                    (change)="newModel.hiddenLayerActivationFunctions = [].constructor(newModel.hiddenLayers).fill(newModel.hiddenLayerActivationFunctions[0])">
+                    (change)="newModel.hiddenLayerActivationFunctions = [].constructor(newModel.hiddenLayers).fill(newModel.hiddenLayerActivationFunctions[0])"
+                    (ngModelChange)="updateGraph()">
             </div>
         </div>
 
@@ -69,7 +70,7 @@
             </div>
             <div class="col-1">
                 <input type="number" min="1" class="form-control" name="hiddenLayerNeurons"
-                    [(ngModel)]="newModel.hiddenLayerNeurons">
+                    [(ngModel)]="newModel.hiddenLayerNeurons" (ngModelChange)="updateGraph()">
             </div>
         </div>
 
@@ -212,6 +213,7 @@
             </div>
         </div>
     </div>
+    <app-graph [model]="newModel" [inputCols]="1"></app-graph>
     <div class="form-group row mt-5 mb-3">
         <div class="col"></div>
         <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="addModel();">Sačuvaj

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import Shared from 'src/app/Shared';
 import Model, { ActivationFunction, Encoding, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
 import { ModelsService } from 'src/app/_services/models.service';
+import { GraphComponent } from '../graph/graph.component';
 
 @Component({
   selector: 'app-model-load',
@@ -9,6 +10,8 @@ import { ModelsService } from 'src/app/_services/models.service';
   styleUrls: ['./model-load.component.css']
 })
 export class ModelLoadComponent implements OnInit {
+
+  @ViewChild(GraphComponent) graph!: GraphComponent;
 
   newModel: Model = new Model();
 
@@ -31,6 +34,10 @@ export class ModelLoadComponent implements OnInit {
   constructor(private models: ModelsService) { }
 
   ngOnInit(): void {
+  }
+
+  updateGraph() {
+    this.graph.update();
   }
 
   getMetrics() {
