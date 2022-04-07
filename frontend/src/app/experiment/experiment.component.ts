@@ -29,8 +29,13 @@ export class ExperimentComponent implements OnInit {
   }
 
   updateDataset(dataset: Dataset) {
-    console.log(dataset);
+    //console.log(dataset);
     this.selectedDataset = dataset;
+  }
+
+  updateModel(model: Model) {
+    //console.log(model);
+    this.selectedModel = model;
   }
 
   getInputById(id: string): HTMLInputElement {

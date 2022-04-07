@@ -66,11 +66,9 @@
                     <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
                     <div id="columnReplacers">
                         <div *ngFor="let column of selectedDataset.columnInfo; let i = index" class="my-3">
-                            <div *ngIf="getInputById('cb_'+column.columnName).checked" class="">
+                            <div *ngIf="getInputById('cb_'+column.columnName).checked || selectedOutputColumnVal == column.columnName" class="">
                                 <span class="w-20 mx-3">
-                                    {{column.columnName}}&nbsp;<span class="small" style="color:gray;">(
-                                        {{column.numNulls}}
-                                        null)
+                                    {{column.columnName}}&nbsp;<span class="small" style="color:gray;">({{column.numNulls}} null)
                                     </span>
                                 </span>
 
@@ -138,6 +136,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!--
                         <div *ngFor="let column of selectedDataset.columnInfo; let i = index" class="my-3">
                             <div class="input-group row" *ngIf="getInputById('rb_'+column.columnName).checked">
                                 <span class="input-group-text col-2 text-center">
@@ -160,7 +159,6 @@
                                 <select [id]="'replaceOptions'+i" class="form-control col-2" *ngIf="!column.isNumber"
                                     (change)="replace($event, column);">
                                     <option *ngFor="let option of []" [value]="option">
-                                        <!--/*arrayColumn(datasetFile, i)*/-->
                                         {{ option }}
                                     </option>
                                 </select>
@@ -182,7 +180,7 @@
                                         (change)="emptyFillTextInput(column.columnName)" checked></label>
                             </div>
                         </div>
-
+                        -->
                     </div>
                 </div>
             </div>
@@ -190,7 +188,7 @@
 
 
         <h2>3. Podešavanja mreže</h2>
-        <app-model-load></app-model-load>
+        <app-model-load (selectedModelChangeEvent)="updateModel($event)"></app-model-load>
 
 
         <h2>4. Treniraj model</h2>

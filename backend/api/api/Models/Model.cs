@@ -26,7 +26,7 @@ namespace api.Models
         public string encoding { get; set; }
         public string optimizer { get; set; }
         public string lossFunction { get; set; }
-        public int inputNeurons { get; set; }
+        //public int inputNeurons { get; set; }
         public int hiddenLayerNeurons { get; set; }
         public int hiddenLayers { get; set; }
         public int batchSize { get; set; }

@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import Shared from 'src/app/Shared';
 import Model, { ActivationFunction, Encoding, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
 import { ModelsService } from 'src/app/_services/models.service';
 import { GraphComponent } from '../graph/graph.component';
+
 
 @Component({
   selector: 'app-model-load',
@@ -12,8 +13,11 @@ import { GraphComponent } from '../graph/graph.component';
 export class ModelLoadComponent implements OnInit {
 
   @ViewChild(GraphComponent) graph!: GraphComponent;
+  @Output() selectedModelChangeEvent = new EventEmitter<Model>();
 
   newModel: Model = new Model();
+  myModels?: Model[];
+  selectedModel?: Model;
 
   ProblemType = ProblemType;
   Encoding = Encoding;
@@ -31,7 +35,13 @@ export class ModelLoadComponent implements OnInit {
   tempTestSetDistribution = 90;
   lossFunction: any = LossFunction;
 
-  constructor(private models: ModelsService) { }
+  showMyModels: boolean = true;
+
+  constructor(private modelsService: ModelsService) {
+    this.modelsService.getMyModels().subscribe((models) => {
+      this.myModels = models;
+    });
+  }
 
   ngOnInit(): void {
   }
@@ -51,17 +61,18 @@ export class ModelLoadComponent implements OnInit {
     }
   }
 
-  addModel() {
+  uploadModel() {   //console.log(this.selectedModel);
     this.getMetrics();
 
     this.newModel.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
     this.newModel.username = Shared.username;
 
-    this.models.addModel(this.newModel).subscribe((response) => {
+    this.modelsService.addModel(this.newModel).subscribe((response) => {
       Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');
       // treba da se selektuje nov model u listi modela
+      //this.selectedModel = 
     }, (error) => {
-      Shared.openDialog('Greška', 'Model sa unetim nazivom već postoji u Vašoj kolekciji.\nPromenite naziv modela i nastavite sa kreiranim datasetom.');
+      Shared.openDialog('Greška', 'Model sa unetim nazivom već postoji u Vašoj kolekciji. Promenite naziv modela i nastavite sa kreiranim datasetom.');
     });
   }
 
@@ -83,4 +94,17 @@ export class ModelLoadComponent implements OnInit {
         break;
     }
   }
+
+  viewMyModelsForm() {
+    this.showMyModels = true;
+  }
+  viewNewModelForm() {
+    this.showMyModels = false;
+  }
+
+  selectThisModel(model: Model) {
+    this.selectedModel = model;
+    this.selectedModelChangeEvent.emit(this.selectedModel);
+  }
+
 }
