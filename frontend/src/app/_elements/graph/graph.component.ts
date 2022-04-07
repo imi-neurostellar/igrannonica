@@ -12,12 +12,13 @@ export class GraphComponent implements OnInit {
   @Input() model?: Model;
   @Input() inputCols: number = 1;
 
-  @Input() lineThickness: number = 5;
+  @Input() lineThickness: number = 2;
   @Input() nodeRadius: number = 15;
-  @Input() lineColor: string = '#ff0000';
+  @Input() lineColor: string = '#00a8e8';
   @Input() nodeColor: string = '#222277';
-  @Input() inputNodeColor: string = '#44ee22';
-  @Input() outputNodeColor: string = '#559977';
+  @Input() borderColor: string = '#00a8e8';
+  @Input() inputNodeColor: string = '#ffdd11';
+  @Input() outputNodeColor: string = '#44ee22';
 
   private wrapper?: HTMLDivElement;
   private canvas?: HTMLCanvasElement;
@@ -103,6 +104,7 @@ export class GraphComponent implements OnInit {
 
   drawLine(node1: Node, node2: Node) {
     this.ctx!.strokeStyle = this.lineColor;
+    this.ctx!.lineWidth = this.lineThickness;
     this.ctx!.beginPath();
     this.ctx!.moveTo(node1.x * this.width, node1.y * this.height);
     this.ctx!.lineTo(node2.x * this.width, node2.y * this.height);
@@ -111,7 +113,8 @@ export class GraphComponent implements OnInit {
 
   drawNode(node: Node) {
     this.ctx!.fillStyle = node.color;
-    this.ctx!.strokeStyle = '#000';
+    this.ctx!.strokeStyle = this.borderColor;
+    this.ctx!.lineWidth = this.lineThickness;
     this.ctx!.beginPath();
     this.ctx!.arc(node.x * this.width, node.y * this.height, this.nodeRadius, 0, 2 * Math.PI);
     this.ctx!.fill();
