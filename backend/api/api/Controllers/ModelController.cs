@@ -148,9 +148,9 @@ namespace api.Controllers
         {
             bool overwrite = false;
             //username="" ako je GUEST
-            Experiment e = _experimentService.Get(model.experimentId);
-            model.inputNeurons = e.inputColumns.Length;
-            if (_modelService.CheckHyperparameters(model.inputNeurons, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
+            //Experiment e = _experimentService.Get(model.experimentId);
+            //model.inputNeurons = e.inputColumns.Length;
+            if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
                 return BadRequest("Bad parameters!");
 
             var existingModel = _modelService.GetOneModel(model.username, model.name);
