@@ -4,6 +4,7 @@ import ml_socket
 import newmlservice
 import tensorflow as tf
 import pandas as pd
+import json
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -41,14 +42,20 @@ def predict():
 
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
-    f=request.json['filepathcolinfo']
-    dataset=pd.read_csv(f)
-    
-    result=newmlservice.returnColumnsInfo(dataset)
-
-    return jsonify(result)
-    
-
+    print("********************************PREPROCESS*******************************")
+    dataset = json.loads(request.form["dataset"])
+    file = request.files.get("file")
+    data=pd.read_csv(file)
+    preprocess = newmlservice.returnColumnsInfo(data)
+    #samo 10 jedinstvenih posto ih ima previse, bilo bi dobro da promenimo ovo da to budu 10 najzastupljenijih vrednosti
+    for col in preprocess["columnInfo"]:
+        col["uniqueValues"] = col["uniqueValues"][0:10]
+    dataset["columnInfo"] = preprocess["columnInfo"]
+    dataset["nullCols"] = preprocess["allNullColl"]
+    dataset["nullRows"] = preprocess["allNullRows"]
+    dataset["isPreProcess"] = True
+    print(dataset)
+    return jsonify(dataset)
     
 print("App loaded.")
 ml_socket.start()

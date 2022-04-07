@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Experiment, { NullValReplacer, NullValueOptions, ReplaceWith } from '../_data/Experiment';
 import Model from '../_data/Model';
-import Dataset from '../_data/Dataset';
+import Dataset, { ColumnInfo } from '../_data/Dataset';
 import { ModelsService } from '../_services/models.service';
 import Shared from '../Shared';
 
@@ -28,6 +28,11 @@ export class ExperimentComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  updateDataset(dataset: Dataset) {
+    console.log(dataset);
+    this.selectedDataset = dataset;
+  }
+
   getInputById(id: string): HTMLInputElement {
     return document.getElementById(id) as HTMLInputElement;
   }
@@ -52,9 +57,30 @@ export class ExperimentComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("fillCol_" + colName)).checked = true;
   }
 
-  replace(event: Event) {
+  replace(event: Event, column: ColumnInfo) {
     let option = (<HTMLInputElement>event.target).value;
-    // TODO
+
+    const input = (<HTMLInputElement>document.getElementById("fillText_" + column.columnName));
+    if (column.isNumber) {
+      switch (option) {
+        case ReplaceWith.Max:
+          input.value = "" + column.max;
+          break;
+        case ReplaceWith.Min:
+          input.value = "" + column.min;
+          break;
+        case ReplaceWith.Mean:
+          input.value = "" + column.mean;
+          break;
+        case ReplaceWith.Median:
+          input.value = "" + column.median;
+          break;
+        case ReplaceWith.None:
+          break;
+      }
+    } else {
+      input.value = option;
+    }
   }
 
   getNullValuesReplacersArray()/*: NullValReplacer[]*/ {

@@ -15,15 +15,17 @@ export default class Dataset {
         public hasHeader: boolean = true,
 
         public columnInfo: ColumnInfo[] = [],
+        public nullRows: number = 0,
+        public nullCols: number = 0,
         public preview: string[][] = [[]]
     ) { }
 }
 
 export class ColumnInfo {
     constructor(
-        public name: string = '',
+        public columnName: string = '',
         public isNumber: boolean = false,
-        public numNull: number = 0,
+        public numNulls: number = 0,
         public uniqueValues?: string[],
         public median?: number,
         public mean?: number,

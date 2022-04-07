@@ -6,6 +6,7 @@ namespace api.Models
 {
 	public class Dataset
 	{
+        public Dataset() { }
         public string username { get; set; }
 
         [BsonId]
@@ -24,7 +25,8 @@ namespace api.Models
         public bool hasHeader { get; set; }
 
         public ColumnInfo[] columnInfo { get; set; }
-        public int totalNulls;
+        public int nullCols { get; set; }
+        public int nullRows { get; set; }
         public bool isPreProcess { get; set; }
 
     }

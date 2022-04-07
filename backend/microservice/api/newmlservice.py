@@ -21,7 +21,7 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 import statistics as s
 from sklearn.metrics import roc_auc_score
-from ann_visualizer.visualize import ann_viz;
+#from ann_visualizer.visualize import ann_viz;
 def returnColumnsInfo(dataset):
     dict=[]
     datafront=dataset.copy()
@@ -43,7 +43,7 @@ def returnColumnsInfo(dataset):
                         'uniqueValues':uniquevalues.tolist(),
                         'median':float(mean),
                         'mean':float(median),
-                        'numNulls':float(nullCount),
+                        'numNulls':int(nullCount),
                         'min':float(minimum),
                         'max':float(maximum)
             }
@@ -52,7 +52,7 @@ def returnColumnsInfo(dataset):
             minimum=min(datafront[kolona])
             maximum=max(datafront[kolona])
             mean=datafront[kolona].mean()
-            median=s.median(datafront[kolona])
+            median=s.median(datafront[kolona].copy().dropna())
             nullCount=datafront[kolona].isnull().sum()
             if(nullCount>0):
                 allNullCols=allNullCols+1
@@ -61,7 +61,7 @@ def returnColumnsInfo(dataset):
                         'uniqueValues':[],
                         'mean':float(mean),
                         'median':float(median),
-                        'numNulls':float(nullCount),
+                        'numNulls':int(nullCount),
                         'min':float(minimum),
                         'max':float(maximum)
             }
@@ -71,7 +71,7 @@ def returnColumnsInfo(dataset):
         #print(len(NullRows))
         allNullRows=len(NullRows)
 
-    return {'columnInfo':dict,'allNullColl':allNullCols,'allNullRows':allNullRows}
+    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows)}
 
 @dataclass
 class TrainingResultClassification:
@@ -433,7 +433,7 @@ def manageH5(dataset,params,h5model):
     #print(x2)
     y2 = data[output_column].values
     h5model.summary()
-    ann_viz(h5model, title="My neural network")
+    #ann_viz(h5model, title="My neural network")
 
     h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics=params['metrics'])
 

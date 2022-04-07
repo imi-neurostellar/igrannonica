@@ -6,7 +6,7 @@
 
 
         <h2>1. Izvor podataka</h2>
-        <app-dataset-load></app-dataset-load>
+        <app-dataset-load (selectedDatasetChangeEvent)="updateDataset($event)"></app-dataset-load>
 
 
         <h2>2. Preprocesiranje</h2>
@@ -17,12 +17,13 @@
                     <h3>Izaberite ulazne kolone:</h3>
                     <div id="divInputs" class="form-check mt-2">
                         <br>
-                        <div *ngFor="let item of selectedDataset.header; let i = index">
-                            <input class="form-check-input" type="checkbox" value="{{item}}" id="cb_{{item}}"
-                                name="cbsNew" [checked]="this.selectedOutputColumnVal != item"
-                                [disabled]="this.selectedOutputColumnVal == item">&nbsp;
-                            <label class="form-check-label" for="cb_{{item}}">
-                                {{item}}
+                        <div *ngFor="let item of selectedDataset.columnInfo; let i = index">
+                            <input class="form-check-input" type="checkbox" value="{{item.columnName}}"
+                                id="cb_{{item.columnName}}" name="cbsNew"
+                                [checked]="this.selectedOutputColumnVal != item.columnName"
+                                [disabled]="this.selectedOutputColumnVal == item.columnName">&nbsp;
+                            <label class="form-check-label" for="cb_{{item.columnName}}">
+                                {{item.columnName}}
                             </label>
                         </div>
                     </div>
@@ -31,11 +32,12 @@
                     <h3>Izaberite izlaznu kolonu:</h3>
                     <div id="divOutputs" class="form-check mt-2">
                         <br>
-                        <div *ngFor="let item of selectedDataset.header; let i = index">
-                            <input class="form-check-input" type="radio" value="{{item}}" id="rb_{{item}}" name="rbsNew"
-                                (change)="this.selectedOutputColumnVal = item">&nbsp;
-                            <label class="form-check-label" for="rb_{{item}}">
-                                {{item}}
+                        <div *ngFor="let item of selectedDataset.columnInfo; let i = index">
+                            <input class="form-check-input" type="radio" value="{{item.columnName}}"
+                                id="rb_{{item.columnName}}" name="rbsNew"
+                                (change)="this.selectedOutputColumnVal = item.columnName">&nbsp;
+                            <label class="form-check-label" for="rb_{{item.columnName}}">
+                                {{item.columnName}}
                             </label>
                         </div>
                     </div>
@@ -48,12 +50,12 @@
                 class="form-check-input" value="deleteRows" name="fillMissing" id="delRows" checked
                 data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
             <label for="delRows" class="form-check-label">Obriši sve
-                redove sa nedostajućim vrednostima</label><br>
+                redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} / TODO)</label><br>
             <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.DeleteColumns"
                 class="form-check-input" value="deleteCols" name="fillMissing" id="delCols" data-bs-toggle="collapse"
                 data-bs-target="#fillMissingCustom.show">
             <label for="delCols" class="form-check-label">Obriši sve
-                kolone sa nedostajućim vrednostima</label><br>
+                kolone sa nedostajućim vrednostima ({{selectedDataset.nullCols}} / TODO)</label><br>
             <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.Replace"
                 class="form-check-input" name="fillMissing" id="replace" data-bs-toggle="collapse"
                 data-bs-target="#fillMissingCustom:not(.show)">
@@ -64,38 +66,38 @@
                     <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
                     <div id="columnReplacers">
                         <div *ngFor="let column of selectedDataset.columnInfo; let i = index" class="my-3">
-                            <div *ngIf="getInputById('cb_'+column).checked" class="">
+                            <div *ngIf="getInputById('cb_'+column.columnName).checked" class="">
                                 <span class="w-20 mx-3">
-                                    {{column.name}}&nbsp;<span class="small" style="color:gray;">(
-                                        <!--{{//column.numNulls}}-->
-                                        TODO BROJ null)
+                                    {{column.columnName}}&nbsp;<span class="small" style="color:gray;">(
+                                        {{column.numNulls}}
+                                        null)
                                     </span>
                                 </span>
 
-                                <label *ngIf="column.numNull <= 0" class="text-center form-control mx-3 text-secondary">
+                                <label *ngIf="column.numNulls <= 0"
+                                    class="text-center form-control mx-3 text-secondary">
                                     Ova kolona nema
                                     nedostajućih
                                     vrednosti.
                                 </label>
 
-                                <div *ngIf="column.numNull > 0" class="d-flex flex-row justify-content-end">
-                                    <!-- ngIf colummn.numNulls == 0 -->
+                                <div *ngIf="column.numNulls > 0" class="d-flex flex-row justify-content-end">
                                     <div class="flex-grow-3 mx-3 me-auto">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <label [for]="'fillCol_'+column.name" class="form-control">
+                                                <label [for]="'fillCol_'+column.columnName" class="form-control">
                                                     Zameni
-                                                    <input type="radio" [id]="'fillCol_'+column.name"
-                                                        [name]="'delOp_'+column.name">
+                                                    <input type="radio" [id]="'fillCol_'+column.columnName"
+                                                        [name]="'delOp_'+column.columnName">
                                                 </label>
                                             </div>
-                                            <input type="text" class="form-control" [id]="'fillText_'+column.name"
-                                                (keyup)="checkFillColRadio(column.name)"
+                                            <input type="text" class="form-control" [id]="'fillText_'+column.columnName"
+                                                (keyup)="checkFillColRadio(column.columnName)"
                                                 placeholder="Unesi vrednost...">
 
                                             <div class="input-group-append">
                                                 <select [id]="'replaceOptions'+i" class="form-control btn-primary"
-                                                    *ngIf="column.isNumber" (change)="replace($event);">
+                                                    *ngIf="column.isNumber" (change)="replace($event, column);">
                                                     <option
                                                         *ngFor="let option of Object.keys(ReplaceWith); let optionName of Object.values(ReplaceWith)"
                                                         [value]="option">
@@ -104,8 +106,8 @@
                                                 </select>
                                                 <select [id]="'replaceOptions'+i"
                                                     class="form-control btn-outline-primary"
-                                                    *ngIf="!column.isNumber && column.numNull > 0"
-                                                    (change)="replace($event);">
+                                                    *ngIf="!column.isNumber && column.numNulls > 0"
+                                                    (change)="replace($event, column);">
                                                     <option *ngFor="let option of column.uniqueValues" [value]="option">
                                                         {{ option }}
                                                     </option>
@@ -116,39 +118,39 @@
 
                                     <div class="flex-shrink-1 mx-3">
                                         <div class="input-group">
-                                            <label class="form-control" [for]="'delCol_'+column.name">Izbriši
+                                            <label class="form-control" [for]="'delCol_'+column.columnName">Izbriši
                                                 kolonu
-                                                <input type="radio" [id]="'delCol_'+column"
-                                                    [name]="'delOp_'+column.name"
-                                                    (change)="emptyFillTextInput(column.name)"></label>
+                                                <input type="radio" [id]="'delCol_'+column.columnName"
+                                                    [name]="'delOp_'+column.columnName"
+                                                    (change)="emptyFillTextInput(column.columnName)"></label>
                                         </div>
                                     </div>
 
                                     <div class="flex-shrink-1 mx-3">
                                         <div class="input-group">
-                                            <label class="form-control" [for]="'delRows_'+column.name">Izbriši
+                                            <label class="form-control" [for]="'delRows_'+column.columnName">Izbriši
                                                 redove
-                                                <input type="radio" [id]="'delRows_'+column.name"
-                                                    [name]="'delOp_'+column.name" checked
-                                                    (change)="emptyFillTextInput(column.name)"></label>
+                                                <input type="radio" [id]="'delRows_'+column.columnName"
+                                                    [name]="'delOp_'+column.columnName" checked
+                                                    (change)="emptyFillTextInput(column.columnName)"></label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div *ngFor="let column of selectedDataset.columnInfo; let i = index" class="my-3">
-                            <div class="input-group row" *ngIf="getInputById('rb_'+column.name).checked">
+                            <div class="input-group row" *ngIf="getInputById('rb_'+column.columnName).checked">
                                 <span class="input-group-text col-2 text-center">
-                                    {{column}}&nbsp;<span class="small" style="color:gray;">(br
+                                    {{column.columnName}}&nbsp;<span class="small" style="color:gray;">(br
                                         null)</span>
                                 </span>
                                 <label *ngIf="true" class="form-control">Ova
                                     kolona nema nedostajućih vrednosti.</label>
 
-                                <input *ngIf="true" type="radio" [id]="'fillCol_'+column.name" class="col-1 mt-2"
-                                    [name]="'delOp_'+column.name">
+                                <input *ngIf="true" type="radio" [id]="'fillCol_'+column.columnName" class="col-1 mt-2"
+                                    [name]="'delOp_'+column.columnName">
                                 <select [id]="'replaceOptions'+i" class="form-control col-2" *ngIf="column.isNumber"
-                                    (change)="replace($event);">
+                                    (change)="replace($event, column);">
                                     <option
                                         *ngFor="let option of Object.keys(ReplaceWith); let optionName of Object.values(ReplaceWith)"
                                         [value]="option">
@@ -156,24 +158,28 @@
                                     </option>
                                 </select>
                                 <select [id]="'replaceOptions'+i" class="form-control col-2" *ngIf="!column.isNumber"
-                                    (change)="replace($event);">
+                                    (change)="replace($event, column);">
                                     <option *ngFor="let option of []" [value]="option">
                                         <!--/*arrayColumn(datasetFile, i)*/-->
                                         {{ option }}
                                     </option>
                                 </select>
                                 <input *ngIf="true" type="text" class="form-control col-1"
-                                    [id]="'fillText_'+column.name" (keyup)="checkFillColRadio(column.name)"
+                                    [id]="'fillText_'+column.columnName" (keyup)="checkFillColRadio(column.columnName)"
                                     placeholder="Unesi vrednost...">
 
-                                <label *ngIf="true" class="form-control col-2" [for]="'delCol_'+column" .name>Izbriši
+                                <label *ngIf="true" class="form-control col-2" [for]="'delCol_'+column.columnName"
+                                    .name>Izbriši
                                     kolonu
-                                    <input type="radio" [id]="'delCol_'+column.name" [name]="'delOp_'+column.name"
-                                        (change)="emptyFillTextInput(column.name)"></label>
-                                <label *ngIf="true" class="form-control col-2" [for]="'delRows_'+column.name">Izbriši
+                                    <input type="radio" [id]="'delCol_'+column.columnName"
+                                        [name]="'delOp_'+column.columnName"
+                                        (change)="emptyFillTextInput(column.columnName)"></label>
+                                <label *ngIf="true" class="form-control col-2"
+                                    [for]="'delRows_'+column.columnName">Izbriši
                                     redove
-                                    <input type="radio" [id]="'delRows_'+column.name" [name]="'delOp_'+column.name"
-                                        (change)="emptyFillTextInput(column.name)" checked></label>
+                                    <input type="radio" [id]="'delRows_'+column.columnName"
+                                        [name]="'delOp_'+column.columnName"
+                                        (change)="emptyFillTextInput(column.columnName)" checked></label>
                             </div>
                         </div>
 

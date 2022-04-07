@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AddNewDatasetComponent } from '../add-new-dataset/add-new-dataset.component';
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
@@ -19,6 +19,7 @@ export class DatasetLoadComponent {
 
   @ViewChild(AddNewDatasetComponent) addNewDatasetComponent?: AddNewDatasetComponent;
   @ViewChild(AddNewDatasetComponent) datatable?: DatatableComponent;
+
   datasetLoaded: boolean = false;
   selectedDatasetLoaded: boolean = false;
 
@@ -70,6 +71,8 @@ export class DatasetLoadComponent {
         //this.refreshThreeNullValueRadioOptions();       //TREBA DA SE DESI
         this.selectedDatasetLoaded = true;
         //this.scrollToNextForm();
+
+        this.selectedDatasetChangeEvent.emit(this.selectedDataset);
       }
     });
   }

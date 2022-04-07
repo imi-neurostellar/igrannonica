@@ -26,12 +26,13 @@ namespace api.Services
         }
         public async Task PreProcess(Dataset dataset,string filePath)//(Dataset dataset,byte[] file,string filename)
         {
-            var request=new RestRequest("preprocess", Method.Post);//USKLADITI SA ML API
+            var request=new RestRequest("preprocess", Method.Post);
             request.AddParameter("dataset", JsonConvert.SerializeObject(dataset));
             //request.AddFile("file", file,filename);
             request.AddFile("file", filePath);
             request.AddHeader("Content-Type", "multipart/form-data");
             var result=await this.client.ExecuteAsync(request);
+
             Dataset newDataset = JsonConvert.DeserializeObject<Dataset>(result.Content);
             newDataset.isPreProcess = true;
             _datasetService.Update(newDataset);

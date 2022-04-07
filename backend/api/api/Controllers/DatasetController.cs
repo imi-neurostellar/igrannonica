@@ -148,8 +148,6 @@ namespace api.Controllers
         /*za pretragu vratiti dataset koji je public
           public ActionResult<Dataset> Get(string name)
         {
-            
-
             var dataset = _datasetService.GetOneDataset(username, name);
 
             if (dataset == null)
