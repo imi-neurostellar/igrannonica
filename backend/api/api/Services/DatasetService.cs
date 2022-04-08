@@ -40,7 +40,7 @@ namespace api.Services
         {
             //Join Igranonica public datasetove sa svim temp uploadanim datasetovima
             List<Dataset> datasets= _dataset.Find(dataset => dataset.username == "Igrannonica" && dataset.isPublic == true && dataset.isPreProcess).ToList();
-            datasets.AddRange(_dataset.Find(dataset => dataset.username == "").ToList());
+            datasets.AddRange(_dataset.Find(dataset => dataset.username == "" && dataset.isPreProcess).ToList());
             return datasets;
         }
 
