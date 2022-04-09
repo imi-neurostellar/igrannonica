@@ -37,9 +37,7 @@ namespace api.Models
 
         public string[] metrics { get; set; }
         public int epochs { get; set; }
-
-        public bool isPreProcess { get; set; }
-        public string fileId { get; set; }
+        public bool isTrained { get; set; }
         //public NullValues[] nullValues { get; set; }
     }
 }

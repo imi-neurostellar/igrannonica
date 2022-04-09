@@ -188,11 +188,6 @@ namespace api.Controllers
                 _predictorService.Create(predictor);
 
                 return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
-                FileModel fileModel = _fileService.getFile(predictor.fileId);
-                predictor.isPreProcess = false;
-                _predictorService.Create(predictor);
-                _mlConnectionService.PreProcess(predictor, fileModel.path);
-                return Ok();
             }
         }
 

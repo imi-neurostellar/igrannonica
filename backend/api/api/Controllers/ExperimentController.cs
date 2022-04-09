@@ -38,15 +38,7 @@ namespace api.Controllers
                 var parameter = headerValue.Parameter;
                 uploaderId = jwtToken.TokenToId(parameter);
                 if (uploaderId == null)
-                    return null;
-                else
-                {
-                    FileModel fileModel = _fileService.getFile(experiment.fileId);
-                    experiment.isPreProcess = false;
-                    _experimentService.Create(experiment);
-                    _mlConnectionService.PreProcess(experiment, fileModel.path);
-                    return Ok();
-                }
+                    return BadRequest();
             }
             else
                 return BadRequest();

@@ -19,7 +19,6 @@ namespace api.Models
         public string nullValues { get; set; }
         public NullValues[] nullValuesReplacers { get; set; }
         public string fileId { get; set; }
-        public bool isPreProcess { get; set; }
 
     }
 }

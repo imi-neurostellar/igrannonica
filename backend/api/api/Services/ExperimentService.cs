@@ -23,9 +23,9 @@ namespace api.Services
             return _experiment.Find(exp=>exp._id == id).FirstOrDefault();
         }
 
-        public void Update(string username, string name, Experiment experiment)
+        public void Update(string id, Experiment experiment)
         {
-            _experiment.ReplaceOne(experiment => experiment.username == username && experiment.name == name, experiment);
+            _experiment.ReplaceOne(experiment => experiment._id == id, experiment);
         }
     }
 }

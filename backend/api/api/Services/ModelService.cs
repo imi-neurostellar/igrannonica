@@ -64,6 +64,10 @@ namespace api.Services
         {
             _model.ReplaceOne(model => model.username == username && model.name == name, model);
         }
+        public void Update(string id, Model model)
+        {
+            _model.ReplaceOne(model => model._id == id, model);
+        }
         //
         public bool CheckHyperparameters(int inputNeurons, int hiddenLayerNeurons, int hiddenLayers, int outputNeurons)
         {

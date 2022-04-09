@@ -45,15 +45,15 @@ namespace api.Controllers
                 var parameter = headerValue.Parameter;
                 uploaderId = jwtToken.TokenToId(parameter);
                 if (uploaderId == null)
-                    return null;
+                    return BadRequest();
             }
             else
                 return BadRequest();
             var experiment=_experimentService.Get(model.experimentId);
             var dataset = _datasetService.GetOneDataset(experiment.datasetId);
             var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
-            var result = await _mlService.SendModelAsync(model, filepath);
-            return Ok(result);
+            _mlService.TrainModel(model,experiment,filepath);//To do  Obavestiti korisnika kada se model istrenira
+            return Ok();
         }
 
         // GET: api/<ModelController>/mymodels
@@ -161,10 +161,8 @@ namespace api.Controllers
                 return NotFound($"Model with name = {model.name} exisits");
             else
             {
-                FileModel fileModel = _fileService.getFile(model.fileId);
-                model.isPreProcess = false;
+                model.isTrained = false;
                 _modelService.Create(model);
-                _mlConnectionService.PreProcess(model, fileModel.path);
                 //return Ok();
                 if (existingModel == null)
                     _modelService.Create(model);
