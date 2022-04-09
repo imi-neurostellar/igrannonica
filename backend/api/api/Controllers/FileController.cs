@@ -13,7 +13,7 @@ namespace api.Controllers
     public class FileController : ControllerBase
     {
         private string[] permittedExtensions = { ".csv",".json",".xls",".xlsx" };
-        private string[] permittedExtensionsH5 = { ".h5" };//niz da bi dodali h4 itd
+        private string[] permittedExtensionsH5 = { ".h5" };//niz da bi dodali h5 itd
         private readonly IConfiguration _configuration;
         private IJwtToken _token;
         private readonly IFileService _fileservice;

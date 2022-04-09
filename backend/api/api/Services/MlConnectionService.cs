@@ -40,5 +40,56 @@ namespace api.Services
             return;
 
         }
+
+        /*public async Task PreProcess(Experiment experiment, string filePath)//(Dataset dataset,byte[] file,string filename)
+        {
+            var request = new RestRequest("preprocess", Method.Post);
+            request.AddParameter("dataset", JsonConvert.SerializeObject(experiment));
+            //request.AddFile("file", file,filename);
+            request.AddFile("file", filePath);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            var result = await this.client.ExecuteAsync(request);
+
+            Dataset newDataset = JsonConvert.DeserializeObject<Dataset>(result.Content);
+            newDataset.isPreProcess = true;
+            _experimentService.Update(newDataset);
+
+            return;
+
+        }
+
+        public async Task PreProcess(Predictor predictor, string filePath)//(Dataset dataset,byte[] file,string filename)
+        {
+            var request = new RestRequest("preprocess", Method.Post);
+            request.AddParameter("dataset", JsonConvert.SerializeObject(dataset));
+            //request.AddFile("file", file,filename);
+            request.AddFile("file", filePath);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            var result = await this.client.ExecuteAsync(request);
+
+            Dataset newDataset = JsonConvert.DeserializeObject<Dataset>(result.Content);
+            newDataset.isPreProcess = true;
+            _datasetService.Update(newDataset);
+
+            return;
+
+        }
+
+        public async Task PreProcess(Model model, string filePath)//(Dataset dataset,byte[] file,string filename)
+        {
+            var request = new RestRequest("preprocess", Method.Post);
+            request.AddParameter("dataset", JsonConvert.SerializeObject(dataset));
+            //request.AddFile("file", file,filename);
+            request.AddFile("file", filePath);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            var result = await this.client.ExecuteAsync(request);
+
+            Dataset newDataset = JsonConvert.DeserializeObject<Dataset>(result.Content);
+            newDataset.isPreProcess = true;
+            _datasetService.Update(newDataset);
+
+            return;
+
+        }*/
     }
 }

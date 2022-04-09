@@ -22,5 +22,10 @@ namespace api.Services
         {
             return _experiment.Find(exp=>exp._id == id).FirstOrDefault();
         }
+
+        public void Update(string username, string name, Experiment experiment)
+        {
+            _experiment.ReplaceOne(experiment => experiment.username == username && experiment.name == name, experiment);
+        }
     }
 }

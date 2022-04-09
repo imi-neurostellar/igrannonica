@@ -19,9 +19,10 @@ namespace api.Controllers
         private readonly IModelService _modelService;
         private readonly IExperimentService _experimentService;
         private IJwtToken jwtToken;
+        private readonly IMlConnectionService _mlConnectionService;
 
 
-        public ModelController(IMlConnectionService mlService, IModelService modelService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token,IExperimentService experiment)
+        public ModelController(IMlConnectionService mlService, IModelService modelService, IMlConnectionService mlConnectionService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token,IExperimentService experiment)
         {
             _mlService = mlService;
             _modelService = modelService;
@@ -29,6 +30,7 @@ namespace api.Controllers
             _fileService = fileService;
             _experimentService = experiment;
             jwtToken = token;
+            _mlConnectionService = mlConnectionService;
         }
 
         [HttpPost("sendModel")]
@@ -159,6 +161,11 @@ namespace api.Controllers
                 return NotFound($"Model with name = {model.name} exisits");
             else
             {
+                FileModel fileModel = _fileService.getFile(model.fileId);
+                model.isPreProcess = false;
+                _modelService.Create(model);
+                _mlConnectionService.PreProcess(model, fileModel.path);
+                //return Ok();
                 if (existingModel == null)
                     _modelService.Create(model);
                 else
