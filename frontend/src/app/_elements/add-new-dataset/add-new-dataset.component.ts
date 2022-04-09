@@ -61,7 +61,10 @@ export class AddNewDatasetComponent {
 
         console.log('Result', result);
         if (result.constructor === Array) {
-          this.csvRecords = result;
+          if(this.dataset.hasHeader)
+            this.csvRecords = result.splice(0,11);
+          else
+            this.csvRecords=result.splice(0,10);
           if (this.dataset.hasHeader)
             this.rowsNumber = this.csvRecords.length - 1;
           else
