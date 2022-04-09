@@ -15,11 +15,15 @@ namespace api.Controllers
 
         private readonly IExperimentService _experimentService;
         private IJwtToken jwtToken;
+        private readonly IMlConnectionService _mlConnectionService;
+        private readonly IFileService _fileService;
 
-        public ExperimentController(IExperimentService experimentService, IConfiguration configuration, IJwtToken Token)
+        public ExperimentController(IExperimentService experimentService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IFileService fileService)
         {
             _experimentService = experimentService;
             jwtToken = Token;
+            _mlConnectionService = mlConnectionService;
+            _fileService = fileService;
         }
 
         [HttpPost("add")]
@@ -35,6 +39,14 @@ namespace api.Controllers
                 uploaderId = jwtToken.TokenToId(parameter);
                 if (uploaderId == null)
                     return null;
+                else
+                {
+                    FileModel fileModel = _fileService.getFile(experiment.fileId);
+                    experiment.isPreProcess = false;
+                    _experimentService.Create(experiment);
+                    _mlConnectionService.PreProcess(experiment, fileModel.path);
+                    return Ok();
+                }
             }
             else
                 return BadRequest();

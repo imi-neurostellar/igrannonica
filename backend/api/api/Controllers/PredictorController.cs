@@ -15,11 +15,16 @@ namespace api.Controllers
     {
         private readonly IPredictorService _predictorService;
         private IJwtToken jwtToken;
+        private readonly IMlConnectionService _mlConnectionService;
+        private readonly IFileService _fileService;
 
-        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token)
+        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IFileService fileService)
         {
             _predictorService = predictorService;
             jwtToken = Token;
+            _mlConnectionService = mlConnectionService;
+            _fileService = fileService;
+                         
         }
 
         // GET: api/<PredictorController>/mypredictors
@@ -183,6 +188,11 @@ namespace api.Controllers
                 _predictorService.Create(predictor);
 
                 return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
+                FileModel fileModel = _fileService.getFile(predictor.fileId);
+                predictor.isPreProcess = false;
+                _predictorService.Create(predictor);
+                _mlConnectionService.PreProcess(predictor, fileModel.path);
+                return Ok();
             }
         }
 

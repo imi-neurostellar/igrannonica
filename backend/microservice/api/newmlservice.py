@@ -222,6 +222,31 @@ def train(dataset, params, callback):
             classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=5, activation=params['outputLayerActivationFunction']))#izlazni sloj
 
+        if(params['optimizer']=='Adam'):
+            opt=tf.keras.optimizers.Adam(learning_rate=params['learningRate'])
+
+        elif(params['optimizer']=='Adadelta'):
+            opt=tf.keras.optimizers.Adadelta(learning_rate=params['learningRate'])
+
+        elif(params['optimizer']=='Adagrad'):
+            opt=tf.keras.optimizers.Adagrad(learning_rate=params['learningRate'])
+
+        elif(params['optimizer']=='Adamax'):
+            opt=tf.keras.optimizers.Adamax(learning_rate=params['learningRate'])
+
+        elif(params['optimizer']=='Nadam'):
+            opt=tf.keras.optimizers.Nadam(learning_rate=params['learningRate'])
+
+        elif(params['optimizer']=='SGD'):
+            opt=tf.keras.optimizers.SGD(learning_rate=params['learningRate'])
+
+        elif(params['optimizer']=='Ftrl'):
+            opt=tf.keras.optimizers.Ftrl(learning_rate=params['learningRate'])
+        
+        elif(params['optimizer']=='RMSprop'):
+            opt=tf.keras.optimizers.RMSprop(learning_rate=params['learningRate'])
+
+
         classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
 
         history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
