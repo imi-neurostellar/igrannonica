@@ -4,6 +4,7 @@ import Model from '../_data/Model';
 import Dataset, { ColumnInfo } from '../_data/Dataset';
 import { ModelsService } from '../_services/models.service';
 import Shared from '../Shared';
+import { ExperimentsService } from '../_services/experiments.service';
 
 @Component({
   selector: 'app-experiment',
@@ -23,7 +24,7 @@ export class ExperimentComponent implements OnInit {
 
   selectedOutputColumnVal: string = '';
 
-  constructor(private models: ModelsService) { }
+  constructor(private modelsService: ModelsService, private experimentsService: ExperimentsService) { }
 
   ngOnInit(): void {
   }
@@ -129,6 +130,28 @@ export class ExperimentComponent implements OnInit {
     return array;*/
   }
 
+  saveExperiment() {
+    if (this.selectedDataset == undefined) {
+      Shared.openDialog("Greška", "Izvor podataka nije izabran!");
+      return;
+    }
+    //ispitivanje da li ima ulazne kolone TODO
+
+    if (this.selectedOutputColumnVal == '') {
+      Shared.openDialog("Greška", "Molimo Vas da izaberete izlaznu kolonu.");
+      return;
+    }
+    
+    this.experiment.datasetId = this.selectedDataset._id;
+    
+    this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
+      this.experiment = response;
+      Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
+    }, (error) => {
+
+    });
+  }
+
   trainModel() {
     this.trainingResult = undefined;
     console.log('Training model...', this.selectedModel);
@@ -141,7 +164,7 @@ export class ExperimentComponent implements OnInit {
       Shared.openDialog('Greška', 'Model nije izabran!');
       return;
     }
-    this.models.trainModel(this.selectedModel).subscribe((response: any) => {
+    this.modelsService.trainModel(this.selectedModel).subscribe((response: any) => {
       console.log('Train model complete!', response);
       this.trainingResult = response;
     });
