@@ -130,6 +130,7 @@ namespace api.Controllers
 
         [HttpPost("Csv")]
         [Authorize(Roles = "User,Guest")]
+        [DisableRequestSizeLimit]
         public async Task<ActionResult<string>> CsvUpload([FromForm]IFormFile file)
         {
 
