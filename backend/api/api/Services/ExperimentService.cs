@@ -27,5 +27,10 @@ namespace api.Services
         {
             _experiment.ReplaceOne(experiment => experiment._id == id, experiment);
         }
+        public List<Experiment> GetMyExperiments(string id)
+        {
+            return _experiment.Find(e=>e.uploaderId==id).ToList();
+
+        }
     }
 }
