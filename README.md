@@ -1,40 +1,49 @@
 # NeuroStellar - Igrannonica
 
-Igrannonica je ASP.NET Core veb aplikacija za manipulaciju vetakim neuronskim mreama. Koristei aplikaciju, poetnicima iz oblasti vetakih neuronskih mrea se omoguava razumevanje samog koncepta preprocesiranja, treniranja i testiranja neuronskih mrea. S druge strane, ekspertima se prua manipulacija setovima podataka uz upotrebu brojnih parametara i mogunost istovremenog nadgledanja toka procesa.  
+Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštačkim neuronskim mrežama. Koristeći aplikaciju, početnicima iz oblasti veštačkih neuronskih mreža se omogućava razumevanje samog koncepta preprocesiranja, treniranja i testiranja neuronskih mreža. S druge strane, ekspertima se pruža manipulacija setovima podataka uz upotrebu brojnih parametara i mogućnost istovremenog nadgledanja toka procesa.  
+
 
 ## Opis projekta
 
-##Izvršavanje eksperimenata
-Izvravanje eksperimenata je omogueno prijavljenim korisnicima i sastoji se iz sledeih koraka:
+**Izvršavanje eksperimenata**
+Izvršavanje eksperimenata je omogućeno prijavljenim korisnicima i sastoji se iz sledećih koraka:
 
-##Izbor seta podataka 
-U navedenom koraku vri se izbor seta podataka iz postojeih setova ili po potrebi korisnik može učitati željeni set podataka.
+**Izbor seta podataka **
+U navedenom koraku vrši se izbor seta podataka iz postojećih setova ili po potrebi korisnik može učitati željeni set podataka.
 
-##Pikaz izabranog seta podataka
-Nakon izvrenog izbora seta podataka, korisniku se tabelarno prikazuju učitani podaci.
+**Pikaz izabranog seta podataka**
+Nakon izvršenog izbora seta podataka, korisniku se tabelarno prikazuju učitani podaci.
 
-##Preprocesiranje
-Preprocesiranje se sastoji iz koraka koji korisniku omoguavaju:  izbor ulaznih kolona i izlazne kolone, uklanjanje greki, uklanjanje nedostajuih vrednosti, izbor tipa enkodiranja. Cilj navedenog koraka je uveanje kvaliteta samog seta podataka. 
+**Preprocesiranje**
+Preprocesiranje se sastoji iz koraka koji korisniku omogućavaju:  izbor ulaznih kolona i izlazne kolone, uklanjanje greški, uklanjanje nedostajućih vrednosti, izbor tipa enkodiranja. Cilj navedenog koraka je uvećanje kvaliteta samog seta podataka. 
 
-##Izbor parametara treniranja
-Korisniku se prua izbor parametara za treniranje mree. Ponueni parametri treniranja su:
-*Tip problema(vrednosti mogu biti:regresioni, binarno-klasifikacioni, multi-klasifikacioni)
-*Broj skrivenih slojeva(celobrojna vrednost)
-*Broj neurona skrivenih slojeva(bira se za svaki sloj pojedinano, celobrojna vrednost)
-*Optimizacija(mogue vrednosti: Adam, Adadelta, Adagrad, Ftrl, Nadam, SDG, SDGMomentum, RMSProp)
-*Funkcija obrade gubitka(vrednosti variraju u zavisnosti od tipa problema)
-*Funkcije aktivacije skrivenih slojeva(vrednosti zavise o tipa problema i definiu se za svaki sloj pojedinano)
-*Funkcija aktivacije izlaznog sloja(izbor zavisi od tipa problema) 
-*Izbor metrika(ponueni izbor zavisi od tipa problema)
+**Izbor parametara treniranja**
+Korisniku se pruža izbor parametara za treniranje mreže. Ponuđeni parametri treniranja su:
 
-##Treniranje modela
-Nakon izbora svih parametara, prua se mogunost treniranja modela.  
+- Tip problema(vrednosti mogu biti:regresioni, binarno-klasifikacioni, multi-klasifikacioni)
 
-##Pregled rezultata treniranja
-Uzevi u obzir prethodno izabrane metrike, korisniku se prikazuju rezultati treniranja.
+- Broj skrivenih slojeva(celobrojna vrednost)
 
-##Predvianja na osnovu postojeih treniranih modela
-Nakon treniranja modela, obavlja se njegovo uvanje u H5 formatu. Samim tim, omoguena je ponovna upotreba sauvanog modela i vri se predikcija za novi set podataka.
+- Broj neurona skrivenih slojeva(bira se za svaki sloj pojedinačno, celobrojna vrednost)
+
+- Optimizacija(moguće vrednosti: Adam, Adadelta, Adagrad, Ftrl, Nadam, SDG, SDGMomentum, RMSProp)
+
+- Funkcija obrade gubitka(vrednosti variraju u zavisnosti od tipa problema)
+
+- Funkcije aktivacije skrivenih slojeva(vrednosti zavise o tipa problema i definišu se za svaki sloj pojedinačno)
+
+- Funkcija aktivacije izlaznog sloja(izbor zavisi od tipa problema) 
+- Izbor metrika(ponuđeni izbor zavisi od tipa problema)
+
+
+**Treniranje modela**
+Nakon izbora svih parametara, pruža se mogućnost treniranja modela.  
+**Pregled rezultata treniranja**
+Uzevši u obzir prethodno izabrane metrike, korisniku se prikazuju rezultati treniranja.
+
+**Predviđanja na osnovu postojećih treniranih modela**
+Nakon treniranja modela, obavlja se njegovo čuvanje u H5 formatu. Samim tim, omogućena je ponovna upotreba sačuvanog modela i vrši se predikcija za novi set podataka.
+
   
 
 
@@ -70,9 +79,8 @@ ng serve --port=80
 ```
 
 * Backend
-```
 api.sln - start without debugging
-```
+
 
 ## Autori
 
