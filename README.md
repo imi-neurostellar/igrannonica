@@ -1,40 +1,40 @@
 # NeuroStellar - Igrannonica
 
-Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštaèkim neuronskim mrežama. Koristeæi aplikaciju, poèetnicima iz oblasti veštaèkih neuronskih mreža se omoguæava razumevanje samog koncepta preprocesiranja, treniranja i testiranja neuronskih mreža. S druge strane, ekspertima se pruža manipulacija setovima podataka uz upotrebu brojnih parametara i moguænost istovremenog nadgledanja toka procesa.  
+Igrannonica je ASP.NET Core veb aplikacija za manipulaciju vetakim neuronskim mreama. Koristei aplikaciju, poetnicima iz oblasti vetakih neuronskih mrea se omoguava razumevanje samog koncepta preprocesiranja, treniranja i testiranja neuronskih mrea. S druge strane, ekspertima se prua manipulacija setovima podataka uz upotrebu brojnih parametara i mogunost istovremenog nadgledanja toka procesa.  
 
 ## Opis projekta
 
-###Izvršavanje eksperimenata
-Izvršavanje eksperimenata je omoguæeno prijavljenim korisnicima i sastoji se iz sledeæih koraka:
+###IzvrÅ¡avanje eksperimenata
+Izvravanje eksperimenata je omogueno prijavljenim korisnicima i sastoji se iz sledeih koraka:
 
 ####Izbor seta podataka 
-U navedenom koraku vrši se izbor seta podataka iz postojeæih setova ili po potrebi korisnik može uèitati željeni set podataka.
+U navedenom koraku vri se izbor seta podataka iz postojeih setova ili po potrebi korisnik moe uitati eljeni set podataka.
 
 ####Pikaz izabranog seta podataka
-Nakon izvršenog izbora seta podataka, korisniku se tabelarno prikazuju uèitani podaci.
+Nakon izvrenog izbora seta podataka, korisniku se tabelarno prikazuju uitani podaci.
 
 ####Preprocesiranje
-Preprocesiranje se sastoji iz koraka koji korisniku omoguæavaju:  izbor ulaznih kolona i izlazne kolone, uklanjanje greški, uklanjanje nedostajuæih vrednosti, izbor tipa enkodiranja. Cilj navedenog koraka je uveæanje kvaliteta samog seta podataka. 
+Preprocesiranje se sastoji iz koraka koji korisniku omoguavaju:  izbor ulaznih kolona i izlazne kolone, uklanjanje greki, uklanjanje nedostajuih vrednosti, izbor tipa enkodiranja. Cilj navedenog koraka je uveanje kvaliteta samog seta podataka. 
 
 ####Izbor parametara treniranja
-Korisniku se pruža izbor parametara za treniranje mreže. Ponuðeni parametri treniranja su:
+Korisniku se prua izbor parametara za treniranje mree. Ponueni parametri treniranja su:
 *Tip problema(vrednosti mogu biti:regresioni, binarno-klasifikacioni, multi-klasifikacioni)
 *Broj skrivenih slojeva(celobrojna vrednost)
-*Broj neurona skrivenih slojeva(bira se za svaki sloj pojedinaèno, celobrojna vrednost)
-*Optimizacija(moguæe vrednosti: Adam, Adadelta, Adagrad, Ftrl, Nadam, SDG, SDGMomentum, RMSProp)
+*Broj neurona skrivenih slojeva(bira se za svaki sloj pojedinano, celobrojna vrednost)
+*Optimizacija(mogue vrednosti: Adam, Adadelta, Adagrad, Ftrl, Nadam, SDG, SDGMomentum, RMSProp)
 *Funkcija obrade gubitka(vrednosti variraju u zavisnosti od tipa problema)
-*Funkcije aktivacije skrivenih slojeva(vrednosti zavise o tipa problema i definišu se za svaki sloj pojedinaèno)
+*Funkcije aktivacije skrivenih slojeva(vrednosti zavise o tipa problema i definiu se za svaki sloj pojedinano)
 *Funkcija aktivacije izlaznog sloja(izbor zavisi od tipa problema) 
-*Izbor metrika(ponuðeni izbor zavisi od tipa problema)
+*Izbor metrika(ponueni izbor zavisi od tipa problema)
 
 ####Treniranje modela
-Nakon izbora svih parametara, pruža se moguænost treniranja modela.  
+Nakon izbora svih parametara, prua se mogunost treniranja modela.  
 
 ####Pregled rezultata treniranja
-Uzevši u obzir prethodno izabrane metrike, korisniku se prikazuju rezultati treniranja.
+Uzevi u obzir prethodno izabrane metrike, korisniku se prikazuju rezultati treniranja.
 
-####Predviðanja na osnovu postojeæih treniranih modela
-Nakon treniranja modela, obavlja se njegovo èuvanje u H5 formatu. Samim tim, omoguæena je ponovna upotreba saèuvanog modela i vrši se predikcija za novi set podataka.
+####Predvianja na osnovu postojeih treniranih modela
+Nakon treniranja modela, obavlja se njegovo uvanje u H5 formatu. Samim tim, omoguena je ponovna upotreba sauvanog modela i vri se predikcija za novi set podataka.
   
 
 
