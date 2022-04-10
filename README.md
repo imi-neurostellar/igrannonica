@@ -6,10 +6,10 @@ Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštačkim neuronski
 ## Opis projekta
 
 **Izvršavanje eksperimenata**
-Izvršavanje eksperimenata je omogućeno prijavljenim korisnicima i sastoji se iz sledećih koraka:
+> Izvršavanje eksperimenata je omogućeno prijavljenim korisnicima i sastoji se iz sledećih koraka:
 
-**Izbor seta podataka **
-U navedenom koraku vrši se izbor seta podataka iz postojećih setova ili po potrebi korisnik može učitati željeni set podataka.
+**Izbor seta podataka**
+> U navedenom koraku vrši se izbor seta podataka iz postojećih setova ili po potrebi korisnik može učitati željeni set podataka.
 
 **Pikaz izabranog seta podataka**
 Nakon izvršenog izbora seta podataka, korisniku se tabelarno prikazuju učitani podaci.
