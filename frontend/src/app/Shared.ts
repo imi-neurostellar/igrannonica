@@ -15,12 +15,10 @@ class Shared {
 
 
     openDialog(title: string, message: string): void {
-        console.log("USAO U OPEN DIALOG 1");
 
         if (this.dialog) {
-            console.log("USAO U OPEN DIALOG 2");
             const dialogRef = this.dialog.open(AlertDialogComponent, {
-                //width: '250px',
+                width: '350px',
                 data: { title: title, message: message }
             });
             dialogRef.afterClosed().subscribe(res => {

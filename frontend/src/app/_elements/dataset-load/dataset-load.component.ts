@@ -51,6 +51,14 @@ export class DatasetLoadComponent {
     //this.resetCbsAndRbs();        //TREBA DA SE DESI
   }
 
+  refreshMyDatasets() {
+    this.datasets.getMyDatasets().subscribe((datasets) => {
+      this.myDatasets = datasets;
+      this.viewMyDatasetsForm();
+      //this.
+    });
+  }
+
   selectThisDataset(dataset: Dataset) {
     this.selectedDataset = dataset;
     this.selectedDatasetLoaded = false;
@@ -66,7 +74,7 @@ export class DatasetLoadComponent {
           else
             break; //nema potrebe dalje
         }*/
-        //console.log(this.datasetFile);
+        console.log(this.datasetFile);
         //this.resetCbsAndRbs();                        //TREBA DA SE DESI
         //this.refreshThreeNullValueRadioOptions();       //TREBA DA SE DESI
         this.selectedDatasetLoaded = true;

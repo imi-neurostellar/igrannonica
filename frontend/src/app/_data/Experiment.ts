@@ -1,5 +1,6 @@
 export default class Experiment {
     _id: string = '';
+    uploaderId: string = '';
     constructor(
         public name: string = 'Novi experiment',
         public description: string = '',

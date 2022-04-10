@@ -154,7 +154,7 @@ export class ExperimentComponent implements OnInit {
 
   trainModel() {
     this.trainingResult = undefined;
-    console.log('Training model...', this.selectedModel);
+    //console.log('Training model...', this.selectedModel);
     if (!this.selectedDataset) {
       Shared.openDialog('Greška', 'Izvor podataka nije izabran!');
       return;

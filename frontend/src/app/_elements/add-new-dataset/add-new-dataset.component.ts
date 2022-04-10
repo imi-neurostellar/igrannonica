@@ -89,25 +89,25 @@ export class AddNewDatasetComponent {
   }
 
   uploadDataset() {
-        this.modelsService.uploadData(this.files[0]).subscribe((file) => {
-          //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
-            this.dataset.fileId = file._id;
-            this.dataset.username = shared.username;
+    if (this.files[0] == undefined) {
+      shared.openDialog("Greška", "Niste izabrali fajl za učitavanje.");
+      return;
+    }
 
-            this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
-             
-              this.newDatasetAdded.emit("added");
-              //this.refreshMyDatasetList(); refreshuj dataset listu u ds-load i selektuj taj ds
-              //this.showMyDatasets = true;
-              //this.selectThisDataset(dataset);
+    this.modelsService.uploadData(this.files[0]).subscribe((file) => {
+      //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+        this.dataset.fileId = file._id;
+        this.dataset.username = shared.username;
 
-              shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
-            }, (error) => {
-              shared.openDialog("Neuspeo pokušaj!", "Dataset sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
-            }); //kraj addDataset subscribe
+        this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
+          this.newDatasetAdded.emit("added");
+          shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
         }, (error) => {
-          
-        }); //kraj uploadData subscribe
+          shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
+        }); //kraj addDataset subscribe
+    }, (error) => {
+      
+    }); //kraj uploadData subscribe
   }
 
 }

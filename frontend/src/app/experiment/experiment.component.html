@@ -10,7 +10,7 @@
 
 
         <h2>2. Preprocesiranje</h2>
-        <h3>Biranje ulaznih i izlaznih kolona:</h3>
+        <h3 class="mt-3">Biranje ulaznih i izlaznih kolona:</h3>
         <div *ngIf="selectedDataset">
             <div class="row">
                 <div class="col d-flex justify-content-center">
@@ -44,6 +44,7 @@
                 </div>
             </div>
         </div>
+        <br>
         <h3>Popunjavanje nedostajućih vrednosti:</h3>
         <div class="form-check" *ngIf="selectedDataset">
             <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.DeleteRows"
