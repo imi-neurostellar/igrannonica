@@ -98,7 +98,7 @@ namespace api.Controllers
 
         [HttpGet("csvread/{hasHeader}/{fileId}")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult<List<string>> CsvRead(bool hasHeader, string fileId)
+        public ActionResult<string> CsvRead(bool hasHeader, string fileId)
         {
 
             string uploaderId;
@@ -118,12 +118,12 @@ namespace api.Controllers
             //String csvContent = System.IO.File.ReadAllText(fileModel.path);
             string filePath = _fileservice.GetFilePath(fileId, uploaderId);
 
-           
 
-            if(hasHeader)
-                return System.IO.File.ReadLines(filePath).Take(11).ToList();
-            else
-                return  System.IO.File.ReadLines(filePath).Take(10).ToList();
+
+            if (hasHeader)
+                return String.Join("", System.IO.File.ReadLines(filePath).Take(11)); 
+            else 
+                return String.Join("", System.IO.File.ReadLines(filePath).Take(10));
         }
 
 

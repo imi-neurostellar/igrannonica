@@ -19,8 +19,8 @@
       <input *ngIf="showMyDatasets" type="text" class="form-control" placeholder="Pretraga"
           [(ngModel)]="term">
   </div>
-  <div class="px-5">
-      <div *ngIf="showMyDatasets" class="overflow-auto" style="max-height: 500px;">
+  <div class="px-5" *ngIf="showMyDatasets">
+        <div class="overflow-auto" style="max-height: 500px;">
             <ul class="list-group">
                 <li class="list-group-item p-3" *ngFor="let dataset of myDatasets|filter:term"
                     [ngClass]="{'selectedDatasetClass': this.selectedDataset == dataset}">
@@ -28,14 +28,14 @@
                         (click)="selectThisDataset(dataset);"></app-item-dataset>
                 </li>
             </ul>
-            <div class="px-5 mt-5">
-                <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
-            </div>
-      </div>
+        </div>
+        <div class="px-5 mt-5">
+            <app-datatable [data]="datasetFile" [hasHeader]="datasetHasHeader"></app-datatable>
+        </div>
   </div>
 
   <app-add-new-dataset [style]="(showMyDatasets)?'display:none;visibility:hidden;':''" id="dataset"
-      (newDatasetAdded)="showMyDatasets = true">
+      (newDatasetAdded)="refreshMyDatasets()">
   </app-add-new-dataset>
 
 </div>

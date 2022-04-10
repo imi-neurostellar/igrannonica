@@ -54,7 +54,7 @@ export class DatasetLoadComponent {
   refreshMyDatasets() {
     this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;
-      this.viewMyDatasetsForm();
+      this.showMyDatasets = true;
       //this.
     });
   }
@@ -67,6 +67,9 @@ export class DatasetLoadComponent {
 
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
+        console.log(file);
+        this.datatable!.hasInput = true;
+        this.datatable!.loaded = true;
         this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
         /*for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
           if (this.datasetFile[i].length != this.datasetFile[0].length)
@@ -74,7 +77,9 @@ export class DatasetLoadComponent {
           else
             break; //nema potrebe dalje
         }*/
+        console.log(this.datatable!.data);
         console.log(this.datasetFile);
+        console.log(this.datatable!.hasInput);
         //this.resetCbsAndRbs();                        //TREBA DA SE DESI
         //this.refreshThreeNullValueRadioOptions();       //TREBA DA SE DESI
         this.selectedDatasetLoaded = true;

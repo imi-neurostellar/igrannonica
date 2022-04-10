@@ -137,11 +137,13 @@ export class ExperimentComponent implements OnInit {
     }
     //ispitivanje da li ima ulazne kolone TODO
 
-    if (this.selectedOutputColumnVal == '') {
+    if (this.experiment.outputColumn == '') {
       Shared.openDialog("Greška", "Molimo Vas da izaberete izlaznu kolonu.");
       return;
     }
     
+    this.experiment._id = '';
+    this.experiment.uploaderId = '';
     this.experiment.datasetId = this.selectedDataset._id;
     
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {

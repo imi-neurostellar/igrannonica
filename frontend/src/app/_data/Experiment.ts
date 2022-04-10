@@ -6,7 +6,7 @@ export default class Experiment {
         public description: string = '',
         public datasetId: string = '',
         public inputColumns: string[] = [],
-        public columnToPredict: string = '',
+        public outputColumn: string = '',
         public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
         public nullValuesReplacers: NullValReplacer[] = [],
         public dateCreated: Date = new Date(),
