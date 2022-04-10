@@ -16,6 +16,7 @@ namespace api.Services
         public void Update(string id, Model model);
         void Delete(string username, string name);
         bool CheckHyperparameters(int inputNeurons, int hiddenLayerNeurons, int hiddenLayers, int outputNeurons);
+        bool CheckDefaultModels();
     }
 }
 

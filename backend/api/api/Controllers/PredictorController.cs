@@ -191,6 +191,57 @@ namespace api.Controllers
             }
         }
 
+
+        public void AddToEmptyDb()
+        {
+
+            List<Predictor> predictors;
+
+            if (_predictorService.GetPublicPredictors() == null)
+            {
+                Predictor predictor = new Predictor();
+
+                predictor.username = "igrannonica";
+                predictor.name = "Igrannonica Predictor 1";
+                predictor.description = "Opis predictora 1";
+                //predictor.inputs = { 1, 3, 5, 7, 9 };
+                predictor.output = "s";
+                predictor.isPublic = true;
+                predictor.accessibleByLink = true;
+                predictor.dateCreated = DateTime.Now;
+                predictor.experimentId = "0";
+                //izmeni experiment id
+
+                _predictorService.Create(predictor);
+
+
+                predictor.name = "Igrannonica Predictor 2";
+                predictor.description = "Opis predictora 2";
+                //predictor.inputs = { 1, 3, 5, 7, 9 };
+                predictor.output = "s";
+                predictor.dateCreated = DateTime.Now;
+                predictor.experimentId = "0";
+                //izmeni experiment id
+
+
+                _predictorService.Create(predictor);
+
+                predictor.name = "Igrannonica Predictor 3";
+                predictor.description = "Opis predictora 3";
+                //predictor.inputs = { 1, 3, 5, 7, 9 };
+                predictor.output = "s";
+                predictor.dateCreated = DateTime.Now;
+                predictor.experimentId = "0";
+                //izmeni experiment id
+
+                _predictorService.Create(predictor);
+
+                //dodaj javne datasetove
+            }
+
+        }
+
+
         // POST api/<PredictorController>/usepredictor {predictor,inputs}
         [HttpPost("usepredictor/{id}")]
         [Authorize(Roles = "User,Guest")]

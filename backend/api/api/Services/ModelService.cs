@@ -80,7 +80,16 @@ namespace api.Services
             return false;
         }
 
-        
+        public bool CheckDefaultModels()
+        {
+            Model? model = null;
+            model = _model.Find(model => model.username == "igrannonica").FirstOrDefault();
+
+            if (model != null)
+                return false;
+            else
+                return true;
+        }
     }
 }
 
