@@ -150,7 +150,7 @@ namespace api.Controllers
         {
             bool overwrite = false;
             //username="" ako je GUEST
-            //Experiment e = _experimentService.Get(model.experimentId);
+            //Experiment e = _experimentService.Get(model.experimentId); umesto 1 ide e.inputColumns.Length   TODO!!!!!!!!!!!!!!!!!
             //model.inputNeurons = e.inputColumns.Length;
             if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
                 return BadRequest("Bad parameters!");
@@ -162,7 +162,7 @@ namespace api.Controllers
             else
             {
                 model.isTrained = false;
-                _modelService.Create(model);
+                //_modelService.Create(model);
                 //return Ok();
                 if (existingModel == null)
                     _modelService.Create(model);
