@@ -8,10 +8,10 @@ Igrannonica je ASP.NET Core veb aplikacija za manipulaciju vetakim neuronskim mr
 Izvravanje eksperimenata je omogueno prijavljenim korisnicima i sastoji se iz sledeih koraka:
 
 ####Izbor seta podataka 
-U navedenom koraku vri se izbor seta podataka iz postojeih setova ili po potrebi korisnik moe uitati eljeni set podataka.
+U navedenom koraku vri se izbor seta podataka iz postojeih setova ili po potrebi korisnik može učitati željeni set podataka.
 
 ####Pikaz izabranog seta podataka
-Nakon izvrenog izbora seta podataka, korisniku se tabelarno prikazuju uitani podaci.
+Nakon izvrenog izbora seta podataka, korisniku se tabelarno prikazuju učitani podaci.
 
 ####Preprocesiranje
 Preprocesiranje se sastoji iz koraka koji korisniku omoguavaju:  izbor ulaznih kolona i izlazne kolone, uklanjanje greki, uklanjanje nedostajuih vrednosti, izbor tipa enkodiranja. Cilj navedenog koraka je uveanje kvaliteta samog seta podataka. 
