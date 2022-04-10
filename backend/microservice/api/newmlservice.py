@@ -211,41 +211,73 @@ def train(dataset, params, callback):
     #
     # Treniranje modela
     #
-    #  
+    #
+    ###OPTIMIZATORI
+    
+    if(params['optimizer']=='Adam'):
+        opt=tf.keras.optimizers.Adam(learning_rate=params['learningRate'])
+
+    elif(params['optimizer']=='Adadelta'):
+        opt=tf.keras.optimizers.Adadelta(learning_rate=params['learningRate'])
+
+    elif(params['optimizer']=='Adagrad'): 
+        opt=tf.keras.optimizers.Adagrad(learning_rate=params['learningRate'])
+
+    elif(params['optimizer']=='Adamax'):
+        opt=tf.keras.optimizers.Adamax(learning_rate=params['learningRate'])
+
+    elif(params['optimizer']=='Nadam'):
+        opt=tf.keras.optimizers.Nadam(learning_rate=params['learningRate'])
+
+    elif(params['optimizer']=='SGD'):
+        opt=tf.keras.optimizers.SGD(learning_rate=params['learningRate'])
+
+    elif(params['optimizer']=='Ftrl'):
+        opt=tf.keras.optimizers.Ftrl(learning_rate=params['learningRate'])
+    
+    elif(params['optimizer']=='RMSprop'):
+        opt=tf.keras.optimizers.RMSprop(learning_rate=params['learningRate'])
+
+    ###REGULARIZACIJA
+    #regularisation={'kernelType':'l1 ili l2 ili l1_l2','krenelRate':default=0.01 ili jedna od vrednosti(0.0001,0.001,0.1,1,2,3) ili neka koju je korisnik zadao,'biasType':'','biasRate':'','activityType','activityRate'}
+    reg=params['regularisation']
+
+    ###Kernel
+    if(reg['kernelType']=='l1'):
+        kernelreg=tf.keras.regularizers.l1(reg['kernelRate'])
+    elif(reg['kernelType']=='l2'):
+        kernelreg=tf.keras.regularizers.l2(reg['kernelRate'])
+    elif(reg['kernelType']=='l1l2'):
+        kernelreg=tf.keras.regularizers.l1_l2(l1=reg['kernelRate'][0],l2=reg['kernelRate'][1])
+
+    ###Bias
+    if(reg['biasType']=='l1'):
+        biasreg=tf.keras.regularizers.l1(reg['biasRate'])
+    elif(reg['biasType']=='l2'):
+        biasreg=tf.keras.regularizers.l2(reg['biasRate'])
+    elif(reg['biasType']=='l1l2'):
+        biasreg=tf.keras.regularizers.l1_l2(l1=reg['biasRate'][0],l2=reg['biasRate'][1])
+
+    ###Activity
+    if(reg['kernelType']=='l1'):
+        activityreg=tf.keras.regularizers.l1(reg['activityRate'])
+    elif(reg['kernelType']=='l2'):
+        activityreg=tf.keras.regularizers.l2(reg['activityRate'])
+    elif(reg['kernelType']=='l1l2'):
+        activityreg=tf.keras.regularizers.l1_l2(l1=reg['activityRate'][0],l2=reg['activityRate'][1])
+      
+
     if(problem_type=='multi-klasifikacioni'):
         #print('multi')
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]),kernel_regularizer=kernelreg,bias_regularizer=biasreg,activity_regularizer=activityreg)#prvi skriveni + definisanje prethodnog-ulaznog
         for i in range(params['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1],kernel_regularizer=kernelreg,bias_regularizer=biasreg,activity_regularizer=activityreg))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=5, activation=params['outputLayerActivationFunction']))#izlazni sloj
 
-        if(params['optimizer']=='Adam'):
-            opt=tf.keras.optimizers.Adam(learning_rate=params['learningRate'])
-
-        elif(params['optimizer']=='Adadelta'):
-            opt=tf.keras.optimizers.Adadelta(learning_rate=params['learningRate'])
-
-        elif(params['optimizer']=='Adagrad'):
-            opt=tf.keras.optimizers.Adagrad(learning_rate=params['learningRate'])
-
-        elif(params['optimizer']=='Adamax'):
-            opt=tf.keras.optimizers.Adamax(learning_rate=params['learningRate'])
-
-        elif(params['optimizer']=='Nadam'):
-            opt=tf.keras.optimizers.Nadam(learning_rate=params['learningRate'])
-
-        elif(params['optimizer']=='SGD'):
-            opt=tf.keras.optimizers.SGD(learning_rate=params['learningRate'])
-
-        elif(params['optimizer']=='Ftrl'):
-            opt=tf.keras.optimizers.Ftrl(learning_rate=params['learningRate'])
         
-        elif(params['optimizer']=='RMSprop'):
-            opt=tf.keras.optimizers.RMSprop(learning_rate=params['learningRate'])
-
 
         classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
 
@@ -266,10 +298,10 @@ def train(dataset, params, callback):
         #print('*************************************************************************binarni')
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1],kernel_regularizer=kernelreg,bias_regularizer=biasreg,activity_regularizer=activityreg))#prvi skriveni + definisanje prethodnog-ulaznog
         for i in range(params['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1],kernel_regularizer=kernelreg,bias_regularizer=biasreg,activity_regularizer=activityreg))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=1, activation=params['outputLayerActivationFunction']))#izlazni sloj
 
         classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
@@ -291,10 +323,10 @@ def train(dataset, params, callback):
     elif(problem_type=='regresioni'):
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1],kernel_regularizer=kernelreg,bias_regularizer=biasreg,activity_regularizer=activityreg))#prvi skriveni + definisanje prethodnog-ulaznog
         for i in range(params['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1],kernel_regularizer=kernelreg,bias_regularizer=biasreg,activity_regularizer=activityreg))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=1))
 
         classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
