@@ -83,6 +83,15 @@ namespace api.Services
             _dataset.ReplaceOne(x=>x._id==dataset._id, dataset);
         }
 
-        
+        public bool CheckDb()
+        {
+            Dataset? dataset = null;
+            dataset = _dataset.Find(model => model.username == "igrannonica").FirstOrDefault();
+
+            if (dataset != null)
+                return false;
+            else
+                return true;
+        }
     }
 }

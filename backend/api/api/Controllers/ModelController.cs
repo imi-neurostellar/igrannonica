@@ -175,6 +175,44 @@ namespace api.Controllers
             }
         }
 
+
+
+        public void AddToEmptyDb()
+        {
+
+            if (_modelService.CheckDefaultModels())
+            {
+                Model model = new Model();
+
+                model.username = "igrannonica";
+                model.name = "Igrannonica model 1";
+                model.description = "Opis modela 1";
+                model.dateCreated = DateTime.Now;
+                model.lastUpdated = DateTime.Now;
+                model.experimentId = "";
+                model.type = "";
+                model.encoding = "";
+                model.optimizer = "";
+                model.lossFunction = "";
+                model.hiddenLayerNeurons = 0;
+                model.hiddenLayers = 0;
+                model.batchSize = 0;
+                model.outputNeurons = 0;
+                //model.hiddenLayerActivationFunctions[] =
+                model.outputLayerActivationFunction = "";
+                //model.metrics =
+                model.epochs = 0;
+                model.isTrained = false;
+
+                _modelService.Create(model);
+
+                //dodaj javne datasetove
+            }
+
+        }
+
+
+
         // PUT api/<ModelController>/{name}
         [HttpPut("{name}")]
         [Authorize(Roles = "User")]
