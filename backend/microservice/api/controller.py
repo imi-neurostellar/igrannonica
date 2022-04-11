@@ -46,6 +46,11 @@ def returnColumnsInfo():
     dataset = json.loads(request.form["dataset"])
     file = request.files.get("file")
     data=pd.read_csv(file)
+    
+    #dataset={}
+    #f = request.json['filepath']
+    #data=pd.read_csv(f)
+
     preprocess = newmlservice.returnColumnsInfo(data)
     #samo 10 jedinstvenih posto ih ima previse, bilo bi dobro da promenimo ovo da to budu 10 najzastupljenijih vrednosti
     for col in preprocess["columnInfo"]:
@@ -53,6 +58,8 @@ def returnColumnsInfo():
     dataset["columnInfo"] = preprocess["columnInfo"]
     dataset["nullCols"] = preprocess["allNullColl"]
     dataset["nullRows"] = preprocess["allNullRows"]
+    dataset["colCount"] = preprocess["colCount"]
+    dataset["rowCount"] = preprocess["rowCount"]
     dataset["isPreProcess"] = True
     print(dataset)
     return jsonify(dataset)

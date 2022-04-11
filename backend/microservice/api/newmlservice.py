@@ -28,6 +28,9 @@ def returnColumnsInfo(dataset):
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
     allNullCols=0
+    rowCount=datafront.shape[0]#ukupan broj redova
+    colCount=len(datafront.columns)#ukupan broj kolona
+
     for kolona in svekolone:
         if(kolona in kategorijskekolone):
             uniquevalues=datafront[kolona].unique()
@@ -45,7 +48,7 @@ def returnColumnsInfo(dataset):
                         'mean':float(median),
                         'numNulls':int(nullCount),
                         'min':float(minimum),
-                        'max':float(maximum)
+                        'max':float(maximum),
             }
             dict.append(frontreturn)
         else:
@@ -63,15 +66,14 @@ def returnColumnsInfo(dataset):
                         'median':float(median),
                         'numNulls':int(nullCount),
                         'min':float(minimum),
-                        'max':float(maximum)
+                        'max':float(maximum),
             }
             dict.append(frontreturn)
         NullRows = datafront[datafront.isnull().any(axis=1)]
         #print(NullRows)
         #print(len(NullRows))
         allNullRows=len(NullRows)
-
-    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows)}
+    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount)}
 
 @dataclass
 class TrainingResultClassification:
@@ -118,7 +120,7 @@ def train(dataset, params, callback):
     null_values_replacers = params["nullValuesReplacers"]
     
     if(null_value_options=='replace'):
-        #print("replace null") # TODO
+        #print("replace null") #
         dict=params['null_values_replacers']
         while(len(dict)>0):
             replace=dict.pop()
