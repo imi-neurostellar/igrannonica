@@ -195,13 +195,12 @@ namespace api.Controllers
         public void AddToEmptyDb()
         {
 
-            List<Predictor> predictors;
-
-            if (_predictorService.GetPublicPredictors() == null)
+            if (_predictorService.CheckDb())
             {
                 Predictor predictor = new Predictor();
 
-                predictor.username = "igrannonica";
+                predictor._id = "";
+                predictor.username = "Igrannonica";
                 predictor.name = "Igrannonica Predictor 1";
                 predictor.description = "Opis predictora 1";
                 //predictor.inputs = { 1, 3, 5, 7, 9 };
