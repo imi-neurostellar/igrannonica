@@ -198,7 +198,7 @@ def train(dataset, params, callback):
         random=123
     else:
         random=0
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.5,random_state=0)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.5,random_state=random)
     #
     # Skaliranje vrednosti
     #
@@ -246,7 +246,9 @@ def train(dataset, params, callback):
         classifier=tf.keras.Sequential()
         
         for func in params["hiddenLayerActivationFunctions"]:
-            classifier.add(tf.keras.layers.Dense(units=hidden_layer_neurons,activation=func))
+            layers = params["hiddenLayers"]
+            for numNeurons in params["hiddenLayerNeurons"]:
+                classifier.add(tf.keras.layers.Dense(units=numNeurons,activation=func))
         output_func = params["outputLayerActivationFunction"]
 
         if(problem_type!="regresioni"):
