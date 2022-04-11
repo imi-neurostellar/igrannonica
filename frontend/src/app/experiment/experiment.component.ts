@@ -22,7 +22,9 @@ export class ExperimentComponent implements OnInit {
   ReplaceWith = ReplaceWith;
   Object = Object;
 
+  selectedColumnsInfoArray: ColumnInfo[] = [];
   selectedOutputColumnVal: string = '';
+  selectedNullColumnsArray: string[] = [];
 
   constructor(private modelsService: ModelsService, private experimentsService: ExperimentsService) { }
 
@@ -32,6 +34,9 @@ export class ExperimentComponent implements OnInit {
   updateDataset(dataset: Dataset) {
     //console.log(dataset);
     this.selectedDataset = dataset;
+    this.selectedColumnsInfoArray = this.selectedDataset.columnInfo;
+    this.selectedNullColumnsArray = [];
+    console.log("array:", this.selectedColumnsInfoArray);
   }
 
   updateModel(model: Model) {
@@ -63,6 +68,21 @@ export class ExperimentComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("fillCol_" + colName)).checked = true;
   }
 
+  checkedColumnsChanged(checkedColumnInfo: ColumnInfo, buttonType: number) { //0-input,1-output
+    let col = this.selectedColumnsInfoArray.find(x => x.columnName == checkedColumnInfo.columnName);
+    if (buttonType == 0) { //inputCol
+      if (col == undefined) 
+        this.selectedColumnsInfoArray.push(checkedColumnInfo);
+      else 
+        this.selectedColumnsInfoArray = this.selectedColumnsInfoArray.filter(x => x.columnName != checkedColumnInfo.columnName);
+    }
+    else { //outputCol
+      if (col == undefined) //ako je vec cekiran neki output, samo dodaj sad ovaj, a taj output postaje input i ostaje u nizu
+        this.selectedColumnsInfoArray.push(checkedColumnInfo);
+    }
+    //console.log(this.selectedColumnsInfoArray);
+  } 
+
   replace(event: Event, column: ColumnInfo) {
     let option = (<HTMLInputElement>event.target).value;
 
@@ -89,45 +109,52 @@ export class ExperimentComponent implements OnInit {
     }
   }
 
-  getNullValuesReplacersArray()/*: NullValReplacer[]*/ {
+  getSelectedNullColumnsArray(): string[] {
+    let colNames: string[] = [];
+
+    for (let i = 0; i < this.selectedColumnsInfoArray.length; i++) {
+      let oneColInfo = this.selectedColumnsInfoArray[i];
+      if (oneColInfo.numNulls == 0)
+        colNames.push(oneColInfo.columnName);
+    }
+    return colNames;
+  }
+
+  getNullValuesReplacersArray(): NullValReplacer[] {
     let array: NullValReplacer[] = [];
 
-    // TODO ispravi
-    /*if (this.datasetFile) {
+    if (this.experiment.nullValues == NullValueOptions.Replace) {
 
-      if (this.newModel.nullValues == NullValueOptions.Replace) {
+      for (let i = 0; i < this.selectedColumnsInfoArray.length; i++) {
+        let oneColInfo = this.selectedColumnsInfoArray[i];
 
-        for (let i = 0; i < this.datasetFile[0].length; i++) {
-          let column = this.datasetFile[0][i];
-
-          if (this.calculateSumOfNullValuesInCol(column) > 0) { //ako kolona nema null vrednosti, ne dodajemo je u niz
-            if ((<HTMLInputElement>document.getElementById("delCol_" + column)).checked) {
-              array.push({
-                column: column,
-                option: NullValueOptions.DeleteColumns,
-                value: ""
-              });
-            }
-            else if ((<HTMLInputElement>document.getElementById("delRows_" + column)).checked) {
-              array.push({
-                column: column,
-                option: NullValueOptions.DeleteRows,
-                value: ""
-              });
-            }
-            else if (((<HTMLInputElement>document.getElementById("fillCol_" + column)).checked)) {
-              array.push({
-                column: column,
-                option: NullValueOptions.Replace,
-                value: (<HTMLInputElement>document.getElementById("fillText_" + column)).value
-              });
-            }
+        if (oneColInfo.numNulls > 0) { //ako kolona nema null vrednosti, ne dodajemo je u niz
+          if ((<HTMLInputElement>document.getElementById("delCol_" + oneColInfo.columnName)).checked) {
+            array.push({
+              column: oneColInfo.columnName,
+              option: NullValueOptions.DeleteColumns,
+              value: ""
+            });
+          }
+          else if ((<HTMLInputElement>document.getElementById("delRows_" + oneColInfo.columnName)).checked) {
+            array.push({
+              column: oneColInfo.columnName,
+              option: NullValueOptions.DeleteRows,
+              value: ""
+            });
+          }
+          else if (((<HTMLInputElement>document.getElementById("fillCol_" + oneColInfo.columnName)).checked)) {
+            array.push({
+              column: oneColInfo.columnName,
+              option: NullValueOptions.Replace,
+              value: (<HTMLInputElement>document.getElementById("fillText_" + oneColInfo.columnName)).value
+            });
           }
         }
       }
     }
     //console.log(array);
-    return array;*/
+    return array;
   }
 
   saveExperiment() {
@@ -135,19 +162,35 @@ export class ExperimentComponent implements OnInit {
       Shared.openDialog("Greška", "Izvor podataka nije izabran!");
       return;
     }
-    //ispitivanje da li ima ulazne kolone TODO
-
     if (this.experiment.outputColumn == '') {
       Shared.openDialog("Greška", "Molimo Vas da izaberete izlaznu kolonu.");
+      return;
+    }
+    if (this.selectedColumnsInfoArray.length <= 1) { //jer izlazna je izabrana
+      Shared.openDialog("Greška", "Molimo Vas da izaberete ulazne kolone.");
       return;
     }
     
     this.experiment._id = '';
     this.experiment.uploaderId = '';
     this.experiment.datasetId = this.selectedDataset._id;
+  
+    let pom = this.selectedColumnsInfoArray.filter(x => x.columnName != this.experiment.outputColumn);
+    for (let i = 0; i < pom.length; i++)
+      this.experiment.inputColumns.push(pom[i].columnName);
+
+    this.selectedColumnsInfoArray = this.selectedColumnsInfoArray.filter(x => x.numNulls > 0);
+    //TREBAJU MI NULLVALUESREPLACERI  
+    this.experiment.nullValuesReplacers = this.getNullValuesReplacersArray();
+
+    console.log("Eksperiment:", this.experiment);
     
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
       this.experiment = response;
+
+      this.selectedColumnsInfoArray = [];
+      this.selectedNullColumnsArray = [];
+
       Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
     }, (error) => {
 
