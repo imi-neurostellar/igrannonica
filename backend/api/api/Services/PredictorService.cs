@@ -68,6 +68,15 @@ namespace api.Services
             _predictor.ReplaceOne(predictor => predictor.username == username && predictor.name == name, predictor);
 
         }
+        public bool CheckDb()
+        {
+            Predictor? predictor = null;
+            predictor = _predictor.Find(predictor => predictor.username == "igrannonica").FirstOrDefault();
 
+            if (predictor != null)
+                return false;
+            else
+                return true;
+        }
     }
 }

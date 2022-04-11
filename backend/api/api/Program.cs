@@ -43,6 +43,7 @@ builder.Services.AddSingleton<IMLWebSocketService>(mlwss);
 builder.Services.AddHostedService(_ => mlwss);
 
 builder.Services.AddHostedService<TempFileService>();
+//builder.Services.AddHostedService<TempFileService>();
 
 //Add Authentication
 builder.Services.AddAuthentication(

@@ -5,6 +5,7 @@
 
 ##Ignore contents for UploadedFiles Folder
 UploadedFiles/*
+!UploadedFiles/Igrannonica
 TempFiles/*
 
 # User-specific files

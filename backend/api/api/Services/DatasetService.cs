@@ -86,7 +86,7 @@ namespace api.Services
         public bool CheckDb()
         {
             Dataset? dataset = null;
-            dataset = _dataset.Find(model => model.username == "igrannonica").FirstOrDefault();
+            dataset = _dataset.Find(dataset => dataset.username == "igrannonica").FirstOrDefault();
 
             if (dataset != null)
                 return false;
