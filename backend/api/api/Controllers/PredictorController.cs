@@ -16,14 +16,12 @@ namespace api.Controllers
         private readonly IPredictorService _predictorService;
         private IJwtToken jwtToken;
         private readonly IMlConnectionService _mlConnectionService;
-        private readonly IFileService _fileService;
 
-        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IFileService fileService)
+        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService)
         {
             _predictorService = predictorService;
             jwtToken = Token;
             _mlConnectionService = mlConnectionService;
-            _fileService = fileService;
                          
         }
 
@@ -190,68 +188,6 @@ namespace api.Controllers
                 return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
             }
         }
-
-
-        public void AddToEmptyDb()
-        {
-
-            if (_predictorService.CheckDb())
-            {
-                Predictor predictor = new Predictor();
-
-                predictor._id = "";
-                predictor.username = "Igrannonica";
-                predictor.name = "Igrannonica Predictor 1";
-                predictor.description = "Opis predictora 1";
-                //predictor.inputs = { 1, 3, 5, 7, 9 };
-                predictor.output = "s";
-                predictor.isPublic = true;
-                predictor.accessibleByLink = true;
-                predictor.dateCreated = DateTime.Now;
-                predictor.experimentId = "0";
-                //izmeni experiment id
-
-                _predictorService.Create(predictor);
-
-
-                predictor = new Predictor();
-
-                predictor._id = "";
-                predictor.username = "Igrannonica";
-                predictor.name = "Igrannonica Predictor 1";
-                predictor.description = "Opis predictora 1";
-                //predictor.inputs = { 1, 3, 5, 7, 9 };
-                predictor.output = "s";
-                predictor.isPublic = true;
-                predictor.accessibleByLink = true;
-                predictor.dateCreated = DateTime.Now;
-                predictor.experimentId = "0";
-                //izmeni experiment id
-
-                _predictorService.Create(predictor);
-
-
-                predictor = new Predictor();
-
-                predictor._id = "";
-                predictor.username = "Igrannonica";
-                predictor.name = "Igrannonica Predictor 1";
-                predictor.description = "Opis predictora 1";
-                //predictor.inputs = { 1, 3, 5, 7, 9 };
-                predictor.output = "s";
-                predictor.isPublic = true;
-                predictor.accessibleByLink = true;
-                predictor.dateCreated = DateTime.Now;
-                predictor.experimentId = "0";
-                //izmeni experiment id
-
-                _predictorService.Create(predictor);
-
-                //dodaj javne datasetove
-            }
-
-        }
-
 
         // POST api/<PredictorController>/usepredictor {predictor,inputs}
         [HttpPost("usepredictor/{id}")]

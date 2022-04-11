@@ -83,15 +83,22 @@ namespace api.Services
             _dataset.ReplaceOne(x=>x._id==dataset._id, dataset);
         }
 
-        public bool CheckDb()
+        public string GetDatasetId(string fileId)
         {
-            Dataset? dataset = null;
-            dataset = _dataset.Find(dataset => dataset.username == "igrannonica").FirstOrDefault();
+            Dataset dataset = _dataset.Find(dataset => dataset.fileId == fileId && dataset.username == "Igrannonica").FirstOrDefault();
 
-            if (dataset != null)
-                return false;
-            else
-                return true;
+            return dataset._id;
         }
+        /*
+public bool CheckDb()
+{
+   Dataset? dataset = null;
+   dataset = _dataset.Find(dataset => dataset.username == "igrannonica").FirstOrDefault();
+
+   if (dataset != null)
+       return false;
+   else
+       return true;
+}*/
     }
 }

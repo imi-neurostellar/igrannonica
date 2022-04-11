@@ -8,5 +8,6 @@ namespace api.Services
         string GetFilePath(string id, string uploaderId);
         public FileModel getFile(string id);
         bool CheckDb();
+        string GetFileId(string fullPath);
     }
 }

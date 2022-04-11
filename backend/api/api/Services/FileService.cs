@@ -23,8 +23,8 @@ namespace api.Services
                 return null;
             _file.InsertOne(file);
             return file;
-
         }
+
         public string GetFilePath(string id, string uploaderId)
         {
             FileModel file;
@@ -36,6 +36,7 @@ namespace api.Services
                 return null;
             return file.path;
         }
+
         public FileModel getFile(string id)
         {
             return _file.Find(x=>x._id==id).FirstOrDefault();
@@ -50,8 +51,13 @@ namespace api.Services
                 return false;
             else
                 return true;
+        }
 
+        public string GetFileId(string fullPath)
+        {
+            FileModel file = _file.Find(file => file.path == fullPath).FirstOrDefault();
 
+            return file._id;
         }
     }
 }

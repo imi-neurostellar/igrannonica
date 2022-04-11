@@ -16,6 +16,7 @@ namespace api.Services
         void Delete(string username, string name);
         public List<Dataset> GetGuestDatasets();
         public void Update(Dataset dataset);
-        bool CheckDb();
+        string GetDatasetId(string fileId);
+        //bool CheckDb();
     }
 }

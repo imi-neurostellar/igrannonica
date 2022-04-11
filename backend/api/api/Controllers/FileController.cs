@@ -264,47 +264,5 @@ namespace api.Controllers
 
         }
 
-
-        [HttpGet("proba")]
-        public void AddFileToEmptyDb()
-        {
-            FileModel file = new FileModel();
-
-            string folderName = "UploadedFiles/Igrannonica";
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, "Igrannonica");
-            var fullPath = Path.Combine(folderPath, "titanic.csv");
-
-            file._id = "";
-            file.type = ".csv";
-            file.uploaderId = "Igrannonica";
-            file.path = fullPath;
-            file.date = DateTime.Now;
-            
-            _fileservice.Create(file);
-
-
-            file = new FileModel();
-
-            fullPath = Path.Combine(folderPath, "diamonds.csv");
-            file._id = "";
-            file.type = ".csv";
-            file.uploaderId = "Igrannonica";
-            file.path = fullPath;
-            file.date = DateTime.Now;
-
-            _fileservice.Create(file);
-
-
-            file = new FileModel();
-
-            fullPath = Path.Combine(folderPath, "IMDB-Movie-Data.csv");
-            file._id = "";
-            file.type = ".csv";
-            file.uploaderId = "Igrannonica";
-            file.path = fullPath;
-            file.date = DateTime.Now;
-
-            _fileservice.Create(file);
-        }
     }
 }
