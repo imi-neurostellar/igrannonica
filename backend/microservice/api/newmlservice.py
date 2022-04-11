@@ -33,7 +33,14 @@ def returnColumnsInfo(dataset):
 
     for kolona in svekolone:
         if(kolona in kategorijskekolone):
-            uniquevalues=datafront[kolona].unique()
+            unique=datafront[kolona].value_counts()
+            uniquevalues=[]
+            uniquevaluescount=[]
+            for val, count in unique.iteritems():
+                uniquevalues.append(val)
+                uniquevaluescount.append(count)
+            #print(uniquevalues)
+            #print(uniquevaluescount)
             mean=0
             median=0
             minimum=0
@@ -43,7 +50,8 @@ def returnColumnsInfo(dataset):
                 allNullCols=allNullCols+1
             frontreturn={'columnName':kolona,
                         'isNumber':False,
-                        'uniqueValues':uniquevalues.tolist(),
+                        'uniqueValues':uniquevalues,
+                        'uniqueValuesCount':uniquevaluescount,
                         'median':float(mean),
                         'mean':float(median),
                         'numNulls':int(nullCount),
@@ -62,6 +70,7 @@ def returnColumnsInfo(dataset):
             frontreturn={'columnName':kolona,
                         'isNumber':1,
                         'uniqueValues':[],
+                        'uniqueValuesCount':[],
                         'mean':float(mean),
                         'median':float(median),
                         'numNulls':int(nullCount),
