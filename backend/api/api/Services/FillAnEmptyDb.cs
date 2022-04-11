@@ -10,8 +10,10 @@ namespace api.Services
         private readonly IMongoCollection<Model> _model;
         private readonly IMongoCollection<Predictor> _predictor;
         private readonly IDatasetService _datasetService;
+        private readonly IFileService _fileService;
 
-        public FillAnEmptyDb(IUserStoreDatabaseSettings settings, IMongoClient mongoClient, IDatasetService datasetService)
+
+        public FillAnEmptyDb(IUserStoreDatabaseSettings settings, IMongoClient mongoClient, IDatasetService datasetService, IFileService fileService)
         {
             var database = mongoClient.GetDatabase(settings.DatabaseName);
             _dataset = database.GetCollection<Dataset>(settings.DatasetCollectionName);
@@ -19,23 +21,24 @@ namespace api.Services
             _predictor = database.GetCollection<Predictor>(settings.PredictorCollectionName);
 
             _datasetService = datasetService;
-
+            _fileService = fileService;
         }
 
         public void AddToEmptyDb()
         {
 
-            if (_datasetService.CheckDb())
+            if (_fileService.CheckDb())
             {
                 //prvo dodati fajl 3 csv-a
                 Dataset dataset = new Dataset();
+
 
                 dataset._id = "";
                 dataset.username = "Igrannonica";
                 dataset.name = "Titanik";
                 dataset.description = "Opis dataseta 1";
                 dataset.header = new string[] { "PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked" };
-                dataset.fileId = "";//DODAAAAAJ
+                dataset.fileId = "";//DODAAAAAJ getFileId(username naziv fajla)
                 dataset.extension = ".csv";
                 dataset.isPublic = true;
                 dataset.accessibleByLink = true;
@@ -51,11 +54,17 @@ namespace api.Services
                 _datasetService.Create(dataset);
 
 
-                dataset.name = "Igrannonica dataset 2";
+                dataset = new Dataset();
+
+                dataset._id = "";
+                dataset.username = "Igrannonica";
+                dataset.name = "Diamonds dataset 2";
                 dataset.description = "Opis dataseta 2";
                 dataset.header = new string[] { "PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked" };
                 dataset.fileId = "";
                 dataset.extension = ".csv";
+                dataset.isPublic = true;
+                dataset.accessibleByLink = true;
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
                 dataset.delimiter = "";
@@ -68,11 +77,17 @@ namespace api.Services
                 _datasetService.Create(dataset);
 
 
+                dataset = new Dataset();
+
+                dataset._id = "";
+                dataset.username = "Igrannonica";
                 dataset.name = "Igrannonica dataset 3";
                 dataset.description = "Opis dataseta 3";
                 dataset.header = new string[] { "PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked" };
                 dataset.fileId = "";
                 dataset.extension = ".csv";
+                dataset.isPublic = true;
+                dataset.accessibleByLink = true;
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
                 dataset.delimiter = "";

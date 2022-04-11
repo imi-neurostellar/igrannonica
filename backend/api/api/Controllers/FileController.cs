@@ -17,12 +17,12 @@ namespace api.Controllers
         private readonly IConfiguration _configuration;
         private IJwtToken _token;
         private readonly IFileService _fileservice;
+
         public FileController(IConfiguration configuration,IFileService fileService,IJwtToken token)
         {
             _configuration = configuration;
             _token = token;
             _fileservice = fileService;
-
         }
 
         [HttpPost("h5")]
@@ -148,6 +148,7 @@ namespace api.Controllers
                     return null;
             }else 
                 return BadRequest();
+
             if (uploaderId == "")
             {
                 folderName = "TempFiles";
@@ -263,5 +264,47 @@ namespace api.Controllers
 
         }
 
+
+        [HttpGet("proba")]
+        public void AddFileToEmptyDb()
+        {
+            FileModel file = new FileModel();
+
+            string folderName = "UploadedFiles/Igrannonica";
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, "Igrannonica");
+            var fullPath = Path.Combine(folderPath, "titanic.csv");
+
+            file._id = "";
+            file.type = ".csv";
+            file.uploaderId = "Igrannonica";
+            file.path = fullPath;
+            file.date = DateTime.Now;
+            
+            _fileservice.Create(file);
+
+
+            file = new FileModel();
+
+            fullPath = Path.Combine(folderPath, "diamonds.csv");
+            file._id = "";
+            file.type = ".csv";
+            file.uploaderId = "Igrannonica";
+            file.path = fullPath;
+            file.date = DateTime.Now;
+
+            _fileservice.Create(file);
+
+
+            file = new FileModel();
+
+            fullPath = Path.Combine(folderPath, "IMDB-Movie-Data.csv");
+            file._id = "";
+            file.type = ".csv";
+            file.uploaderId = "Igrannonica";
+            file.path = fullPath;
+            file.date = DateTime.Now;
+
+            _fileservice.Create(file);
+        }
     }
 }

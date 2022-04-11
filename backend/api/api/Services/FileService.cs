@@ -40,6 +40,18 @@ namespace api.Services
         {
             return _file.Find(x=>x._id==id).FirstOrDefault();
         }
-        
+
+        public bool CheckDb()
+        {
+            FileModel? file = null;
+            file = _file.Find(file => file.uploaderId == "Igrannonica").FirstOrDefault();
+
+            if (file != null)
+                return false;
+            else
+                return true;
+
+
+        }
     }
 }

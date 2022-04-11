@@ -175,9 +175,10 @@ namespace api.Controllers
             }
         }
 
+        
 
 
-        public void AddToEmptyDb()
+            public void AddToEmptyDb()
         {
 
             if (_modelService.CheckDb())
@@ -207,6 +208,10 @@ namespace api.Controllers
 
                 _modelService.Create(model);
 
+                model = new Model();
+
+                model._id = "";
+                model.username = "Igrannonica";
                 model.name = "Igrannonica model 2";
                 model.description = "Opis modela 2";
                 model.dateCreated = DateTime.Now;
@@ -220,14 +225,18 @@ namespace api.Controllers
                 model.hiddenLayers = 0;
                 model.batchSize = 0;
                 model.outputNeurons = 0;
-                //model.hiddenLayerActivationFunctions[] =
+                model.hiddenLayerActivationFunctions = new string[] { "sigmoid" };
                 model.outputLayerActivationFunction = "";
-                //model.metrics =
+                model.metrics = new string[] { };
                 model.epochs = 0;
                 model.isTrained = false;
 
                 _modelService.Create(model);
 
+                model = new Model();
+
+                model._id = "";
+                model.username = "Igrannonica";
                 model.name = "Igrannonica model 3";
                 model.description = "Opis modela 3";
                 model.dateCreated = DateTime.Now;
@@ -241,9 +250,9 @@ namespace api.Controllers
                 model.hiddenLayers = 0;
                 model.batchSize = 0;
                 model.outputNeurons = 0;
-                //model.hiddenLayerActivationFunctions[] =
+                model.hiddenLayerActivationFunctions = new string[] { "sigmoid" };
                 model.outputLayerActivationFunction = "";
-                //model.metrics =
+                model.metrics = new string[] { };
                 model.epochs = 0;
                 model.isTrained = false;
 

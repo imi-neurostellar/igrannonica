@@ -214,21 +214,33 @@ namespace api.Controllers
                 _predictorService.Create(predictor);
 
 
-                predictor.name = "Igrannonica Predictor 2";
-                predictor.description = "Opis predictora 2";
+                predictor = new Predictor();
+
+                predictor._id = "";
+                predictor.username = "Igrannonica";
+                predictor.name = "Igrannonica Predictor 1";
+                predictor.description = "Opis predictora 1";
                 //predictor.inputs = { 1, 3, 5, 7, 9 };
                 predictor.output = "s";
+                predictor.isPublic = true;
+                predictor.accessibleByLink = true;
                 predictor.dateCreated = DateTime.Now;
                 predictor.experimentId = "0";
                 //izmeni experiment id
 
-
                 _predictorService.Create(predictor);
 
-                predictor.name = "Igrannonica Predictor 3";
-                predictor.description = "Opis predictora 3";
+
+                predictor = new Predictor();
+
+                predictor._id = "";
+                predictor.username = "Igrannonica";
+                predictor.name = "Igrannonica Predictor 1";
+                predictor.description = "Opis predictora 1";
                 //predictor.inputs = { 1, 3, 5, 7, 9 };
                 predictor.output = "s";
+                predictor.isPublic = true;
+                predictor.accessibleByLink = true;
                 predictor.dateCreated = DateTime.Now;
                 predictor.experimentId = "0";
                 //izmeni experiment id

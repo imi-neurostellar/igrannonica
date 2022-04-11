@@ -7,5 +7,6 @@ namespace api.Services
         FileModel Create(FileModel file);
         string GetFilePath(string id, string uploaderId);
         public FileModel getFile(string id);
+        bool CheckDb();
     }
 }
