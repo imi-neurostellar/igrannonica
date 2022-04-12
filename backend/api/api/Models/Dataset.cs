@@ -25,6 +25,7 @@ namespace api.Models
         public bool hasHeader { get; set; }
 
         public ColumnInfo[] columnInfo { get; set; }
+        public int rowCount { get; set; }
         public int nullCols { get; set; }
         public int nullRows { get; set; }
         public bool isPreProcess { get; set; }

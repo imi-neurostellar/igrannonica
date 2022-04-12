@@ -1,16 +1,41 @@
 <div class="card" style="min-width: 12rem;">
-    <div class="card-header">
-        {{dataset.name}}
-    </div>
-    <div class="card-body overflow-hidden">
-        <p class="card-text">
-            {{dataset.description}}
-        </p>
-        <table class="table table-bordered table-sm">
-            <thead>
-                <th scope="col" *ngFor="let column of dataset.header">{{column}}</th>
-                <!-- treba da se namesti da kad nema hedere, da korisnik unese nazive kolona pa da se taj heder prikaze  -->
-            </thead>
-        </table>
-    </div>
+<div class="card-header d-flex mb-2 justify-content-" style="padding: 0;margin: 0;">
+    
+        <div class=" p-2 float-left "><b   style="color: gray;">Naziv</b></div> 
+        <div class=" p-2 float-left"><b>{{dataset.name}}</b></div>
 </div>
+<div class="card-body overflow-hidden">
+    <b style="color: gray;">Opis</b>
+     <hr style="width: 20%;"> <p> {{dataset.description}}</p>
+    <hr>
+    <div class="d-flex justify-content-center">
+        <div  class=" p-2" >
+            <h4><span class="badge bg-secondary">{{dataset.extension}}</span></h4>
+        </div> 
+        <div class="p-2">
+            <span class="material-icons">{{visibleicon}}</span>
+        </div>
+        <div class="p-2">
+            <span class="material-icons">{{accessibleicon}}</span>
+        </div>
+    </div>
+    <hr>
+    <div class="col text-center">
+<button (click)=toggleDisplayDiv() class="btn btn-primary btn-sm active " mat-raised-button color="primary" style="margin: 0.5rem;">Kolone</button>
+        <div [hidden]="isShowDiv" style="overflow: scroll; overflow-y: hidden;">
+            <table class="table table-bordered table-md" >
+                <thead>
+                    <th scope="col" *ngFor="let column of dataset.columnInfo" >{{column.columnName}}</th> 
+                </thead>
+            </table>
+        </div>
+</div>
+    <table>
+        <tr><td><span class="material-icons">calendar_today</span></td><td><span style="color: grey;">   <b> Kreirano</b></span></td><td>{{dataset.dateCreated |date}}</td></tr>
+        <tr><td><span class="material-icons">edit_calendar</span></td><td><span style="color: grey;">  <b> Poslednja izmena</b></span></td><td>{{dataset.lastUpdated |date}}</td></tr> 
+    </table>
+    
+</div>
+<div class="card-footer">	
+        
+    </div>

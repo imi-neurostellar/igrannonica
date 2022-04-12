@@ -121,9 +121,9 @@ namespace api.Controllers
 
 
             if (hasHeader)
-                return String.Join("", System.IO.File.ReadLines(filePath).Take(11)); 
+                return String.Join("\n", System.IO.File.ReadLines(filePath).Take(11)); 
             else 
-                return String.Join("", System.IO.File.ReadLines(filePath).Take(10));
+                return String.Join("\n", System.IO.File.ReadLines(filePath).Take(10));
         }
 
 

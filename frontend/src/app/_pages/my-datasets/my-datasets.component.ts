@@ -5,6 +5,7 @@ import Dataset from 'src/app/_data/Dataset';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
 import shared from 'src/app/Shared';
+import { share } from 'rxjs';
 
 @Component({
   selector: 'app-my-datasets',
@@ -41,17 +42,17 @@ export class MyDatasetsComponent implements OnInit {
 */
 
 deleteThisDataset(dataset: Dataset): void{
-  console.log("OK");
+  shared.openYesNoDialog('Brisanje seta podataka','Da li ste sigurni da želite da obrišete ovaj set podataka?',() => {  
   this.datasetsS.deleteDataset(dataset).subscribe((response) => {
     console.log("OBRISANO JE", response);
     //na kraju uspesnog
     this.getAllMyDatasets();
   }, (error) =>{
       if (error.error == "Dataset with name = {name} deleted") {
-        alert("Greška pri brisanju dataseta!");
+        shared.openDialog("Greška","Greška pri brisanju dataseta!");
       }
     });
-
+  });
 }
 
   getAllMyDatasets(): void{
@@ -61,5 +62,6 @@ deleteThisDataset(dataset: Dataset): void{
       console.log(this.myDatasets);
     });
   }
+  
 
 }

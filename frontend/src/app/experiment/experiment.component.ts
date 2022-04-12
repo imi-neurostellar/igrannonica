@@ -39,12 +39,7 @@ export class ExperimentComponent implements OnInit {
     this.selectedDataset = dataset;
     this.selectedColumnsInfoArray = this.selectedDataset.columnInfo;
     this.selectedNullColumnsArray = [];
-    console.log("array:", this.selectedColumnsInfoArray);
-  }
-
-  updateModel(model: Model) {
-    //console.log(model);
-    this.selectedModel = model;
+    //console.log("array:", this.selectedColumnsInfoArray);
   }
 
   getInputById(id: string): HTMLInputElement {
@@ -74,9 +69,9 @@ export class ExperimentComponent implements OnInit {
   checkedColumnsChanged(checkedColumnInfo: ColumnInfo, buttonType: number) { //0-input,1-output
     let col = this.selectedColumnsInfoArray.find(x => x.columnName == checkedColumnInfo.columnName);
     if (buttonType == 0) { //inputCol
-      if (col == undefined) 
+      if (col == undefined)
         this.selectedColumnsInfoArray.push(checkedColumnInfo);
-      else 
+      else
         this.selectedColumnsInfoArray = this.selectedColumnsInfoArray.filter(x => x.columnName != checkedColumnInfo.columnName);
     }
     else { //outputCol
@@ -84,7 +79,7 @@ export class ExperimentComponent implements OnInit {
         this.selectedColumnsInfoArray.push(checkedColumnInfo);
     }
     //console.log(this.selectedColumnsInfoArray);
-  } 
+  }
 
   replace(event: Event, column: ColumnInfo) {
     let option = (<HTMLInputElement>event.target).value;
@@ -173,11 +168,11 @@ export class ExperimentComponent implements OnInit {
       Shared.openDialog("Greška", "Molimo Vas da izaberete ulazne kolone.");
       return;
     }
-    
+
     this.experiment._id = '';
     this.experiment.uploaderId = '';
     this.experiment.datasetId = this.selectedDataset._id;
-  
+
     let pom = this.selectedColumnsInfoArray.filter(x => x.columnName != this.experiment.outputColumn);
     for (let i = 0; i < pom.length; i++)
       this.experiment.inputColumns.push(pom[i].columnName);
@@ -189,8 +184,8 @@ export class ExperimentComponent implements OnInit {
 
     this.experiment.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
 
-    console.log("Eksperiment:", this.experiment);
-    
+    //console.log("Eksperiment:", this.experiment);
+
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
       this.experiment = response;
 

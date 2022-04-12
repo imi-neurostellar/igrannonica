@@ -1,13 +1,58 @@
 <div class="card" style="min-width: 12rem;">
-    <div class="card-header">
-        {{model.name}}
+    <div class="card-header d-flex mb-2 justify-content-" style="padding: 0;margin: 0;">
+    
+        <div class=" p-2 float-left "><b   style="color: gray;">Naziv</b></div> 
+        <div class=" p-2 float-left"><b>{{model.name}}</b></div>
     </div>
-    <div class="card-body overflow-hidden">
-        <p class="card-text">
-            {{"Opis: "+ model.description}}<br>
-            {{"Datum kreiranja: " + model.dateCreated}}<br>
-            {{"Poslednje ažuriranje: " + model.lastUpdated}}<br>
-        </p>
+    <div class="card-body overflow-hidden"> 
         <app-graph [model]="model"></app-graph>
+        <br>
+        <b style="color: gray;">Opis</b><hr  style="width: 20%;">
+        <p class="card-text">
+           {{model.description}}
+        </p>
+        <hr>
+        
+        <div>
+            <table>
+                <tr><td><span class="material-icons">calendar_today</span></td><td><span style="color: grey;">   <b> Kreirano</b></span></td><td>{{model.dateCreated |date}}</td></tr>
+                <tr><td><span class="material-icons">edit_calendar</span></td><td><span style="color: grey;">  <b> Poslednja izmena</b></span></td><td>{{model.lastUpdated |date}}</td></tr> 
+            </table> 
+        </div>
+       
     </div>
+    <button (click)=toggleDisplayDiv() class="btn btn-default btn-lg " mat-raised-button color="primary" style="margin: 0.5rem;">Parametri</button>
+        <div [hidden]="isShowDiv">
+        <!--  <table>
+            <tr>
+            <td><span style="color: grey;">  <b> Nasumično raspoređivanje podataka</b></span></td><td>{{randomOrd}}</td>
+            </tr>
+            <tr>
+            <td><span style="color: grey;">  <b> Podela podataka na trening i test skup</b></span></td><td>{{randomOrd}}</td>
+            </tr>
+            <tr>
+            <td><span style="color: grey;">  <b> Veličina skupa za treniranje</b></span></td><td>{{randomOrd}}</td>
+            </tr>
+            </table>-->
+            <hr>
+            <table>
+            <tr>
+            <td><span style="color: grey;">  <b> Tip problema</b></span></td><td>{{model.type}}</td>
+        </tr>
+        <tr>
+            <td><span style="color: grey;">  <b> Optimizator</b></span></td><td>{{model.optimizer}}</td>
+        </tr>
+        <tr>
+           <td> <span style="color: grey;">  <b> Funkcija gubitka</b></span></td><td>{{model.lossFunction}}</td>
+        </tr>
+        <tr>
+            <td><span style="color: grey;">  <b> Batch size</b></span></td><td>{{model.batchSize}}</td>
+        </tr>
+        <tr>
+            <td><span style="color: grey;">  <b> Broj epoha</b></span></td><td>{{model.epochs}}</td>
+        </tr>
+        
+            </table>
+
+        </div>
 </div>

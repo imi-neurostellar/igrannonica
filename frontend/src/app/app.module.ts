@@ -46,6 +46,7 @@ import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-data
 import { GraphComponent } from './_elements/graph/graph.component';
 import { TrainingComponent } from './training/training.component';
 import { ItemExperimentComponent } from './_elements/item-experiment/item-experiment.component';
+import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { ItemExperimentComponent } from './_elements/item-experiment/item-experi
     AddNewDatasetComponent,
     GraphComponent,
     TrainingComponent,
-    ItemExperimentComponent
+    ItemExperimentComponent,
+    YesNoDialogComponent
   ],
   imports: [
     BrowserModule,
