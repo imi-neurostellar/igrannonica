@@ -7,16 +7,10 @@ export default class Model {
         public description: string = '',
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
-        public experimentId: string = '',
-
-        // Test set settings
-        public randomOrder: boolean = true,
-        public randomTestSet: boolean = true,
-        public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
+        //public experimentId: string = '',
 
         // Neural net training settings
         public type: ProblemType = ProblemType.Regression,
-        public encoding: Encoding = Encoding.Label,
         public optimizer: Optimizer = Optimizer.Adam,
         public lossFunction: LossFunction = LossFunction.MeanSquaredError,
         public inputNeurons: number = 1,
@@ -39,29 +33,6 @@ export enum ProblemType {
 
 // replaceMissing srednja vrednost mean, median, najcesca vrednost (mode)
 // removeOutliers
-export enum Encoding {
-    Label = 'label',
-    OneHot = 'onehot',
-    Ordinal = 'ordinal',
-    Hashing = 'hashing',
-    Binary = 'binary',
-    BaseN = 'baseN'
-    /*
-    BackwardDifference = 'backward difference',
-    CatBoost = 'cat boost',
-    Count = 'count',
-    GLMM = 'glmm',
-    Target = 'target',
-    Helmert = 'helmert',
-    JamesStein = 'james stein',
-    LeaveOneOut = 'leave one out',
-    MEstimate = 'MEstimate',
-    Sum = 'sum',
-    Polynomial = 'polynomial',
-    WOE = 'woe',
-    Quantile = 'quantile'
-    */
-}
 
 export enum ActivationFunction {
     // linear

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import Experiment, { NullValReplacer, NullValueOptions, ReplaceWith } from '../_data/Experiment';
+import Experiment, { NullValReplacer, NullValueOptions, ReplaceWith, Encoding } from '../_data/Experiment';
 import Model from '../_data/Model';
 import Dataset, { ColumnInfo } from '../_data/Dataset';
 import { ModelsService } from '../_services/models.service';
@@ -20,11 +20,14 @@ export class ExperimentComponent implements OnInit {
 
   NullValueOptions = NullValueOptions;
   ReplaceWith = ReplaceWith;
+  Encoding = Encoding;
   Object = Object;
 
   selectedColumnsInfoArray: ColumnInfo[] = [];
-  selectedOutputColumnVal: string = '';
+  //selectedOutputColumnVal: string = '';
   selectedNullColumnsArray: string[] = [];
+
+  tempTestSetDistribution = 90;
 
   constructor(private modelsService: ModelsService, private experimentsService: ExperimentsService) { }
 
@@ -179,9 +182,12 @@ export class ExperimentComponent implements OnInit {
     for (let i = 0; i < pom.length; i++)
       this.experiment.inputColumns.push(pom[i].columnName);
 
-    this.selectedColumnsInfoArray = this.selectedColumnsInfoArray.filter(x => x.numNulls > 0);
-    //TREBAJU MI NULLVALUESREPLACERI  
+    //this.experiment.outputColumn = this.selectedOutputColumnVal;
+
+    this.selectedColumnsInfoArray = this.selectedColumnsInfoArray.filter(x => x.numNulls > 0); //obavezno
     this.experiment.nullValuesReplacers = this.getNullValuesReplacersArray();
+
+    this.experiment.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
 
     console.log("Eksperiment:", this.experiment);
     
@@ -193,7 +199,9 @@ export class ExperimentComponent implements OnInit {
 
       Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
     }, (error) => {
-
+      if (error.error == "Experiment with this name exists") {
+        Shared.openDialog("Greška", "Eksperiment sa unetim nazivom već postoji u Vašoj kolekciji. Unesite neki drugi naziv.");
+      }
     });
   }
 

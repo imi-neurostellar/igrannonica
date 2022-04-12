@@ -85,18 +85,6 @@
             <div class="row p-2">
                 <div class="col-1">
                 </div>
-                <div class="col-3">
-                    <label for="encoding" class="col-form-label">Enkoding: </label>
-                </div>
-                <div class="col-2">
-                    <select id=encodingOptions class="form-control" name="encoding" [(ngModel)]="newModel.encoding">
-                        <option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)"
-                            [value]="option">
-                            {{ optionName }}
-                        </option>
-                    </select>
-                </div>
-
                 <div class="col-1">
                 </div>
                 <div class="col-3">
@@ -149,43 +137,6 @@
                     </select>
                 </div>
                 <div class="col-1"></div>
-                <div class="col-3 mt-2">
-                    <label for="type" class="form-check-label">Nasumičan redosled podataka?</label>
-                    <input class="mx-3 form-check-input" type="checkbox" [(ngModel)]="newModel.randomOrder"
-                        type="checkbox" value="" checked>
-                </div>
-            </div>
-            <div class="border m-3">
-                <div class="row p-2 m-2">
-                    <div class="col-4">
-                        <label for="splitYesNo" class="form-check-label">
-                            <h3>Podela test skupa:&nbsp;&nbsp;
-                                <input id="splitYesNo" class="form-check-input" type="checkbox"
-                                    [checked]="newModel.randomTestSet"
-                                    (change)="newModel.randomTestSet = !newModel.randomTestSet">
-                            </h3>
-                        </label>
-                    </div>
-                    <div class="col-8">
-                        trening
-                        <mat-slider style="width: 85%;" min="10" max="90" step="10" value="10"
-                            name="randomTestSetDistribution" thumbLabel [disabled]="!newModel.randomTestSet"
-                            [(ngModel)]="tempTestSetDistribution">
-                        </mat-slider>
-                        test
-                    </div>
-                </div>
-
-                <div class="row p-2 mx-2">
-                    <div class="col-4">
-                        <label for="percentage" class="form-label">Procenat podataka koji se uzima za trening
-                            skup:</label>
-                    </div>
-                    <div class="col-2">
-                        <input id="percentage" type="number" class="form-control" min="10" max="90" step="10" value="90"
-                            [(ngModel)]="tempTestSetDistribution" [disabled]="!newModel.randomTestSet">
-                    </div>
-                </div>
             </div>
             <h3>Aktivacione funkcije:</h3>
 

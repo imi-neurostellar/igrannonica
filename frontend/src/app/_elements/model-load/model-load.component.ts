@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import Shared from 'src/app/Shared';
-import Model, { ActivationFunction, Encoding, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
+import Model, { ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
 import { ModelsService } from 'src/app/_services/models.service';
 import { GraphComponent } from '../graph/graph.component';
 
@@ -20,7 +20,6 @@ export class ModelLoadComponent implements OnInit {
   selectedModel?: Model;
 
   ProblemType = ProblemType;
-  Encoding = Encoding;
   ActivationFunction = ActivationFunction;
   metrics: any = Metrics;
   LossFunction = LossFunction;
@@ -32,7 +31,6 @@ export class ModelLoadComponent implements OnInit {
   term: string = "";
   selectedProblemType: string = '';
   selectedMetrics = [];
-  tempTestSetDistribution = 90;
   lossFunction: any = LossFunction;
 
   showMyModels: boolean = true;
@@ -64,7 +62,6 @@ export class ModelLoadComponent implements OnInit {
   uploadModel() {   //console.log(this.selectedModel);
     this.getMetrics();
 
-    this.newModel.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
     this.newModel.username = Shared.username;
 
     this.modelsService.addModel(this.newModel).subscribe((response) => {
