@@ -1,0 +1,26 @@
+<div id="header">
+    <h1>Trenirajte veštačku neuronske mrežu</h1>
+</div>
+<div id="wrapper">
+    <div id="container" class="container p-5" style="background-color: white; min-height: 100%;">
+
+<h2>1. Izaberi eksperiment</h2>
+TODO
+
+<h2>2.Izaberi model</h2>
+<app-model-load (selectedModelChangeEvent)="selectModel($event)"></app-model-load>
+
+<h2>3. Treniraj model</h2>
+<button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="trainModel();">Treniraj
+    model</button>
+
+<h2>Rezultati treniranja</h2>
+<div class="m-3" *ngIf="trainingResult">
+    <h2 class="my-2">Rezultati treniranja:</h2>
+    <p>
+        {{trainingResult}}
+    </p>
+</div>
+
+</div>
+</div>

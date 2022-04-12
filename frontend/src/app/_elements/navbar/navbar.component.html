@@ -9,7 +9,10 @@
                 <li><a routerLink="" class="nav-link px-2"
                         [class]="(currentUrl === '') ? 'text-secondary' : 'text-white'">Početna</a></li>
                 <li><a routerLink="experiment" class="nav-link px-2"
-                        [class]="(currentUrl === '/add-model') ? 'text-secondary' : 'text-white'">Eksperimentiši</a>
+                        [class]="(currentUrl === '/experiment') ? 'text-secondary' : 'text-white'">Napravi eksperiment</a>
+                </li>
+                <li><a routerLink="training" class="nav-link px-2"
+                        [class]="(currentUrl === '/training') ? 'text-secondary' : 'text-white'">Treniraj model</a>
                 </li>
                 <li><a routerLink="my-predictors" class="nav-link px-2"
                         [class]="(currentUrl === '/my-predictors') ? 'text-secondary' : 'text-white' + (shared.loggedIn) ? '' : 'disabled'">Predvidi</a>

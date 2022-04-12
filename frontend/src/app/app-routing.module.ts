@@ -13,11 +13,13 @@ import { ProfileComponent } from './_pages/profile/profile.component';
 import { PredictComponent } from './_pages/predict/predict.component';
 import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-datasets.component';
 import { ExperimentComponent } from './experiment/experiment.component';
+import { TrainingComponent } from './training/training.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Početna strana' } },
   /*{ path: 'add-model', component: AddModelComponent, data: { title: 'Dodaj model' } },*/
-  { path: 'experiment', component: ExperimentComponent, data: { title: 'Dodaj model' } },
+  { path: 'experiment', component: ExperimentComponent, data: { title: 'Dodaj eksperiment' } },
+  { path: 'training', component: TrainingComponent, data: { title: 'Treniraj model' } },
   { path: 'my-datasets', component: MyDatasetsComponent, canActivate: [AuthGuardService], data: { title: 'Moji izvori podataka' } },
   { path: 'my-models', component: MyModelsComponent, canActivate: [AuthGuardService], data: { title: 'Moji modeli' } },
   { path: 'my-predictors', component: MyPredictorsComponent, canActivate: [AuthGuardService], data: { title: 'Moji trenirani modeli' } },

@@ -9,11 +9,7 @@
             <mat-icon>arrow_forward</mat-icon>
             <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="1">Preprocesiranje</a>
             <mat-icon>arrow_forward</mat-icon>
-            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="2">Podešavanja mreže</a>
-            <mat-icon>arrow_forward</mat-icon>
-            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="3">Treniraj model</a>
-            <mat-icon>arrow_forward</mat-icon>
-            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="4">Rezultati treniranja</a>
+            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="2">Dodaj eksperiment</a>
         </div>
 
         <div id="carouselExampleControls" class="carousel slide" data-bs-wrap="false" data-bs-ride="carousel" data-bs-interval="false">
@@ -200,31 +196,15 @@
                     </div>
                 </div>
 
+
+            </div>
+
+            <div class="carousel-item">
                 <div class="form-group row mt-5 mb-3">
                     <div class="col"></div>
                     <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="saveExperiment();">Sačuvaj
                         eksperiment</button>
                     <div class="col"></div>
-                </div>
-            </div>
-
-            <div class="carousel-item">
-                <h2>3. Podešavanja mreže</h2>
-                <app-model-load (selectedModelChangeEvent)="updateModel($event)"></app-model-load>
-            </div>
-            <div class="carousel-item">
-                <h2>4. Treniraj model</h2>
-                <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="trainModel();">Treniraj
-                    model</button>
-            </div>
-
-            <div class="carousel-item">
-                <h3>Rezultati treniranja</h3>
-                <div class="m-3" *ngIf="trainingResult">
-                    <h2 class="my-2">Rezultati treniranja:</h2>
-                    <p>
-                        {{trainingResult}}
-                    </p>
                 </div>
             </div>
 
