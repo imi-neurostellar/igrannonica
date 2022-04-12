@@ -3,7 +3,9 @@ import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { AuthService } from './_services/auth.service';
-
+import { SignalRService } from './_services/signal-r.service';
+import { HttpClient } from '@angular/common/http';
+import Shared from './Shared';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,7 +13,7 @@ import { AuthService } from './_services/auth.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private router: Router, private titleService: Title,private authService:AuthService) { }
+  constructor(private router: Router, private titleService: Title,private authService:AuthService,private signalRService:SignalRService,private http:HttpClient) { }
 
   ngOnInit() {
     this.router.events
@@ -38,5 +40,19 @@ export class AppComponent implements OnInit {
       {
         this.authService.addGuestToken();
       }
+      this.signalRService.startConnection();
+      //this.startHttpRequest();
+
+
+
+
   }
+  private startHttpRequest = () => {
+    this.http.get('http://localhost:5283/chatHub')
+      .subscribe(res => {
+        console.log(res);
+      })
+  }
+
+
 }

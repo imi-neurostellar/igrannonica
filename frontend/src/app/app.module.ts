@@ -79,7 +79,7 @@ import { TrainingComponent } from './training/training.component';
     AlertDialogComponent,
     AddNewDatasetComponent,
     GraphComponent,
-    TrainingComponent
+    TrainingComponent,
   ],
   imports: [
     BrowserModule,

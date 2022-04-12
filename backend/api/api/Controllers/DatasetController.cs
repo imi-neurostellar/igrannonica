@@ -162,6 +162,18 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<Dataset>> Post([FromBody] Dataset dataset)
         {
+            string uploaderId;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                uploaderId = jwtToken.TokenToId(parameter);
+                if (uploaderId == null)
+                    return null;
+            }
+            else
+                return BadRequest();
             //da li ce preko tokena da se ubaci username ili front salje
             //dataset.username = usernameToken;
             //username = "" ako je GUEST DODAO
@@ -175,7 +187,7 @@ namespace api.Controllers
                 FileModel fileModel = _fileService.getFile(dataset.fileId);
                 dataset.isPreProcess = false;
                 _datasetService.Create(dataset);
-                _mlConnectionService.PreProcess(dataset,fileModel.path);
+                _mlConnectionService.PreProcess(dataset,fileModel.path,uploaderId);
                 return Ok();
             }
         }

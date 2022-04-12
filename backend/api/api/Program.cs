@@ -36,14 +36,13 @@ builder.Services.AddScoped<IPredictorService, PredictorService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 builder.Services.AddScoped<IExperimentService, ExperimentService>();
-
-var mlwss = new MLWebSocketService();
-
-builder.Services.AddSingleton<IMLWebSocketService>(mlwss);
-builder.Services.AddHostedService(_ => mlwss);
-
+builder.Services.AddScoped<IChat,ChatHub>();
 builder.Services.AddHostedService<TempFileService>();
 builder.Services.AddHostedService<FillAnEmptyDb>();
+
+
+
+
 
 //Add Authentication
 builder.Services.AddAuthentication(
@@ -63,32 +62,54 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartBodyLengthLimit = int.MaxValue;
 });
 
+builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 
-var app = builder.Build();
-
-var webSocketOptions = new WebSocketOptions
+builder.Services.AddCors(options =>
 {
-    KeepAliveInterval = TimeSpan.FromMinutes(2)
-};
-
-app.UseWebSockets(webSocketOptions);
-
-//Add Cors
-app.UseCors(
-    x=>x.AllowAnyOrigin()
+    options.AddPolicy("CorsPolicy", builder => builder
+    .WithOrigins("http://localhost:4200")
     .AllowAnyMethod()
     .AllowAnyHeader()
-    );
+    .AllowCredentials());
+});
+
+
+
+var app = builder.Build();
+
+
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(120)
+});
+
+
+
+
+
+//Add Cors
+app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
 
 //Add Authentication
 app.UseAuthentication();
 
-app.UseAuthorization();
 
-app.MapControllers();
+
+app.UseRouting();
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<ChatHub>("/chatHub");
+});
+
+
+
+
+
 
 app.Run();
