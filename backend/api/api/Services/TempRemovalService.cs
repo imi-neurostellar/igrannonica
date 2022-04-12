@@ -35,10 +35,11 @@ namespace api.Services
                         foreach(var experiment in experiments)
                         {
                             DeleteExperiment(experiment._id);
-                            List<Model> models = _model.Find(model => model.experimentId == experiment._id && model.username == "").ToList();
-                            foreach (var model in models)
+                            foreach(var modelId in experiment.ModelIds)
                             {
-                                DeleteModel(model._id);
+                                var delModel=_model.Find(model=> modelId== model._id && model.username=="").FirstOrDefault();
+                                if(delModel!= null)
+                                    DeleteModel(delModel._id);
                             }
                         }     
                     }

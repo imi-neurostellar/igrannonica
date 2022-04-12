@@ -18,7 +18,7 @@ namespace api.Models
         public DateTime dateCreated { get; set; }
         public DateTime lastUpdated { get; set; }
         //proveriti id
-        public string experimentId { get; set; }
+        //public string experimentId { get; set; }
 
 
         //Neural net training

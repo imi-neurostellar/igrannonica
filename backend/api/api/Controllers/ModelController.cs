@@ -35,7 +35,7 @@ namespace api.Controllers
 
         [HttpPost("sendModel")]
         [Authorize(Roles = "User,Guest")]
-        public async Task<ActionResult<string>> Test([FromBody] Model model)
+        public async Task<ActionResult<string>> Test([FromBody] string modelId,string experimentId)
         {
             string uploaderId;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -49,9 +49,10 @@ namespace api.Controllers
             }
             else
                 return BadRequest();
-            var experiment=_experimentService.Get(model.experimentId);
+            var experiment=_experimentService.Get(experimentId);
             var dataset = _datasetService.GetOneDataset(experiment.datasetId);
             var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
+            var model = _modelService.GetOneModel(modelId);
             _mlService.TrainModel(model,experiment,filepath);//To do  Obavestiti korisnika kada se model istrenira
             return Ok();
         }
