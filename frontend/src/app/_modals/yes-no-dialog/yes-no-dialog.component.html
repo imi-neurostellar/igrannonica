@@ -1,0 +1,8 @@
+<h2 mat-dialog-title class="text-muted">{{data.title}}</h2>
+<div mat-dialog-content class="mt-4" style="color: rgb(81, 76, 76);">
+  {{data.message}}
+</div>
+<div mat-dialog-actions class="d-flex justify-content-center mt-4">
+  <button mat-button cdkFocusInitial (click)="onYesClick()" style="background-color: lightgray;">Da</button>
+  <button mat-button cdkFocusInitial (click)="onNoClick()" style="background-color: lightgray;">Ne</button>
+</div>

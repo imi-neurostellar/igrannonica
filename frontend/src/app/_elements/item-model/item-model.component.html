@@ -1,13 +1,66 @@
 <div class="card" style="min-width: 12rem;">
-    <div class="card-header">
-        {{model.name}}
+    <div class="card-header d-flex mb-2 justify-content-" style="padding: 0;margin: 0;">
+    
+        <div class=" p-2 float-left "><b   style="color: gray;">Naziv</b></div> 
+        <div class=" p-2 float-left"><b>{{model.name}}</b></div>
     </div>
-    <div class="card-body overflow-hidden">
-        <p class="card-text">
-            {{"Opis: "+ model.description}}<br>
-            {{"Datum kreiranja: " + model.dateCreated}}<br>
-            {{"Poslednje ažuriranje: " + model.lastUpdated}}<br>
-        </p>
+    <div class="card-body overflow-hidden"> 
         <app-graph [model]="model"></app-graph>
+        <br>
+        <b style="color: gray;">Opis</b><hr  style="width: 20%;">
+        <p class="card-text">
+           {{model.description}}opis1234564654768798768
+        </p>
+        <hr>
+        
+        <div>
+            <table>
+                <tr><td>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus" viewBox="0 0 16 16">
+                <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+            </svg><span style="color: grey;">   <b> Kreirano</b></span></td><td>{{model.dateCreated |date}}</td>
+           <tr><tr><td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
+                <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+            </svg><span style="color: grey;">  <b> Poslednja izmena</b></span></td><td>{{model.lastUpdated |date}}</td>
+        </tr> 
+            </table>
+        </div>
+       
     </div>
+    <button (click)=toggleDisplayDiv() class="btn btn-default btn-lg " mat-raised-button color="primary" style="margin: 0.5rem;">Parametri</button>
+        <div [hidden]="isShowDiv">
+        <!--  <table>
+            <tr>
+            <td><span style="color: grey;">  <b> Nasumično raspoređivanje podataka</b></span></td><td>{{randomOrd}}</td>
+            </tr>
+            <tr>
+            <td><span style="color: grey;">  <b> Podela podataka na trening i test skup</b></span></td><td>{{randomOrd}}</td>
+            </tr>
+            <tr>
+            <td><span style="color: grey;">  <b> Veličina skupa za treniranje</b></span></td><td>{{randomOrd}}</td>
+            </tr>
+            </table>-->
+            <hr>
+            <table>
+            <tr>
+            <td><span style="color: grey;">  <b> Tip problema</b></span></td><td>{{model.type}}</td>
+        </tr>
+        <tr>
+            <td><span style="color: grey;">  <b> Optimizator</b></span></td><td>{{model.optimizer}}</td>
+        </tr>
+        <tr>
+           <td> <span style="color: grey;">  <b> Funkcija gubitka</b></span></td><td>{{model.lossFunction}}</td>
+        </tr>
+        <tr>
+            <td><span style="color: grey;">  <b> Batch size</b></span></td><td>{{model.batchSize}}</td>
+        </tr>
+        <tr>
+            <td><span style="color: grey;">  <b> Broj epoha</b></span></td><td>{{model.epochs}}</td>
+        </tr>
+        
+            </table>
+
+        </div>
 </div>

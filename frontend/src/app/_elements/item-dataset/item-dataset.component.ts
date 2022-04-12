@@ -9,7 +9,13 @@ import Dataset from 'src/app/_data/Dataset';
 export class ItemDatasetComponent {
 
   @Input() dataset: Dataset = new Dataset();
-
+  
+  isShowDiv = true;
+  toggleDisplayDiv() {
+    this.isShowDiv = !this.isShowDiv;
+  }
   constructor() {
   }
+  
 }
+
