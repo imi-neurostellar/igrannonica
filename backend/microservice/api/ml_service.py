@@ -101,99 +101,103 @@ class TrainingResultRegression:
 class TrainingResult:
     metrics: dict
 '''
-def train(dataset, params, callback):
-    problem_type = params["type"]
-    data = pd.DataFrame()
-    for col in params["inputColumns"]:
-        data[col]=dataset[col]
+def train(dataset, paramsModel, paramsExperiment, callback):
+    problem_type = paramsModel["type"]
+    dataModel = pd.DataFrame()
+    dataExperiment = pd.DataFrame()
+    for col in paramsModel["inputColumns"]:
+        dataModel[col]=dataset[col]
+    for col in paramsExperiment["inputColumns"]:
+        dataExperiment[col]=dataset[col]
 
-    print(data.head())
-    output_column = params["columnToPredict"]
-    data[output_column] = dataset[output_column]
+    print(dataModel.head())
+    output_column_model = paramsModel["columnToPredict"]
+    output_column_experiment = paramsExperiment["outputColumn"]
+    dataModel[output_column_model] = dataset[output_column_model]
     #
     # Brisanje null kolona / redova / zamena
     #nullreplace=[
     #    {"column":"Embarked","value":"C","deleteRow":false,"deleteCol":true},
     #    {"column": "Cabin","value":"C123","deleteRow":"0","deleteCol":"0"}]
         
-    null_value_options = params["nullValues"]
-    null_values_replacers = params["nullValuesReplacers"]
+    null_value_options = paramsModel["nullValues"]
+    null_values_replacers = paramsModel["nullValuesReplacers"]
     
     if(null_value_options=='replace'):
         print("replace null") # TODO
     elif(null_value_options=='delete_rows'):
-        data=data.dropna()
+        dataModel=dataModel.dropna()
     elif(null_value_options=='delete_columns'):
-        data=data.dropna()
+        dataModel=dataModel.dropna()
     #
     #print(data.isnull().any())
     #
     # Brisanje kolona koje ne uticu na rezultat
     #
-    num_rows=data.shape[0]
-    for col in data.columns:
-        if((data[col].nunique()==(num_rows)) and (data[col].dtype==np.object_)):
-            data.pop(col)
+    num_rows=dataModel.shape[0]
+    for col in dataModel.columns:
+        if((dataModel[col].nunique()==(num_rows)) and (dataModel[col].dtype==np.object_)):
+            dataModel.pop(col)
     #
     # Enkodiranje
     # https://www.analyticsvidhya.com/blog/2020/08/types-of-categorical-data-encoding/
     #
-    encoding=params["encoding"]
+    encoding=paramsModel["encoding"]
     if(encoding=='label'):
         encoder=LabelEncoder()
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
-                data[col]=encoder.fit_transform(data[col])
+        for col in dataModel.columns:
+            if(dataModel[col].dtype==np.object_):
+                dataModel[col]=encoder.fit_transform(dataModel[col])
     elif(encoding=='onehot'):
         category_columns=[]
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
+        for col in dataModel.columns:
+            if(dataModel[col].dtype==np.object_):
                 category_columns.append(col)
-        data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
+        dataModel=pd.get_dummies(dataModel, columns=category_columns, prefix=category_columns)
     elif(encoding=='ordinal'):
         encoder = OrdinalEncoder()
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
-                data[col]=encoder.fit_transform(data[col])
+        for col in dataModel.columns:
+            if(dataModel[col].dtype==np.object_):
+                dataModel[col]=encoder.fit_transform(dataModel[col])
  
     elif(encoding=='hashing'):
         category_columns=[]
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
+        for col in dataModel.columns:
+            if(dataModel[col].dtype==np.object_):
                 category_columns.append(col)
         encoder=ce.HashingEncoder(cols=category_columns, n_components=len(category_columns))
-        encoder.fit_transform(data)
+        encoder.fit_transform(dataModel)
     elif(encoding=='binary'):
         category_columns=[]
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
+        for col in dataModel.columns:
+            if(dataModel[col].dtype==np.object_):
                 category_columns.append(col)
         encoder=ce.BinaryEncoder(cols=category_columns, return_df=True)
-        encoder.fit_transform(data)
+        encoder.fit_transform(dataModel)
        
     elif(encoding=='baseN'):
         category_columns=[]
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
+        for col in dataModel.columns:
+            if(dataModel[col].dtype==np.object_):
                 category_columns.append(col)
         encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
-        encoder.fit_transform(data)
+        encoder.fit_transform(dataModel)
     #
     # Input - output
     #
     x_columns = []
-    for col in data.columns:
-        if(col!=output_column):
+    for col in dataModel.columns:
+        if(col!=output_column_model):
             x_columns.append(col)
-    x = data[x_columns].values
-    y = data[output_column].values
+    x = dataModel[x_columns].values
+    y = dataModel[output_column_model].values
     print(x_columns)
     print(x)
     #
     # Podela na test i trening skupove
     #
-    test=params["randomTestSetDistribution"]
-    randomOrder = params["randomOrder"]
+    test=paramsModel["randomTestSetDistribution"]
+    randomOrder = paramsModel["randomOrder"]
     if(randomOrder):
         random=123
     else:
@@ -213,60 +217,60 @@ def train(dataset, params, callback):
     # Treniranje modela
     #
     #  
-    hidden_layer_neurons = params["hiddenLayerNeurons"]
+    hidden_layer_neurons = paramsModel["hiddenLayerNeurons"]
 
     if(problem_type=='multi-klasifikacioni'):
-        func=params['hiddenLayerActivationFunctions']
-        output_func = params["outputLayerActivationFunction"]
-        optimizer = params["optimizer"]
-        metrics=params['metrics']
-        loss_func=params["lossFunction"]
-        batch_size = params["batchSize"]
-        epochs = params["epochs"]
-        inputDim = len(data.columns) - 1
+        func=paramsModel['hiddenLayerActivationFunctions']
+        output_func = paramsModel["outputLayerActivationFunction"]
+        optimizer = paramsModel["optimizer"]
+        metrics=paramsModel['metrics']
+        loss_func=paramsModel["lossFunction"]
+        batch_size=paramsModel["batchSize"]
+        epochs=paramsModel["epochs"]
+        inputDim=len(dataModel.columns) - 1
         '''
         classifier=tf.keras.Sequential()
         
-        classifier.add(tf.keras.layers.Dense(units=len(data.columns),input_dim=inputDim))#input layer
+        classifier.add(tf.keras.layers.Dense(units=len(dataModel.columns),input_dim=inputDim))#input layer
         
         for f in func:#hidden layers
             classifier.add(tf.keras.layers.Dense(hidden_layer_neurons,activation=f))
         
-        numberofclasses=len(output_column.unique())
+        numberofclasses=len(output_column_model.unique())
         classifier.add(tf.keras.layers.Dense(numberofclasses,activation=output_func))#output layer
         '''
         model=tf.keras.Sequential()
         model.add(tf.keras.layers.Dense(1,input_dim=x_train.shape[1]))#input layer
         model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
-        model.add(tf.keras.layers.Dense(len(output_column.unique())+1, activation='softmax'))
+        model.add(tf.keras.layers.Dense(len(output_column_model.unique())+1, activation='softmax'))
         classifier.compile(optimizer=optimizer, loss=loss_func,metrics=metrics)
         
         history=classifier.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, callbacks=callback(x_test, y_test))
     else:    
         classifier=tf.keras.Sequential()
         
-        for func in params["hiddenLayerActivationFunctions"]:
-            layers = params["hiddenLayers"]
-            for numNeurons in params["hiddenLayerNeurons"]:
+        for func in paramsModel["hiddenLayerActivationFunctions"]:
+            layers = paramsModel["hiddenLayers"]
+            for numNeurons in paramsModel["hiddenLayerNeurons"]:
                 classifier.add(tf.keras.layers.Dense(units=numNeurons,activation=func))
-        output_func = params["outputLayerActivationFunction"]
+        output_func = paramsModel["outputLayerActivationFunction"]
 
         if(problem_type!="regresioni"):
             classifier.add(tf.keras.layers.Dense(units=1,activation=output_func))
         else:
             classifier.add(tf.keras.layers.Dense(units=1))
 
-        optimizer = params["optimizer"]
-        metrics=params['metrics']
-        loss_func=params["lossFunction"]
+        optimizer = paramsModel["optimizer"]
+        metrics=paramsModel['metrics']
+        loss_func=paramsModel["lossFunction"]
         classifier.compile(optimizer=optimizer, loss=loss_func,metrics=metrics)
-        batch_size = params["batchSize"]
-        epochs = params["epochs"]
+        batch_size = paramsModel["batchSize"]
+        epochs = paramsModel["epochs"]
         history=classifier.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, callbacks=callback(x_test, y_test), validation_split=0.2) # TODO params["validationSplit"]
     #
     # Test
     #
-    model_name = params['_id']
+    model_name = paramsModel['_id']
     #y_pred=classifier.predict(x_test)
     if(problem_type == "regresioni"):
         y_pred=classifier.predict(x_test)
@@ -375,8 +379,8 @@ def manageH5(datain,params,h5model):
     data = pd.DataFrame()
     for col in params["inputColumns"]:
         data[col]=dataset[col]
-    output_column = params["columnToPredict"]
-    data[output_column] = dataset[output_column]
+    output_column_model = params["columnToPredict"]
+    data[output_column_model] = dataset[output_column_model]
     #
     # Brisanje null kolona / redova / zamena
     #nullreplace=[
@@ -450,10 +454,10 @@ def manageH5(datain,params,h5model):
     #
     x_columns = []
     for col in data.columns:
-        if(col!=output_column):
+        if(col!=output_column_model):
             x_columns.append(col)
     x = data[x_columns].values
-    y = data[output_column].values
+    y = data[output_column_model].values
 
 
     y_pred=h5model.predict_classes(x)
