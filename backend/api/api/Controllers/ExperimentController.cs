@@ -25,35 +25,7 @@ namespace api.Controllers
             _mlConnectionService = mlConnectionService;
             _fileService = fileService;
         }
-
-        [HttpPost("add")]
-        [Authorize(Roles = "User,Guest")]
-        public async Task<ActionResult<Experiment>> Post([FromBody] Experiment experiment)
-        {
-            string uploaderId;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                uploaderId = jwtToken.TokenToId(parameter);
-                if (uploaderId == null)
-                    return BadRequest();
-            }
-            else
-                return BadRequest();
-
-            experiment.uploaderId = uploaderId;
-            var existingExperiment = _experimentService.Get(uploaderId, experiment.name);
-            if(existingExperiment != null)
-                return NotFound($"Experiment with name = {experiment.name} exisits");
-            _experimentService.Create(experiment);
-            return Ok(experiment);
-        }
-
-        [HttpGet("get")]
-        [Authorize(Roles = "User,Guest")]
-        public async Task<ActionResult<Experiment>> Get(string id)
+        public string getUserId()
         {
             string uploaderId;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -66,6 +38,35 @@ namespace api.Controllers
                     return null;
             }
             else
+                return null;
+
+            return uploaderId;
+        }
+
+        [HttpPost("add")]
+        [Authorize(Roles = "User,Guest")]
+        public async Task<ActionResult<Experiment>> Post([FromBody] Experiment experiment)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            experiment.uploaderId = uploaderId;
+            var existingExperiment = _experimentService.Get(uploaderId, experiment.name);
+            if(existingExperiment != null)
+                return NotFound($"Experiment with this name exists");
+            _experimentService.Create(experiment);
+            return Ok(experiment);
+        }
+
+        [HttpGet("get")]
+        [Authorize(Roles = "User,Guest")]
+        public async Task<ActionResult<Experiment>> Get(string id)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
                 return BadRequest();
 
             var experiment = _experimentService.Get(id);
@@ -79,24 +80,13 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<List<Experiment>>> getMyExperiments()
         {
-            string uploaderId;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                uploaderId = jwtToken.TokenToId(parameter);
-                if (uploaderId == null)
-                    return null;
-            }
-            else
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
                 return BadRequest();
+
             var experiments=_experimentService.GetMyExperiments(uploaderId);
             return Ok(experiments);
-
         }
-
-
-
     }
 }

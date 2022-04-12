@@ -22,6 +22,23 @@ namespace api.Controllers
             this.userService = userService;
             jwtToken = token;
         }
+        public string getUsername()
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return null;
+
+            return username;
+        }
 
         // GET: api/<UserController>
         [HttpGet]
@@ -36,17 +53,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<User> MyProfilePage()
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var user = userService.GetUserUsername(username);
@@ -61,7 +70,6 @@ namespace api.Controllers
         [HttpPost]
         public ActionResult<User> Post([FromBody] User user)
         {
-            
             var existingUser = userService.GetUserUsername(user.Username);
 
             if (existingUser != null)
@@ -81,20 +89,10 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult PutPass([FromBody] string[] Password)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
-
-
 
             User user = new User();
 
@@ -122,17 +120,9 @@ namespace api.Controllers
         [HttpPut("changeinfo")]
         public ActionResult Put([FromBody] User user)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             return Ok(userService.Update(username, user));
@@ -143,17 +133,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Delete()
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var user = userService.GetUserUsername(username);

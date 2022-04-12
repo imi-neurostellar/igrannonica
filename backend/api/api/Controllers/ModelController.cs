@@ -33,13 +33,8 @@ namespace api.Controllers
             _mlConnectionService = mlConnectionService;
         }
 
-        [HttpPost("trainModel")]
-        [Authorize(Roles = "User,Guest")]
-        public async Task<ActionResult<string>> Test([FromBody] TrainModelObject trainModelObject)
+        public string getUserId()
         {
-            string experimentId = trainModelObject.ExperimentId;
-            string modelId = trainModelObject.ModelId;
-
             string uploaderId;
             var header = Request.Headers[HeaderNames.Authorization];
             if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
@@ -48,10 +43,43 @@ namespace api.Controllers
                 var parameter = headerValue.Parameter;
                 uploaderId = jwtToken.TokenToId(parameter);
                 if (uploaderId == null)
-                    return BadRequest();
+                    return null;
             }
             else
+                return null;
+
+            return uploaderId;
+        }
+        public string getUsername()
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return null;
+
+            return username;
+        }
+
+        [HttpPost("trainModel")]
+        [Authorize(Roles = "User,Guest")]
+        public async Task<ActionResult<string>> Test([FromBody] TrainModelObject trainModelObject)
+        {
+            string experimentId = trainModelObject.ExperimentId;
+            string modelId = trainModelObject.ModelId;
+
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
                 return BadRequest();
+
             var experiment=_experimentService.Get(experimentId);
             var dataset = _datasetService.GetOneDataset(experiment.datasetId);
             var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
@@ -65,17 +93,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Model>> Get()
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername(); 
+            
+            if (username == null)
                 return BadRequest();
 
             return _modelService.GetMyModels(username);
@@ -87,17 +107,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<Model> Get(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var model = _modelService.GetOneModel(username, name);
@@ -119,17 +131,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Model>> GetLatestModels(int latest)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             //ako bude trebao ID, samo iz baze uzeti
@@ -143,8 +147,6 @@ namespace api.Controllers
 
             return novaLista;
         }
-
-
 
 
         // POST api/<ModelController>/add
@@ -179,26 +181,14 @@ namespace api.Controllers
             }
         }
 
-        
-
-
-
         // PUT api/<ModelController>/{name}
         [HttpPut("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Put(string name, [FromBody] Model model)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
 
@@ -216,17 +206,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var model = _modelService.GetOneModel(username, name);

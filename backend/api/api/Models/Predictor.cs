@@ -24,7 +24,7 @@ namespace api.Models
 
 /*
 {
-	"_id" : "6244950f26cf2385bc29ba28",
+	"_id" : "",
 		"username" : "ivan123",
 	  "name" : "Neki prediktor",
 		"description" : "Neki opis prediktora koji je unet tamo",
@@ -32,9 +32,10 @@ namespace api.Models
 		  "proba2", 
 		  "proba3"
 		],
-		"output" : "",
+		"output" : "izlaz",
 		"isPublic" : true,
-		"accessibleByLink" : false,
-		"dateCreated" : "232"
+		"accessibleByLink" : true,
+		"dateCreated" : "2022-04-11T20:33:26.937+00:00",
+    "experimentId" : "Neki id eksperimenta"
 }
 */

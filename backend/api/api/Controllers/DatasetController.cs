@@ -25,11 +25,7 @@ namespace api.Controllers
             _fileService = fileService;
             jwtToken = Token;
         }
-
-        // GET: api/<DatasetController>/mydatasets
-        [HttpGet("mydatasets")]
-        [Authorize(Roles = "User,Guest")]
-        public ActionResult<List<Dataset>> Get()
+        public string getUsername()
         {
             string username;
             var header = Request.Headers[HeaderNames.Authorization];
@@ -42,8 +38,21 @@ namespace api.Controllers
                     return null;
             }
             else
+                return null;
+
+            return username;
+        }
+
+        // GET: api/<DatasetController>/mydatasets
+        [HttpGet("mydatasets")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<List<Dataset>> Get()
+        {
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
-            //U slucaju da je korisnik gost vrati dataSetove igrannonice
+
             if (username == "")
                 return _datasetService.GetGuestDatasets();
 
@@ -60,21 +69,12 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Dataset>> SortDatasets(bool ascdsc, int latest)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             List<Dataset> lista = _datasetService.SortDatasets(username, ascdsc, latest);
-
 
             if (latest == 0)
                 return lista;
@@ -100,17 +100,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Dataset>> Search(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             //ako bude trebao ID, samo iz baze uzeti
@@ -125,17 +117,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<Dataset> Get(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var dataset = _datasetService.GetOneDataset(username, name);
@@ -144,18 +128,6 @@ namespace api.Controllers
 
             return dataset;
         }
-
-        /*za pretragu vratiti dataset koji je public
-          public ActionResult<Dataset> Get(string name)
-        {
-            var dataset = _datasetService.GetOneDataset(username, name);
-
-            if (dataset == null)
-                return NotFound($"Dataset with name = {name} or user with username = {username} not found");
-
-            return dataset;
-        }
-         */
 
         // POST api/<DatasetController>/add
         [HttpPost("add")]
@@ -171,7 +143,6 @@ namespace api.Controllers
                 return NotFound($"Dateset with name = {dataset.name} exisits");
             else
             {
-
                 FileModel fileModel = _fileService.getFile(dataset.fileId);
                 dataset.isPreProcess = false;
                 _datasetService.Create(dataset);
@@ -186,17 +157,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Put(string name, [FromBody] Dataset dataset)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var existingDataset = _datasetService.GetOneDataset(username, name);
@@ -217,17 +180,9 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var dataset = _datasetService.GetOneDataset(username, name);

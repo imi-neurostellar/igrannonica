@@ -14,7 +14,6 @@ namespace api.Services
         Predictor Create(Predictor predictor);
         void Update(string username, string name, Predictor predictor);
         void Delete(string username, string name);
-        bool CheckDb();
     }
 }
 

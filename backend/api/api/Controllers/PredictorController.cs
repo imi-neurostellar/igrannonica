@@ -1,7 +1,6 @@
 ﻿using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
@@ -22,7 +21,24 @@ namespace api.Controllers
             _predictorService = predictorService;
             jwtToken = Token;
             _mlConnectionService = mlConnectionService;
-                         
+        }
+
+        public string getUsername()
+        {
+            string username;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                username = jwtToken.TokenToUsername(parameter);
+                if (username == null)
+                    return null;
+            }
+            else
+                return null;
+
+            return username;
         }
 
         // GET: api/<PredictorController>/mypredictors
@@ -30,21 +46,14 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Predictor>> Get()
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             return _predictorService.GetMyPredictors(username);
         }
+
         // GET: api/<PredictorController>/publicpredictors
         [HttpGet("publicpredictors")]
         public ActionResult<List<Predictor>> GetPublicPredictors()
@@ -52,28 +61,16 @@ namespace api.Controllers
             return _predictorService.GetPublicPredictors();
         }
 
-
-
         //SEARCH za predictore (public ili private sa ovim imenom )
         // GET api/<PredictorController>/search/{name}
         [HttpGet("search/{name}")]
         [Authorize(Roles = "User")]
         public ActionResult<List<Predictor>> Search(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+            
+            if (username == null)
                 return BadRequest();
-
-            //ako bude trebao ID, samo iz baze uzeti
 
             return _predictorService.SearchPredictors(name, username);
         }
@@ -83,20 +80,10 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public ActionResult<Predictor> GetPredictor(string id)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
-                return BadRequest();
+            string username = getUsername();
 
-            //ako bude trebao ID, samo iz baze uzeti
+            if (username == null)
+                return BadRequest();
 
             Predictor predictor = _predictorService.GetPredictor(username, id);
 
@@ -106,24 +93,14 @@ namespace api.Controllers
             return predictor;
         }
 
-
-        //da li da se odvoji search za public i posebno za private?
         // GET api/<PredictorController>/{name}
         [HttpGet("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult<Predictor> Get(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var predictor = _predictorService.GetOnePredictor(username, name);
@@ -143,20 +120,10 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Predictor>> SortPredictors(bool ascdsc, int latest)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
-                return BadRequest();
+            string username = getUsername();
 
-            //ako bude trebao ID, samo iz baze uzeti
+            if (username == null)
+                return BadRequest();
 
             List<Predictor> lista = _predictorService.SortPredictors(username, ascdsc, latest);
 
@@ -172,6 +139,7 @@ namespace api.Controllers
                 return novaLista;
             }
         }
+
         // POST api/<PredictorController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User")]
@@ -194,18 +162,9 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public ActionResult UsePredictor(String id, [FromBody] PredictorColumns[] inputs)
         {
+            string username = getUsername();
 
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            if (username == null)
                 return BadRequest();
 
             Predictor predictor = _predictorService.GetPredictor(username, id);
@@ -215,23 +174,14 @@ namespace api.Controllers
             return NoContent();
         }
 
-
         // PUT api/<PredictorController>/{name}
         [HttpPut("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Put(string name, [FromBody] Predictor predictor)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var existingPredictor = _predictorService.GetOnePredictor(username, name);
@@ -245,30 +195,14 @@ namespace api.Controllers
             return Ok($"Predictor with name = {name} updated");
         }
 
-        // odraditi pretragu predictora
-        //potrebna public i private pretraga
-        //prvo da napakuje svoje pa onda ostale
-        //
-        //isto odraditi i za datasetove
-        //
-
-
         // DELETE api/<PredictorController>/name
         [HttpDelete("{name}")]
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)
         {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
+            string username = getUsername();
+
+            if (username == null)
                 return BadRequest();
 
             var predictor = _predictorService.GetOnePredictor(username, name);
@@ -281,9 +215,5 @@ namespace api.Controllers
             return Ok($"Predictor with name = {name} deleted");
 
         }
-
-
-
-
     }
 }

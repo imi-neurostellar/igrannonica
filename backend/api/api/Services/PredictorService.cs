@@ -45,11 +45,10 @@ namespace api.Services
             return _predictor.Find(predictor => predictor._id == id && (predictor.username == username || predictor.isPublic == true)).FirstOrDefault();
 
         }
-        //last private models
+
         public List<Predictor> SortPredictors(string username, bool ascdsc, int latest)
         {
             List<Predictor> list = _predictor.Find(predictor => predictor.username == username).ToList();
-
 
             if (ascdsc)
                 list = list.OrderBy(predictor => predictor.dateCreated).ToList();
@@ -66,17 +65,6 @@ namespace api.Services
         public void Update(string username, string name, Predictor predictor)
         {
             _predictor.ReplaceOne(predictor => predictor.username == username && predictor.name == name, predictor);
-
-        }
-        public bool CheckDb()
-        {
-            Predictor? predictor = null;
-            predictor = _predictor.Find(predictor => predictor.username == "igrannonica").FirstOrDefault();
-
-            if (predictor != null)
-                return false;
-            else
-                return true;
         }
     }
 }
