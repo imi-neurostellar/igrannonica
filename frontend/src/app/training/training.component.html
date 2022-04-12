@@ -4,13 +4,25 @@
 <div id="wrapper">
     <div id="container" class="container p-5" style="background-color: white; min-height: 100%;">
 
-<h2>1. Izaberi eksperiment</h2>
-TODO
+<h2>1. Izaberite eksperiment iz kolekcije</h2>
+<div class="px-5 my-2">
+    <input type="text" class="form-control" placeholder="Pretraga"
+        [(ngModel)]="term">
+</div>
+<div class="overflow-auto" style="max-height: 500px;">
+    <ul class="list-group">
+        <li class="list-group-item p-3" *ngFor="let experiment of myExperiments|filter:term"
+            [ngClass]="{'selectedExperimentClass': this.selectedExperiment == experiment}">
+            <app-item-experiment [experiment]="experiment"
+                (click)="selectThisExperiment(experiment);"></app-item-experiment>
+        </li>
+    </ul>
+</div>
 
-<h2>2.Izaberi model</h2>
+<h2>2.Izaberite model</h2>
 <app-model-load (selectedModelChangeEvent)="selectModel($event)"></app-model-load>
 
-<h2>3. Treniraj model</h2>
+<h2>3. Trenirajte model</h2>
 <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="trainModel();">Treniraj
     model</button>
 

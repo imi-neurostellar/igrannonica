@@ -75,7 +75,7 @@ namespace api.Controllers
             return Ok(experiment);
         }
 
-        [HttpPost("getMyExperiments")]
+        [HttpGet("getMyExperiments")]
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<List<Experiment>>> getMyExperiments()
         {

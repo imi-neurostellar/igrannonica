@@ -15,4 +15,8 @@ export class ExperimentsService {
   addExperiment(experiment: Experiment): Observable<any> {
     return this.http.post(`${API_SETTINGS.apiURL}/experiment/add`, experiment, { headers: this.authService.authHeader() });
   }
+
+  getMyExperiments(): Observable<Experiment[]> {
+    return this.http.get<Experiment[]>(`${API_SETTINGS.apiURL}/experiment/getmyexperiments`, { headers: this.authService.authHeader() });
+  }
 }

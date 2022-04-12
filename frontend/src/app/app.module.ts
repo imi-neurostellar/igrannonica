@@ -45,6 +45,7 @@ import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.compon
 import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-dataset.component';
 import { GraphComponent } from './_elements/graph/graph.component';
 import { TrainingComponent } from './training/training.component';
+import { ItemExperimentComponent } from './_elements/item-experiment/item-experiment.component';
 import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
 
 @NgModule({
@@ -81,6 +82,7 @@ import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.comp
     AddNewDatasetComponent,
     GraphComponent,
     TrainingComponent,
+    ItemExperimentComponent,
     YesNoDialogComponent
   ],
   imports: [

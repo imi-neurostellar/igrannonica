@@ -35,8 +35,8 @@ export class ModelsService {
   addDataset(dataset: Dataset): Observable<any> {
     return this.http.post(`${API_SETTINGS.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
   }
-  trainModel(model: Model): Observable<any> {
-    return this.http.post(`${API_SETTINGS.apiURL}/model/sendmodel`, model, { headers: this.authService.authHeader(), responseType: 'text' });
+  trainModel(modelId: string, experimentId: string): Observable<any> {
+    return this.http.post(`${API_SETTINGS.apiURL}/model/trainmodel`, { ModelId: modelId, ExperimentId: experimentId }, { headers: this.authService.authHeader(), responseType: 'text' });
   }
 
   getMyDatasets(): Observable<Dataset[]> {

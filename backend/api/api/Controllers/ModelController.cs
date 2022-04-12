@@ -33,10 +33,13 @@ namespace api.Controllers
             _mlConnectionService = mlConnectionService;
         }
 
-        [HttpPost("sendModel")]
+        [HttpPost("trainModel")]
         [Authorize(Roles = "User,Guest")]
-        public async Task<ActionResult<string>> Test([FromBody] string modelId,string experimentId)
+        public async Task<ActionResult<string>> Test([FromBody] TrainModelObject trainModelObject)
         {
+            string experimentId = trainModelObject.ExperimentId;
+            string modelId = trainModelObject.ModelId;
+
             string uploaderId;
             var header = Request.Headers[HeaderNames.Authorization];
             if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
@@ -236,6 +239,13 @@ namespace api.Controllers
             return Ok($"Model with name = {name} deleted");
 
         }
+
+    }
+
+    public class TrainModelObject
+    {
+        public string ModelId { get; set; }
+        public string ExperimentId { get; set; }
 
     }
 }

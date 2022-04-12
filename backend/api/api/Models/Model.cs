@@ -23,7 +23,6 @@ namespace api.Models
 
         //Neural net training
         public string type { get; set; }
-        public string encoding { get; set; }
         public string optimizer { get; set; }
         public string lossFunction { get; set; }
         //public int inputNeurons { get; set; }
