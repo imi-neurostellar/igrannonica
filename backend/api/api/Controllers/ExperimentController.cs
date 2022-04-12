@@ -44,7 +44,9 @@ namespace api.Controllers
                 return BadRequest();
 
             experiment.uploaderId = uploaderId;
-
+            var existingExperiment = _experimentService.Get(uploaderId, experiment.name);
+            if(existingExperiment != null)
+                return NotFound($"Experiment with name = {experiment.name} exisits");
             _experimentService.Create(experiment);
             return Ok(experiment);
         }

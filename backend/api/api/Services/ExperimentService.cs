@@ -22,6 +22,10 @@ namespace api.Services
         {
             return _experiment.Find(exp=>exp._id == id).FirstOrDefault();
         }
+        public Experiment Get(string uploaderId, string name)
+        {
+            return _experiment.Find(exp => exp.uploaderId == uploaderId && exp.name == name ).FirstOrDefault();
+        }
 
         public void Update(string id, Experiment experiment)
         {

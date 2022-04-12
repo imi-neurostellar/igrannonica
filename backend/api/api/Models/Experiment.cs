@@ -8,7 +8,8 @@ namespace api.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
-
+        public string name { get; set; }
+        public string description { get; set; }
         public string datasetId { get; set; }
         public string uploaderId { get; set; }
         public string[] inputColumns { get; set; }
