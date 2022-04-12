@@ -204,22 +204,4 @@ export class ExperimentComponent implements OnInit {
       }
     });
   }
-
-  trainModel() {
-    this.trainingResult = undefined;
-    //console.log('Training model...', this.selectedModel);
-    if (!this.selectedDataset) {
-      Shared.openDialog('Greška', 'Izvor podataka nije izabran!');
-      return;
-    }
-    // TODO proveri nullValues
-    if (!this.selectedModel) {
-      Shared.openDialog('Greška', 'Model nije izabran!');
-      return;
-    }
-    this.modelsService.trainModel(this.selectedModel).subscribe((response: any) => {
-      console.log('Train model complete!', response);
-      this.trainingResult = response;
-    });
-  }
 }

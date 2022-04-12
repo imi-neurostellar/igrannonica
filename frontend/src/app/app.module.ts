@@ -45,6 +45,7 @@ import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.compon
 import { AddNewDatasetComponent } from './_elements/add-new-dataset/add-new-dataset.component';
 import { GraphComponent } from './_elements/graph/graph.component';
 import { TrainingComponent } from './training/training.component';
+import { ItemExperimentComponent } from './_elements/item-experiment/item-experiment.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { TrainingComponent } from './training/training.component';
     AlertDialogComponent,
     AddNewDatasetComponent,
     GraphComponent,
-    TrainingComponent
+    TrainingComponent,
+    ItemExperimentComponent
   ],
   imports: [
     BrowserModule,
