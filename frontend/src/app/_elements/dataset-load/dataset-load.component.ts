@@ -3,7 +3,7 @@ import { AddNewDatasetComponent } from '../add-new-dataset/add-new-dataset.compo
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
 import Dataset from 'src/app/_data/Dataset';
-import { DatatableComponent } from 'src/app/_elements/datatable/datatable.component';
+import { DatatableComponent, TableData } from 'src/app/_elements/datatable/datatable.component';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 import { Output, EventEmitter } from '@angular/core';
@@ -17,8 +17,8 @@ export class DatasetLoadComponent {
 
   @Output() selectedDatasetChangeEvent = new EventEmitter<Dataset>();
 
-  @ViewChild(AddNewDatasetComponent) addNewDatasetComponent?: AddNewDatasetComponent;
-  @ViewChild(AddNewDatasetComponent) datatable?: DatatableComponent;
+  @ViewChild(AddNewDatasetComponent) addNewDatasetComponent!: AddNewDatasetComponent;
+  @ViewChild(AddNewDatasetComponent) datatable!: DatatableComponent;
 
   datasetLoaded: boolean = false;
   selectedDatasetLoaded: boolean = false;
@@ -27,10 +27,8 @@ export class DatasetLoadComponent {
   myDatasets?: Dataset[];
   existingDatasetSelected: boolean = false;
   selectedDataset?: Dataset;
-  otherDataset?: Dataset;
-  otherDatasetFile?: any[];
-  datasetFile?: any[];
-  datasetHasHeader?: boolean = true;
+
+  tableData: TableData = new TableData();
 
   term: string = "";
 
@@ -63,27 +61,20 @@ export class DatasetLoadComponent {
     this.selectedDataset = dataset;
     this.selectedDatasetLoaded = false;
     this.existingDatasetSelected = true;
-    this.datasetHasHeader = this.selectedDataset.hasHeader;
+    this.tableData.hasHeader = this.selectedDataset.hasHeader;
+
+    this.tableData.hasInput = true;
+    this.tableData.loaded = false;
 
     this.datasets.getDatasetFile(dataset.fileId).subscribe((file: string | undefined) => {
       if (file) {
-        console.log(file);
-        this.datatable!.hasInput = true;
-        this.datatable!.loaded = true;
-        this.datasetFile = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
-        /*for (let i = this.datasetFile.length - 1; i >= 0; i--) {  //moguce da je vise redova na kraju fajla prazno i sl.
-          if (this.datasetFile[i].length != this.datasetFile[0].length)
-            this.datasetFile[i].pop();
-          else
-            break; //nema potrebe dalje
-        }*/
-        console.log(this.datatable!.data);
-        console.log(this.datasetFile);
-        console.log(this.datatable!.hasInput);
+        this.tableData.loaded = true;
+        this.tableData.numRows = this.selectedDataset!.rowCount;
+        this.tableData.numCols = this.selectedDataset!.columnInfo.length;
+        this.tableData.data = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
         //this.resetCbsAndRbs();                        //TREBA DA SE DESI
         //this.refreshThreeNullValueRadioOptions();       //TREBA DA SE DESI
         this.selectedDatasetLoaded = true;
-        //this.scrollToNextForm();
 
         this.selectedDatasetChangeEvent.emit(this.selectedDataset);
       }
@@ -91,17 +82,7 @@ export class DatasetLoadComponent {
   }
 
   resetSelectedDataset(): boolean {
-    const temp = this.selectedDataset;
-    this.selectedDataset = this.otherDataset;
-    this.otherDataset = temp;
-    const tempFile = this.datasetFile;
-    this.datasetFile = this.otherDatasetFile;
-    this.otherDatasetFile = tempFile;
-
     this.selectedDatasetChangeEvent.emit(this.selectedDataset);
-
     return true;
   }
-
-
 }

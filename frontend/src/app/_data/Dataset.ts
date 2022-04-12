@@ -15,6 +15,7 @@ export default class Dataset {
         public hasHeader: boolean = true,
 
         public columnInfo: ColumnInfo[] = [],
+        public rowCount: number = 0,
         public nullRows: number = 0,
         public nullCols: number = 0,
         public preview: string[][] = [[]]

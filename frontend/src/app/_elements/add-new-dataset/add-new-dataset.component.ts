@@ -4,7 +4,8 @@ import Dataset from 'src/app/_data/Dataset';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
-import { DatatableComponent } from '../datatable/datatable.component';
+import { DatatableComponent, TableData } from '../datatable/datatable.component';
+import { CsvParseService } from 'src/app/_services/csv-parse.service';
 
 @Component({
   selector: 'app-add-new-dataset',
@@ -14,12 +15,9 @@ import { DatatableComponent } from '../datatable/datatable.component';
 export class AddNewDatasetComponent {
 
   @Output() newDatasetAdded = new EventEmitter<string>();
-  @ViewChild(DatatableComponent) datatable?: DatatableComponent;
+  @ViewChild(DatatableComponent) datatable!: DatatableComponent;
 
   delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
-
-  //hasHeader: boolean = true;
-  hasInput: boolean = false;
 
   csvRecords: any[] = [];
   files: File[] = [];
@@ -28,7 +26,9 @@ export class AddNewDatasetComponent {
 
   dataset: Dataset; //dodaj ! potencijalno
 
-  constructor(private ngxCsvParser: NgxCsvParser, private modelsService: ModelsService, private datasetsService: DatasetsService) {
+  tableData: TableData = new TableData();
+
+  constructor(private modelsService: ModelsService, private datasetsService: DatasetsService, private csv: CsvParseService) {
     this.dataset = new Dataset();
   }
 
@@ -39,12 +39,13 @@ export class AddNewDatasetComponent {
     if (this.files.length == 0 || this.files[0] == null) {
       //console.log("NEMA FAJLA");
       //this.loaded.emit("not loaded");
-      this.hasInput = false;
+      this.tableData.hasInput = false;
       return;
     }
     else
-      this.hasInput = true;
+      this.tableData.hasInput = true;
 
+    this.tableData.loaded = false;
     this.update();
   }
 
@@ -53,34 +54,27 @@ export class AddNewDatasetComponent {
     if (this.files.length < 1)
       return;
 
-    this.datatable!.loaded = false;
-    this.datatable!.hasInput = this.hasInput;
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      if (typeof fileReader.result === 'string') {
+        const result = this.csv.csvToArray(fileReader.result, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter)
 
-    this.ngxCsvParser.parse(this.files[0], { header: false, delimiter: (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter })
-      .pipe().subscribe((result) => {
+        if (this.dataset.hasHeader)
+          this.csvRecords = result.splice(0, 11);
+        else
+          this.csvRecords = result.splice(0, 10);
 
-        console.log('Result', result);
-        if (result.constructor === Array) {
-          if(this.dataset.hasHeader)
-            this.csvRecords = result.splice(0,11);
-          else
-            this.csvRecords=result.splice(0,10);
-          if (this.dataset.hasHeader)
-            this.rowsNumber = this.csvRecords.length - 1;
-          else
-            this.rowsNumber = this.csvRecords.length;
-          this.colsNumber = this.csvRecords[0].length;
+        this.colsNumber = result[0].length;
+        this.rowsNumber = result.length;
 
-          if (this.dataset.hasHeader) 
-            this.dataset.header = this.csvRecords[0];
-          
-          this.datatable!.data = this.csvRecords;
-          this.datatable!.hasHeader = this.dataset.hasHeader;
-          this.datatable!.loaded = true;
-        }
-      }, (error: NgxCSVParserError) => {
-        console.log('Error', error);
-      });
+        this.tableData.data = this.csvRecords
+        this.tableData.hasHeader = this.dataset.hasHeader;
+        this.tableData.loaded = true;
+        this.tableData.numCols = this.colsNumber;
+        this.tableData.numRows = this.rowsNumber;
+      }
+    }
+    fileReader.readAsText(this.files[0]);
   }
 
   checkAccessible() {
@@ -96,17 +90,17 @@ export class AddNewDatasetComponent {
 
     this.modelsService.uploadData(this.files[0]).subscribe((file) => {
       //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
-        this.dataset.fileId = file._id;
-        this.dataset.username = shared.username;
+      this.dataset.fileId = file._id;
+      this.dataset.username = shared.username;
 
-        this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
-          this.newDatasetAdded.emit("added");
-          shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
-        }, (error) => {
-          shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
-        }); //kraj addDataset subscribe
+      this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
+        this.newDatasetAdded.emit("added");
+        shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
+      }, (error) => {
+        shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
+      }); //kraj addDataset subscribe
     }, (error) => {
-      
+
     }); //kraj uploadData subscribe
   }
 
