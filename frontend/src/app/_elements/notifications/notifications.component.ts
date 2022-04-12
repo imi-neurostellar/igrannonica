@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WebSocketService } from 'src/app/_services/web-socket.service';
+import { SignalRService } from 'src/app/_services/signal-r.service';
 import Notification from 'src/app/_data/Notification';
 
 @Component({
@@ -12,7 +12,7 @@ export class NotificationsComponent implements OnInit {
   notifications?: Notification[];
   closed: boolean = false;
 
-  constructor(private wsService: WebSocketService) {
+  constructor(private signalRService:SignalRService) {
     this.notifications = [
       new Notification("Titanik (Preziveli)", "79768456867", 0.2),
       new Notification("Test Prediktor 1", "56758768678", 0.4),
