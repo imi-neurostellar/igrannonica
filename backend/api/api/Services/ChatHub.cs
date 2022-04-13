@@ -31,8 +31,10 @@ namespace api.Services
         }
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            string id = Users.FirstOrDefault(u => u.Value == Context.ConnectionId).Key;
-            Users.Remove(id);
+            var user = Users.Values.Contains(Context.ConnectionId);
+            if (user==false)
+                return;
+            Users.Remove(Users.FirstOrDefault(u => u.Value == Context.ConnectionId).Key);
         }
         public async Task SendDirect(string id,string message)
         {
