@@ -44,7 +44,7 @@ namespace api.Services
             var result = await this.client.ExecuteAsync(request);
 
             if (ChatHub.CheckUser(id))
-                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyModel", "Trained model with name " +model.name );
+                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyModel",model.name,model._id);
 
             return;
 
@@ -62,7 +62,7 @@ namespace api.Services
             newDataset.isPreProcess = true;
             _datasetService.Update(newDataset);
             if(ChatHub.CheckUser(id))
-                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyDataset", "Preprocessed dataset with name "+newDataset.name,newDataset._id);
+                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyDataset",newDataset.name,newDataset._id);
             return;
 
         }
