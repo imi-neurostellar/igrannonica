@@ -24,6 +24,7 @@ async def start():
     get_or_create_eventloop().run_until_complete(start_server)
     get_or_create_eventloop().run_forever()
 
+
 async def send(msg):
     print("WS sending message:")
     print(msg)

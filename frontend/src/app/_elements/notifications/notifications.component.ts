@@ -9,19 +9,25 @@ import Notification from 'src/app/_data/Notification';
 })
 export class NotificationsComponent implements OnInit {
 
-  notifications?: Notification[];
+  notifications: Notification[] = [];
   closed: boolean = false;
 
-  constructor(private signalRService:SignalRService) {
-    this.notifications = [
-      new Notification("Titanik (Preziveli)", "79768456867", 0.2),
-      new Notification("Test Prediktor 1", "56758768678", 0.4),
-      new Notification("Test Prediktor 2", "11344556425", 0.7)
-    ]
+  constructor(private signalRService: SignalRService) {
+
   }
 
   ngOnInit(): void {
-    // this.wsService.send('test');
+    if (this.signalRService.hubConnection) {
+      this.signalRService.hubConnection.on("NotifyDataset", (message: string) => {
+        this.notifications.push(new Notification(message, "datasetIDOvde!!!", 1.0));
+      });
+
+      this.signalRService.hubConnection.on("NotifyEpoch", (message: string) => {
+        this.notifications.push(new Notification(message, "predictorIDOvde!!!", 0.5 /*(epoch / model.epochs)*/));
+      });
+    } else {
+      console.warn("Notifications: No connection!");
+    }
   }
 
 }

@@ -3,6 +3,7 @@ using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 
@@ -20,10 +21,13 @@ namespace api.Controllers
         private readonly IExperimentService _experimentService;
         private IJwtToken jwtToken;
         private readonly IMlConnectionService _mlConnectionService;
+        private readonly IUserService _userService;
+        private readonly IHubContext<ChatHub> _ichat;
 
 
-        public ModelController(IMlConnectionService mlService, IModelService modelService, IMlConnectionService mlConnectionService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token,IExperimentService experiment)
+        public ModelController(IMlConnectionService mlService, IModelService modelService, IMlConnectionService mlConnectionService, IDatasetService datasetService, IFileService fileService, IConfiguration configuration,IJwtToken token,IExperimentService experiment,IUserService user,IHubContext<ChatHub> ichat)
         {
+            
             _mlService = mlService;
             _modelService = modelService;
             _datasetService = datasetService;
@@ -31,6 +35,8 @@ namespace api.Controllers
             _experimentService = experiment;
             jwtToken = token;
             _mlConnectionService = mlConnectionService;
+            _userService= user;
+            _ichat= ichat;
         }
 
         public string getUserId()
@@ -70,7 +76,7 @@ namespace api.Controllers
 
         [HttpPost("trainModel")]
         [Authorize(Roles = "User,Guest")]
-        public async Task<ActionResult<string>> Test([FromBody] TrainModelObject trainModelObject)
+        public async Task<ActionResult<string>> TrainModel([FromBody] TrainModelObject trainModelObject)
         {
             string experimentId = trainModelObject.ExperimentId;
             string modelId = trainModelObject.ModelId;
@@ -84,9 +90,27 @@ namespace api.Controllers
             var dataset = _datasetService.GetOneDataset(experiment.datasetId);
             var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
             var model = _modelService.GetOneModel(modelId);
-            _mlService.TrainModel(model,experiment,filepath);//To do  Obavestiti korisnika kada se model istrenira
+            _mlService.TrainModel(model,experiment,filepath,dataset,uploaderId);//To do  Obavestiti korisnika kada se model istrenira
             return Ok();
         }
+
+        [HttpPost("epoch")]
+        public async Task<ActionResult<string>> Epoch([FromBody] Epoch info)
+        {
+            
+            var model=_modelService.GetOneModel(info.ModelId);
+            var user = _userService.GetUserByUsername(model.username);
+
+            if (ChatHub.CheckUser(user._id))
+                await _ichat.Clients.Client(ChatHub.Users[user._id]).SendAsync("NotifyEpoch",info.ModelId,info.Stat);
+
+            return Ok();
+        }
+
+
+
+
+
 
         // GET: api/<ModelController>/mymodels
         [HttpGet("mymodels")]
@@ -166,8 +190,7 @@ namespace api.Controllers
             if (existingModel != null && !overwrite)
                 return NotFound($"Model with name = {model.name} exisits");
             else
-            {
-                model.isTrained = false;
+            { 
                 //_modelService.Create(model);
                 //return Ok();
                 if (existingModel == null)
@@ -229,5 +252,10 @@ namespace api.Controllers
         public string ModelId { get; set; }
         public string ExperimentId { get; set; }
 
+    }
+    public class Epoch
+    {
+        public string ModelId { get; set; }
+        public string Stat { get; set; }
     }
 }
