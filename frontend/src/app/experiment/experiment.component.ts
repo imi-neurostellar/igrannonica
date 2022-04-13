@@ -24,11 +24,12 @@ export class ExperimentComponent implements OnInit {
   Object = Object;
 
   selectedColumnsInfoArray: ColumnInfo[] = [];
-  selectedNullColumnsArray: string[] = [];
+  selectedNotNullColumnsArray: string[] = [];
 
   tempTestSetDistribution = 90;
 
-  constructor(private modelsService: ModelsService, private experimentsService: ExperimentsService) { }
+  constructor(private modelsService: ModelsService, private experimentsService: ExperimentsService) {
+  }
 
   ngOnInit(): void {
   }
@@ -36,7 +37,7 @@ export class ExperimentComponent implements OnInit {
   updateDataset(dataset: Dataset) {
     this.selectedDataset = dataset;
     this.selectedColumnsInfoArray = this.selectedDataset.columnInfo;
-    this.selectedNullColumnsArray = [];
+    this.selectedNotNullColumnsArray = [];
   }
 
   getInputById(id: string): HTMLInputElement {
@@ -104,7 +105,7 @@ export class ExperimentComponent implements OnInit {
     }
   }
 
-  getSelectedNullColumnsArray(): string[] {
+  getSelectedColumnsArrayWithoutNullVals(): string[] {
     let colNames: string[] = [];
 
     for (let i = 0; i < this.selectedColumnsInfoArray.length; i++) {
@@ -184,7 +185,7 @@ export class ExperimentComponent implements OnInit {
       this.experiment = response;
 
       this.selectedColumnsInfoArray = [];
-      this.selectedNullColumnsArray = [];
+      this.selectedNotNullColumnsArray = [];
 
       Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
     }, (error) => {
@@ -192,5 +193,16 @@ export class ExperimentComponent implements OnInit {
         Shared.openDialog("Greška", "Eksperiment sa unetim nazivom već postoji u Vašoj kolekciji. Unesite neki drugi naziv.");
       }
     });
+  }
+
+  countSelectedNullCols(): number {
+    let counter: number = 0;
+
+    for (let i = 0; i < this.selectedColumnsInfoArray.length; i++) {
+      let oneColInfo = this.selectedColumnsInfoArray[i];
+      if (oneColInfo.numNulls > 0)
+        ++counter;
+    }
+    return counter;
   }
 }

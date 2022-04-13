@@ -34,8 +34,6 @@ export class MyModelsComponent implements OnInit {
 deleteThisModel(model: Model): void{
   shared.openYesNoDialog('Brisanje seta podataka','Da li ste sigurni da želite da obrišete model?',() => {
   this.modelsS.deleteModel(model).subscribe((response) => {
-    console.log("OBRISANOOO JEE", response);
-    //na kraju uspesnog
     this.getAllMyModels();
   }, (error) =>{
       if (error.error == "Model with name = {name} deleted") {
@@ -48,9 +46,7 @@ deleteThisModel(model: Model): void{
 
   getAllMyModels(): void{
     this.modelsS.getMyModels().subscribe(m => {
-      
       this.myModels = m;
-      console.log(this.myModels);
     });
   }
 

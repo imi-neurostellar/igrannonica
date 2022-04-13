@@ -59,7 +59,7 @@ export class ModelLoadComponent implements OnInit {
     }
   }
 
-  uploadModel() {   //console.log(this.selectedModel);
+  uploadModel() {
     this.getMetrics();
 
     this.newModel.username = Shared.username;

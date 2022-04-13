@@ -33,7 +33,6 @@ export class LoginModalComponent implements OnInit {
   doLogin() {
     if (this.username.length > 0 && this.password.length > 0) {
       this.authService.login(this.username, this.password).subscribe((response) => {
-        console.log(response);
 
         if (response == "Username doesn't exist" || response == "Wrong password") {
           this.wrongCreds = true;

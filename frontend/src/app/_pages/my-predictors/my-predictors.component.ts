@@ -20,8 +20,6 @@ export class MyPredictorsComponent implements OnInit {
     if(window.confirm("IZABRANI MODEL ĆE BITI IZBRISAN"))
       {
       this.predictorsS.deletePredictor(predictor).subscribe((response) => {
-        console.log("OBRISANOOO JEE", response);
-        //na kraju uspesnog
         this.getAllMyPredictors();
       }, (error) =>{
           if (error.error == "Predictor with name = {name} deleted") {
@@ -35,9 +33,7 @@ export class MyPredictorsComponent implements OnInit {
 
   getAllMyPredictors(): void{
     this.predictorsS.getMyPredictors().subscribe(m => {
-      
       this.predictors = m;
-      console.log(this.predictors);
     });
   }
 

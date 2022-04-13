@@ -53,7 +53,6 @@ export class DatasetLoadComponent {
     this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;
       this.showMyDatasets = true;
-      //this.
     });
   }
 

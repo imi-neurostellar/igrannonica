@@ -67,7 +67,6 @@ export class ProfileComponent implements OnInit {
           break;
         }
       }
-      console.log(this.user);
     });
   }
 
@@ -96,7 +95,6 @@ export class ProfileComponent implements OnInit {
       }
       shared.openDialog("Obaveštenje", "Podaci su uspešno promenjeni.");
       this.user = editedUser;
-      console.log(this.user);
       this.resetInfo();
     }, (error: any) =>{
       if (error.error == "Username already exists!") {
@@ -134,7 +132,6 @@ export class ProfileComponent implements OnInit {
       this.authService.logOut();
       this.router.navigate(['']);
     }, (error: any) => {
-      console.log("error poruka: ", error.error);
       if (error.error == 'Wrong old password!') {
         this.wrongPassBool = true;
         //(<HTMLSelectElement>document.getElementById("inputPassword")).focus();

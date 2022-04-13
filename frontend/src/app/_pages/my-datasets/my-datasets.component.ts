@@ -44,8 +44,6 @@ export class MyDatasetsComponent implements OnInit {
 deleteThisDataset(dataset: Dataset): void{
   shared.openYesNoDialog('Brisanje seta podataka','Da li ste sigurni da želite da obrišete ovaj set podataka?',() => {  
   this.datasetsS.deleteDataset(dataset).subscribe((response) => {
-    console.log("OBRISANO JE", response);
-    //na kraju uspesnog
     this.getAllMyDatasets();
   }, (error) =>{
       if (error.error == "Dataset with name = {name} deleted") {
@@ -57,9 +55,7 @@ deleteThisDataset(dataset: Dataset): void{
 
   getAllMyDatasets(): void{
     this.datasetsS.getMyDatasets().subscribe(m => {
-      
       this.myDatasets = m;
-      console.log(this.myDatasets);
     });
   }
   

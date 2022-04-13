@@ -25,7 +25,6 @@ export class PredictComponent implements OnInit {
       
         this.predictor = p;
         this.predictor.inputs.forEach((p,index)=> this.inputs[index] = new Column(p, ""));
-        console.log(this.predictor);
       })
     });
   }
@@ -34,7 +33,6 @@ export class PredictComponent implements OnInit {
     this.predictS.usePredictor(this.predictor, this.inputs).subscribe(p => {
       shared.openDialog("Obaveštenje", "Prediktor je uspešno poslat na probu."); //pisalo je "na treniranje" ??
     })
-    console.log(this.inputs);
   }
 }
 

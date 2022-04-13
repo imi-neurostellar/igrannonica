@@ -38,7 +38,6 @@ export class FilterDatasetsComponent implements OnInit {
     newDataset.name=name as string;
     if(name!=null && name!="")
     this.datasets.addDataset(newDataset).subscribe((response:string)=>{
-      console.log(response);
       shared.openDialog("Obaveštenje", "Uspešno ste dodali dataset sa nazivom " + newDataset.name);
     },(error)=>{
       shared.openDialog("Obaveštenje", "U svojoj kolekciji već imate dataset sa ovim imenom. Molimo Vas da unesete drugo ime.");
