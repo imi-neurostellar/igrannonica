@@ -158,8 +158,8 @@ namespace api.Controllers
             //username="" ako je GUEST
             //Experiment e = _experimentService.Get(model.experimentId); umesto 1 ide e.inputColumns.Length   TODO!!!!!!!!!!!!!!!!!
             //model.inputNeurons = e.inputColumns.Length;
-            if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
-                return BadRequest("Bad parameters!");
+            /*if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
+                return BadRequest("Bad parameters!");*/
 
             var existingModel = _modelService.GetOneModel(model.username, model.name);
 
