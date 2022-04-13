@@ -101,7 +101,7 @@ class TrainingResultRegression:
 class TrainingResult:
     metrics: dict
 '''
-def train(dataset, paramsModel, paramsExperiment, callback):
+def train(dataset, paramsModel, paramsExperiment, paramsDataset, callback):
     problem_type = paramsModel["type"]
     dataModel = pd.DataFrame()
     dataExperiment = pd.DataFrame()
