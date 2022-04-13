@@ -73,5 +73,4 @@ def returnColumnsInfo():
     return jsonify(dataset)
     
 print("App loaded.")
-ml_socket.start()
 app.run()

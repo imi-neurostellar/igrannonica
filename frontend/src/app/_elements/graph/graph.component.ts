@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import Model from 'src/app/_data/Model';
 
@@ -7,7 +7,12 @@ import Model from 'src/app/_data/Model';
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css']
 })
-export class GraphComponent implements OnInit {
+export class GraphComponent implements AfterViewInit {
+
+  @ViewChild('graphWrapper')
+  wrapper!: ElementRef;
+  @ViewChild('graphCanvas')
+  canvas!: ElementRef;
 
   @Input() model?: Model;
   @Input() inputCols: number = 1;
@@ -20,16 +25,12 @@ export class GraphComponent implements OnInit {
   @Input() inputNodeColor: string = '#ffdd11';
   @Input() outputNodeColor: string = '#44ee22';
 
-  private wrapper?: HTMLDivElement;
-  private canvas?: HTMLCanvasElement;
   private ctx?: CanvasRenderingContext2D;
 
   constructor() { }
 
-  ngOnInit(): void {
-    this.wrapper = (<HTMLDivElement>document.getElementById('graphWrapper'));
-    this.canvas = (<HTMLCanvasElement>document.getElementById('graphCanvas'));
-    const ctx = this.canvas.getContext('2d');
+  ngAfterViewInit(): void {
+    const ctx = this.canvas.nativeElement.getContext('2d');
     if (ctx) {
       this.ctx = ctx;
     } else {
@@ -39,10 +40,6 @@ export class GraphComponent implements OnInit {
     window.addEventListener('resize', () => { this.resize() });
     this.update();
     this.resize();
-
-    /*setInterval(() => {
-      this.update();
-    }, 5000);*/
   }
 
   layers?: Node[][];
@@ -83,7 +80,7 @@ export class GraphComponent implements OnInit {
   }
 
   draw() {
-    this.ctx!.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
+    this.ctx!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     let index = 0;
     while (index < this.layers!.length - 1) {
@@ -126,13 +123,13 @@ export class GraphComponent implements OnInit {
   ratio = 1;
 
   resize() {
-    this.width = this.wrapper!.offsetWidth;
-    this.height = this.wrapper!.offsetHeight;
+    this.width = this.wrapper.nativeElement.offsetWidth;
+    this.height = this.wrapper.nativeElement.offsetHeight;
     this.ratio = this.width / this.height;
 
     if (this.canvas) {
-      this.canvas.width = this.width;
-      this.canvas.height = this.height;
+      this.canvas.nativeElement.width = this.width;
+      this.canvas.nativeElement.height = this.height;
     }
 
     this.draw();

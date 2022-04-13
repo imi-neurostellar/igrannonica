@@ -13,17 +13,17 @@ export class NotificationsComponent implements OnInit {
   closed: boolean = false;
 
   constructor(private signalRService: SignalRService) {
-
   }
 
   ngOnInit(): void {
     if (this.signalRService.hubConnection) {
-      this.signalRService.hubConnection.on("NotifyDataset", (message: string) => {
-        this.notifications.push(new Notification(message, "datasetIDOvde!!!", 1.0));
+      this.signalRService.hubConnection.on("NotifyDataset", (dName: string, dId: string) => {
+        this.notifications.push(new Notification(`Obrađen izvor podataka: ${dName}`, dId, 1.0, false));
       });
 
-      this.signalRService.hubConnection.on("NotifyEpoch", (message: string) => {
-        this.notifications.push(new Notification(message, "predictorIDOvde!!!", 0.5 /*(epoch / model.epochs)*/));
+      this.signalRService.hubConnection.on("NotifyEpoch", (epoch: string, mName: string, mId: string, numEpochs) => {
+        //todo epoch
+        this.notifications.push(new Notification(`Treniranje modela: ${mName}`, mId, 0.5));
       });
     } else {
       console.warn("Notifications: No connection!");

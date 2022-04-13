@@ -7,13 +7,14 @@ import { DatatableComponent, TableData } from 'src/app/_elements/datatable/datat
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 import { Output, EventEmitter } from '@angular/core';
+import { SignalRService } from 'src/app/_services/signal-r.service';
 
 @Component({
   selector: 'app-dataset-load',
   templateUrl: './dataset-load.component.html',
   styleUrls: ['./dataset-load.component.css']
 })
-export class DatasetLoadComponent {
+export class DatasetLoadComponent implements OnInit {
 
   @Output() selectedDatasetChangeEvent = new EventEmitter<Dataset>();
 
@@ -32,7 +33,7 @@ export class DatasetLoadComponent {
 
   term: string = "";
 
-  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService) {
+  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService, private signalRService: SignalRService) {
     this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;
     });
@@ -83,5 +84,15 @@ export class DatasetLoadComponent {
   resetSelectedDataset(): boolean {
     this.selectedDatasetChangeEvent.emit(this.selectedDataset);
     return true;
+  }
+
+  ngOnInit(): void {
+    if (this.signalRService.hubConnection) {
+      this.signalRService.hubConnection.on("NotifyDataset", _ => {
+        this.refreshMyDatasets();
+      });
+    } else {
+      console.warn("Dataset-Load: No connection!");
+    }
   }
 }
