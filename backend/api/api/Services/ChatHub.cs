@@ -22,14 +22,14 @@ namespace api.Services
             string token=Context.GetHttpContext().Request.Query["access_token"];
             string id=_tokenService.TokenToId(token);
             Users.Add(id,Context.ConnectionId);
-            //await Send(id,Context.ConnectionId);
             await SendDirect(id, "poruka");
+            //await Send(Context.ConnectionId);
             await base.OnConnectedAsync();
 
         }
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            string id = Users.FirstOrDefault(u => u.Key == Context.ConnectionId).Value;
+            string id = Users.FirstOrDefault(u => u.Value == Context.ConnectionId).Key;
             Users.Remove(id);
         }
         public async Task SendDirect(string id,string message)
