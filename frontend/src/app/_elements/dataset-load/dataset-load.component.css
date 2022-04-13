@@ -1,11 +1,16 @@
 .btnType1 {
     background-color: #003459;
     color: white;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
 }
 .btnType2 {
     background-color: white;
     color: #003459;
     border-color: #003459;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    
 }
 .selectedDatasetClass {
     /*border-color: 2px solid #003459;*/

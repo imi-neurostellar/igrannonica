@@ -24,7 +24,6 @@ export class ExperimentComponent implements OnInit {
   Object = Object;
 
   selectedColumnsInfoArray: ColumnInfo[] = [];
-  //selectedOutputColumnVal: string = '';
   selectedNullColumnsArray: string[] = [];
 
   tempTestSetDistribution = 90;
@@ -35,11 +34,9 @@ export class ExperimentComponent implements OnInit {
   }
 
   updateDataset(dataset: Dataset) {
-    //console.log(dataset);
     this.selectedDataset = dataset;
     this.selectedColumnsInfoArray = this.selectedDataset.columnInfo;
     this.selectedNullColumnsArray = [];
-    //console.log("array:", this.selectedColumnsInfoArray);
   }
 
   getInputById(id: string): HTMLInputElement {
@@ -151,7 +148,6 @@ export class ExperimentComponent implements OnInit {
         }
       }
     }
-    //console.log(array);
     return array;
   }
 
@@ -176,8 +172,6 @@ export class ExperimentComponent implements OnInit {
     let pom = this.selectedColumnsInfoArray.filter(x => x.columnName != this.experiment.outputColumn);
     for (let i = 0; i < pom.length; i++)
       this.experiment.inputColumns.push(pom[i].columnName);
-
-    //this.experiment.outputColumn = this.selectedOutputColumnVal;
 
     this.selectedColumnsInfoArray = this.selectedColumnsInfoArray.filter(x => x.numNulls > 0); //obavezno
     this.experiment.nullValuesReplacers = this.getNullValuesReplacersArray();

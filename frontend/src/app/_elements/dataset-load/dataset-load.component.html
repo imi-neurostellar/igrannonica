@@ -2,19 +2,18 @@
 
   <!--Sklonjeno ucitavanje novog dataseta i sve opcije u vezi sa tim, premesteno u add-new-dataset-->
 
-  <div class="col-12 d-flex my-5">
-    <div class="col-3">
+    <div class="d-flex flex-row justify-content-center align-items-center mt-3 mb-5">
+        <button type="button" id="btnMyDataset" class="btn" (click)="viewMyDatasetsForm()"
+            [ngClass]="{'btnType1': showMyDatasets, 'btnType2': !showMyDatasets}">
+            Izaberite dataset iz kolekcije
+        </button>
+        <h3 class="mt-3 mx-3">ili</h3>
+        <button type="button" id="btnNewDataset" class="btn" (click)="viewNewDatasetForm()"
+            [ngClass]="{'btnType1': !showMyDatasets, 'btnType2': showMyDatasets}">
+            Dodajte novi dataset
+        </button>
     </div>
-    <button type="button" id="btnMyDataset" class="btn" (click)="viewMyDatasetsForm()"
-        [ngClass]="{'btnType1': showMyDatasets, 'btnType2': !showMyDatasets}">
-        Izaberite dataset iz kolekcije
-    </button>
-    <h3 class="mt-3 mx-3">ili</h3>
-    <button type="button" id="btnNewDataset" class="btn" (click)="viewNewDatasetForm()"
-        [ngClass]="{'btnType1': !showMyDatasets, 'btnType2': showMyDatasets}">
-        Dodajte novi dataset
-    </button>
-  </div>
+
   <div class="px-5 my-2">
       <input *ngIf="showMyDatasets" type="text" class="form-control" placeholder="Pretraga"
           [(ngModel)]="term">
