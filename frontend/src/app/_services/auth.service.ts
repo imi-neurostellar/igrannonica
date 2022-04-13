@@ -52,7 +52,6 @@ export class AuthService {
     var username = property['name'];
     if (username != "") {
       this.refresher = setTimeout(() => {
-        console.log('refreshing token!');
         this.http.post(`${API_SETTINGS.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
           this.authenticate(response);
         });
@@ -60,7 +59,6 @@ export class AuthService {
     }
     else {
       this.refresher = setTimeout(() => {
-        console.log('refreshing token!');
         this.getGuestToken().subscribe((response) => {
           this.authenticate(response);
         });
@@ -87,7 +85,6 @@ export class AuthService {
     if (this.cookie.check('token')) {
       const token = this.cookie.get('token');
       const decodedToken = jwtHelper.decodeToken(token);
-      console.log("decoded:", decodedToken);
       this.shared.loggedIn = this.isAuthenticated();
       this.shared.username = decodedToken.name;
       this.shared.userId = decodedToken.id;

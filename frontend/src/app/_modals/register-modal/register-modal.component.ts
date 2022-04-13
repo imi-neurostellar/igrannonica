@@ -143,13 +143,11 @@ export class RegisterModalComponent implements OnInit {
       this.authService.register(user)
         .subscribe(
           (response) => {
-            console.log(response);
             if (response == 'User added') {
               //nakon sto je registrovan, nek bude ulogovan
               this.authService.login(this.username, this.pass1).subscribe((response) => {
 
                 this.authService.authenticate(response);
-                console.log("close button");
                 (<HTMLSelectElement>document.getElementById('closeButtonReg')).click();
                 //(<HTMLSelectElement>document.getElementById('linkToLoginModal')).click();
               }, (error) => console.warn(error));             

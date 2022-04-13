@@ -67,12 +67,12 @@
                             class="form-check-input" value="deleteRows" name="fillMissing" id="delRows" checked
                             data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
                         <label for="delRows" class="form-check-label">Obriši sve
-                            redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} / TODO)</label><br>
+                            redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} od {{selectedDataset.rowCount}})</label><br>
                         <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.DeleteColumns"
                             class="form-check-input" value="deleteCols" name="fillMissing" id="delCols" data-bs-toggle="collapse"
                             data-bs-target="#fillMissingCustom.show">
                         <label for="delCols" class="form-check-label">Obriši sve
-                            kolone sa nedostajućim vrednostima ({{selectedDataset.nullCols}} / TODO)</label><br>
+                            kolone sa nedostajućim vrednostima ({{countSelectedNullCols()}} od {{selectedDataset.columnInfo.length}})</label><br>
                         <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.Replace"
                             class="form-check-input" name="fillMissing" id="replace" data-bs-toggle="collapse"
                             data-bs-target="#fillMissingCustom:not(.show)">
@@ -81,11 +81,11 @@
                         <div class="collapse" id="fillMissingCustom">
                             <div>
                                 <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
-                                <div class="my-3" *ngIf="getSelectedNullColumnsArray().length > 0" >
+                                <div class="my-3" *ngIf="getSelectedColumnsArrayWithoutNullVals().length > 0" >
                                     <label class="text-center form-control mx-3 text-secondary">
-                                        Kolone <span style="font-style: italic;" *ngFor="let colname of getSelectedNullColumnsArray(); let i = index">
-                                            <span *ngIf="i != getSelectedNullColumnsArray().length - 1">{{colname}}, </span> 
-                                            <span *ngIf="i == getSelectedNullColumnsArray().length - 1">{{colname}} </span> 
+                                        Kolone <span style="font-style: italic;" *ngFor="let colname of getSelectedColumnsArrayWithoutNullVals(); let i = index">
+                                            <span *ngIf="i != getSelectedColumnsArrayWithoutNullVals().length - 1">{{colname}}, </span> 
+                                            <span *ngIf="i == getSelectedColumnsArrayWithoutNullVals().length - 1">{{colname}} </span> 
                                         </span>
                                         nemaju nedostajućih vrednosti za popunjavanje.
                                     </label>
@@ -203,8 +203,8 @@
                         </div>
                     </div>
     
-                    <div id="encodingForColumns" class="my-5">
-                        <div class="col-3">
+                    <div id="encodingForColumns" class="row px-3 my-5">
+                        <div class="col-1">
                             <label for="encoding" class="col-form-label">Enkoding: </label>
                         </div>
                         <div class="col-2">
