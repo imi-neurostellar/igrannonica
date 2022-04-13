@@ -12,13 +12,13 @@ namespace api.Services
         private RestClient client;
         private readonly IDatasetService _datasetService;
         private readonly IModelService _modelService;
-        private readonly IChat _chat;
+        private readonly IHubContext<ChatHub> _ichat;
 
-        public MlConnectionService(IDatasetService datasetService,IChat chat)
+        public MlConnectionService(IDatasetService datasetService,IHubContext<ChatHub> ichat)
         {
             this.client = new RestClient("http://127.0.0.1:5543");
             _datasetService=datasetService;
-            _chat=chat;
+            _ichat=ichat;
         }
 
         public async Task<string> SendModelAsync(object model, object dataset)//Don't Use
@@ -57,7 +57,7 @@ namespace api.Services
             Dataset newDataset = JsonConvert.DeserializeObject<Dataset>(result.Content);
             newDataset.isPreProcess = true;
             _datasetService.Update(newDataset);
-            await _chat.SendDirect(id, "Procesed dataset with name "+newDataset.name);
+            await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("Notify", "Preprocessed dataset with name "+newDataset.name);
             return;
 
         }

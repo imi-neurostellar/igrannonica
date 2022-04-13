@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace api.Services
 {
-    public class ChatHub :Hub,IChat
+    public class ChatHub :Hub
     {
-        static readonly Dictionary<string,string> Users=new Dictionary<string,string>();
+        static public readonly Dictionary<string,string> Users=new Dictionary<string,string>();
         private readonly IJwtToken _tokenService;
         public ChatHub(IJwtToken tokenService)
         {
@@ -22,7 +22,7 @@ namespace api.Services
             string token=Context.GetHttpContext().Request.Query["access_token"];
             string id=_tokenService.TokenToId(token);
             Users.Add(id,Context.ConnectionId);
-            await SendDirect(id, "poruka");
+            //await SendDirect(id, "poruka");
             //await Send(Context.ConnectionId);
             await base.OnConnectedAsync();
 

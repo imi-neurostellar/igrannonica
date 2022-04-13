@@ -36,7 +36,6 @@ builder.Services.AddScoped<IPredictorService, PredictorService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 builder.Services.AddScoped<IExperimentService, ExperimentService>();
-builder.Services.AddScoped<IChat,ChatHub>();
 builder.Services.AddHostedService<TempFileService>();
 builder.Services.AddHostedService<FillAnEmptyDb>();
 
