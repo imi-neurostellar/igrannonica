@@ -1,6 +1,5 @@
 import flask
 from flask import request, jsonify
-import ml_socket
 import newmlservice
 import tensorflow as tf
 import pandas as pd
