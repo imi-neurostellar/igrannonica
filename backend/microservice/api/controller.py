@@ -30,8 +30,11 @@ def train():
     print("******************************TRAIN*************************************************")
     f = request.files.get("file")
     data = pd.read_csv(f)
+    paramsModel = json.loads(request.form["model"])
+    paramsExperiment = json.loads(request.form["experiment"])
+    paramsDataset = json.loads(request.form["dataset"])
     #dataset, paramsModel, paramsExperiment, callback)
-    result = newmlservice.train(data, request.json["model"], request.json["experiment"], request.json["dataset"], train_callback)
+    result = newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
     print(result)
     return jsonify(result)
 
