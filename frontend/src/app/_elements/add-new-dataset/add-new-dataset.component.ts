@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import Dataset from 'src/app/_data/Dataset';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { ModelsService } from 'src/app/_services/models.service';
