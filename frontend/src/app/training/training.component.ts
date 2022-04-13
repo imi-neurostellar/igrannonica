@@ -24,7 +24,6 @@ export class TrainingComponent{
   constructor(private modelsService: ModelsService, private datasetsService: DatasetsService, private experimentsService: ExperimentsService) { 
     this.experimentsService.getMyExperiments().subscribe((experiments) => {
       this.myExperiments = experiments;
-      console.log(this.myExperiments);
     });
   }
 
@@ -48,7 +47,8 @@ export class TrainingComponent{
       return;
     }
     this.modelsService.trainModel(this.selectedModel._id, this.selectedExperiment._id).subscribe((response: any) => {
-      console.log('Train model complete!', response);
+      //console.log('Train model complete!', response);
+      Shared.openDialog("Obaveštenje", "Treniranje modela je uspešno završeno!");
       this.trainingResult = response;
     });
   }

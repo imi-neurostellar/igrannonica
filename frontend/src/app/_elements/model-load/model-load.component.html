@@ -1,7 +1,5 @@
 <div>
-    <div class="col-12 d-flex my-5">
-        <div class="col-3">
-        </div>
+    <div class="d-flex flex-row justify-content-center align-items-center mt-3 mb-5">
         <button type="button" id="btnMyModel" class="btn" (click)="viewMyModelsForm()"
             [ngClass]="{'btnType1': showMyModels, 'btnType2': !showMyModels}">
             Izaberite model iz kolekcije
@@ -13,7 +11,7 @@
         </button>
     </div>
 
-    <div *ngIf="showMyModels" class="px-5 my-2">
+    <div *ngIf="showMyModels" class="px-5 my-3">
         <input *ngIf="showMyModels" type="text" class="form-control" placeholder="Pretraga" [(ngModel)]="term">
     </div>
     <div *ngIf="showMyModels" class="px-5">
@@ -51,11 +49,11 @@
                     value="{{newModel.dateCreated | date: 'dd/MM/yyyy'}}" readonly>
             </div>
         </div>
-        <h2 class="mt-5 mb-4">Parametri treniranja:</h2>
+        <h2 class="mt-5 mb-4 mx-5">Parametri treniranja modela:</h2>
         <div>
+
             <div class="row p-2">
-                <div class="col-1">
-                </div>
+                <div class="col-1"></div>
                 <div class="col-3">
                     <label for="type" class="col-form-label">Tip problema: </label>
                 </div>
@@ -69,8 +67,7 @@
                         </option>
                     </select>
                 </div>
-                <div class="col-1">
-                </div>
+                <div class="col-1"></div>
                 <div class="col-3">
                     <label for="hiddenLayers" class="col-form-label">Broj skrivenih slojeva: </label>
                 </div>
@@ -79,20 +76,6 @@
                         [(ngModel)]="newModel.hiddenLayers"
                         (change)="newModel.hiddenLayerActivationFunctions = [].constructor(newModel.hiddenLayers).fill(newModel.hiddenLayerActivationFunctions[0])"
                         (ngModelChange)="updateGraph()">
-                </div>
-            </div>
-
-            <div class="row p-2">
-                <div class="col-1">
-                </div>
-                <div class="col-1">
-                </div>
-                <div class="col-3">
-                    <label for="hiddenLayerNeurons" class="col-form-label">Broj neurona skrivenih slojeva: </label>
-                </div>
-                <div class="col-1">
-                    <input type="number" min="1" class="form-control" name="hiddenLayerNeurons"
-                        [(ngModel)]="newModel.hiddenLayerNeurons" (ngModelChange)="updateGraph()">
                 </div>
             </div>
 
@@ -114,15 +97,16 @@
                 <div class="col-1">
                 </div>
                 <div class="col-3">
-                    <label for="batchSize" class="col-form-label">Broj uzorka po iteraciji: </label>
+                    <label for="hiddenLayerNeurons" class="col-form-label">Broj neurona skrivenih slojeva: </label>
                 </div>
                 <div class="col-1">
-                    <input type="number" min="1" class="form-control" name="batchSize" [(ngModel)]="newModel.batchSize">
+                    <input type="number" min="1" class="form-control" name="hiddenLayerNeurons"
+                        [(ngModel)]="newModel.hiddenLayerNeurons" (ngModelChange)="updateGraph()">
                 </div>
             </div>
+
             <div class="row p-2">
-                <div class="col-1">
-                </div>
+                <div class="col-1"></div>
                 <div class="col-3">
                     <label for="lossFunction" class="col-form-label">Funkcija obrade gubitka: </label>
                 </div>
@@ -137,17 +121,27 @@
                     </select>
                 </div>
                 <div class="col-1"></div>
+                <div class="col-3">
+                    <label for="batchSize" class="col-form-label">Broj uzorka po iteraciji: </label>
+                </div>
+                <div class="col-1">
+                    <input type="number" min="1" class="form-control" name="batchSize" [(ngModel)]="newModel.batchSize">
+                </div>
             </div>
-            <h3>Aktivacione funkcije:</h3>
 
-            <div class="row p-2 m-2" style="align-self: center;">
+            <div class="m-5">
+                <app-graph [model]="newModel" [inputCols]="1"></app-graph>
+            </div>
+
+            <h3 class="mx-5 mt-4">Aktivacione funkcije:</h3>
+
+            <div class="row p-2" style="align-self: center;">
+                <div class="col-1"></div>
                 <div class="col-3">
                     <label for="hiddenLayerActivationFunction" class="col-form-label"
-                        style="text-align: center;">Funkcija
-                        aktivacije skrivenih
-                        slojeva:</label>
+                        style="text-align: center;">Funkcija aktivacije<br>skrivenih slojeva:</label>
                 </div>
-                <div class="col-3">
+                <div class="col-2 mt-2">
                     <div *ngFor="let item of [].constructor(newModel.hiddenLayers); let i = index">
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
@@ -164,13 +158,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-1"></div>
+                <div class="col-2">
                     <label for="outputLayerActivationFunction" class="col-form-label"
-                        style="text-align: center;">Funkcija
-                        aktivacije izlaznog
-                        sloja:</label>
+                        style="text-align: center;">Funkcija aktivacije<br>izlaznog sloja:</label>
                 </div>
-                <div class="col-3">
+                <div class="col-2 mt-2">
                     <select id=outputLayerActivationFunctionOptions class="form-control"
                         name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction">
                         <option
@@ -184,25 +177,24 @@
                 </div>
             </div>
         </div>
-        <br><br>
-        <hr>
-        <div class="form-check form-check-inline overflow-auto " style="width: max-content;">
+
+        <div class="form-check form-check-inline overflow-auto m-4" style="width: max-content;">
             <h3>Izaberite metrike:</h3>
-            <div id="divMetricsinput">
+            <div id="divMetricsinput" class="mt-2 mx-5">
 
                 <div *ngFor="let option of Object.keys(metrics); let optionName of Object.values(metrics) "
                     class="form-check form-check-inline">
 
                     <input name="cbmetrics" class="form-check-input" type="checkbox" value="{{option}}"
-                        id="metrics_{{option}}" style="float: left;">
+                        id="metrics_{{option}}" style="float: left;" checked>
                     <label class="form-check-label" for="metrics_{{option}}" for="inlineCheckbox2">
                         {{optionName}}
                     </label>
                 </div>
             </div>
         </div>
-        <app-graph [model]="newModel" [inputCols]="1"></app-graph>
-        <div class="form-group row mt-5 mb-3">
+        
+        <div class="form-group row mt-3 mb-3">
             <div class="col"></div>
             <button class="btn btn-lg col-4" style="background-color:#003459; color:white;"
                 (click)="uploadModel();">Sačuvaj
