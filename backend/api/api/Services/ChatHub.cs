@@ -43,6 +43,12 @@ namespace api.Services
         {
             await Clients.All.SendAsync("Notify",message);
         }
+        public static bool CheckUser(string id)
+        {
+            if (Users[id] == null)
+                return false;
+            return true;
+        }
     }
     
 
