@@ -62,7 +62,7 @@ namespace api.Services
             newDataset.isPreProcess = true;
             _datasetService.Update(newDataset);
             if(ChatHub.CheckUser(id))
-                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyDataset", "Preprocessed dataset with name "+newDataset.name);
+                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyDataset", "Preprocessed dataset with name "+newDataset.name,newDataset._id);
             return;
 
         }
