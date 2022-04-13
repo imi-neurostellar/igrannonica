@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
-import Shared from '../Shared';
 import { CookieService } from 'ngx-cookie-service';
+import { Configuration } from '../configuration.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,7 +10,7 @@ export class SignalRService {
   public startConnection = () => {
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5283/chatHub', {
+      .withUrl(Configuration.settings.apiWSUrl, {
         accessTokenFactory: () => this.cookie.get("token"),
         withCredentials: false
       }).build();

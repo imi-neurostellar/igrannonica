@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
-import API_SETTINGS from '../../config.json';
 import shared from '../Shared';
+import { Configuration } from '../configuration.service';
 
 const jwtHelper = new JwtHelperService();
 
@@ -17,15 +17,15 @@ export class AuthService {
   constructor(private http: HttpClient, private cookie: CookieService) { }
 
   login(username: string, password: string) {
-    return this.http.post(`${API_SETTINGS.apiURL}/auth/login`, { username, password }, { responseType: 'text' });
+    return this.http.post(`${Configuration.settings.apiURL}/auth/login`, { username, password }, { responseType: 'text' });
   }
 
   register(user: any) {
-    return this.http.post(`${API_SETTINGS.apiURL}/auth/register`, { ...user }, { responseType: 'text' });
+    return this.http.post(`${Configuration.settings.apiURL}/auth/register`, { ...user }, { responseType: 'text' });
   }
 
   getGuestToken() {
-    return this.http.post(`${API_SETTINGS.apiURL}/auth/guestToken`, {}, { responseType: 'text' });
+    return this.http.post(`${Configuration.settings.apiURL}/auth/guestToken`, {}, { responseType: 'text' });
   }
 
   isAuthenticated(): boolean {
@@ -52,7 +52,7 @@ export class AuthService {
     var username = property['name'];
     if (username != "") {
       this.refresher = setTimeout(() => {
-        this.http.post(`${API_SETTINGS.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
+        this.http.post(`${Configuration.settings.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
           this.authenticate(response);
         });
       }, exp.getTime() - new Date().getTime() - 60000);

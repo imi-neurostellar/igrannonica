@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -47,7 +47,11 @@ import { GraphComponent } from './_elements/graph/graph.component';
 import { TrainingComponent } from './training/training.component';
 import { ItemExperimentComponent } from './_elements/item-experiment/item-experiment.component';
 import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
+import { Configuration } from './configuration.service';
 
+export function initializeApp(appConfig: Configuration) {
+  return () => appConfig.load();
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -99,7 +103,14 @@ import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.comp
     NgChartsModule,
     Ng2SearchPipeModule,
   ],
-  providers: [],
+  providers: [
+    Configuration,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [Configuration], multi: true
+    }
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   entryComponents: [AlertDialogComponent]
