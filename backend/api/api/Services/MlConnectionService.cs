@@ -13,12 +13,16 @@ namespace api.Services
         private readonly IDatasetService _datasetService;
         private readonly IModelService _modelService;
         private readonly IHubContext<ChatHub> _ichat;
+        private readonly IConfiguration _configuration;
 
-        public MlConnectionService(IDatasetService datasetService,IHubContext<ChatHub> ichat)
+        public MlConnectionService(IConfiguration configuration,IDatasetService datasetService,IHubContext<ChatHub> ichat)
         {
-            this.client = new RestClient("http://127.0.0.1:5543");
+            _configuration = configuration;
+
+            this.client = new RestClient(_configuration.GetValue<string>("AppSettings:MlApi"));
             _datasetService=datasetService;
             _ichat=ichat;
+
         }
 
         public async Task<string> SendModelAsync(object model, object dataset)//Don't Use
