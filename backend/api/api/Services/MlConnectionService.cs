@@ -32,19 +32,19 @@ namespace api.Services
             var result = await this.client.ExecuteAsync(request);
             return result.Content; //Response od ML microservisa
         }
-        public async Task TrainModel(Model model, Experiment experiment, string filePath)
+        public async Task TrainModel(Model model, Experiment experiment, string filePath,Dataset dataset,string id)
         {
             var request = new RestRequest("train", Method.Post);
             request.AddParameter("model", JsonConvert.SerializeObject(model));
             request.AddParameter("experiment", JsonConvert.SerializeObject(experiment));
+            request.AddParameter("dataset", JsonConvert.SerializeObject(dataset));
             //request.AddFile("file", file,filename);
             request.AddFile("file", filePath);
             request.AddHeader("Content-Type", "multipart/form-data");
             var result = await this.client.ExecuteAsync(request);
 
-            Model newModel = JsonConvert.DeserializeObject<Model>(result.Content);
-            newModel.isTrained = true;
-            _modelService.Update(newModel._id, newModel);
+            if (ChatHub.CheckUser(id))
+                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyModel", "Trained model with name " +model.name );
 
             return;
 
@@ -62,7 +62,7 @@ namespace api.Services
             newDataset.isPreProcess = true;
             _datasetService.Update(newDataset);
             if(ChatHub.CheckUser(id))
-                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("Notify", "Preprocessed dataset with name "+newDataset.name);
+                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyDataset", "Preprocessed dataset with name "+newDataset.name);
             return;
 
         }

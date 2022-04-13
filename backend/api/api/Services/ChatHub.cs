@@ -20,6 +20,8 @@ namespace api.Services
         public override async Task OnConnectedAsync()
         {
             string token=Context.GetHttpContext().Request.Query["access_token"];
+            if (token == null)
+                return;
             string id=_tokenService.TokenToId(token);
             Users.Add(id,Context.ConnectionId);
             //await SendDirect(id, "poruka");
