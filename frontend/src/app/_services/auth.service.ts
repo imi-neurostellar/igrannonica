@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
-import { API_SETTINGS } from 'src/config';
+import API_SETTINGS from '../../config.json';
 import shared from '../Shared';
 
 const jwtHelper = new JwtHelperService();
@@ -24,17 +24,17 @@ export class AuthService {
     return this.http.post(`${API_SETTINGS.apiURL}/auth/register`, { ...user }, { responseType: 'text' });
   }
 
-  getGuestToken(){
+  getGuestToken() {
     return this.http.post(`${API_SETTINGS.apiURL}/auth/guestToken`, {}, { responseType: 'text' });
   }
 
   isAuthenticated(): boolean {
     if (this.cookie.check('token')) {
       var token = this.cookie.get('token');
-      var property=jwtHelper.decodeToken(this.cookie.get('token'));
-      var username=property['name'];
+      var property = jwtHelper.decodeToken(this.cookie.get('token'));
+      var username = property['name'];
       var userId = property['id'];
-      return !jwtHelper.isTokenExpired(token) && username!="";
+      return !jwtHelper.isTokenExpired(token) && username != "";
     }
     return false;
   }
@@ -48,9 +48,9 @@ export class AuthService {
     if (!exp) {
       exp = new Date();
     }
-    var property=jwtHelper.decodeToken(this.cookie.get('token'));
-    var username=property['name'];
-    if(username!=""){
+    var property = jwtHelper.decodeToken(this.cookie.get('token'));
+    var username = property['name'];
+    if (username != "") {
       this.refresher = setTimeout(() => {
         console.log('refreshing token!');
         this.http.post(`${API_SETTINGS.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
@@ -58,7 +58,7 @@ export class AuthService {
         });
       }, exp.getTime() - new Date().getTime() - 60000);
     }
-    else{
+    else {
       this.refresher = setTimeout(() => {
         console.log('refreshing token!');
         this.getGuestToken().subscribe((response) => {
@@ -68,8 +68,8 @@ export class AuthService {
     }
   }
 
-  addGuestToken(){
-    this.getGuestToken().subscribe((token)=>{
+  addGuestToken() {
+    this.getGuestToken().subscribe((token) => {
       this.authenticate(token);
     });
   }

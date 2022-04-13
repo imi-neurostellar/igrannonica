@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import Model from '../_data/Model';
 import { AuthService } from './auth.service';
-import { API_SETTINGS } from 'src/config';
+import API_SETTINGS from '../../config.json';
 import { Observable } from 'rxjs';
 import Dataset from '../_data/Dataset';
 
