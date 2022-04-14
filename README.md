@@ -4,20 +4,19 @@ Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštačkim neuronski
 
 
 ## Opis projekta
-
-**Izvršavanje eksperimenata**
+###Izvršavanje eksperimenata
  Izvršavanje eksperimenata je omogućeno prijavljenim korisnicima i sastoji se iz sledećih koraka:
 
-**Izbor seta podataka**
+####Izbor seta podataka
  U navedenom koraku vrši se izbor seta podataka iz postojećih setova ili po potrebi korisnik može učitati željeni set podataka.
 
-**Pikaz izabranog seta podataka**
+####Pikaz izabranog seta podataka
  Nakon izvršenog izbora seta podataka, korisniku se tabelarno prikazuju učitani podaci.
 
-**Preprocesiranje**
+####Preprocesiranje
  Preprocesiranje se sastoji iz koraka koji korisniku omogućavaju:  izbor ulaznih kolona i izlazne kolone, uklanjanje greški, uklanjanje nedostajućih vrednosti, izbor tipa enkodiranja. Cilj navedenog koraka je uvećanje kvaliteta samog seta podataka. 
 
-**Izbor parametara treniranja**
+####Izbor parametara treniranja
  Korisniku se pruža izbor parametara za treniranje mreže. Ponuđeni parametri treniranja su:
 
 - Tip problema(vrednosti mogu biti:regresioni, binarno-klasifikacioni, multi-klasifikacioni)
@@ -36,12 +35,12 @@ Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštačkim neuronski
 - Izbor metrika(ponuđeni izbor zavisi od tipa problema)
 
 
-**Treniranje modela**
+####Treniranje modela
  Nakon izbora svih parametara, pruža se mogućnost treniranja modela.  
-**Pregled rezultata treniranja**
+####Pregled rezultata treniranja
  Uzevši u obzir prethodno izabrane metrike, korisniku se prikazuju rezultati treniranja.
 
-**Predviđanja na osnovu postojećih treniranih modela**
+####Predviđanja na osnovu postojećih treniranih modela
  Nakon treniranja modela, obavlja se njegovo čuvanje u H5 formatu. Samim tim, omogućena je ponovna upotreba sačuvanog modela i vrši se predikcija za novi set podataka.
 
   
