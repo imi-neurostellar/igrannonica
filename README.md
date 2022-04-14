@@ -4,12 +4,13 @@ Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštačkim neuronski
 
 
 ## Opis projekta
+###Prikaz unetih podataka
 
-**Izvršavanje eksperimenata**
+###Izvršavanje eksperimenata
  Izvršavanje eksperimenata je omogućeno prijavljenim korisnicima i sastoji se iz sledećih koraka:
 
 **Izbor seta podataka**
- U navedenom koraku vrši se izbor seta podataka iz postojećih setova ili po potrebi korisnik može učitati željeni set podataka.
+ U navedenom koraku vrši se izbor seta podataka iz postojećih setova ili po potrebi korisnik može učitati željeni set podataka. Korisniku se pruža mogućnost da svoj set podataka označi javnim i na taj način će set podataka biti vidljiv svim korisnicima. 
 
 **Pikaz izabranog seta podataka**
  Nakon izvršenog izbora seta podataka, korisniku se tabelarno prikazuju učitani podaci.
@@ -44,6 +45,8 @@ Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštačkim neuronski
 **Predviđanja na osnovu postojećih treniranih modela**
  Nakon treniranja modela, obavlja se njegovo čuvanje u H5 formatu. Samim tim, omogućena je ponovna upotreba sačuvanog modela i vrši se predikcija za novi set podataka.
 
+### Upravljanje korisničkim nalogom
+Registrovanim korisnicima je omogućen izbor profilne slike u formi avatara. Omogućena je promena korisničkog imena, lozinke i e-mail adrese.
   
 
 
@@ -54,7 +57,7 @@ Igrannonica je ASP.NET Core veb aplikacija za manipulaciju veštačkim neuronski
 * .NET 6.0
 * NodeJS
 * MongoDB
-* Python
+* Python 3.10
 
 ### Instalacija
 
