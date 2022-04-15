@@ -21,6 +21,7 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 import statistics as s
 from sklearn.metrics import roc_auc_score
+
 #from ann_visualizer.visualize import ann_viz;
 def returnColumnsInfo(dataset):
     dict=[]
@@ -224,7 +225,7 @@ def train(dataset, params, callback):
     #
     #
     ###OPTIMIZATORI
-    
+    """
     if(params['optimizer']=='adam'):
         opt=tf.keras.optimizers.Adam(learning_rate=params['learningRate'])
 
@@ -276,7 +277,7 @@ def train(dataset, params, callback):
         activityreg=tf.keras.regularizers.l2(reg['activityRate'])
     elif(reg['kernelType']=='l1l2'):
         activityreg=tf.keras.regularizers.l1_l2(l1=reg['activityRate'][0],l2=reg['activityRate'][1])
-      
+    """  
 
     if(problem_type=='multi-klasifikacioni'):
         #print('multi')
@@ -293,17 +294,19 @@ def train(dataset, params, callback):
         classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
 
         history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
-
+     
+        hist=history.history
+    
         y_pred=classifier.predict(x_test)
         y_pred=np.argmax(y_pred,axis=1)
-        #print(y_pred.flatten())
-        #print(y_test)
+        
         scores = classifier.evaluate(x_test, y_test)
         #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
         classifier.save("temp/"+params['name'], save_format='h5')
         #vizuelizacija u python-u
         #from ann_visualizer.visualize import ann_viz;
         #ann_viz(classifier, title="My neural network")
+        return hist
 
     elif(problem_type=='binarni-klasifikacioni'):
         #print('*************************************************************************binarni')
@@ -318,7 +321,7 @@ def train(dataset, params, callback):
         classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
 
         history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
-
+        hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
 
@@ -330,6 +333,7 @@ def train(dataset, params, callback):
         #ann_viz(classifier, title="My neural network")
         
         classifier.save("temp/"+params['name'], save_format='h5')
+        return hist
 
     elif(problem_type=='regresioni'):
         classifier=tf.keras.Sequential()
@@ -343,9 +347,10 @@ def train(dataset, params, callback):
         classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
 
         history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
+        hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
-
+        return hist
     def roc_auc_score_multiclass(actual_class, pred_class, average = "macro"):
     
         #creating a set of all the unique classes using the actual class list
