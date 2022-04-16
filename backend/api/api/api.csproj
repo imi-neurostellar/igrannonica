@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Predictors\" />
     <Folder Include="TempFiles\" />
   </ItemGroup>
 

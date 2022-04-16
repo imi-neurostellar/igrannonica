@@ -44,26 +44,13 @@ namespace api.Controllers
         }
 
         [HttpPost("h5")]
-        public async Task<ActionResult<string>> H5Upload([FromForm] IFormFile file)
+        public async Task<ActionResult<string>> H5Upload([FromForm] IFormFile file,[FromForm] string uploaderId)
         {
 
             //get username from jwtToken
             
-            string folderName;
-            
-            string uploaderId = getUserId();
+            string folderName="PredictorFiles";
 
-            if (uploaderId == null)
-                return BadRequest();
-
-            if (uploaderId == "")
-            {
-                folderName = "TempFiles";
-            }
-            else
-            {
-                folderName = "UploadedFiles";
-            }
 
 
             //Check filetype
@@ -74,7 +61,7 @@ namespace api.Controllers
             {
                 return BadRequest("Wrong file type");
             }
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, uploaderId);
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName,uploaderId);
             //Check Directory
             if (!Directory.Exists(folderPath))
             {
