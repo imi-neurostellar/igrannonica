@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from gc import callbacks
+from xmlrpc.client import DateTime
 import flask
 from flask import request, jsonify
 import newmlservice
@@ -7,11 +9,27 @@ import pandas as pd
 import json
 import requests
 import config
+from datetime import datetime 
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 app.config["SERVER_NAME"] = config.hostIP
-  
+
+@dataclass
+class Predictor:
+    _id : str
+    username: str
+    inputs : list
+    output : str
+    isPublic: bool
+    accessibleByLink: bool
+    dateCreated: DateTime
+    experimentId: str
+    modelId: str
+    h5FileId: str
+    metrics: list
+
+
 class train_callback(tf.keras.callbacks.Callback):
     def __init__(self, x_test, y_test):
         self.x_test = x_test
@@ -47,6 +65,19 @@ def train():
     files = {'file': open(filepath, 'rb')}
     r=requests.post(url, files=files)
     fileId=r.text
+    predictor = Predictor()
+    predictor._id = ""
+    predictor.username = paramsModel["username"]
+    predictor.inputs = paramsExperiment["inputColumns"]
+    predictor.output = paramsExperiment["outputColumn"]
+    predictor.isPublic = False
+    predictor.accessibleByLink = False
+    predictor.dateCreated = datetime.now()
+    predictor.experimentId = paramsExperiment["_id"]
+    predictor.modelId = paramsModel["_id"]
+    predictor.h5FileId = fileId
+
+    print(result)
     return jsonify(result)
 
 @app.route('/predict', methods = ['POST'])
