@@ -105,7 +105,7 @@ namespace api.Controllers
             fileModel = _fileservice.Create(fileModel);
 
 
-            return Ok(fileModel);
+            return Ok(fileModel._id);
         }
 
         [HttpGet("csvread/{hasHeader}/{fileId}")]
