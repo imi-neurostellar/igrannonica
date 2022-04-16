@@ -1,3 +1,4 @@
+from gc import callbacks
 import flask
 from flask import request, jsonify
 import newmlservice
@@ -27,14 +28,25 @@ class train_callback(tf.keras.callbacks.Callback):
 @app.route('/train', methods = ['POST'])
 def train():
     print("******************************TRAIN*************************************************")
+    
     f = request.files.get("file")
     data = pd.read_csv(f)
     paramsModel = json.loads(request.form["model"])
     paramsExperiment = json.loads(request.form["experiment"])
     paramsDataset = json.loads(request.form["dataset"])
     #dataset, paramsModel, paramsExperiment, callback)
-    result = newmlservice.train(data, paramsModel, paramsExperiment, paramsDataset, train_callback)
+    filepath,result = newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
+    """
+    f = request.json['filepath']
+    dataset = pd.read_csv(f)
+    filepath,result=newmlservice.train(dataset,request.json['model'],train_callback)
     print(result)
+    """
+
+    url = config.api_url + "/file/h5"
+    files = {'file': open(filepath, 'rb')}
+    r=requests.post(url, files=files)
+    fileId=r.text
     return jsonify(result)
 
 @app.route('/predict', methods = ['POST'])

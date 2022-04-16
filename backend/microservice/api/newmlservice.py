@@ -1,5 +1,6 @@
 from enum import unique
 from itertools import count
+import os
 import pandas as pd
 from sklearn import datasets, multiclass
 import tensorflow as tf
@@ -21,7 +22,7 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 import statistics as s
 from sklearn.metrics import roc_auc_score
-
+import matplotlib.pyplot as plt
 #from ann_visualizer.visualize import ann_viz;
 def returnColumnsInfo(dataset):
     dict=[]
@@ -113,25 +114,25 @@ class TrainingResult:
     metrics: dict
 '''
 
-def train(dataset, params, callback):
-    problem_type = params["type"]
+def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
+    problem_type = paramsModel["type"]
     #print(problem_type)
     data = pd.DataFrame()
     #print(data)
-    for col in params["inputColumns"]:
+    for col in paramsExperiment["inputColumns"]:
         #print(col)
         data[col]=dataset[col]
-    output_column = params["columnToPredict"]
+    output_column = paramsExperiment["columnToPredict"]
     data[output_column] = dataset[output_column]
     #print(data)
 
     ###NULL
-    null_value_options = params["nullValues"]
-    null_values_replacers = params["nullValuesReplacers"]
+    null_value_options = paramsExperiment["nullValues"]
+    null_values_replacers = paramsExperiment["nullValuesReplacers"]
     
     if(null_value_options=='replace'):
         #print("replace null") #
-        dict=params['null_values_replacers']
+        dict=null_values_replacers
         while(len(dict)>0):
             replace=dict.pop()
             col=replace['column']
@@ -154,7 +155,7 @@ def train(dataset, params, callback):
             data.pop(col)
     #
     ### Enkodiranje
-    encoding=params["encoding"]
+    encoding=paramsExperiment["encoding"]
     if(encoding=='label'):
         encoder=LabelEncoder()
         for col in data.columns:
@@ -211,8 +212,8 @@ def train(dataset, params, callback):
     #
     # Podela na test i trening skupove
     #
-    test=params["randomTestSetDistribution"]
-    randomOrder = params["randomOrder"]
+    test=paramsExperiment["randomTestSetDistribution"]
+    randomOrder = paramsExperiment["randomOrder"]
     if(randomOrder):
         random=123
     else:
@@ -278,49 +279,54 @@ def train(dataset, params, callback):
     elif(reg['kernelType']=='l1l2'):
         activityreg=tf.keras.regularizers.l1_l2(l1=reg['activityRate'][0],l2=reg['activityRate'][1])
     """  
-
+    filepath=os.path.join("temp/",paramsExperiment['_id']+"_"+paramsModel['_id'])
     if(problem_type=='multi-klasifikacioni'):
         #print('multi')
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
-        for i in range(params['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
+        classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        for i in range(paramsModel['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
-        classifier.add(tf.keras.layers.Dense(units=5, activation=params['outputLayerActivationFunction']))#izlazni sloj
+            classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+        classifier.add(tf.keras.layers.Dense(units=5, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
         
 
-        classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'])
      
         hist=history.history
-    
+        plt.plot(hist['accuracy'])
+        plt.show()
         y_pred=classifier.predict(x_test)
         y_pred=np.argmax(y_pred,axis=1)
         
         scores = classifier.evaluate(x_test, y_test)
         #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
-        classifier.save("temp/"+params['name'], save_format='h5')
+        
+        
+        classifier.save(filepath, save_format='h5')
+        
         #vizuelizacija u python-u
         #from ann_visualizer.visualize import ann_viz;
         #ann_viz(classifier, title="My neural network")
-        return hist
+        
+        return filepath,hist
 
     elif(problem_type=='binarni-klasifikacioni'):
         #print('*************************************************************************binarni')
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
-        for i in range(params['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
+        classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        for i in range(paramsModel['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
-        classifier.add(tf.keras.layers.Dense(units=1, activation=params['outputLayerActivationFunction']))#izlazni sloj
+            classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+        classifier.add(tf.keras.layers.Dense(units=1, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
-        classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'])
         hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
@@ -332,25 +338,26 @@ def train(dataset, params, callback):
         #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
         #ann_viz(classifier, title="My neural network")
         
-        classifier.save("temp/"+params['name'], save_format='h5')
-        return hist
+        classifier.save(filepath, save_format='h5')
+        return filepath,hist
 
     elif(problem_type=='regresioni'):
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
-        for i in range(params['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
+        classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        for i in range(paramsModel['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=params['hiddenLayerNeurons'], activation=params['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+            classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=1))
 
-        classifier.compile(loss =params["lossFunction"] , optimizer = params['optimizer'] , metrics =params['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = params['epochs'],batch_size=params['batchSize'])
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'])
         hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
-        return hist
+        classifier.save(filepath, save_format='h5')
+        return filepath,hist
     def roc_auc_score_multiclass(actual_class, pred_class, average = "macro"):
     
         #creating a set of all the unique classes using the actual class list
