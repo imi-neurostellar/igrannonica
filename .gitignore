@@ -9,3 +9,4 @@ backend/microservice/temp/
 backend/microservice/api/__pycache__/
 production/app/node_modules/
 production/app/dist/
+backend/microservice/api/temp/

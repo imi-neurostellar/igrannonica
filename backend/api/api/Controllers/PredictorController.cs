@@ -155,6 +155,7 @@ namespace api.Controllers
         public async Task<ActionResult<Predictor>> Post([FromBody] Predictor predictor)
         {
             var user=_userService.GetUserByUsername(predictor.username);
+            predictor.dateCreated = DateTime.Now.ToUniversalTime();
             var model = _modelService.GetOneModel(predictor.modelId);
             if (model == null || user==null)
                 return BadRequest("Model not found or user doesnt exist");

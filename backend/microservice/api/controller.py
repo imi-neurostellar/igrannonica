@@ -2,7 +2,6 @@ from cmath import log
 from dataclasses import dataclass
 from distutils.command.upload import upload
 from gc import callbacks
-from xmlrpc.client import DateTime
 import flask
 from flask import request, jsonify
 import newmlservice
@@ -11,25 +10,24 @@ import pandas as pd
 import json
 import requests
 import config
-from datetime import datetime 
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 app.config["SERVER_NAME"] = config.hostIP
 
-@dataclass
-class Predictor:
-    _id : str
-    username: str
-    inputs : list
-    output : str
-    isPublic: bool
-    accessibleByLink: bool
-    dateCreated: DateTime
-    experimentId: str
-    modelId: str
-    h5FileId: str
-    metrics: list
+#@dataclass
+#class Predictor:
+#    _id : str
+    # username: str
+    # inputs : list
+    # output : str
+    # isPublic: bool
+    # accessibleByLink: bool
+    # dateCreated: DateTime
+    # experimentId: str
+    # modelId: str
+    # h5FileId: str
+    # metrics: list
 
 
 class train_callback(tf.keras.callbacks.Callback):
@@ -77,23 +75,23 @@ def train():
     fileId=r.text
     m = []
     for attribute, value in result.items():
-        m.append({"Name" : attribute, "JsonValue" : jsonify(value)})
-    predictor = Predictor(
-        _id = "",
-        username = paramsModel["username"],
-        inputs = paramsExperiment["inputColumns"],
-        output = paramsExperiment["outputColumn"],
-        isPublic = False,
-        accessibleByLink = False,
-        dateCreated = datetime.now(),
-        experimentId = paramsExperiment["_id"],
-        modelId = paramsModel["_id"],
-        h5FileId = fileId,
-        metrics = m
-    )
+        m.append({"Name" : attribute, "JsonValue" : value})
+    predictor = {
+        "_id" : "",
+        "username" : paramsModel["username"],
+        "inputs" : paramsExperiment["inputColumns"],
+        "output" : paramsExperiment["outputColumn"],
+        "isPublic" : False,
+        "accessibleByLink" : False,
+        "experimentId" : paramsExperiment["_id"],
+        "modelId" : paramsModel["_id"],
+        "h5FileId" : fileId,
+        "metrics" : m
+    }
     print(predictor)
     url = config.api_url + "/Predictor/add"
     r = requests.post(url, json=predictor).text
+    print(r)
     return r
 
 @app.route('/predict', methods = ['POST'])
