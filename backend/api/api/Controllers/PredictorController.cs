@@ -15,12 +15,14 @@ namespace api.Controllers
         private readonly IPredictorService _predictorService;
         private IJwtToken jwtToken;
         private readonly IMlConnectionService _mlConnectionService;
+        private readonly IExperimentService _experimentService;
 
-        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService)
+        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IExperimentService experimentService)
         {
             _predictorService = predictorService;
             jwtToken = Token;
             _mlConnectionService = mlConnectionService;
+            _experimentService = experimentService;
         }
 
         public string getUsername()
@@ -160,7 +162,7 @@ namespace api.Controllers
         // POST api/<PredictorController>/usepredictor {predictor,inputs}
         [HttpPost("usepredictor/{id}")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult UsePredictor(String id, [FromBody] PredictorColumns[] inputs)
+        public async Task<ActionResult> UsePredictor(String id, [FromBody] PredictorColumns[] inputs)
         {
             string username = getUsername();
 
@@ -168,10 +170,17 @@ namespace api.Controllers
                 return BadRequest();
 
             Predictor predictor = _predictorService.GetPredictor(username, id);
-            
+
+            Experiment e = _experimentService.Get(predictor.experimentId);
+
+            string result = await _mlConnectionService.Predict(predictor, e, inputs);
+
+            //salji ml
+
+            /*
             foreach(PredictorColumns i in inputs)
-                Debug.WriteLine(i.value.ToString()); 
-            return NoContent();
+                Debug.WriteLine(i.value.ToString());*/
+            return Ok(result);
         }
 
         // PUT api/<PredictorController>/{name}

@@ -14,8 +14,9 @@ namespace api.Services
         private readonly IModelService _modelService;
         private readonly IHubContext<ChatHub> _ichat;
         private readonly IConfiguration _configuration;
+        private readonly IFileService _fileService;
 
-        public MlConnectionService(IConfiguration configuration,IDatasetService datasetService,IHubContext<ChatHub> ichat)
+        public MlConnectionService(IConfiguration configuration,IDatasetService datasetService,IHubContext<ChatHub> ichat, IFileService fileService)
         {
             _configuration = configuration;
 
@@ -23,6 +24,7 @@ namespace api.Services
             _datasetService=datasetService;
             _ichat=ichat;
 
+            _fileService = fileService;
         }
 
         public async Task<string> SendModelAsync(object model, object dataset)//Don't Use
@@ -67,8 +69,20 @@ namespace api.Services
 
         }
 
-        
+        public async Task<string> Predict(Predictor predictor, Experiment experiment, PredictorColumns[] inputs)
+        {
+            string filePath = _fileService.GetFilePath(predictor.h5FileId, predictor.username);
 
+            var request = new RestRequest("predict", Method.Post);
+            request.AddParameter("predictor", JsonConvert.SerializeObject(predictor));
+            request.AddParameter("experiment", JsonConvert.SerializeObject(experiment));
+            request.AddFile("file", filePath);
+            request.AddHeader("Content-Type", "multipart/form-data");
 
+            var result = await this.client.ExecuteAsync(request);
+
+            return result.Content;
+
+        }
     }
 }
