@@ -1,4 +1,6 @@
+from cmath import log
 from dataclasses import dataclass
+from distutils.command.upload import upload
 from gc import callbacks
 from xmlrpc.client import DateTime
 import flask
@@ -31,16 +33,24 @@ class Predictor:
 
 
 class train_callback(tf.keras.callbacks.Callback):
-    def __init__(self, x_test, y_test):
+    def __init__(self, x_test, y_test,modelId):
         self.x_test = x_test
         self.y_test = y_test
+        self.modelId=modelId
     #
     def on_epoch_end(self, epoch, logs=None):
-        print(epoch)
+        #print('Evaluation: ', self.model.evaluate(self.x_test,self.y_test),"\n")
+       
+        #print(epoch)
+        
+        #print(logs)
+        
         #ml_socket.send(epoch)
         #file = request.files.get("file")
         url = config.api_url + "/Model/epoch"
-        requests.post(url, epoch).text
+        r=requests.post(url, json={"Stat":str(logs),"ModelId":str(self.modelId),"EpochNum":epoch}).text
+        
+        #print(r)
         #print('Evaluation: ', self.model.evaluate(self.x_test,self.y_test),"\n") #broj parametara zavisi od izabranih metrika loss je default
 
 @app.route('/train', methods = ['POST'])
@@ -63,7 +73,7 @@ def train():
 
     url = config.api_url + "/file/h5"
     files = {'file': open(filepath, 'rb')}
-    r=requests.post(url, files=files)
+    r=requests.post(url, files=files,data={"uploaderId":paramsExperiment['uploaderId']})
     fileId=r.text
     predictor = Predictor(
         _id = "",

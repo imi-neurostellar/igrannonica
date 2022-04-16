@@ -252,7 +252,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         opt=tf.keras.optimizers.RMSprop(learning_rate=params['learningRate'])
 
     ###REGULARIZACIJA
-    #regularisation={'kernelType':'l1 ili l2 ili l1_l2','krenelRate':default=0.01 ili jedna od vrednosti(0.0001,0.001,0.1,1,2,3) ili neka koju je korisnik zadao,'biasType':'','biasRate':'','activityType','activityRate'}
+    #regularisation={'kernelType':'l1 ili l2 ili l1_l2','kernelRate':default=0.01 ili jedna od vrednosti(0.0001,0.001,0.1,1,2,3) ili neka koju je korisnik zadao,'biasType':'','biasRate':'','activityType','activityRate'}
     reg=params['regularisation']
 
     ###Kernel
@@ -279,7 +279,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     elif(reg['kernelType']=='l1l2'):
         activityreg=tf.keras.regularizers.l1_l2(l1=reg['activityRate'][0],l2=reg['activityRate'][1])
     """  
-    filepath=os.path.join("temp/",paramsExperiment['_id']+"_"+paramsModel['_id'])
+    filepath=os.path.join("temp/",paramsExperiment['_id']+"_"+paramsModel['_id']+".h5")
     if(problem_type=='multi-klasifikacioni'):
         #print('multi')
         classifier=tf.keras.Sequential()
@@ -294,7 +294,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'])
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
      
         hist=history.history
         #plt.plot(hist['accuracy'])
@@ -326,7 +326,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'])
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
@@ -352,7 +352,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'])
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
