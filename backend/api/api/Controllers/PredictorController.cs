@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 using System.Diagnostics;
+using Microsoft.AspNetCore.SignalR;
 
 namespace api.Controllers
 {
@@ -16,13 +17,19 @@ namespace api.Controllers
         private IJwtToken jwtToken;
         private readonly IMlConnectionService _mlConnectionService;
         private readonly IExperimentService _experimentService;
+        private readonly IUserService _userService;
+        private readonly IHubContext<ChatHub> _ichat;
+        private readonly IModelService _modelService;
 
-        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IExperimentService experimentService)
+        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IExperimentService experimentService,IUserService userService, IHubContext<ChatHub> ichat,IModelService modelService)
         {
             _predictorService = predictorService;
             jwtToken = Token;
             _mlConnectionService = mlConnectionService;
             _experimentService = experimentService;
+            _userService = userService;
+            _ichat = ichat;
+            _modelService = modelService;
         }
 
         public string getUsername()
@@ -65,17 +72,18 @@ namespace api.Controllers
 
         //SEARCH za predictore (public ili private sa ovim imenom )
         // GET api/<PredictorController>/search/{name}
-        [HttpGet("search/{name}")]
-        [Authorize(Roles = "User")]
-        public ActionResult<List<Predictor>> Search(string name)
-        {
-            string username = getUsername();
-            
-            if (username == null)
-                return BadRequest();
 
-            return _predictorService.SearchPredictors(name, username);
-        }
+        //[HttpGet("search/{name}")]
+        //[Authorize(Roles = "User")]
+        //public ActionResult<List<Predictor>> Search(string name)
+        //{
+        //    string username = getUsername();
+            
+        //    if (username == null)
+        //        return BadRequest();
+
+        //    return _predictorService.SearchPredictors(name, username);
+        //}
 
         // GET api/<PredictorController>/getpredictor/{name}
         [HttpGet("getpredictor/{id}")]
@@ -98,17 +106,17 @@ namespace api.Controllers
         // GET api/<PredictorController>/{name}
         [HttpGet("{name}")]
         [Authorize(Roles = "User")]
-        public ActionResult<Predictor> Get(string name)
+        public ActionResult<Predictor> Get(string id)
         {
             string username = getUsername();
 
             if (username == null)
                 return BadRequest();
 
-            var predictor = _predictorService.GetOnePredictor(username, name);
+            var predictor = _predictorService.GetOnePredictor(id);
 
             if (predictor == null)
-                return NotFound($"Predictor with name = {name} not found or predictor is not public");
+                return NotFound($"Predictor with id = {id} not found or predictor is not public");
 
             return predictor;
         }
@@ -144,19 +152,17 @@ namespace api.Controllers
 
         // POST api/<PredictorController>/add
         [HttpPost("add")]
-        [Authorize(Roles = "User")]
-        public ActionResult<Predictor> Post([FromBody] Predictor predictor)
+        public async Task<ActionResult<Predictor>> Post([FromBody] Predictor predictor)
         {
-            var existingPredictor = _predictorService.GetOnePredictor(predictor.username, predictor.name);
-
-            if (existingPredictor != null)
-                return NotFound($"Predictor with name = {predictor.name} exisits");
-            else
-            {
-                _predictorService.Create(predictor);
-
-                return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
-            }
+            var user=_userService.GetUserByUsername(predictor.username);
+            var model = _modelService.GetOneModel(predictor.modelId);
+            if (model == null || user==null)
+                return BadRequest("Model not found or user doesnt exist");
+            _predictorService.Create(predictor);       
+            if (ChatHub.CheckUser(user._id))
+                await _ichat.Clients.Client(ChatHub.Users[user._id]).SendAsync("NotifyPredictor", predictor._id,model.name);
+            return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
+            
         }
 
         // POST api/<PredictorController>/usepredictor {predictor,inputs}
@@ -186,42 +192,42 @@ namespace api.Controllers
         // PUT api/<PredictorController>/{name}
         [HttpPut("{name}")]
         [Authorize(Roles = "User")]
-        public ActionResult Put(string name, [FromBody] Predictor predictor)
+        public ActionResult Put(string id, [FromBody] Predictor predictor)
         {
             string username = getUsername();
 
             if (username == null)
                 return BadRequest();
 
-            var existingPredictor = _predictorService.GetOnePredictor(username, name);
+            var existingPredictor = _predictorService.GetOnePredictor(id);
 
             //ne mora da se proverava
             if (existingPredictor == null)
-                return NotFound($"Predictor with name = {name} or user with username = {username} not found");
+                return NotFound($"Predictor with id = {id} or user with username = {username} not found");
 
-            _predictorService.Update(username, name, predictor);
+            _predictorService.Update(id, predictor);
 
-            return Ok($"Predictor with name = {name} updated");
+            return Ok($"Predictor with id = {id} updated");
         }
 
         // DELETE api/<PredictorController>/name
         [HttpDelete("{name}")]
         [Authorize(Roles = "User")]
-        public ActionResult Delete(string name)
+        public ActionResult Delete(string id)
         {
             string username = getUsername();
 
             if (username == null)
                 return BadRequest();
 
-            var predictor = _predictorService.GetOnePredictor(username, name);
+            var predictor = _predictorService.GetOnePredictor(id);
 
             if (predictor == null)
-                return NotFound($"Predictor with name = {name} or user with username = {username} not found");
+                return NotFound($"Predictor with id = {id} or user with username = {username} not found");
 
-            _predictorService.Delete(predictor.username, predictor.name);
+            _predictorService.Delete(id);
 
-            return Ok($"Predictor with name = {name} deleted");
+            return Ok($"Predictor with id = {id} deleted");
 
         }
     }

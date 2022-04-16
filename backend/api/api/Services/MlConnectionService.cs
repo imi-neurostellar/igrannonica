@@ -43,11 +43,7 @@ namespace api.Services
             //request.AddFile("file", file,filename);
             request.AddFile("file", filePath);
             request.AddHeader("Content-Type", "multipart/form-data");
-            var result = await this.client.ExecuteAsync(request);
-
-            if (ChatHub.CheckUser(id))
-                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyModel",model.name,model._id);
-
+            this.client.ExecuteAsync(request);
             return;
 
         }
