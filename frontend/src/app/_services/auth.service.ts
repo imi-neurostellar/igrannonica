@@ -44,6 +44,7 @@ export class AuthService {
 
   enableAutoRefresh() {
     this.lastToken = this.cookie.get('token');
+    clearTimeout(this.refresher);
     let exp = jwtHelper.getTokenExpirationDate(this.lastToken);
     if (!exp) {
       exp = new Date();
@@ -51,6 +52,7 @@ export class AuthService {
     var property = jwtHelper.decodeToken(this.cookie.get('token'));
     var username = property['name'];
     if (username != "") {
+      
       this.refresher = setTimeout(() => {
         this.http.post(`${Configuration.settings.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
           this.authenticate(response);
