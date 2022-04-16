@@ -432,11 +432,11 @@ def train(dataset, params, callback):
         micro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'micro')
         roc_auc_dict=roc_auc_score_multiclass(y_test, y_pred)
     '''
-def predict(experiment, predictor, model) {
+def predict(experiment, predictor, model):
     #model.predict()
     # ovo je pre bilo manageH5 
     return "TODO"
-}
+
 
 def manageH5(dataset,params,h5model):
     problem_type = params["type"]
