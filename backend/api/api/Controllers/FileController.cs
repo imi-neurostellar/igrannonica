@@ -84,7 +84,7 @@ namespace api.Controllers
                 await file.CopyToAsync(stream);
             }
             FileModel fileModel = new FileModel();
-            fileModel.type = "h5";
+            fileModel.type = ".h5";
             fileModel.path = fullPath;
             fileModel.uploaderId = uploaderId;
             fileModel.date = DateTime.Now.ToUniversalTime();
