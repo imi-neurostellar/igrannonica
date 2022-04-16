@@ -9,7 +9,7 @@ import config
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-app.config["SERVER_NAME"] = "127.0.0.1:5543"
+app.config["SERVER_NAME"] = config.hostIP
   
 class train_callback(tf.keras.callbacks.Callback):
     def __init__(self, x_test, y_test):
@@ -33,19 +33,19 @@ def train():
     paramsExperiment = json.loads(request.form["experiment"])
     paramsDataset = json.loads(request.form["dataset"])
     #dataset, paramsModel, paramsExperiment, callback)
-    result = newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
+    result = newmlservice.train(data, paramsModel, paramsExperiment, paramsDataset, train_callback)
     print(result)
     return jsonify(result)
 
 @app.route('/predict', methods = ['POST'])
 def predict():
-    f = request.json['filepath']
-    dataset = pd.read_csv(f)
-    m = request.json['modelpath']
-    model = tf.keras.models.load_model(m)
+    h5 = request.files.get("h5file")
+    model = tf.keras.models.load_model(h5)
+    paramsExperiment = json.loads(request.form["experiment"])
+    paramsPredictor = json.loads(request.form["predictor"])
     print("********************************model loaded*******************************")
-    newmlservice.manageH5(dataset,request.json['model'],model)
-    return "done"
+    result = newmlservice.predict(paramsExperiment, paramsPredictor, model)
+    return result
 
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
