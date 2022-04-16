@@ -44,7 +44,6 @@ namespace api.Controllers
         }
 
         [HttpPost("h5")]
-        [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<string>> H5Upload([FromForm] IFormFile file)
         {
 

@@ -122,7 +122,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     for col in paramsExperiment["inputColumns"]:
         #print(col)
         data[col]=dataset[col]
-    output_column = paramsExperiment["columnToPredict"]
+    output_column = paramsExperiment["outputColumn"]
     data[output_column] = dataset[output_column]
     #print(data)
 
@@ -297,8 +297,8 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'])
      
         hist=history.history
-        plt.plot(hist['accuracy'])
-        plt.show()
+        #plt.plot(hist['accuracy'])
+        #plt.show()
         y_pred=classifier.predict(x_test)
         y_pred=np.argmax(y_pred,axis=1)
         

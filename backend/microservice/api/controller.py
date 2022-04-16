@@ -65,19 +65,22 @@ def train():
     files = {'file': open(filepath, 'rb')}
     r=requests.post(url, files=files)
     fileId=r.text
-    predictor = Predictor()
-    predictor._id = ""
-    predictor.username = paramsModel["username"]
-    predictor.inputs = paramsExperiment["inputColumns"]
-    predictor.output = paramsExperiment["outputColumn"]
-    predictor.isPublic = False
-    predictor.accessibleByLink = False
-    predictor.dateCreated = datetime.now()
-    predictor.experimentId = paramsExperiment["_id"]
-    predictor.modelId = paramsModel["_id"]
-    predictor.h5FileId = fileId
+    predictor = Predictor(
+        _id = "",
+        username = paramsModel["username"],
+        inputs = paramsExperiment["inputColumns"],
+        output = paramsExperiment["outputColumn"],
+        isPublic = False,
+        accessibleByLink = False,
+        dateCreated = datetime.now(),
+        experimentId = paramsExperiment["_id"],
+        modelId = paramsModel["_id"],
+        h5FileId = fileId,
+        metrics=[]
+    )
 
     print(result)
+    print(predictor)
     return jsonify(result)
 
 @app.route('/predict', methods = ['POST'])

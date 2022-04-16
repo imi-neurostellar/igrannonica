@@ -73,7 +73,7 @@ export enum LossFunction {
     HingeLoss = 'hinge_loss',
     // multi-class classification loss functions
     CategoricalCrossEntropy = 'categorical_crossentropy',
-    SparseCategoricalCrossEntropy = 'sparse_categorical_crosentropy',
+    SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
     KLDivergence = 'kullback_leibler_divergence',
 
     // regression loss functions
@@ -95,7 +95,7 @@ export enum LossFunctionBinaryClassification {
 }
 export enum LossFunctionMultiClassification {
     CategoricalCrossEntropy = 'categorical_crossentropy',
-    SparseCategoricalCrossEntropy = 'sparse_categorical_crosentropy',
+    SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
     KLDivergence = 'kullback_leibler_divergence',
 }
 
