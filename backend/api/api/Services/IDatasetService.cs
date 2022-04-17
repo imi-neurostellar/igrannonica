@@ -5,15 +5,15 @@ namespace api.Services
 {
     public interface IDatasetService
     {
-        Dataset GetOneDataset(string username, string name);
+        Dataset GetOneDataset(string userId, string name);
         Dataset GetOneDataset(string id);
-        List<Dataset> SearchDatasets(string name, string username);
-        List<Dataset> GetMyDatasets(string username);
-        List<Dataset> SortDatasets(string username, bool ascdsc, int latest);
+        List<Dataset> SearchDatasets(string name);
+        List<Dataset> GetMyDatasets(string userId);
+        List<Dataset> SortDatasets(string userId, bool ascdsc, int latest);
         List<Dataset> GetPublicDatasets();
         Dataset Create(Dataset dataset);
-        void Update(string username, string name, Dataset dataset);
-        void Delete(string username, string name);
+        void Update(string userId, string name, Dataset dataset);
+        void Delete(string userId, string name);
         public List<Dataset> GetGuestDatasets();
         public void Update(Dataset dataset);
         string GetDatasetId(string fileId);
