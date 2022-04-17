@@ -22,6 +22,8 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
   @Input() pointColor: string = '#ffffff';
   @Input() cursorLineColor: string = '#ff0000';
 
+  private fleeSpeed = 0.005;
+
   private points: Point[] = [];
 
   private width = 200;
@@ -160,8 +162,8 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
     const distToCursor = this.distance(p.x, p.y, mx, my);
     if (distToCursor < this.cursorDistance) {
 
-      p.x -= ((mx - p.x) / distToCursor) / 500;
-      p.y -= ((my - p.y) / distToCursor) / 500;
+      p.x -= ((mx - p.x) / distToCursor) * this.fleeSpeed;
+      p.y -= ((my - p.y) / distToCursor) * this.fleeSpeed;
 
       const grd = this.ctx.createLinearGradient(p.x * this.width, p.y * this.height, mx * this.width, my * this.height);
       const alpha = HEX[Math.round(p.size / this.maxSize * (HEX.length - 1))];
