@@ -33,7 +33,7 @@ export class FilterDatasetsComponent implements OnInit {
     newDataset._id = "";
     newDataset.isPublic = false;
     newDataset.lastUpdated = new Date();
-    newDataset.username = decodedToken.name;
+    newDataset.uploaderId = decodedToken.uploaderId;
     let name=prompt("Unesite naziv dataset-a",newDataset.name);
     newDataset.name=name as string;
     if(name!=null && name!="")
