@@ -14,6 +14,7 @@ import { PredictComponent } from './_pages/predict/predict.component';
 import { FilterDatasetsComponent } from './_pages/filter-datasets/filter-datasets.component';
 import { ExperimentComponent } from './experiment/experiment.component';
 import { TrainingComponent } from './training/training.component';
+import { PlaygroundComponent } from './_pages/playground/playground.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Početna strana' } },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'browse-datasets', component: FilterDatasetsComponent, data: { title: 'Javni izvori podataka' } },
   { path: 'browse-predictors', component: BrowsePredictorsComponent, data: { title: 'Javni trenirani modeli' } },
   { path: 'predict/:id', component: PredictComponent, data: { title: 'Predvidi vrednosti' } },
+  { path: 'playground', component: PlaygroundComponent, data: { title: 'Zabava' } }
 ];
 
 @NgModule({

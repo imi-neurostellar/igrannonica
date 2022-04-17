@@ -1,14 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-reactive-background',
   templateUrl: './reactive-background.component.html',
   styleUrls: ['./reactive-background.component.css']
 })
-export class ReactiveBackgroundComponent implements OnInit {
+export class ReactiveBackgroundComponent implements AfterViewInit {
+
+  @ViewChild('bgCanvas') canvasRef!: ElementRef;
 
   @Input() numPoints: number = 450;
   @Input() speed: number = 0.001; // 0-1
+  @Input() scrollSpeed: number = 1;
   @Input() maxSize: number = 6;
 
   @Input() minDistance: number = 0.07; //0-1
@@ -25,8 +28,8 @@ export class ReactiveBackgroundComponent implements OnInit {
   private height = 200;
   private ratio = 1;
 
-  private canvas?: HTMLCanvasElement;
-  private ctx?: CanvasRenderingContext2D;
+  private canvas!: HTMLCanvasElement;
+  private ctx!: CanvasRenderingContext2D;
 
   private time: number = 0;
 
@@ -35,14 +38,22 @@ export class ReactiveBackgroundComponent implements OnInit {
   private mouseX = 0;
   private mouseY = 0;
 
-  ngOnInit(): void {
-
+  ngAfterViewInit(): void {
     document.addEventListener('mousemove', (e) => {
       this.mouseX = e.clientX / this.width;
       this.mouseY = e.clientY / this.height;
     })
 
-    this.canvas = (<HTMLCanvasElement>document.getElementById('bgCanvas'));
+    document.addEventListener('mouseleave', _ => {
+      this.mouseX = -1;
+      this.mouseY = -1;
+    })
+
+    document.addEventListener('scroll', (e) => {
+      this.scrollBackground(e);
+    })
+
+    this.canvas = (<HTMLCanvasElement>this.canvasRef.nativeElement);
     const ctx = this.canvas.getContext('2d');
     if (ctx) {
       this.ctx = ctx;
@@ -68,17 +79,28 @@ export class ReactiveBackgroundComponent implements OnInit {
     }, 1000 / 60);
   }
 
+  private lastScrollY: number = 0;
+
+  scrollBackground(e: Event) {
+    const scrolledAmount = window.scrollY - this.lastScrollY;
+    this.points.forEach((point) => {
+      point.y = point.y - (scrolledAmount / this.height) * this.scrollSpeed;
+      this.keepPointWithinBounds(point);
+    })
+    this.lastScrollY = window.scrollY;
+  }
+
   drawBackground() {
     if (!this.ctx || !this.canvas) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.fillStyle = this.bgColor;
-    this.ctx.fillRect(0, 0, this.width, this.height);
+    //this.ctx.fillStyle = this.bgColor;
+    //this.ctx.fillRect(0, 0, this.width, this.height);
 
     this.points.forEach((point, index) => {
+      this.updatePoint(point);
       this.drawLines(point, index);
       this.drawPoint(point);
-      this.updatePoint(point);
     });
 
     //this.drawPoint(new Point(this.mouseX, this.mouseY, 12, 0));
@@ -94,11 +116,12 @@ export class ReactiveBackgroundComponent implements OnInit {
       const dist = this.distance(p.x, p.y, otherPoint.x, otherPoint.y);
       if (dist < this.minDistance) {
         const h = HEX[Math.round((1 - dist / this.minDistance) * 16)]
-        this.ctx!.strokeStyle = this.lineColor + h + h;
-        this.ctx!.beginPath();
-        this.ctx!.moveTo(p.x * this.width, p.y * this.height);
-        this.ctx!.lineTo(otherPoint.x * this.width, otherPoint.y * this.height);
-        this.ctx!.stroke();
+        this.ctx.strokeStyle = this.lineColor + h;
+        this.ctx.lineWidth = this.maxSize / 2;
+        this.ctx.beginPath();
+        this.ctx.moveTo(p.x * this.width, p.y * this.height);
+        this.ctx.lineTo(otherPoint.x * this.width, otherPoint.y * this.height);
+        this.ctx.stroke();
       }
 
       i++;
@@ -108,7 +131,7 @@ export class ReactiveBackgroundComponent implements OnInit {
   drawPoint(p: Point) {
     this.ctx!.fillStyle = this.pointColor;
     this.ctx!.beginPath();
-    this.ctx!.arc(p.x * this.width, p.y * this.height, p.size, 0, 2 * Math.PI);
+    this.ctx!.arc(p.x * this.width, p.y * this.height, p.size * this.screenDepth(p.x), 0, 2 * Math.PI);
     this.ctx!.fill();
   }
 
@@ -140,22 +163,33 @@ export class ReactiveBackgroundComponent implements OnInit {
       p.x -= ((mx - p.x) / distToCursor) / 500;
       p.y -= ((my - p.y) / distToCursor) / 500;
 
-      const grd = this.ctx!.createLinearGradient(p.x * this.width, p.y * this.height, mx * this.width, my * this.height);
-      grd.addColorStop(0, this.cursorLineColor + 'ff');
+      const grd = this.ctx.createLinearGradient(p.x * this.width, p.y * this.height, mx * this.width, my * this.height);
+      const alpha = HEX[Math.round(p.size / this.maxSize * (HEX.length - 1))];
+      grd.addColorStop(0, this.cursorLineColor + alpha);
       grd.addColorStop(1, this.cursorLineColor + '00');
-      this.ctx!.strokeStyle = grd;
-      this.ctx!.beginPath();
-      this.ctx!.moveTo(p.x * this.width, p.y * this.height);
-      this.ctx!.lineTo(mx * this.width, my * this.height);
-      this.ctx!.stroke();
+      this.ctx.strokeStyle = grd;
+      this.ctx.beginPath();
+      this.ctx.moveTo(p.x * this.width, p.y * this.height);
+      this.ctx.lineTo(mx * this.width, my * this.height);
+      this.ctx.stroke();
     }
 
-    p.x %= 1;
-    p.y %= 1;
+    this.keepPointWithinBounds(p);
+  }
+
+  keepPointWithinBounds(p: Point) {
+    p.x = p.x % 1.0;
+    p.y = p.y % 1.0;
+    p.x = ((1 - Math.sign(p.x)) / 2) + p.x;
+    p.y = ((1 - Math.sign(p.y)) / 2) + p.y;
   }
 
   distance(x1: number, y1: number, x2: number, y2: number): number {
-    return Math.sqrt(((x2 - x1) ** 2) + ((y2 / this.ratio - y1 / this.ratio) ** 2));
+    return Math.sqrt(((x2 - x1) ** 2) + ((y2 / this.ratio - y1 / this.ratio) ** 2) / this.screenDepth(x1)) * this.ratio;
+  }
+
+  screenDepth(x: number): number {
+    return (1.5 - Math.sin(x * Math.PI));
   }
 }
 
@@ -168,4 +202,4 @@ class Point {
   ) { }
 }
 
-const HEX = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+const HEX = ['00', '11', '22', '33', '44', '55', '66', '77', '88', '99', 'aa', 'bb', 'cc', 'dd', 'ee', 'ff'];

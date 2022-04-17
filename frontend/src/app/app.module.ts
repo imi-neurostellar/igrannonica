@@ -48,6 +48,8 @@ import { TrainingComponent } from './training/training.component';
 import { ItemExperimentComponent } from './_elements/item-experiment/item-experiment.component';
 import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
 import { Configuration } from './configuration.service';
+import { PlaygroundComponent } from './_pages/playground/playground.component';
+import { GradientBackgroundComponent } from './_elements/gradient-background/gradient-background.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -87,7 +89,9 @@ export function initializeApp(appConfig: Configuration) {
     GraphComponent,
     TrainingComponent,
     ItemExperimentComponent,
-    YesNoDialogComponent
+    YesNoDialogComponent,
+    PlaygroundComponent,
+    GradientBackgroundComponent
   ],
   imports: [
     BrowserModule,
