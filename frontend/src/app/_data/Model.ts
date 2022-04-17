@@ -19,7 +19,7 @@ export default class Model {
         public batchSize: number = 5,
         public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
-        public username: string = '',
+        public uploaderId: string = '',
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5 // TODO add to add-model form
     ) { }

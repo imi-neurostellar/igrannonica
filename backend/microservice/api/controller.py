@@ -78,7 +78,7 @@ def train():
         m.append({"Name" : attribute, "JsonValue" : value})
     predictor = {
         "_id" : "",
-        "username" : paramsModel["username"],
+        "uploaderId" : paramsModel["uploaderId"],
         "inputs" : paramsExperiment["inputColumns"],
         "output" : paramsExperiment["outputColumn"],
         "isPublic" : False,

@@ -10,7 +10,7 @@ export default class Dataset {
         public accessibleByLink: boolean = false,
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
-        public username: string = '',
+        public uploaderId: string = '',
         public delimiter: string = '',
         public hasHeader: boolean = true,
 

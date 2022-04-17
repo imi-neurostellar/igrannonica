@@ -69,7 +69,7 @@ export class ModelLoadComponent implements OnInit {
   uploadModel() {
     this.getMetrics();
 
-    this.newModel.username = Shared.username;
+    this.newModel.uploaderId = Shared.userId;
 
     this.modelsService.addModel(this.newModel).subscribe((response) => {
       Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');

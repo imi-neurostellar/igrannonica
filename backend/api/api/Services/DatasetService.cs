@@ -27,9 +27,9 @@ namespace api.Services
         }
 
         //brisanje odredjenog name-a
-        public void Delete(string userId, string name)
+        public void Delete(string userId, string id)
         {
-            _dataset.DeleteOne(dataset => (dataset.uploaderId == userId && dataset.name == name)); 
+            _dataset.DeleteOne(dataset => (dataset.uploaderId == userId && dataset._id == id)); 
         }
 
         public List<Dataset> GetMyDatasets(string userId)
@@ -62,9 +62,9 @@ namespace api.Services
             return _dataset.Find(dataset => dataset.isPublic == true && dataset.isPreProcess).ToList();
         }
 
-        public Dataset GetOneDataset(string userId, string name)
+        public Dataset GetOneDataset(string userId, string id)
         {
-            return _dataset.Find(dataset => dataset.uploaderId == userId && dataset.name == name && dataset.isPreProcess).FirstOrDefault();
+            return _dataset.Find(dataset => dataset.uploaderId == userId && dataset._id == id && dataset.isPreProcess).FirstOrDefault();
         }
         //odraditi za pretragu getOne
 
@@ -74,9 +74,9 @@ namespace api.Services
         }
 
         //ako je potrebno da se zameni name  ili ekstenzija
-        public void Update(string userId, string name, Dataset dataset )
+        public void Update(string userId, string id, Dataset dataset )
         {
-            _dataset.ReplaceOne(dataset => dataset.uploaderId == userId && dataset.name == name, dataset);
+            _dataset.ReplaceOne(dataset => dataset.uploaderId == userId && dataset._id == id, dataset);
         }
         public void Update(Dataset dataset)
         {

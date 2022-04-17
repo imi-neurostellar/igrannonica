@@ -82,7 +82,7 @@ namespace api.Controllers
         {
             
             var model=_modelService.GetOneModel(info.ModelId);
-            var user = _userService.GetUserByUsername(model.uploaderId);
+            var user = _userService.GetUserById(model.uploaderId);
 
             if (ChatHub.CheckUser(user._id))
                 await _ichat.Clients.Client(ChatHub.Users[user._id]).SendAsync("NotifyEpoch",model.name,info.ModelId,info.Stat,model.epochs,info.EpochNum);

@@ -213,7 +213,7 @@ namespace api.Controllers
         }
 
         // DELETE api/<PredictorController>/name
-        [HttpDelete("{name}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "User")]
         public ActionResult Delete(string id)
         {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import shared from 'src/app/Shared';
 import Model from 'src/app/_data/Model';
 import { ModelsService } from 'src/app/_services/models.service';
@@ -12,7 +13,7 @@ export class MyModelsComponent implements OnInit {
   myModels: Model[] = [];
   //myModel: Model;
 
-  constructor(private modelsS : ModelsService) {
+  constructor(private modelsS : ModelsService, private router : Router) {
 
     
 
@@ -44,6 +45,11 @@ deleteThisModel(model: Model): void{
 }
 
 
+useThisModel(model: Model): void{
+
+  this.router.navigate(['/training'])
+  
+}
   getAllMyModels(): void{
     this.modelsS.getMyModels().subscribe(m => {
       this.myModels = m;
