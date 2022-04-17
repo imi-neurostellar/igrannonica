@@ -23,7 +23,7 @@
             </div>
     
             <h2 class="mt-5 mb-2">2. Izaberite model</h2>
-            <app-model-load (selectedModelChangeEvent)="selectModel($event)"></app-model-load>
+            <app-model-load (selectedModelChangeEvent)="selectModel($event)" [forExperiment]="selectedExperiment"></app-model-load>
     
             <h2 class="my-5">3. Treniranje modela</h2>
 

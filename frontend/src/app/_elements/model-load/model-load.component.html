@@ -17,7 +17,7 @@
     <div *ngIf="showMyModels" class="px-5">
         <div class="overflow-auto" style="max-height: 500px;">
             <ul class="list-group">
-                <li class="list-group-item p-3" *ngFor="let model of myModels|filter:term"
+                <li class="list-group-item p-3" *ngFor="let model of myModels|filter:term|filter:(forExperiment ? forExperiment.type : '')"
                     [ngClass]="{'selectedModelClass': this.selectedModel == model}">
                     <app-item-model name="usersModel" [model]="model" (click)="selectThisModel(model);">
                     </app-item-model>
@@ -124,19 +124,7 @@
                     
                     <input type="number" min="0" step="1" max="7" class="form-control" name="batchSizePower" [(ngModel)]="batchSizePower" (click)="updateBatchSize()" >
                     {{newModel.batchSize}}
-                    <!--<select id=BatchSizeOptions class="form-select" name="batchSize" [(ngModel)]="newModel.batchSize">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="4">4</option>
-                        <option value="8">8</option>
-                        <option value="16">16</option>
-                        <option value="32">32</option>
-                        <option value="64">64</option>
-                        <option value="128">128</option>
-                        <option value="256">256</option>
-                        <option value="512">512</option>
-                        <option value="1024">1024</option>
-                    </select>-->
+                 
                 </div>
                 
                 <div class="row p-2">

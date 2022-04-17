@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Experiment, { NullValReplacer, NullValueOptions, ReplaceWith, Encoding } from '../_data/Experiment';
-import Model from '../_data/Model';
+import Model,{ProblemType} from '../_data/Model';
 import Dataset, { ColumnInfo } from '../_data/Dataset';
 import { ModelsService } from '../_services/models.service';
 import Shared from '../Shared';
@@ -24,7 +24,7 @@ export class ExperimentComponent implements OnInit {
   Encoding = Encoding;
   ColumnEncoding = ColumnEncoding;
   Object = Object;
-
+  ProblemType=ProblemType;
   selectedColumnsInfoArray: ColumnInfo[] = [];
   selectedNotNullColumnsArray: string[] = [];
 
