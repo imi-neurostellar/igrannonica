@@ -43,6 +43,11 @@ export class ModelLoadComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  batchSizePower:number=1;
+  updateBatchSize()
+  {
+    this.newModel.batchSize=2**this.batchSizePower;
+  }
 
   updateGraph() {
     this.graph.update();

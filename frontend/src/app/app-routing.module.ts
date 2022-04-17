@@ -21,6 +21,7 @@ const routes: Routes = [
   /*{ path: 'add-model', component: AddModelComponent, data: { title: 'Dodaj model' } },*/
   { path: 'experiment', component: ExperimentComponent, data: { title: 'Dodaj eksperiment' } },
   { path: 'training', component: TrainingComponent, data: { title: 'Treniraj model' } },
+  { path: 'training/:id', component: TrainingComponent, data: { title: 'Treniraj model' } },
   { path: 'my-datasets', component: MyDatasetsComponent, canActivate: [AuthGuardService], data: { title: 'Moji izvori podataka' } },
   { path: 'my-models', component: MyModelsComponent, canActivate: [AuthGuardService], data: { title: 'Moji modeli' } },
   { path: 'my-predictors', component: MyPredictorsComponent, canActivate: [AuthGuardService], data: { title: 'Moji trenirani modeli' } },
