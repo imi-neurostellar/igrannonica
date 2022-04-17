@@ -67,7 +67,7 @@ namespace api.Services
 
         public async Task<string> Predict(Predictor predictor, Experiment experiment, PredictorColumns[] inputs)
         {
-            string filePath = _fileService.GetFilePath(predictor.h5FileId, predictor.username);
+            string filePath = _fileService.GetFilePath(predictor.h5FileId, predictor.uploaderId);
 
             var request = new RestRequest("predict", Method.Post);
             request.AddParameter("predictor", JsonConvert.SerializeObject(predictor));

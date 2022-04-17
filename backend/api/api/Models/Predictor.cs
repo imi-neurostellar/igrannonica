@@ -9,7 +9,7 @@ namespace api.Models
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]//mongo data type to .net
 		public string _id { get; set; }
-		public string username { get; set; }
+		public string uploaderId { get; set; }
 		//public string name { get; set; }
 		//public string description { get; set; }
 		public string[] inputs { get; set; }

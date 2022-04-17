@@ -14,7 +14,7 @@ namespace api.Services
             _dataset = database.GetCollection<Dataset>(settings.DatasetCollectionName);
         }
 
-        public List<Dataset> SearchDatasets(string name, string username)
+        public List<Dataset> SearchDatasets(string name)
         {
             return _dataset.Find(dataset => dataset.name == name && dataset.isPublic == true && dataset.isPreProcess).ToList();
         }
@@ -27,27 +27,27 @@ namespace api.Services
         }
 
         //brisanje odredjenog name-a
-        public void Delete(string username, string name)
+        public void Delete(string userId, string name)
         {
-            _dataset.DeleteOne(dataset => (dataset.username == username && dataset.name == name)); 
+            _dataset.DeleteOne(dataset => (dataset.uploaderId == userId && dataset.name == name)); 
         }
 
-        public List<Dataset> GetMyDatasets(string username)
+        public List<Dataset> GetMyDatasets(string userId)
         {
-            return _dataset.Find(dataset => dataset.username == username && dataset.isPreProcess).ToList();
+            return _dataset.Find(dataset => dataset.uploaderId == userId && dataset.isPreProcess).ToList();
         }
         public List<Dataset> GetGuestDatasets()
         {
             //Join Igranonica public datasetove sa svim temp uploadanim datasetovima
-            List<Dataset> datasets= _dataset.Find(dataset => dataset.username == "Igrannonica" && dataset.isPublic == true && dataset.isPreProcess).ToList();
-            datasets.AddRange(_dataset.Find(dataset => dataset.username == "" && dataset.isPreProcess).ToList());
+            List<Dataset> datasets= _dataset.Find(dataset => dataset.uploaderId == "Igrannonica" && dataset.isPublic == true && dataset.isPreProcess).ToList();
+            datasets.AddRange(_dataset.Find(dataset => dataset.uploaderId == "" && dataset.isPreProcess).ToList());
             return datasets;
         }
 
         //poslednji datasetovi
-        public List<Dataset> SortDatasets(string username, bool ascdsc, int latest)
+        public List<Dataset> SortDatasets(string userId, bool ascdsc, int latest)
         {
-            List<Dataset> list = _dataset.Find(dataset => dataset.username == username && dataset.isPreProcess).ToList();
+            List<Dataset> list = _dataset.Find(dataset => dataset.uploaderId == userId && dataset.isPreProcess).ToList();
 
             if(ascdsc)
                 list = list.OrderBy(dataset => dataset.lastUpdated).ToList();
@@ -62,9 +62,9 @@ namespace api.Services
             return _dataset.Find(dataset => dataset.isPublic == true && dataset.isPreProcess).ToList();
         }
 
-        public Dataset GetOneDataset(string username, string name)
+        public Dataset GetOneDataset(string userId, string name)
         {
-            return _dataset.Find(dataset => dataset.username == username && dataset.name == name && dataset.isPreProcess).FirstOrDefault();
+            return _dataset.Find(dataset => dataset.uploaderId == userId && dataset.name == name && dataset.isPreProcess).FirstOrDefault();
         }
         //odraditi za pretragu getOne
 
@@ -74,9 +74,9 @@ namespace api.Services
         }
 
         //ako je potrebno da se zameni name  ili ekstenzija
-        public void Update(string username, string name, Dataset dataset )
+        public void Update(string userId, string name, Dataset dataset )
         {
-            _dataset.ReplaceOne(dataset => dataset.username == username && dataset.name == name, dataset);
+            _dataset.ReplaceOne(dataset => dataset.uploaderId == userId && dataset.name == name, dataset);
         }
         public void Update(Dataset dataset)
         {
@@ -85,7 +85,7 @@ namespace api.Services
 
         public string GetDatasetId(string fileId)
         {
-            Dataset dataset = _dataset.Find(dataset => dataset.fileId == fileId && dataset.username == "Igrannonica").FirstOrDefault();
+            Dataset dataset = _dataset.Find(dataset => dataset.fileId == fileId && dataset.uploaderId == "Igrannonica").FirstOrDefault();
 
             return dataset._id;
         }
