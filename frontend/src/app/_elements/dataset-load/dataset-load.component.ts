@@ -41,12 +41,14 @@ export class DatasetLoadComponent implements OnInit {
 
   viewMyDatasetsForm() {
     this.showMyDatasets = true;
-    this.resetSelectedDataset();
+    if (this.selectedDataset != undefined)
+      this.resetSelectedDataset();
     //this.resetCbsAndRbs();        //TREBA DA SE DESI
   }
   viewNewDatasetForm() {
     this.showMyDatasets = false;
-    this.resetSelectedDataset();
+    if (this.selectedDataset != undefined)
+      this.resetSelectedDataset();
     //this.resetCbsAndRbs();        //TREBA DA SE DESI
   }
 
