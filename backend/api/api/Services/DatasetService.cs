@@ -62,9 +62,9 @@ namespace api.Services
             return _dataset.Find(dataset => dataset.isPublic == true && dataset.isPreProcess).ToList();
         }
 
-        public Dataset GetOneDataset(string userId, string id)
+        public Dataset GetOneDataset(string userId, string name)
         {
-            return _dataset.Find(dataset => dataset.uploaderId == userId && dataset._id == id && dataset.isPreProcess).FirstOrDefault();
+            return _dataset.Find(dataset => dataset.uploaderId == userId && dataset.name == name && dataset.isPreProcess).FirstOrDefault();
         }
         //odraditi za pretragu getOne
 

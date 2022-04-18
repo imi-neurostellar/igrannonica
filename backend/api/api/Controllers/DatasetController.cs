@@ -136,7 +136,7 @@ namespace api.Controllers
             var existingDataset = _datasetService.GetOneDataset(dataset.uploaderId, dataset.name);
 
             if (existingDataset != null)
-                return NotFound($"Dateset with name = {dataset.name} exisits");
+                return NotFound($"Dataset with this name already exists");
             else
             {
                 FileModel fileModel = _fileService.getFile(dataset.fileId);
@@ -149,46 +149,46 @@ namespace api.Controllers
 
 
         // PUT api/<DatasetController>/{name}
-        [HttpPut("{id}")]
+        [HttpPut("{name}")]
         [Authorize(Roles = "User")]
-        public ActionResult Put(string id, [FromBody] Dataset dataset)
+        public ActionResult Put(string name, [FromBody] Dataset dataset)
         {
             string uploaderId = getUserId();
 
             if (uploaderId == null)
                 return BadRequest();
 
-            var existingDataset = _datasetService.GetOneDataset(uploaderId, id);
+            var existingDataset = _datasetService.GetOneDataset(uploaderId, name);
 
             //ne mora da se proverava
             if (existingDataset == null)
-                return NotFound($"Dataset with ID = {id} or user with ID = {uploaderId} not found");
+                return NotFound($"Dataset with name = {name} or user with ID = {uploaderId} not found");
 
             dataset.lastUpdated = DateTime.UtcNow;
 
-            _datasetService.Update(uploaderId, id, dataset);
+            _datasetService.Update(uploaderId, name, dataset);
 
-            return Ok($"Dataset with ID = {id} updated");
+            return Ok($"Dataset with name = {name} updated");
         }
 
         // DELETE api/<DatasetController>/name
-        [HttpDelete("{id}")]
+        [HttpDelete("{name}")]
         [Authorize(Roles = "User")]
-        public ActionResult Delete(string id)
+        public ActionResult Delete(string name)
         {
             string uploaderId = getUserId();
 
             if (uploaderId == null)
                 return BadRequest();
 
-            var dataset = _datasetService.GetOneDataset(uploaderId, id);
+            var dataset = _datasetService.GetOneDataset(uploaderId, name);
 
             if (dataset == null)
-                return NotFound($"Dataset with ID = {id} or user with ID = {uploaderId} not found");
+                return NotFound($"Dataset with name = {name} or user with ID = {uploaderId} not found");
 
-            _datasetService.Delete(dataset.uploaderId, dataset._id);
+            _datasetService.Delete(dataset.uploaderId, dataset.name);
 
-            return Ok($"Dataset with ID = {id} deleted");
+            return Ok($"Dataset with name = {name} deleted");
 
         }
     }

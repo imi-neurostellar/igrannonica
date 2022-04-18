@@ -31,8 +31,7 @@
                                     <div id="divInputs" class="form-check mt-2">
                                         <br>
                                         <div *ngFor="let item of selectedDataset.columnInfo; let i = index">
-                                            <input class="form-check-input" type="checkbox" value="{{item.columnName}}" id="cb_{{item.columnName}}" name="cbsNew" [checked]="experiment.outputColumn != item.columnName" [disabled]="experiment.outputColumn == item.columnName" (change)="resetColumnEncodings()"
-                                                (click)="checkedColumnsChanged(item, 0)">&nbsp;
+                                            <input class="form-check-input" type="checkbox" value="{{item.columnName}}" id="cb_{{item.columnName}}" name="cbsNew" [checked]="experiment.outputColumn != item.columnName" [disabled]="experiment.outputColumn == item.columnName" (change)="checkedColumnsChanged(item, 0); resetColumnEncodings();">&nbsp;
                                             <label class="form-check-label" for="cb_{{item.columnName}}">
                                             {{item.columnName}}
                                         </label>
@@ -44,7 +43,8 @@
                                     <div id="divOutputs" class="form-check mt-2">
                                         <br>
                                         <div *ngFor="let item of selectedDataset.columnInfo; let i = index">
-                                            <input class="form-check-input" type="radio" value="{{item.columnName}}" id="rb_{{item.columnName}}" name="rbsNew" [(ngModel)]="this.experiment.outputColumn" (change)="experiment.outputColumn = item.columnName; resetColumnEncodings();" (click)="checkedColumnsChanged(item, 1);">&nbsp;
+                                            <input class="form-check-input" type="radio" value="{{item.columnName}}" id="rb_{{item.columnName}}" name="rbsNew" [(ngModel)]="this.experiment.outputColumn" (change)="experiment.outputColumn = item.columnName; checkedColumnsChanged(item, 1); resetColumnEncodings();"
+                                                checked>&nbsp;
                                             <label class="form-check-label" for="rb_{{item.columnName}}">
                                             {{item.columnName}}
                                         </label>
@@ -54,89 +54,90 @@
                             </div>
                         </div>
 
-                        <h3 class="mt-5">Popunjavanje nedostajućih vrednosti:</h3>
-                        <div class="form-check" *ngIf="selectedDataset">
-                            <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.DeleteRows" class="form-check-input" value="deleteRows" name="fillMissing" id="delRows" checked data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
-                            <label for="delRows" class="form-check-label">Obriši sve
+
+                        <div class="mt-5 mb-3 mx-3" *ngIf="countSelectedNullCols() == 0">
+                            <h3 class="border p-2 text-center"><i>Izabrane kolone nemaju nedostajuće vrednosti koje možete popuniti.</i></h3>
+                        </div>
+
+                        <div *ngIf="countSelectedNullCols() != 0">
+                            <h3 class="mt-5">Popunjavanje nedostajućih vrednosti:</h3>
+                            <div class="form-check" *ngIf="selectedDataset">
+                                <input type="radio" [(ngModel)]="experiment.nullValues " [value]="NullValueOptions.DeleteRows " class="form-check-input" value="deleteRows" name="fillMissing " id="delRows" checked data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
+                                <label for="delRows" class="form-check-label ">Obriši sve
                             redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} od {{selectedDataset.rowCount}})</label><br>
-                            <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.DeleteColumns" class="form-check-input" value="deleteCols" name="fillMissing" id="delCols" data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
-                            <label for="delCols" class="form-check-label">Obriši sve
+                                <input type="radio" [(ngModel)]="experiment.nullValues " [value]="NullValueOptions.DeleteColumns " class="form-check-input" value="deleteCols" name="fillMissing " id="delCols" data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
+                                <label for="delCols" class="form-check-label ">Obriši sve
                             kolone sa nedostajućim vrednostima ({{countSelectedNullCols()}} od {{selectedDataset.columnInfo.length}})</label><br>
-                            <input type="radio" [(ngModel)]="experiment.nullValues" [value]="NullValueOptions.Replace" class="form-check-input" name="fillMissing" id="replace" data-bs-toggle="collapse" data-bs-target="#fillMissingCustom:not(.show)">
-                            <label for="replace" class="form-check-label">Izabraću
+                                <input type="radio" [(ngModel)]="experiment.nullValues " [value]="NullValueOptions.Replace " class="form-check-input" name="fillMissing" id="replace" data-bs-toggle="collapse" data-bs-target="#fillMissingCustom:not(.show)">
+                                <label for="replace" class="form-check-label">Izabraću
                             vrednosti koje će da zamene nedostajuće vrednosti za svaku kolonu...</label><br><br>
-                            <div class="collapse" id="fillMissingCustom">
-                                <div>
-                                    <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
-                                    <div class="my-3" *ngIf="getSelectedColumnsArrayWithoutNullVals().length > 0">
-                                        <label class="text-center form-control mx-3 text-secondary">
+                                <div class="collapse" id="fillMissingCustom">
+                                    <div>
+                                        <label for="columnReplacers" class="form-label">Unesite zamenu za svaku kolonu:</label>
+                                        <div class="my-3 " *ngIf="getSelectedColumnsArrayWithoutNullVals().length> 0">
+                                            <label class="text-center form-control mx-3 text-secondary">
                                         Kolone <span style="font-style: italic;" *ngFor="let colname of getSelectedColumnsArrayWithoutNullVals(); let i = index">
                                             <span *ngIf="i != getSelectedColumnsArrayWithoutNullVals().length - 1">{{colname}}, </span> 
                                             <span *ngIf="i == getSelectedColumnsArrayWithoutNullVals().length - 1">{{colname}} </span> 
                                         </span>
                                         nemaju nedostajućih vrednosti za popunjavanje.
                                     </label>
-                                    </div>
-                                    <div id="columnReplacers">
-                                        <div *ngFor="let column of selectedColumnsInfoArray; let i = index" class="my-3">
-                                            <div *ngIf="column.numNulls > 0">
-                                                <span class="w-20 mx-3">
-                                                {{column.columnName}}&nbsp;<span class="small" style="color:gray;">({{column.numNulls}} null)
-                                                </span>
-                                                </span>
+                                        </div>
+                                        <div id="columnReplacers">
+                                            <div *ngFor="let column of selectedColumnsInfoArray; let i = index" class="my-3">
+                                                <div *ngIf="column.numNulls > 0">
+                                                    <span class="w-20 mx-3">
+                                                        {{column.columnName}}&nbsp;
+                                                        <span class="small" style="color:gray;">({{column.numNulls}} null)</span>
+                                                    </span>
 
-                                                <label *ngIf="column.numNulls <= 0" class="text-center form-control mx-3 text-secondary">
-                                                Ova kolona nema
-                                                nedostajućih
-                                                vrednosti.
-                                            </label>
-
-                                                <div *ngIf="column.numNulls > 0" class="d-flex flex-row justify-content-end">
-                                                    <div class="flex-grow-3 mx-3 me-auto">
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <label [for]="'fillCol_'+column.columnName" class="form-control">
+                                                    <div class="d-flex flex-row justify-content-end">
+                                                        <div class="flex-grow-3 mx-3 me-auto">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <label [for]="'fillCol_'+column.columnName" class="form-control">
                                                                 Zameni
                                                                 <input type="radio" [id]="'fillCol_'+column.columnName"
                                                                     [name]="'delOp_'+column.columnName">
                                                             </label>
-                                                            </div>
-                                                            <input type="text" class="form-control" [id]="'fillText_'+column.columnName" (keyup)="checkFillColRadio(column.columnName)" placeholder="Unesi vrednost...">
+                                                                </div>
+                                                                <input type="text" class="form-control" [id]="'fillText_'+column.columnName" (keyup)="checkFillColRadio(column.columnName)" placeholder="Unesi vrednost...">
 
-                                                            <div class="input-group-append">
-                                                                <select [id]="'replaceOptions'+i" class="form-control btn-primary" *ngIf="column.isNumber" (change)="replace($event, column); checkFillColRadio(column.columnName);">
+                                                                <div class="input-group-append">
+                                                                    <select [id]="'replaceOptions'+i" class="form-control btn-primary" *ngIf="column.isNumber" (change)="replace($event, column); checkFillColRadio(column.columnName);">
                                                                 <option
                                                                     *ngFor="let option of Object.keys(ReplaceWith); let optionName of Object.values(ReplaceWith)"
                                                                     [value]="option">
                                                                     {{ optionName }}
                                                                 </option>
                                                             </select>
-                                                                <select [id]="'replaceOptions'+i" class="form-control btn-outline-primary" *ngIf="!column.isNumber && column.numNulls > 0" (change)="replace($event, column); checkFillColRadio(column.columnName);">
+                                                                    <select [id]="'replaceOptions'+i" class="form-control btn-outline-primary" *ngIf="!column.isNumber && column.numNulls > 0" (change)="replace($event, column); checkFillColRadio(column.columnName);">
                                                                 <option *ngFor="let option of column.uniqueValues" [value]="option">
                                                                     {{ option }}
                                                                 </option>
                                                             </select>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div class="flex-shrink-1 mx-3">
-                                                        <div class="input-group">
-                                                            <label class="form-control" [for]="'delCol_'+column.columnName">Izbriši
+                                                        <div class="flex-shrink-1 mx-3">
+                                                            <div class="input-group">
+                                                                <label class="form-control" [for]="'delCol_'+column.columnName">Izbriši
                                                             kolonu
                                                             <input type="radio" [id]="'delCol_'+column.columnName"
                                                                 [name]="'delOp_'+column.columnName"
                                                                 (change)="emptyFillTextInput(column.columnName)"></label>
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div class="flex-shrink-1 mx-3">
-                                                        <div class="input-group">
-                                                            <label class="form-control" [for]="'delRows_'+column.columnName">Izbriši
+                                                        <div class="flex-shrink-1 mx-3">
+                                                            <div class="input-group">
+                                                                <label class="form-control" [for]="'delRows_'+column.columnName">Izbriši
                                                             redove
                                                             <input type="radio" [id]="'delRows_'+column.columnName"
                                                                 [name]="'delOp_'+column.columnName" checked
                                                                 (change)="emptyFillTextInput(column.columnName)"></label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -188,7 +189,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">{{selectedColumnsInfoArray[i].columnName}}</span>
                                         </div>
-                                        <select [id]="'encodingOption_'+i" class="form-control" [(ngModel)]="experiment.encodings[i].encoding">
+                                        <select [id]="'encodingOption_'+i" class="form-select" [(ngModel)]="experiment.encodings[i].encoding">
                                         <option
                                             *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)"
                                             [value]="option">
@@ -214,33 +215,23 @@
                             <label for="name" class="col-form-label">Naziv eksperimenta:</label>
                             <input type="text" class="form-control mb-3" name="name" placeholder="Naziv..." [(ngModel)]="experiment.name">
 
-            <div class="carousel-item mt-2">
-                <h2 class="mb-4">3. Dodaj eskperiment</h2>
-
-                <div class="row">
-                    <div class="col"></div>
-                    <div class="col-8">
-                        <label for="name" class="col-form-label">Naziv eksperimenta:</label>
-                        <input type="text" class="form-control mb-3" name="name" placeholder="Naziv..." [(ngModel)]="experiment.name">
-        
-                        <label for="desc" class="col-sm-2 col-form-label">Opis:</label>
-                        <div>
-                            <textarea class="form-control" name="desc" rows="3" [(ngModel)]="experiment.description"></textarea>
-                        </div>
-                        <label for="desc" class="col-sm-2 col-form-label">Tip problema:</label>
-                        <div class="col-2">
-                            <select id=typeOptions class="form-select" name="type" [(ngModel)]="experiment.type">
-                               
-                                <option
-                                    *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
-                                    [value]="option">
-                                    {{ optionName }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group row mt-5 mb-3">
-                            <div class="col"></div>
-                            <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="saveExperiment();">Sačuvaj
+                            <label for="desc" class="col-sm-2 col-form-label">Opis:</label>
+                            <div>
+                                <textarea class="form-control" name="desc" rows="3" [(ngModel)]="experiment.description"></textarea>
+                            </div>
+                            <label for="desc" class="col-sm-2 col-form-label mt-3">Tip problema:</label>
+                            <div class="col-4">
+                                <select id="typeOptions" class="form-select" name="type" [(ngModel)]="experiment.type">
+                                    <option
+                                        *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
+                                        [value]="option">
+                                        {{ optionName }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group row mt-5 mb-3">
+                                <div class="col"></div>
+                                <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="saveExperiment();">Sačuvaj
                                 eksperiment</button>
                                 <div class="col"></div>
                             </div>
@@ -250,13 +241,14 @@
                 </div>
 
             </div>
+
             <div class="m-3 d-flex flex-row justify-content-between align-items-center" style=" margin-left: auto;">
                 <button mat-fab color="primary" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <mat-icon>arrow_backward</mat-icon>
-            </button>
+                                <mat-icon>arrow_backward</mat-icon>
+                            </button>
                 <button mat-fab color="primary" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
+                                <mat-icon>arrow_forward</mat-icon>
+                            </button>
             </div>
         </div>
     </div>

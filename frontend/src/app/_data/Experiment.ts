@@ -19,8 +19,8 @@ export default class Experiment {
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
 
-        public encodings: ColumnEncoding[] = [],//[{columnName: "", columnEncoding: Encoding.Label}]
-        public type:ProblemType = ProblemType.Regression
+        public encodings: ColumnEncoding[] = [],
+        public type: ProblemType = ProblemType.Regression
     ) { }
 }
 

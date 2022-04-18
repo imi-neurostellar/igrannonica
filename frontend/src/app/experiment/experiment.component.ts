@@ -40,6 +40,7 @@ export class ExperimentComponent implements OnInit {
     this.selectedDataset = dataset;
     this.selectedColumnsInfoArray = this.selectedDataset.columnInfo;
     this.selectedNotNullColumnsArray = [];
+    this.experiment.outputColumn = this.selectedDataset.columnInfo[this.selectedDataset.columnInfo.length - 1].columnName;
 
     this.resetColumnEncodings();
     console.log(this.experiment.encodings);
