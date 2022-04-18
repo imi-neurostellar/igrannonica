@@ -7,6 +7,7 @@ export default class Predictor {
         public output: string = '',
         public isPublic: boolean = false,
         public accessibleByLink: boolean = false,
-        public dateCreated: Date = new Date()
+        public dateCreated: Date = new Date(),
+        public uploaderId: string = ''
     ) { }
 }

@@ -27,7 +27,7 @@ namespace api.Services
                 if ((DateTime.Now.ToUniversalTime() - file.date).TotalDays >= 1)
                 {
                     DeleteFile(file._id);
-                    List<Dataset> datasets = _dataset.Find(dataset => dataset.fileId == file._id && dataset.username=="").ToList();
+                    List<Dataset> datasets = _dataset.Find(dataset => dataset.fileId == file._id && dataset.uploaderId=="").ToList();
                     foreach(var dataset in datasets)
                     {
                         DeleteDataset(dataset._id);
@@ -37,7 +37,7 @@ namespace api.Services
                             DeleteExperiment(experiment._id);
                             foreach(var modelId in experiment.ModelIds)
                             {
-                                var delModel=_model.Find(model=> modelId== model._id && model.username=="").FirstOrDefault();
+                                var delModel=_model.Find(model=> modelId== model._id && model.uploaderId=="").FirstOrDefault();
                                 if(delModel!= null)
                                     DeleteModel(delModel._id);
                             }
@@ -48,7 +48,7 @@ namespace api.Services
                 }
             }
             //Brisanje modela ukoliko gost koristi vec postojeci dataset
-            List<Model> models1= _model.Find(model =>model.username == "").ToList();
+            List<Model> models1= _model.Find(model =>model.uploaderId == "").ToList();
             foreach(var model in models1)
             {
                 if ((DateTime.Now.ToUniversalTime() - model.dateCreated.ToUniversalTime()).TotalDays >= 1)

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Predictor from 'src/app/_data/Predictor';
 import { PredictorsService } from 'src/app/_services/predictors.service';
-
+import shared from 'src/app/Shared';
 @Component({
   selector: 'app-my-predictors',
   templateUrl: './my-predictors.component.html',
@@ -12,28 +12,30 @@ export class MyPredictorsComponent implements OnInit {
   constructor(private predictorsS : PredictorsService) {
   }
   ngOnInit(): void {
-    this.getAllMyPredictors();
-
+    this.predictorsS.getMyPredictors().subscribe((response) => {
+      this.predictors = response;
+    }, (error) => {
+      if (error.error == "Predictor with...") {
+        shared.openDialog("Greska", "Greska");
+      }
+    });
   }
 
-  delete(predictor: Predictor){
-    if(window.confirm("IZABRANI MODEL ĆE BITI IZBRISAN"))
-      {
-      this.predictorsS.deletePredictor(predictor).subscribe((response) => {
-        this.getAllMyPredictors();
-      }, (error) =>{
-          if (error.error == "Predictor with name = {name} deleted") {
-            alert("Greška pri brisanju modela!");
-          }
-        });
-    }
-    
-    
+  deleteThisPredictor(predictor: Predictor): void{
+    shared.openYesNoDialog('Brisanje prediktora','Da li ste sigurni da želite da obrišete prediktor?',() => {
+    this.predictorsS.deletePredictor(predictor).subscribe((response) => {
+      this.getAllMyPredictors();
+    }, (error) =>{
+        if (error.error == "Predictor with name = {name} deleted") {
+          shared.openDialog("Obaveštenje", "Greška prilikom brisanja prediktora.");
+        }
+      });
+    });
   }
 
   getAllMyPredictors(): void{
-    this.predictorsS.getMyPredictors().subscribe(m => {
-      this.predictors = m;
+    this.predictorsS.getMyPredictors().subscribe(p => {
+      this.predictors = p;
     });
   }
 

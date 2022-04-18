@@ -32,22 +32,22 @@ namespace api.Controllers
             _modelService = modelService;
         }
 
-        public string getUsername()
+        public string getUserId()
         {
-            string username;
+            string uploaderId;
             var header = Request.Headers[HeaderNames.Authorization];
             if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
             {
                 var scheme = headerValue.Scheme;
                 var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
+                uploaderId = jwtToken.TokenToId(parameter);
+                if (uploaderId == null)
                     return null;
             }
             else
                 return null;
 
-            return username;
+            return uploaderId;
         }
 
         // GET: api/<PredictorController>/mypredictors
@@ -55,12 +55,12 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Predictor>> Get()
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
-            return _predictorService.GetMyPredictors(username);
+            return _predictorService.GetMyPredictors(userId);
         }
 
         // GET: api/<PredictorController>/publicpredictors
@@ -90,12 +90,12 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public ActionResult<Predictor> GetPredictor(string id)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
-            Predictor predictor = _predictorService.GetPredictor(username, id);
+            Predictor predictor = _predictorService.GetPredictor(userId, id);
 
             if (predictor == null)
                 return NotFound($"Predictor with id = {id} not found");
@@ -108,11 +108,12 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<Predictor> Get(string id)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
+            //treba userId da se salje GetOnePredictor
             var predictor = _predictorService.GetOnePredictor(id);
 
             if (predictor == null)
@@ -130,12 +131,12 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Predictor>> SortPredictors(bool ascdsc, int latest)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
-            List<Predictor> lista = _predictorService.SortPredictors(username, ascdsc, latest);
+            List<Predictor> lista = _predictorService.SortPredictors(userId, ascdsc, latest);
 
             if(latest == 0)
                 return lista;
@@ -154,7 +155,7 @@ namespace api.Controllers
         [HttpPost("add")]
         public async Task<ActionResult<Predictor>> Post([FromBody] Predictor predictor)
         {
-            var user=_userService.GetUserByUsername(predictor.username);
+            var user=_userService.GetUserById(predictor.uploaderId);
             predictor.dateCreated = DateTime.Now.ToUniversalTime();
             var model = _modelService.GetOneModel(predictor.modelId);
             if (model == null || user==null)
@@ -171,12 +172,12 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult> UsePredictor(String id, [FromBody] PredictorColumns[] inputs)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
-            Predictor predictor = _predictorService.GetPredictor(username, id);
+            Predictor predictor = _predictorService.GetPredictor(userId, id);
 
             Experiment e = _experimentService.Get(predictor.experimentId);
 
@@ -195,16 +196,16 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Put(string id, [FromBody] Predictor predictor)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
             var existingPredictor = _predictorService.GetOnePredictor(id);
 
             //ne mora da se proverava
             if (existingPredictor == null)
-                return NotFound($"Predictor with id = {id} or user with username = {username} not found");
+                return NotFound($"Predictor with id = {id} or user with ID = {userId} not found");
 
             _predictorService.Update(id, predictor);
 
@@ -212,21 +213,21 @@ namespace api.Controllers
         }
 
         // DELETE api/<PredictorController>/name
-        [HttpDelete("{name}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "User")]
         public ActionResult Delete(string id)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
             var predictor = _predictorService.GetOnePredictor(id);
 
             if (predictor == null)
-                return NotFound($"Predictor with id = {id} or user with username = {username} not found");
+                return NotFound($"Predictor with id = {id} or user with ID = {userId} not found");
 
-            _predictorService.Delete(id);
+            _predictorService.Delete(id, userId);
 
             return Ok($"Predictor with id = {id} deleted");
 

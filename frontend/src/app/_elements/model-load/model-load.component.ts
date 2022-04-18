@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
 import Shared from 'src/app/Shared';
+import Experiment from 'src/app/_data/Experiment';
 import Model, { ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
 import { ModelsService } from 'src/app/_services/models.service';
 import { GraphComponent } from '../graph/graph.component';
@@ -13,6 +14,7 @@ import { GraphComponent } from '../graph/graph.component';
 export class ModelLoadComponent implements OnInit {
 
   @ViewChild(GraphComponent) graph!: GraphComponent;
+  @Input() forExperiment?:Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
 
   newModel: Model = new Model();
@@ -43,6 +45,11 @@ export class ModelLoadComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  batchSizePower:number=1;
+  updateBatchSize()
+  {
+    this.newModel.batchSize=2**this.batchSizePower;
+  }
 
   updateGraph() {
     this.graph.update();
@@ -62,7 +69,7 @@ export class ModelLoadComponent implements OnInit {
   uploadModel() {
     this.getMetrics();
 
-    this.newModel.username = Shared.username;
+    this.newModel.uploaderId = Shared.userId;
 
     this.modelsService.addModel(this.newModel).subscribe((response) => {
       Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');

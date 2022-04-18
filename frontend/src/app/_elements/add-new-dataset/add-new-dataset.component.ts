@@ -90,7 +90,7 @@ export class AddNewDatasetComponent {
     this.modelsService.uploadData(this.files[0]).subscribe((file) => {
       //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
       this.dataset.fileId = file._id;
-      this.dataset.username = shared.username;
+      this.dataset.uploaderId = shared.userId;
 
       this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
         this.newDatasetAdded.emit("added");

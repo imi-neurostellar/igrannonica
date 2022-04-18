@@ -11,14 +11,18 @@
         </button>
     </h2>
 
-    <div id="collapseNotifs" class="collapse show">
+    <div id="collapseNotifs" class="collapse show overflow-auto" style="max-height: 32rem;">
         <div *ngFor="let notification of notifications" class="p-2 m-1 border rounded">
-            <div class="d-flex flex-row">
-                <p>{{notification.title}}</p>
-            </div>
-            <div *ngIf="notification.hasProgress" class="border-3 border-primary bg-dark m-1" style="height: 5px; margin-top: -10px !important;">
-                <div class="bg-primary" style="height: 5px;" [style]="'width: '+(notification.progress*100)+'%;'">
+            <div class="d-flex flex-row ">
+                <div>
+                    <p>{{notification.title}}</p>
+                    <div *ngIf="notification.hasProgress" class="border-3 border-primary bg-dark m-1" style="height: 5px; margin-top: -10px !important; min-width: 12rem;">
+                        <div class="bg-primary" style="height: 5px;" [style]="'width: '+(notification.progress*100)+'%;'">
+                        </div>
+                    </div>
                 </div>
+                <button type="button" class="btn-close ms-auto align-self-center" aria-label="Close" (click)="removeNotification(notification);"></button>
             </div>
+
         </div>
     </div>

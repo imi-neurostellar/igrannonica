@@ -51,17 +51,17 @@ namespace api.Services
             using (var session =  _client.StartSession())
             {
                 if(username!=user.Username)
-                if(_users.Find(u => u.Username == user.Username).FirstOrDefault()!=null)
-                {
-                    return false;
-                }
+                    if(_users.Find(u => u.Username == user.Username).FirstOrDefault()!=null)
+                    {
+                        return false;
+                    }
 
                 //Trenutan MongoDB Server ne podrzava transakcije.Omoguciti Podrsku
                 //session.StartTransaction();
                 try
                 {
                     _users.ReplaceOne(user => user.Username == username, user);
-                    if (username != user.Username)
+                    /*if (username != user.Username)
                     {
                         var builderModel = Builders<Model>.Update;
                         var builderDataset = Builders<Dataset>.Update;
@@ -70,7 +70,7 @@ namespace api.Services
                         _datasets.UpdateMany(x => x.username == username, builderDataset.Set(x => x.username, user.Username));
                         _predictors.UpdateMany(x => x.username == username, builderPredictor.Set(x => x.username, user.Username));
                     }
-
+                    */
                     //session.AbortTransaction();
 
 

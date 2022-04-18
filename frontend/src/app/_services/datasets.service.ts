@@ -29,10 +29,10 @@ export class DatasetsService {
   }
 
   editDataset(dataset: Dataset): Observable<Dataset> {
-    return this.http.put<Dataset>(`${Configuration.settings.apiURL}/dataset/`, dataset, { headers: this.authService.authHeader() });
+    return this.http.put<Dataset>(`${Configuration.settings.apiURL}/dataset/` + dataset._id, dataset, { headers: this.authService.authHeader() });
   }
 
   deleteDataset(dataset: Dataset) {
-    return this.http.delete(`${Configuration.settings.apiURL}/dataset/` + dataset.name, { headers: this.authService.authHeader(), responseType: "text" });
+    return this.http.delete(`${Configuration.settings.apiURL}/dataset/` + dataset._id, { headers: this.authService.authHeader(), responseType: "text" });
   }
 }

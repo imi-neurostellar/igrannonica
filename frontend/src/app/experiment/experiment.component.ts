@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import Experiment, { NullValReplacer, NullValueOptions, ReplaceWith, Encoding } from '../_data/Experiment';
-import Model from '../_data/Model';
+import Model,{ProblemType} from '../_data/Model';
 import Dataset, { ColumnInfo } from '../_data/Dataset';
 import { ModelsService } from '../_services/models.service';
 import Shared from '../Shared';
 import { ExperimentsService } from '../_services/experiments.service';
+import { ColumnEncoding } from '../_data/Experiment';
 
 @Component({
   selector: 'app-experiment',
@@ -21,8 +22,9 @@ export class ExperimentComponent implements OnInit {
   NullValueOptions = NullValueOptions;
   ReplaceWith = ReplaceWith;
   Encoding = Encoding;
+  ColumnEncoding = ColumnEncoding;
   Object = Object;
-
+  ProblemType=ProblemType;
   selectedColumnsInfoArray: ColumnInfo[] = [];
   selectedNotNullColumnsArray: string[] = [];
 
@@ -38,6 +40,17 @@ export class ExperimentComponent implements OnInit {
     this.selectedDataset = dataset;
     this.selectedColumnsInfoArray = this.selectedDataset.columnInfo;
     this.selectedNotNullColumnsArray = [];
+    this.experiment.outputColumn = this.selectedDataset.columnInfo[this.selectedDataset.columnInfo.length - 1].columnName;
+
+    this.resetColumnEncodings();
+    console.log(this.experiment.encodings);
+  }
+
+  resetColumnEncodings() {
+    this.experiment.encodings = [];
+    for (let i = 0; i < this.selectedColumnsInfoArray.length; i++) {
+      this.experiment.encodings.push(new ColumnEncoding(this.selectedColumnsInfoArray[i].columnName, Encoding.Label));
+    }
   }
 
   getInputById(id: string): HTMLInputElement {
@@ -179,13 +192,14 @@ export class ExperimentComponent implements OnInit {
 
     this.experiment.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
 
-    //console.log("Eksperiment:", this.experiment);
+    console.log("Eksperiment:", this.experiment);
 
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
       this.experiment = response;
 
-      this.selectedColumnsInfoArray = [];
+      this.selectedColumnsInfoArray = []; 
       this.selectedNotNullColumnsArray = [];
+      this.experiment.encodings = [];
 
       Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
     }, (error) => {
