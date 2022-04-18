@@ -21,6 +21,7 @@ namespace api.Models
         public float randomTestSetDistribution { get; set; }
         public string nullValues { get; set; }
         public NullValues[] nullValuesReplacers { get; set; }
+        public ColumnEncoding[] encodings { get; set; }
 
     }
 }
