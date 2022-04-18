@@ -155,11 +155,15 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             data.pop(col)
     #
     ### Enkodiranje
-    encoding=paramsExperiment["encoding"]
+    encodings=paramsExperiment["encodings"]
     datafront=dataset.copy()
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
-    for kolona in svekolone:
+    for kolonaEncoding in encodings:
+        
+        kolona = kolonaEncoding["columnName"]
+        encoding = kolonaEncoding["encoding"]
+    
         if(kolona in kategorijskekolone):
             if(encoding=='label'):
                 encoder=LabelEncoder()

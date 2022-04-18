@@ -10,7 +10,6 @@ namespace api.Models
         public string _id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public string encoding { get; set; }
         public List<string> ModelIds { get; set; }
         public string datasetId { get; set; }
         public string uploaderId { get; set; }
@@ -21,6 +20,7 @@ namespace api.Models
         public float randomTestSetDistribution { get; set; }
         public string nullValues { get; set; }
         public NullValues[] nullValuesReplacers { get; set; }
+        public ColumnEncoding[] encodings { get; set; }
 
     }
 }

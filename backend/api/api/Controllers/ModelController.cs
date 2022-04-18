@@ -78,6 +78,7 @@ namespace api.Controllers
         }
 
         [HttpPost("epoch")]
+        [ServiceFilter(typeof(MlApiCheckActionFilter))]
         public async Task<ActionResult<string>> Epoch([FromBody] Epoch info)
         {
             

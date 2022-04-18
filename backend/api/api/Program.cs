@@ -39,7 +39,14 @@ builder.Services.AddScoped<IExperimentService, ExperimentService>();
 builder.Services.AddHostedService<TempFileService>();
 builder.Services.AddHostedService<FillAnEmptyDb>();
 
-
+//Ml Api Ip Filter
+builder.Services.AddScoped<MlApiCheckActionFilter>(container =>
+{
+    var loggerFactory = container.GetRequiredService<ILoggerFactory>();
+    var logger=loggerFactory.CreateLogger<MlApiCheckActionFilter>();
+    var MlIp = builder.Configuration.GetValue<string>("AppSettings:MlIp");
+    return new MlApiCheckActionFilter(MlIp, logger);
+});
 
 
 
