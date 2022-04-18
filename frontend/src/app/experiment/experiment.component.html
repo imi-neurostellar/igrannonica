@@ -63,8 +63,10 @@
                             <h3 class="mt-5">Popunjavanje nedostajućih vrednosti:</h3>
                             <div class="form-check" *ngIf="selectedDataset">
                                 <input type="radio" [(ngModel)]="experiment.nullValues " [value]="NullValueOptions.DeleteRows " class="form-check-input" value="deleteRows" name="fillMissing " id="delRows" checked data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
-                                <label for="delRows" class="form-check-label ">Obriši sve
-                            redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} od {{selectedDataset.rowCount}})</label><br>
+                                <label *ngIf="selectedColumnsInfoArray.length == selectedDataset.columnInfo.length" for="delRows" class="form-check-label ">Obriši sve
+                            redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} od {{selectedDataset.rowCount}})</label>
+                                <label *ngIf="selectedColumnsInfoArray.length != selectedDataset.columnInfo.length" for="delRows" class="form-check-label ">Obriši sve
+                            redove sa nedostajućim vrednostima</label><br>
                                 <input type="radio" [(ngModel)]="experiment.nullValues " [value]="NullValueOptions.DeleteColumns " class="form-check-input" value="deleteCols" name="fillMissing " id="delCols" data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
                                 <label for="delCols" class="form-check-label ">Obriši sve
                             kolone sa nedostajućim vrednostima ({{countSelectedNullCols()}} od {{selectedDataset.columnInfo.length}})</label><br>

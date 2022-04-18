@@ -6,6 +6,9 @@ import { ModelsService } from '../_services/models.service';
 import Shared from '../Shared';
 import { ExperimentsService } from '../_services/experiments.service';
 import { ColumnEncoding } from '../_data/Experiment';
+import { Router } from '@angular/router';
+import { TrainingComponent } from '../training/training.component';
+import { retryWhen } from 'rxjs';
 
 @Component({
   selector: 'app-experiment',
@@ -30,7 +33,7 @@ export class ExperimentComponent implements OnInit {
 
   tempTestSetDistribution = 90;
 
-  constructor(private modelsService: ModelsService, private experimentsService: ExperimentsService) {
+  constructor(private experimentsService: ExperimentsService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -43,7 +46,6 @@ export class ExperimentComponent implements OnInit {
     this.experiment.outputColumn = this.selectedDataset.columnInfo[this.selectedDataset.columnInfo.length - 1].columnName;
 
     this.resetColumnEncodings();
-    console.log(this.experiment.encodings);
   }
 
   resetColumnEncodings() {
@@ -166,7 +168,7 @@ export class ExperimentComponent implements OnInit {
   }
 
   saveExperiment() {
-    if (this.selectedDataset == undefined) {
+      if (this.selectedDataset == undefined) {
       Shared.openDialog("Greška", "Izvor podataka nije izabran!");
       return;
     }
@@ -192,7 +194,7 @@ export class ExperimentComponent implements OnInit {
 
     this.experiment.randomTestSetDistribution = 1 - Math.round(this.tempTestSetDistribution / 100 * 10) / 10;
 
-    console.log("Eksperiment:", this.experiment);
+    //console.log("Eksperiment:", this.experiment);
 
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
       this.experiment = response;
@@ -202,6 +204,8 @@ export class ExperimentComponent implements OnInit {
       this.experiment.encodings = [];
 
       Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
+
+      this.router.navigate(['/training', this.experiment._id]);
     }, (error) => {
       if (error.error == "Experiment with this name exists") {
         Shared.openDialog("Greška", "Eksperiment sa unetim nazivom već postoji u Vašoj kolekciji. Unesite neki drugi naziv.");

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import Shared from '../Shared';
 import Experiment from '../_data/Experiment';
 import Model from '../_data/Model';
-import { DatasetsService } from '../_services/datasets.service';
 import { ExperimentsService } from '../_services/experiments.service';
 import { ModelsService } from '../_services/models.service';
 
@@ -11,7 +11,7 @@ import { ModelsService } from '../_services/models.service';
   templateUrl: './training.component.html',
   styleUrls: ['./training.component.css']
 })
-export class TrainingComponent{
+export class TrainingComponent implements OnInit{
 
   myExperiments?: Experiment[];
   selectedExperiment?: Experiment;
@@ -21,9 +21,17 @@ export class TrainingComponent{
 
   term: string = "";
 
-  constructor(private modelsService: ModelsService, private datasetsService: DatasetsService, private experimentsService: ExperimentsService) { 
-    this.experimentsService.getMyExperiments().subscribe((experiments) => {
-      this.myExperiments = experiments;
+  constructor(private modelsService: ModelsService, private route: ActivatedRoute, private experimentsService: ExperimentsService) { 
+  }
+
+  ngOnInit(): void { 
+    this.route.queryParams.subscribe(params => {
+      let expId =this.route.snapshot.paramMap.get("id");
+
+      this.experimentsService.getMyExperiments().subscribe((experiments) => {
+        this.myExperiments = experiments;
+        this.selectedExperiment = this.myExperiments.filter(x => x._id == expId)[0];
+      });
     });
   }
 
