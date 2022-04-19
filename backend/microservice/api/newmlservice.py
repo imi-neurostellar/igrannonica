@@ -155,6 +155,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             data.pop(col)
     #
     ### Enkodiranje
+    '''
     encodings=paramsExperiment["encodings"]
 
     from sklearn.preprocessing import LabelEncoder
@@ -164,60 +165,63 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         if(kolona in kategorijskekolone):
             data[kolona]=encoder.fit_transform(data[kolona])
     '''
-    encoding=paramsExperiment["encoding"]
+    
+    
+    encodings=paramsExperiment["encoding"]
     datafront=dataset.copy()
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
     for kolonaEncoding in encodings:
         
         kolona = kolonaEncoding["columnName"]
-        encoding = kolonaEncoding["encoding"]
-    
-        if(kolona in kategorijskekolone):
-            if(encoding=='label'):
-                encoder=LabelEncoder()
-                for col in data.columns:
-                    if(data[col].dtype==np.object_):
-                        data[col]=encoder.fit_transform(data[col])
-    
-    
-            elif(encoding=='onehot'):
-                category_columns=[]
-                for col in data.columns:
-                    if(data[col].dtype==np.object_):
-                        category_columns.append(col)
-                data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
-
-            elif(encoding=='ordinal'):
-                encoder = OrdinalEncoder()
-                for col in data.columns:
-                    if(data[col].dtype==np.object_):
-                        data[col]=encoder.fit_transform(data[col])
+        if kolona in data.columns:
+            encoding = kolonaEncoding["encoding"]
         
-            elif(encoding=='hashing'):
-                category_columns=[]
-                for col in data.columns:
-                    if(data[col].dtype==np.object_):
-                        category_columns.append(col)
-                encoder=ce.HashingEncoder(cols=category_columns, n_components=len(category_columns))
-                encoder.fit_transform(data)
-            elif(encoding=='binary'):
-                category_columns=[]
-                for col in data.columns:
-                    if(data[col].dtype==np.object_):
-                        category_columns.append(col)
-                encoder=ce.BinaryEncoder(cols=category_columns, return_df=True)
-                encoder.fit_transform(data)
-            
-            elif(encoding=='baseN'):
-                category_columns=[]
-                for col in data.columns:
-                    if(data[col].dtype==np.object_):
-                        category_columns.append(col)
-                encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
-                encoder.fit_transform(data)
+            if(kolona in kategorijskekolone):
+                if(encoding=='label'):
+                    encoder=LabelEncoder()
+                    for col in data.columns:
+                        if(data[col].dtype==np.object_):
+                            data[col]=encoder.fit_transform(data[col])
+        
+        
+                elif(encoding=='onehot'):
+                    category_columns=[]
+                    for col in data.columns:
+                        if(data[col].dtype==np.object_):
+                            category_columns.append(col)
+                    data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
 
-    '''
+                elif(encoding=='ordinal'):
+                    encoder = OrdinalEncoder()
+                    for col in data.columns:
+                        if(data[col].dtype==np.object_):
+                            data[col]=encoder.fit_transform(data[col])
+            
+                elif(encoding=='hashing'):
+                    category_columns=[]
+                    for col in data.columns:
+                        if(data[col].dtype==np.object_):
+                            category_columns.append(col)
+                    encoder=ce.HashingEncoder(cols=category_columns, n_components=len(category_columns))
+                    encoder.fit_transform(data)
+                elif(encoding=='binary'):
+                    category_columns=[]
+                    for col in data.columns:
+                        if(data[col].dtype==np.object_):
+                            category_columns.append(col)
+                    encoder=ce.BinaryEncoder(cols=category_columns, return_df=True)
+                    encoder.fit_transform(data)
+                
+                elif(encoding=='baseN'):
+                    category_columns=[]
+                    for col in data.columns:
+                        if(data[col].dtype==np.object_):
+                            category_columns.append(col)
+                    encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
+                    encoder.fit_transform(data)
+
+    
     #
     # Input - output
     #
