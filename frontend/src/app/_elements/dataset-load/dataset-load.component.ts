@@ -52,13 +52,6 @@ export class DatasetLoadComponent implements OnInit {
     //this.resetCbsAndRbs();        //TREBA DA SE DESI
   }
 
-  refreshMyDatasets() {
-    this.datasets.getMyDatasets().subscribe((datasets) => {
-      this.myDatasets = datasets;
-      this.showMyDatasets = true;
-    });
-  }
-
   selectThisDataset(dataset: Dataset) {
     this.selectedDataset = dataset;
     this.selectedDatasetLoaded = false;
@@ -88,10 +81,19 @@ export class DatasetLoadComponent implements OnInit {
     return true;
   }
 
+  refreshMyDatasets(selectedDatasetId: string | null) {
+    this.datasets.getMyDatasets().subscribe((datasets) => {
+      this.myDatasets = datasets.reverse();
+      this.showMyDatasets = true; 
+      this.selectedDataset = this.myDatasets.filter(x => x._id == selectedDatasetId)[0];
+      this.resetSelectedDataset();
+    });
+  }
+
   ngOnInit(): void {
     if (this.signalRService.hubConnection) {
-      this.signalRService.hubConnection.on("NotifyDataset", _ => {
-        this.refreshMyDatasets();
+      this.signalRService.hubConnection.on("NotifyDataset", (dName: string, dId: string) => {
+        this.refreshMyDatasets(dId);
       });
     } else {
       console.warn("Dataset-Load: No connection!");

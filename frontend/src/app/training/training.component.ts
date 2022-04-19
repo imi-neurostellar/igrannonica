@@ -42,7 +42,8 @@ export class TrainingComponent implements OnInit{
 
   selectThisExperiment(experiment: Experiment) {
     this.selectedExperiment = experiment;
-    this.modelLoadComponent!.newModel.type = this.selectedExperiment.type;
+    if (this.modelLoadComponent)
+      this.modelLoadComponent.newModel.type = this.selectedExperiment.type;
   }
 
   selectModel(model: Model) {

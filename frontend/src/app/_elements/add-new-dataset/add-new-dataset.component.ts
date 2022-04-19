@@ -13,10 +13,9 @@ import { CsvParseService } from 'src/app/_services/csv-parse.service';
 })
 export class AddNewDatasetComponent {
 
-  @Output() newDatasetAdded = new EventEmitter<string>();
   @ViewChild(DatatableComponent) datatable!: DatatableComponent;
 
-  delimiterOptions: Array<string> = [",", ";", "\t", "razmak", "|"]; //podrazumevano ","
+  delimiterOptions: Array<string> = [",", ";",  "|", "razmak", "novi red"]; //podrazumevano ","
 
   csvRecords: any[] = [];
   files: File[] = [];
@@ -29,6 +28,7 @@ export class AddNewDatasetComponent {
 
   constructor(private modelsService: ModelsService, private datasetsService: DatasetsService, private csv: CsvParseService) {
     this.dataset = new Dataset();
+    this.dataset.delimiter = ',';
   }
 
   //@ViewChild('fileImportInput', { static: false }) fileImportInput: any; cemu je ovo sluzilo?
@@ -36,8 +36,6 @@ export class AddNewDatasetComponent {
   changeListener($event: any): void {
     this.files = $event.srcElement.files;
     if (this.files.length == 0 || this.files[0] == null) {
-      //console.log("NEMA FAJLA");
-      //this.loaded.emit("not loaded");
       this.tableData.hasInput = false;
       return;
     }
@@ -56,7 +54,7 @@ export class AddNewDatasetComponent {
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
       if (typeof fileReader.result === 'string') {
-        const result = this.csv.csvToArray(fileReader.result, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter)
+        const result = this.csv.csvToArray(fileReader.result, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter)
 
         if (this.dataset.hasHeader)
           this.csvRecords = result.splice(0, 11);
@@ -93,7 +91,6 @@ export class AddNewDatasetComponent {
       this.dataset.uploaderId = shared.userId;
 
       this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
-        this.newDatasetAdded.emit("added");
         shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
       }, (error) => {
         shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");

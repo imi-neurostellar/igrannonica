@@ -51,7 +51,7 @@
                     <label for="type" class="col-form-label">Tip problema: </label>
                 </div>
                 <div class="col-2">
-                    <select id=typeOptions class="form-select" name="type" [(ngModel)]="newModel.type" (change)="filterOptions()">
+                    <select id="typeOptions" class="form-select" name="type" [(ngModel)]="newModel.type" (change)="filterOptions()">
                         <option
                             *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
                             [value]="option">
@@ -75,7 +75,7 @@
                     <label for="optimizer" class="col-form-label">Optimizacija: </label>
                 </div>
                 <div class="col-2">
-                    <select id=optimizerOptions class="form-select" name="optimizer" [(ngModel)]="newModel.optimizer">
+                    <select id="optimizerOptions" class="form-select" name="optimizer" [(ngModel)]="newModel.optimizer">
                         <option
                             *ngFor="let option of Object.keys(Optimizer); let optionName of Object.values(Optimizer)"
                             [value]="option">
@@ -99,7 +99,7 @@
                     <label for="lossFunction" class="col-form-label">Funkcija troška: </label>
                 </div>
                 <div class="col-2">
-                    <select id=lossFunctionOptions class="form-select" name="lossFunction" [(ngModel)]="newModel.lossFunction" aria-checked="true">
+                    <select id="lossFunctionOptions" class="form-select" name="lossFunction" [(ngModel)]="newModel.lossFunction" aria-checked="true">
                         <option
                             *ngFor="let option of Object.keys(lossFunction); let optionName of Object.values(lossFunction)"
                             [value]="option">
@@ -160,7 +160,7 @@
                     <label for="outputLayerActivationFunction" class="col-form-label" style="text-align: center;">Funkcija aktivacije<br>izlaznog sloja:</label>
                 </div>
                 <div class="col-2 mt-2">
-                    <select id=outputLayerActivationFunctionOptions class="form-select" name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction">
+                    <select id="outputLayerActivationFunctionOptions" class="form-select" name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction">
                         <option
                             *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
                             [value]="option">

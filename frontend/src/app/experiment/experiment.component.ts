@@ -199,9 +199,9 @@ export class ExperimentComponent implements OnInit {
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
       this.experiment = response;
 
-      Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
-
-      this.router.navigate(['/training', this.experiment._id]);
+      Shared.openYesNoDialog("Obaveštenje", "Eksperiment je uspešno kreiran. Da li želite da pređete na treniranje modela?", () => {
+        this.router.navigate(['/training', this.experiment._id]);
+      });
     }, (error) => {
       if (error.error == "Experiment with this name exists") {
         Shared.openDialog("Greška", "Eksperiment sa unetim nazivom već postoji u Vašoj kolekciji. Unesite neki drugi naziv.");
