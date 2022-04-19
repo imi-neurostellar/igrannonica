@@ -1,5 +1,8 @@
 <div class="d-flex flex-column align-items-center">
-    <img src="../../../assets/svg/logo.svg" class="bi me-2" width="256" height="256" role="img">
+    <div class="ann-logo">
+        <img src="../../../assets/images/logo_igrannonica_temp.png" class="bi me-2" width="256" height="256" role="img">
+    </div>
+
     <div *ngIf="shared.loggedIn" class="d-flex flex-column align-items-center">
 
         <div class="rounded-pill bg-light px-4 m-4 shadow-accent position-relative">
@@ -11,7 +14,7 @@
         </div>
 
         <div id="cards" class="row align-items-view align-items-stretch justify-content-center">
-            <div class="card shadowed col-3 m-3" style="width: 18rem;">
+            <div class="card shadowed bg-light text-light col-3 m-3" style="width: 18rem;">
                 <div class="card-body">
                     <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">storage</mat-icon>
                     <h3 class="card-title my-2">Moji izvori podataka</h3>
@@ -20,7 +23,7 @@
                     </p>
                 </div>
             </div>
-            <div class="card shadowed col-3 m-3" style="width: 18rem;">
+            <div class="card shadowed bg-light text-light col-3 m-3" style="width: 18rem;">
                 <div class="card-body">
                     <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">model_training
                     </mat-icon>
@@ -30,7 +33,7 @@
                     </p>
                 </div>
             </div>
-            <div class="card shadowed col-3 m-3" style="width: 18rem;">
+            <div class="card shadowed bg-light text-light col-3 m-3" style="width: 18rem;">
                 <div class="card-body">
                     <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">batch_prediction
                     </mat-icon>
@@ -44,23 +47,28 @@
 
     </div>
 
-    <div class="rounded-pill bg-light px-4 m-2 mt-5">
-        <h2 class="my-2">Pogledajte javne izvore podataka!</h2>
-    </div>
-    <app-carousel [items]="publicDatasets" [type]="'Dataset'">
-    </app-carousel>
+    <div *ngIf="publicDatasets.length > 0" class="my-5">
+        <!--<div class="rounded-pill bg-light px-4 m-2 mt-5 text-center">
+            <h2 class="my-2">Pogledajte javne izvore podataka!</h2>
+        </div>
+        <app-carousel [items]="publicDatasets" [type]="'Dataset'">
+        </app-carousel>-->
+        <app-playlist [datasets]="publicDatasets"></app-playlist>
 
-    <div class="rounded-pill bg-light p-4 m-2 text-center position-relative">
-        <a routerLink="browse-datasets" class="stretched-link">Pogledaj sve javne izvore podataka...</a>
+        <div class="rounded-pill bg-light p-4 m-2 text-center position-relative">
+            <a routerLink="browse-datasets" class="stretched-link">Pogledaj sve javne izvore podataka...</a>
+        </div>
     </div>
 
-    <div class="rounded-pill bg-light px-4 m-2 mt-5">
-        <h2 class="my-2">Iskoristite već trenirane modele!</h2>
-    </div>
-    <app-carousel [items]="publicPredictors" [type]="'Predictor'">
-    </app-carousel>
+    <!--<div *ngIf="publicPredictors.length > 0">
+        <div class="rounded-pill bg-light px-4 m-2 mt-5 text-center">
+            <h2 class="my-2">Iskoristite već trenirane modele!</h2>
+        </div>
+        <app-carousel [items]="publicPredictors" [type]="'Predictor'">
+        </app-carousel>
 
-    <div class="rounded-pill bg-light p-4 m-2 text-center position-relative">
-        <a routerLink="browse-predictors" class="stretched-link">Pogledaj sve javne trenirane modele...</a>
-    </div>
+        <div class="rounded-pill bg-light p-4 m-2 text-center position-relative">
+            <a routerLink="browse-predictors" class="stretched-link">Pogledaj sve javne trenirane modele...</a>
+        </div>
+    </div>-->
 </div>

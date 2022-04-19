@@ -108,5 +108,10 @@
       }
     }
   },
-  "defaultProject": "frontend"
+  "defaultProject": "frontend",
+  "cli": {
+    "warnings": {
+      "versionMismatch": false
+    }
+  }
 }

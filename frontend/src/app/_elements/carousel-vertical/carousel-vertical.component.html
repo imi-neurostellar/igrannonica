@@ -1,0 +1,12 @@
+<h1>
+    {{scroll}}
+</h1>
+<div #wrapper class="carousel position-relative" style="overflow-y: scroll;" [style]="'height:'+ shownElements * height+'rem;'">
+    <div class="my-2" *ngFor="let item of itemsToShow; let i = index;" [style]="'height:'+ height+'rem; width: 90%; margin: auto;'">
+        <div class="position-absolute text-dark bg-white" [style]="calcStyle(i)">
+            <a class="stretched-link" (click)="clickItem">
+                <p class="title">{{item.name}}</p>
+            </a>
+        </div>
+    </div>
+</div>

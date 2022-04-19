@@ -50,6 +50,9 @@ import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.comp
 import { Configuration } from './configuration.service';
 import { PlaygroundComponent } from './_pages/playground/playground.component';
 import { GradientBackgroundComponent } from './_elements/gradient-background/gradient-background.component';
+import { CarouselVerticalComponent } from './_elements/carousel-vertical/carousel-vertical.component';
+import { SelectItemListComponent } from './_elements/select-item-list/select-item-list.component';
+import { PlaylistComponent } from './_elements/playlist/playlist.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -91,7 +94,10 @@ export function initializeApp(appConfig: Configuration) {
     ItemExperimentComponent,
     YesNoDialogComponent,
     PlaygroundComponent,
-    GradientBackgroundComponent
+    GradientBackgroundComponent,
+    CarouselVerticalComponent,
+    SelectItemListComponent,
+    PlaylistComponent
   ],
   imports: [
     BrowserModule,

@@ -4,18 +4,96 @@ body {
     background-color: #003459;
 }
 
-.shadowed {
-    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+.shadowed:hover {
+    box-shadow: rgba(0, 152, 189, 0.4) 0px 5px, rgba(0, 152, 189, 0.3) 0px 10px, rgba(0, 152, 189, 0.2) 0px 15px, rgba(0, 152, 189, 0.1) 0px 20px, rgba(0, 152, 189, 0.05) 0px 25px;
 }
 
-.shadowed:last-child {
-    box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
+.shadowed:first-child:hover {
+    box-shadow: rgba(0, 152, 189, 0.4) -5px 5px, rgba(0, 152, 189, 0.3) -10px 10px, rgba(0, 152, 189, 0.2) -15px 15px, rgba(0, 152, 189, 0.1) -20px 20px, rgba(0, 152, 189, 0.05) -25px 25px;
 }
 
-.shadowed:first-child {
-    box-shadow: rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;
+.shadowed:last-child:hover {
+    box-shadow: rgba(0, 152, 189, 0.4) 5px 5px, rgba(0, 152, 189, 0.3) 10px 10px, rgba(0, 152, 189, 0.2) 15px 15px, rgba(0, 152, 189, 0.1) 20px 20px, rgba(0, 152, 189, 0.05) 25px 25px;
 }
 
-.shadow-accent {
-    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+.shadow-accent:hover {
+    box-shadow: rgba(0, 152, 189, 0.4) 0px 5px, rgba(0, 152, 189, 0.3) 0px 10px, rgba(0, 152, 189, 0.2) 0px 15px, rgba(0, 152, 189, 0.1) 0px 20px, rgba(0, 152, 189, 0.05) 0px 25px;
+    animation-name: holo-hover;
+    animation-duration: 300ms;
+    transform: perspective(100em) rotateX(10deg);
+}
+
+
+/*Mora da se ispravi za media kada je ekran premali pa se poredjaju u kolonu*/
+
+.align-items-view>*:first-child {
+    transform: perspective(100em) rotateY(25deg) translateZ(1em);
+}
+
+.align-items-view>* {
+    transform: perspective(100em) translateZ(-2em);
+}
+
+.align-items-view>*:last-child {
+    transform: perspective(100em) rotateY(-25deg) translateZ(1em);
+}
+
+.bg-light {
+    background-color: rgba(0, 152, 189, 0.3) !important;
+}
+
+a {
+    color: #00a8e8 !important;
+}
+
+@keyframes holo-hover {
+    to {
+        transform: perspective(100em) rotateX(10deg);
+    }
+}
+
+@keyframes logo-animation {
+    from {
+        transform: perspective(100em) rotateX(50deg) rotateZ(0deg);
+    }
+    to {
+        transform: perspective(100em) rotateX(50deg) rotateZ(360deg);
+    }
+}
+
+.ann-logo {
+    animation-name: logo-animation;
+    animation-duration: 3140ms;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 188, 252, 0.6);
+    border-radius: 25px;
+}
+
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 188, 252, 0.8);
 }
