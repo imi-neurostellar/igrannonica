@@ -155,9 +155,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             data.pop(col)
     #
     ### Enkodiranje
-<<<<<<< HEAD
     encodings=paramsExperiment["encodings"]
-=======
 
     from sklearn.preprocessing import LabelEncoder
     kategorijskekolone=data.select_dtypes(include=['object']).columns
@@ -167,7 +165,6 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             data[kolona]=encoder.fit_transform(data[kolona])
     '''
     encoding=paramsExperiment["encoding"]
->>>>>>> 7d57bb9 (Dodate su komponente za grafik.)
     datafront=dataset.copy()
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
