@@ -156,6 +156,15 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #
     ### Enkodiranje
     encodings=paramsExperiment["encodings"]
+
+    from sklearn.preprocessing import LabelEncoder
+    kategorijskekolone=data.select_dtypes(include=['object']).columns
+    encoder=LabelEncoder()
+    for kolona in data.columns:
+        if(kolona in kategorijskekolone):
+            data[kolona]=encoder.fit_transform(data[kolona])
+    '''
+    encoding=paramsExperiment["encoding"]
     datafront=dataset.copy()
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
@@ -207,6 +216,8 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
                         category_columns.append(col)
                 encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
                 encoder.fit_transform(data)
+
+    '''
     #
     # Input - output
     #
@@ -301,7 +312,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
      
@@ -333,7 +344,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=1, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
@@ -359,7 +370,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=1))
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =paramsModel['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
@@ -529,7 +540,7 @@ def manageH5(dataset,params,h5model):
     h5model.summary()
     #ann_viz(h5model, title="My neural network")
 
-    h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics=params['metrics'])
+    h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics=params['accuracy',''])
 
     history=h5model.fit(x2, y2, epochs = params['epochs'],batch_size=params['batchSize'])
     

@@ -52,6 +52,7 @@ import { PointLinechartComponent } from './point-linechart/point-linechart.compo
 import { GraficiComponent } from './grafici/grafici.component';
 import { MixedChartComponent } from './mixed-chart/mixed-chart.component';
 
+import { LineChartComponent } from './_elements/line-chart/line-chart.component';
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
 }
@@ -93,7 +94,8 @@ export function initializeApp(appConfig: Configuration) {
     YesNoDialogComponent,
     PointLinechartComponent,
     GraficiComponent,
-    MixedChartComponent
+    MixedChartComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule,

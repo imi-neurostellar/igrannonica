@@ -8,6 +8,7 @@ namespace api.Services
         Model GetOneModel(string userId, string name);
         Model GetOneModel(string id);
         List<Model> GetMyModels(string userId);
+        List<Model> GetMyModelsByType(string userId, string problemType);
         List<Model> GetLatestModels(string userId);
         //List<Model> GetPublicModels();
         Model Create(Model model);

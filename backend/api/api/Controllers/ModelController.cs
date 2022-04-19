@@ -109,6 +109,24 @@ namespace api.Controllers
             return _modelService.GetMyModels(uploaderId);
         }
 
+        // GET: api/<ModelController>/mymodels
+        [HttpGet("mymodelsbytype/{problemtype}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Model>> GetMyModelsByType(string problemType)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            List<Model> modeli = _modelService.GetMyModelsByType(uploaderId, problemType);
+            
+            if (modeli == null)
+                return NoContent();
+            else
+                return modeli;
+        }
+
         // vraca svoj model prema nekom imenu
         // GET api/<ModelController>/{name}
         [HttpGet("{name}")]

@@ -31,21 +31,32 @@ export class ModelLoadComponent implements OnInit {
   shared = Shared;
 
   term: string = "";
-  selectedProblemType: string = '';
   selectedMetrics = [];
   lossFunction: any = LossFunction;
 
   showMyModels: boolean = true;
 
+  batchSizePower: number = 2;
+
   constructor(private modelsService: ModelsService) {
-    this.modelsService.getMyModels().subscribe((models) => {
-      this.myModels = models;
-    });
+    //console.log("forExperiment = ", this.forExperiment);
+    
+    //if (this.forExperiment == undefined) {
+      this.modelsService.getMyModels().subscribe((models) => {
+        this.myModels = models;
+      });
+    /*}
+    else {
+      this.modelsService.getMyModelsByType(ProblemType.Regression).subscribe((models) => {
+        this.myModels = models;
+        console.log("modeli po tipu: ", this.myModels);
+      });
+    }*/
   }
 
   ngOnInit(): void {
   }
-  batchSizePower:number=1;
+  
   updateBatchSize()
   {
     this.newModel.batchSize=2**this.batchSizePower;
@@ -73,8 +84,6 @@ export class ModelLoadComponent implements OnInit {
 
     this.modelsService.addModel(this.newModel).subscribe((response) => {
       Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');
-      // treba da se selektuje nov model u listi modela
-      //this.selectedModel = 
     }, (error) => {
       Shared.openDialog('Greška', 'Model sa unetim nazivom već postoji u Vašoj kolekciji. Promenite naziv modela i nastavite sa kreiranim datasetom.');
     });
