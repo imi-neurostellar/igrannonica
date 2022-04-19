@@ -24,5 +24,10 @@ export class SignalRService {
       .then(() => {})
       .catch(err => {})
   }
+
+  public stopConnection = () => {
+    this.hubConnection?.stop();
+  }
+
   constructor(private cookie: CookieService) { }
 }
