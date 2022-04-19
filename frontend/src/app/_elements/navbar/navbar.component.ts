@@ -4,6 +4,7 @@ import { AuthService } from '../../_services/auth.service';
 import shared from 'src/app/Shared';
 import { UserInfoService } from 'src/app/_services/user-info.service';
 import { MatDialog } from '@angular/material/dialog';
+import { SignalRService } from 'src/app/_services/signal-r.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,11 +16,15 @@ export class NavbarComponent implements OnInit {
   currentUrl: string;
   shared = shared;
 
-  constructor(public location: Location, private auth: AuthService, private userInfoService: UserInfoService, private matDialog: MatDialog) {
+  constructor(public location: Location, private auth: AuthService, private userInfoService: UserInfoService, private matDialog: MatDialog, private signalRService: SignalRService) {
     shared.dialog = matDialog;
     this.currentUrl = this.location.path();
     this.location.onUrlChange(() => {
       this.currentUrl = this.location.path();
+    });
+
+    this.auth.loggedInEvent.subscribe(_ => {
+      this.signalRService.startConnection();
     })
   }
 
@@ -34,5 +39,6 @@ export class NavbarComponent implements OnInit {
 
   logOut() {
     this.auth.logOut();
+    this.signalRService.stopConnection();
   }
 }
