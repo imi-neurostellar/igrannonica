@@ -8,7 +8,7 @@ import { ExperimentsService } from '../_services/experiments.service';
 import { ColumnEncoding } from '../_data/Experiment';
 import { Router } from '@angular/router';
 import { TrainingComponent } from '../training/training.component';
-import { retryWhen } from 'rxjs';
+import { NEVER, retryWhen } from 'rxjs';
 
 @Component({
   selector: 'app-experiment',
@@ -32,6 +32,7 @@ export class ExperimentComponent implements OnInit {
   selectedNotNullColumnsArray: string[] = [];
 
   tempTestSetDistribution = 90;
+  carouselIndex: number = 0;
 
   constructor(private experimentsService: ExperimentsService, private router: Router) {
   }
@@ -218,5 +219,14 @@ export class ExperimentComponent implements OnInit {
         ++counter;
     }
     return counter;
+  }
+
+  updateCarouselIndex(newIndex: number) {
+    if (newIndex > 2)
+      newIndex = 2;
+    else if (newIndex < 0)
+      newIndex = 0; 
+
+    this.carouselIndex = newIndex;
   }
 }

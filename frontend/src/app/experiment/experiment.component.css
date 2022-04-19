@@ -41,3 +41,8 @@ ul li:hover {
 h2 {
     color: #003459;
 }
+
+.boldClass {
+    font-weight: bold;
+    font-size: 125%;
+}

@@ -50,7 +50,6 @@ export class AppComponent implements OnInit {
   private startHttpRequest = () => {
     this.http.get('http://localhost:5283/chatHub')
       .subscribe(res => {
-        console.log(res);
       })
   }
 

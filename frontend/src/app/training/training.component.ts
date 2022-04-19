@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Shared from '../Shared';
 import Experiment from '../_data/Experiment';
@@ -17,6 +17,8 @@ import { SignalRService } from '../_services/signal-r.service';
 export class TrainingComponent implements OnInit {
 
   @ViewChild(ModelLoadComponent) modelLoadComponent?: ModelLoadComponent;
+  @ViewChild("trainButton") trainButtonRef!: ElementRef;
+  
 
   myExperiments?: Experiment[];
   selectedExperiment?: Experiment;
@@ -55,7 +57,6 @@ export class TrainingComponent implements OnInit {
       this.myExperiments = experiments;
 
       this.selectedExperiment = this.myExperiments.filter(x => x._id == andSelectWithId)[0];
-      console.log("selektovan exp u training comp: ", this.selectedExperiment);
     });
   }
 
@@ -80,8 +81,10 @@ export class TrainingComponent implements OnInit {
       Shared.openDialog("Greška", "Molimo Vas da izaberete model.");
       return;
     }
+    this.trainButtonRef.nativeElement.disabled = true;
     this.modelsService.trainModel(this.selectedModel._id, this.selectedExperiment._id).subscribe((response: any) => {
       //console.log('Train model complete!', response);
+      this.trainButtonRef.nativeElement.disabled = false;
       Shared.openDialog("Obaveštenje", "Treniranje modela je uspešno završeno!");
       this.trainingResult = response;
     });

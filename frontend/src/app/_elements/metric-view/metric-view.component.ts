@@ -16,13 +16,13 @@ export class MetricViewComponent implements OnInit {
     if(this.signalRService.hubConnection)
       {
         this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
-        console.log(stat)
-        console.log(totalEpochs)
+        //console.log(stat)
+        //console.log(totalEpochs)
         const data=JSON.parse(stat)
         for (let key in data) 
         {
           let value = data[key];
-          console.log(value)
+          //console.log(value)
         }
       });
       

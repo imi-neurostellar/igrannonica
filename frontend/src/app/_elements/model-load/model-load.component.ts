@@ -57,7 +57,7 @@ export class ModelLoadComponent implements OnInit {
     else {
       this.modelsService.getMyModelsByType(ProblemType.Regression).subscribe((models) => {
         this.myModels = models;
-        console.log("modeli po tipu: ", this.myModels);
+        //console.log("modeli po tipu: ", this.myModels);
       });
     }*/
   }

@@ -24,7 +24,7 @@ export class NotificationsComponent implements OnInit {
       this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
         const existingNotification = this.notifications.find(x => x.id === mId)
         const progress = ((currentEpoch + 1) / totalEpochs);
-        console.log("Ukupno epoha", totalEpochs, "Trenutna epoha:", currentEpoch);
+        //console.log("Ukupno epoha", totalEpochs, "Trenutna epoha:", currentEpoch);
         if (!existingNotification)
           this.notifications.push(new Notification(`Treniranje modela: ${mName}`, mId, progress, true));
         else {
