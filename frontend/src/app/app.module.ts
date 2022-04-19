@@ -49,8 +49,11 @@ import { ItemExperimentComponent } from './_elements/item-experiment/item-experi
 import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
 import { Configuration } from './configuration.service';
 import { PointLinechartComponent } from './point-linechart/point-linechart.component';
+import { GraficiComponent } from './grafici/grafici.component';
+import { MixedChartComponent } from './mixed-chart/mixed-chart.component';
 
 import { LineChartComponent } from './_elements/line-chart/line-chart.component';
+import { MetricViewComponent } from './_elements/metric-view/metric-view.component';
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
 }
@@ -89,9 +92,15 @@ export function initializeApp(appConfig: Configuration) {
     GraphComponent,
     TrainingComponent,
     ItemExperimentComponent,
-    YesNoDialogComponent,
+    YesNoDialogComponent, 
+    LineChartComponent,
     PointLinechartComponent,
-    LineChartComponent
+    GraficiComponent,
+    MixedChartComponent,
+    LineChartComponent,
+    MetricViewComponent,
+   
+    
   ],
   imports: [
     BrowserModule,
