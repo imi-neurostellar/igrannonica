@@ -16,7 +16,7 @@ export default class Model {
         public inputNeurons: number = 1,
         public hiddenLayerNeurons: number = 1,
         public hiddenLayers: number = 1,
-        public batchSize: number = 5,
+        public batchSize: number = 4,
         public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public uploaderId: string = '',
@@ -94,7 +94,7 @@ export enum LossFunctionBinaryClassification {
     HingeLoss = 'hinge_loss',
 }
 export enum LossFunctionMultiClassification {
-    CategoricalCrossEntropy = 'categorical_crossentropy',
+    //CategoricalCrossEntropy = 'categorical_crossentropy',
     SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
     KLDivergence = 'kullback_leibler_divergence',
 }

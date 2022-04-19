@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Shared from '../Shared';
 import Experiment from '../_data/Experiment';
-import Model from '../_data/Model';
+import Model, { ProblemType } from '../_data/Model';
+import { ModelLoadComponent } from '../_elements/model-load/model-load.component';
 import { ExperimentsService } from '../_services/experiments.service';
 import { ModelsService } from '../_services/models.service';
 
@@ -12,6 +13,8 @@ import { ModelsService } from '../_services/models.service';
   styleUrls: ['./training.component.css']
 })
 export class TrainingComponent implements OnInit{
+
+  @ViewChild(ModelLoadComponent) modelLoadComponent?: ModelLoadComponent;
 
   myExperiments?: Experiment[];
   selectedExperiment?: Experiment;
@@ -30,14 +33,16 @@ export class TrainingComponent implements OnInit{
 
       this.experimentsService.getMyExperiments().subscribe((experiments) => {
         this.myExperiments = experiments;
-        if (experimentId != undefined) 
-          this.selectedExperiment = this.myExperiments.filter(x => x._id == experimentId)[0];
+
+        this.selectedExperiment = this.myExperiments.filter(x => x._id == experimentId)[0];
+        console.log("selektovan exp u training comp: ", this.selectedExperiment);
       });
     });
   }
 
   selectThisExperiment(experiment: Experiment) {
     this.selectedExperiment = experiment;
+    this.modelLoadComponent!.newModel.type = this.selectedExperiment.type;
   }
 
   selectModel(model: Model) {

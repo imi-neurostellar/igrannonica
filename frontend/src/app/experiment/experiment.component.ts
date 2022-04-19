@@ -199,10 +199,6 @@ export class ExperimentComponent implements OnInit {
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
       this.experiment = response;
 
-      this.selectedColumnsInfoArray = []; 
-      this.selectedNotNullColumnsArray = [];
-      this.experiment.encodings = [];
-
       Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
 
       this.router.navigate(['/training', this.experiment._id]);
