@@ -227,6 +227,16 @@ export class ExperimentComponent implements OnInit {
     else if (newIndex < 0)
       newIndex = 0; 
 
+    if (this.carouselIndex == 0 && (newIndex == 1 || newIndex == 2))
+      this.checkRequiredData();
     this.carouselIndex = newIndex;
+  }
+
+  checkRequiredData() {
+      if (this.selectedDataset == undefined) {
+        (<HTMLAnchorElement>document.getElementById("firstStep")).click();
+        Shared.openDialog("Pažnja", "Potrebno je da dodate ili izabere izvor podataka kako biste prešli na naredni korak (preprocesiranje).");
+        return;
+      }
   }
 }

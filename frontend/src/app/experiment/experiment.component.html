@@ -5,7 +5,7 @@
     <div id="container" class="container p-5" style="background-color: white; min-height: 100%;">
 
         <div class="d-flex flex-row justify-content-center align-items-center my-3 links">
-            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" (click)="updateCarouselIndex(0)" [ngClass]="{'boldClass' : carouselIndex == 0}" style="text-decoration: none">Izvor podataka</a>
+            <a id="firstStep" href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" (click)="updateCarouselIndex(0);" [ngClass]="{'boldClass' : carouselIndex == 0}" style="text-decoration: none">Izvor podataka</a>
             <mat-icon>arrow_forward</mat-icon>
             <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="1" (click)="updateCarouselIndex(1)" [ngClass]="{'boldClass' : carouselIndex == 1}" style="text-decoration: none">Preprocesiranje</a>
             <mat-icon>arrow_forward</mat-icon>
