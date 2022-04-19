@@ -129,7 +129,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     ###NULL
     null_value_options = paramsExperiment["nullValues"]
     null_values_replacers = paramsExperiment["nullValuesReplacers"]
-    
+
     if(null_value_options=='replace'):
         #print("replace null") #
         dict=null_values_replacers
@@ -138,8 +138,13 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             col=replace['column']
             opt=replace['option']
             if(opt=='replace'):
-                replacevalue=replace['value']
-                data[col]=data[col].fillna(replacevalue)
+                val = replace['value']
+                if(data[col].dtype == 'int64'):
+                    val = np.int64(val)
+                elif(data[col].dtype == 'float64'):
+                    val = np.float64(val)
+                #elif(data[col].dtype == 'object'):
+                data[col]=data[col].fillna(val)
     elif(null_value_options=='delete_rows'):
         data=data.dropna()
     elif(null_value_options=='delete_columns'):
@@ -167,7 +172,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     '''
     
     
-    encodings=paramsExperiment["encoding"]
+    encodings=paramsExperiment["encodings"]
     datafront=dataset.copy()
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
@@ -232,6 +237,13 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #print(x_columns)
     x = data[x_columns].values
     y = data[output_column].values
+    print('-----------------dfghfhgfhfg-------------------------------')
+    print(x)
+    print('-----------------dfghfhgfhfg-------------------------------')
+    print(y)
+    print('-----------------dfghfhgfhfg-------------------------------')
+    print(output_column)
+    print('-----------------dfghfhgfhfg-------------------------------')
 
     #
     # Podela na test i trening skupove

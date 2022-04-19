@@ -4,6 +4,7 @@ import Experiment from 'src/app/_data/Experiment';
 import Model, { ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
 import { AuthService } from 'src/app/_services/auth.service';
 import { ModelsService } from 'src/app/_services/models.service';
+import { SignalRService } from 'src/app/_services/signal-r.service';
 import { GraphComponent } from '../graph/graph.component';
 
 
@@ -48,10 +49,11 @@ export class ModelLoadComponent implements OnInit {
     })
   }
 
-  fetchModels() {
+  fetchModels(andSelectWithId: string | null = '') {
     //if (this.forExperiment == undefined) {
     this.modelsService.getMyModels().subscribe((models) => {
-      this.myModels = models;
+      this.myModels = models.reverse();
+      this.selectThisModel(this.myModels.filter(x => x._id == andSelectWithId)[0]);
     });
     /*}
     else {
@@ -90,7 +92,14 @@ export class ModelLoadComponent implements OnInit {
     this.newModel.uploaderId = Shared.userId;
 
     this.modelsService.addModel(this.newModel).subscribe((response) => {
-      Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');
+      console.log(this.newModel);
+      //Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');
+
+      Shared.openYesNoDialog("Model dodat", "Model je uspešno dodat u bazu. Da li želite da nastavite treniranje sa dodatim modelom?", () => {
+        this.fetchModels(response._id);
+        this.showMyModels = true;
+      });
+      this.fetchModels();
     }, (error) => {
       Shared.openDialog('Greška', 'Model sa unetim nazivom već postoji u Vašoj kolekciji. Promenite naziv modela i nastavite sa kreiranim datasetom.');
     });

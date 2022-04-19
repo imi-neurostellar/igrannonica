@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import Shared from '../Shared';
 import Experiment from '../_data/Experiment';
 import Model, { ProblemType } from '../_data/Model';
+import { MetricViewComponent } from '../_elements/metric-view/metric-view.component';
 import { ModelLoadComponent } from '../_elements/model-load/model-load.component';
 import { AuthService } from '../_services/auth.service';
 import { ExperimentsService } from '../_services/experiments.service';
@@ -17,6 +18,7 @@ import { SignalRService } from '../_services/signal-r.service';
 export class TrainingComponent implements OnInit {
 
   @ViewChild(ModelLoadComponent) modelLoadComponent?: ModelLoadComponent;
+  @ViewChild(MetricViewComponent) metricViewComponent!: MetricViewComponent;
 
   myExperiments?: Experiment[];
   selectedExperiment?: Experiment;
@@ -24,16 +26,11 @@ export class TrainingComponent implements OnInit {
 
   trainingResult: any;
 
+  history: any[] = [];
+
   term: string = "";
 
   constructor(private modelsService: ModelsService, private route: ActivatedRoute, private experimentsService: ExperimentsService, private authService: AuthService, private signalRService: SignalRService) {
-    if (this.signalRService.hubConnection) {
-      this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
-        if (this.selectedModel?._id == mId) {
-          this.trainingResult = stat;
-        }
-      });
-    }
   }
 
   ngOnInit(): void {
@@ -45,17 +42,32 @@ export class TrainingComponent implements OnInit {
       this.authService.loggedInEvent.subscribe(_ => {
         this.fetchExperiments(experimentId);
 
-        this.signalRService.startConnection()
+        this.signalRService.startConnection();
       });
+
+      console.log(this.signalRService.hubConnection);
+      if (this.signalRService.hubConnection) {
+        this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
+          console.log(this.selectedModel?._id, mId);
+          if (this.selectedModel?._id == mId) {
+            stat = stat.replace(/'/g, '"');
+            this.trainingResult = JSON.parse(stat);
+            //console.log('JSON', this.trainingResult);
+            this.history.push(this.trainingResult);
+            this.metricViewComponent.update(this.history);
+          }
+        });
+      }
     });
   }
 
   fetchExperiments(andSelectWithId: string | null = '') {
     this.experimentsService.getMyExperiments().subscribe((experiments) => {
-      this.myExperiments = experiments;
+      this.myExperiments = experiments.reverse();
 
       this.selectedExperiment = this.myExperiments.filter(x => x._id == andSelectWithId)[0];
-      console.log("selektovan exp u training comp: ", this.selectedExperiment);
+      if (this.modelLoadComponent)
+        this.modelLoadComponent.newModel.type = this.selectedExperiment.type;
     });
   }
 
@@ -82,8 +94,7 @@ export class TrainingComponent implements OnInit {
     }
     this.modelsService.trainModel(this.selectedModel._id, this.selectedExperiment._id).subscribe((response: any) => {
       //console.log('Train model complete!', response);
-      Shared.openDialog("Obaveštenje", "Treniranje modela je uspešno završeno!");
-      this.trainingResult = response;
+      Shared.openDialog("Obaveštenje", "Treniranje modela je počelo!");
     });
   }
 }
