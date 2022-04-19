@@ -129,7 +129,8 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     ###NULL
     null_value_options = paramsExperiment["nullValues"]
     null_values_replacers = paramsExperiment["nullValuesReplacers"]
-
+    kategorijskekolone=data.select_dtypes(include=['object']).columns.copy()
+    #print(kategorijskekolone)
     if(null_value_options=='replace'):
         #print("replace null") #
         dict=null_values_replacers
@@ -143,11 +144,18 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
                     val = np.int64(val)
                 elif(data[col].dtype == 'float64'):
                     val = np.float64(val)
-                #elif(data[col].dtype == 'object'):
                 data[col]=data[col].fillna(val)
     elif(null_value_options=='delete_rows'):
         data=data.dropna()
     elif(null_value_options=='delete_columns'):
+        if(data[output_column].isnull().sum()>0):
+            if(output_column in kategorijskekolone):
+                replace=data[output_column].value_counts().index[0]
+                #print(replace)
+            else:
+                replace=data[output_column].mean()
+            data[output_column]=data[output_column].fillna(replace)
+            #print(data[output_column].isnull().sum())
         data=data.dropna(axis=1)
     #print(data.shape)
     
@@ -175,7 +183,8 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     encodings=paramsExperiment["encodings"]
     datafront=dataset.copy()
     svekolone=datafront.columns
-    kategorijskekolone=datafront.select_dtypes(include=['object']).columns
+
+    
     for kolonaEncoding in encodings:
         
         kolona = kolonaEncoding["columnName"]
@@ -237,13 +246,6 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #print(x_columns)
     x = data[x_columns].values
     y = data[output_column].values
-    print('-----------------dfghfhgfhfg-------------------------------')
-    print(x)
-    print('-----------------dfghfhgfhfg-------------------------------')
-    print(y)
-    print('-----------------dfghfhgfhfg-------------------------------')
-    print(output_column)
-    print('-----------------dfghfhgfhfg-------------------------------')
 
     #
     # Podela na test i trening skupove
@@ -360,7 +362,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
         classifier.add(tf.keras.layers.Dense(units=1, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
