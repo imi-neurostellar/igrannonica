@@ -8,6 +8,7 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 import { Output, EventEmitter } from '@angular/core';
 import { SignalRService } from 'src/app/_services/signal-r.service';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-dataset-load',
@@ -33,7 +34,15 @@ export class DatasetLoadComponent implements OnInit {
 
   term: string = "";
 
-  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService, private signalRService: SignalRService) {
+  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService, private signalRService: SignalRService, private authService: AuthService) {
+    this.fetchDatasets();
+
+    authService.loggedInEvent.subscribe(_ => {
+      this.fetchDatasets();
+    })
+  }
+
+  fetchDatasets() {
     this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;
     });
