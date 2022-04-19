@@ -26,6 +26,7 @@ namespace api.Models
         
         public string photoId { get; set; }
         public bool isPermament { get; set; }
-        
+        public DateTime dateCreated { get; set; }
+
     }
 }
