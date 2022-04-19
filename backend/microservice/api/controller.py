@@ -53,7 +53,7 @@ class train_callback(tf.keras.callbacks.Callback):
 
 @app.route('/train', methods = ['POST'])
 def train():
-    print("******************************TRAIN*************************************************")
+    #print("******************************TRAIN*************************************************")
     
     f = request.files.get("file")
     data = pd.read_csv(f)
@@ -88,10 +88,11 @@ def train():
         "h5FileId" : fileId,
         "metrics" : m
     }
-    print(predictor)
+    #print(predictor)
+    #print('\n')
     url = config.api_url + "/Predictor/add"
     r = requests.post(url, json=predictor).text
-    print(r)
+    #print(r)
     return r
 
 @app.route('/predict', methods = ['POST'])
@@ -100,13 +101,13 @@ def predict():
     model = tf.keras.models.load_model(h5)
     paramsExperiment = json.loads(request.form["experiment"])
     paramsPredictor = json.loads(request.form["predictor"])
-    print("********************************model loaded*******************************")
+    #print("********************************model loaded*******************************")
     result = newmlservice.predict(paramsExperiment, paramsPredictor, model)
     return result
 
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
-    print("********************************PREPROCESS*******************************")
+    #print("********************************PREPROCESS*******************************")
     dataset = json.loads(request.form["dataset"])
     file = request.files.get("file")
     data=pd.read_csv(file)
@@ -126,8 +127,8 @@ def returnColumnsInfo():
     dataset["colCount"] = preprocess["colCount"]
     dataset["rowCount"] = preprocess["rowCount"]
     dataset["isPreProcess"] = True
-    print(dataset)
+    #print(dataset)
     return jsonify(dataset)
     
-print("App loaded.")
+#print("App loaded.")
 app.run()
