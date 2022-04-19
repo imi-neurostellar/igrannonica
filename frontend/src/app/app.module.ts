@@ -50,6 +50,7 @@ import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.comp
 import { Configuration } from './configuration.service';
 import { PointLinechartComponent } from './point-linechart/point-linechart.component';
 
+import { LineChartComponent } from './_elements/line-chart/line-chart.component';
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
 }
@@ -89,7 +90,8 @@ export function initializeApp(appConfig: Configuration) {
     TrainingComponent,
     ItemExperimentComponent,
     YesNoDialogComponent,
-    PointLinechartComponent
+    PointLinechartComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule,
