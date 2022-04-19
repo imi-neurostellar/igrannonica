@@ -35,6 +35,10 @@ namespace api.Services
         {
             return _model.Find(model => model.uploaderId == userId).ToList();
         }
+        public List<Model> GetMyModelsByType(string userId, string problemType)
+        {
+            return _model.Find(model => (model.uploaderId == userId && model.type == problemType)).ToList();
+        }
         public List<Model> GetLatestModels(string userId)
         {
             List<Model> list = _model.Find(model => model.uploaderId == userId).ToList();
