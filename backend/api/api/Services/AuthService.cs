@@ -37,6 +37,7 @@ namespace api.Services
             u.FirstName = user.firstName;
             u.LastName = user.lastName;
             u.photoId = "1";
+            u.isPermament = true;
             if (_users.Find(user => user.Username == u.Username).FirstOrDefault() != null)
                 return "Username Already Exists";
             if (_users.Find(user => user.Email == u.Email).FirstOrDefault() != null)
@@ -44,6 +45,13 @@ namespace api.Services
 
             _users.InsertOne(u);
             return "User added";
+        }
+        public void RegisterGuest()
+        {
+            User u=new User();
+            u._id = "";
+            _users.InsertOne(u);
+            _jwt.GenGuestToken(u._id);
         }
 
         public string RenewToken(string header)
@@ -60,7 +68,11 @@ namespace api.Services
 
         public string GuestToken()
         {
-            return _jwt.GenGuestToken();
+            User u = new User();
+            u._id = "";
+            _users.InsertOne(u);
+            return _jwt.GenGuestToken(u._id);
+ 
         }
 
 

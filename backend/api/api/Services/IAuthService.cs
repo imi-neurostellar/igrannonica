@@ -8,5 +8,6 @@ namespace api.Services
         string Register(RegisterRequest user);
         string RenewToken(string token);
         public string GuestToken();
+        public void RegisterGuest();
     }
 }

@@ -25,6 +25,7 @@ namespace api.Models
         public string LastName { get; set; }
         
         public string photoId { get; set; }
+        public bool isPermament { get; set; }
         
     }
 }

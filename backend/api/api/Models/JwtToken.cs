@@ -100,15 +100,16 @@ namespace api.Models
 
         }
 
-        public string GenGuestToken()
+        public string GenGuestToken(string id)
         {
+            var user=_userService.GetUserById(id);
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("name",""),
                                                     new Claim("role", "Guest"),
-                                                    new Claim("id","")}),
+                                                    new Claim("id",user._id)}),
                 Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
