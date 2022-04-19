@@ -19,16 +19,17 @@ namespace api.Models
 
         }
 
-        public string GenToken(AuthRequest user)
+        public string GenToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:JwtToken").Value);
-            var fullUser = _userService.GetUserByUsername(user.UserName);
+            string role=(user.isPermament)?"User":"Guest";
+            string name = (user.isPermament) ? user.Username : "";
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("name", fullUser.Username),
-                                                    new Claim("role", "User"),
-                                                    new Claim("id",fullUser._id)}),
+                Subject = new ClaimsIdentity(new[] { new Claim("name", name),
+                                                    new Claim("role", role),
+                                                    new Claim("id",user._id)}),
                 Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -39,13 +40,12 @@ namespace api.Models
 
         public string RenewToken(string existingToken)
         {
-            var userName = TokenToUsername(existingToken);
-            if (userName == null)
+            var id = TokenToId(existingToken);
+            if (id == null)
                 return null;
-            var authUser = new AuthRequest();
-            authUser.UserName = userName;
+            var user = _userService.GetUserById(id);
 
-            return GenToken(authUser);
+            return GenToken(user);
 
         }
 

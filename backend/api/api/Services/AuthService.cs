@@ -25,7 +25,7 @@ namespace api.Services
                 return "Username doesn't exist";
             if (!PasswordCrypt.checkPassword(user.Password, u.Password))
                 return "Wrong password";
-            return _jwt.GenToken(user);
+            return _jwt.GenToken(u);
 
         }
         public string Register(RegisterRequest user)
