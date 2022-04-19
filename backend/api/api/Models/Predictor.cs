@@ -21,9 +21,8 @@ namespace api.Models
 		public string modelId { get; set; }
 		public string h5FileId { get; set; }
 		public Metric[] metrics { get; set; }
-
-
 	}
+
 	public class Metric
     {
 		string Name { get; set; }
@@ -32,12 +31,15 @@ namespace api.Models
     }
 }
 
-/*
+/** 
+* Paste one or more documents here
+
 {
-	"_id" : "",
-		"username" : "ivan123",
-	  "name" : "Neki prediktor",
-		"description" : "Neki opis prediktora koji je unet tamo",
+	"_id": {
+		"$oid": "625dc348b7856ace8a6f8702"
+
+	},
+		"uploaderId" : "6242ea59486c664208d4255c",
 		"inputs": ["proba",
 		  "proba2", 
 		  "proba3"
@@ -46,6 +48,8 @@ namespace api.Models
 		"isPublic" : true,
 		"accessibleByLink" : true,
 		"dateCreated" : "2022-04-11T20:33:26.937+00:00",
-    "experimentId" : "Neki id eksperimenta"
-}
-*/
+    "experimentId" : "Neki id eksperimenta",
+    "modelId" : "Neki id eksperimenta",
+    "h5FileId" : "Neki id eksperimenta",
+    "metrics" : [{ }]
+}*/
