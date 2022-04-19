@@ -38,9 +38,16 @@ export class ModelLoadComponent implements OnInit {
   showMyModels: boolean = true;
 
   constructor(private modelsService: ModelsService) {
-    this.modelsService.getMyModels().subscribe((models) => {
-      this.myModels = models;
-    });
+    if (this.forExperiment == undefined) {
+      this.modelsService.getMyModels().subscribe((models) => {
+        this.myModels = models;
+      });
+    }
+    else {
+      this.modelsService.getMyModelsByType(this.forExperiment.type).subscribe((models) => {
+        this.myModels = models;
+      });
+    }
   }
 
   ngOnInit(): void {

@@ -26,11 +26,12 @@ export class TrainingComponent implements OnInit{
 
   ngOnInit(): void { 
     this.route.queryParams.subscribe(params => {
-      let expId =this.route.snapshot.paramMap.get("id");
+      let experimentId =this.route.snapshot.paramMap.get("id");
 
       this.experimentsService.getMyExperiments().subscribe((experiments) => {
         this.myExperiments = experiments;
-        this.selectedExperiment = this.myExperiments.filter(x => x._id == expId)[0];
+        if (experimentId != undefined) 
+          this.selectedExperiment = this.myExperiments.filter(x => x._id == experimentId)[0];
       });
     });
   }
