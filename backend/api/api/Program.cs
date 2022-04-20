@@ -72,11 +72,12 @@ builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 string frontApi = builder.Configuration.GetValue<string>("AppSettings:FrontApi");
+string frontApiAlt = builder.Configuration.GetValue<string>("AppSettings:FrontApiAlt");
 string mlApi = builder.Configuration.GetValue<string>("AppSettings:MlApi");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder => builder
-    .WithOrigins(frontApi, mlApi)
+    .WithOrigins(frontApi, mlApi,frontApiAlt)
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials());
