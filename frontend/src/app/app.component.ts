@@ -13,7 +13,7 @@ import Shared from './Shared';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private router: Router, private titleService: Title,private authService:AuthService,private signalRService:SignalRService,private http:HttpClient) { }
+  constructor(private router: Router, private titleService: Title, private authService: AuthService, private signalRService: SignalRService, private http: HttpClient) { }
 
   ngOnInit() {
     this.router.events
@@ -36,16 +36,11 @@ export class AppComponent implements OnInit {
           this.titleService.setTitle(`${title} - Igrannonica`);
         }
       });
-      if(!this.authService.isAuthenticated())
-      {
-        this.authService.addGuestToken();
-      }
-      this.signalRService.startConnection();
-      //this.startHttpRequest();
-
-
-
-
+    if (!this.authService.isAuthenticated()) {
+      this.authService.addGuestToken();
+    }
+    //this.signalRService.startConnection();
+    //this.startHttpRequest();
   }
   private startHttpRequest = () => {
     this.http.get('http://localhost:5283/chatHub')

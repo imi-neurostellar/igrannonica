@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Experiment, { NullValReplacer, NullValueOptions, ReplaceWith, Encoding } from '../_data/Experiment';
-import Model,{ProblemType} from '../_data/Model';
+import Model, { ProblemType } from '../_data/Model';
 import Dataset, { ColumnInfo } from '../_data/Dataset';
 import { ModelsService } from '../_services/models.service';
 import Shared from '../Shared';
@@ -27,7 +27,7 @@ export class ExperimentComponent implements OnInit {
   Encoding = Encoding;
   ColumnEncoding = ColumnEncoding;
   Object = Object;
-  ProblemType=ProblemType;
+  ProblemType = ProblemType;
   selectedColumnsInfoArray: ColumnInfo[] = [];
   selectedNotNullColumnsArray: string[] = [];
 
@@ -141,7 +141,7 @@ export class ExperimentComponent implements OnInit {
         let oneColInfo = this.selectedColumnsInfoArray[i];
 
         if (oneColInfo.numNulls > 0) { //ako kolona nema null vrednosti, ne dodajemo je u niz
-          if ((<HTMLInputElement>document.getElementById("delCol_" + oneColInfo.columnName)).checked) {
+          if ((<HTMLInputElement>document.getElementById("delCol_" + oneColInfo.columnName))?.checked) {
             array.push({
               column: oneColInfo.columnName,
               option: NullValueOptions.DeleteColumns,
@@ -169,7 +169,7 @@ export class ExperimentComponent implements OnInit {
   }
 
   saveExperiment() {
-      if (this.selectedDataset == undefined) {
+    if (this.selectedDataset == undefined) {
       Shared.openDialog("Greška", "Izvor podataka nije izabran!");
       return;
     }
@@ -225,7 +225,7 @@ export class ExperimentComponent implements OnInit {
     if (newIndex > 2)
       newIndex = 2;
     else if (newIndex < 0)
-      newIndex = 0; 
+      newIndex = 0;
 
     if (this.carouselIndex == 0 && (newIndex == 1 || newIndex == 2))
       this.checkRequiredData();
@@ -233,10 +233,10 @@ export class ExperimentComponent implements OnInit {
   }
 
   checkRequiredData() {
-      if (this.selectedDataset == undefined) {
-        (<HTMLAnchorElement>document.getElementById("firstStep")).click();
-        Shared.openDialog("Pažnja", "Potrebno je da dodate ili izabere izvor podataka kako biste prešli na naredni korak (preprocesiranje).");
-        return;
-      }
+    if (this.selectedDataset == undefined) {
+      (<HTMLAnchorElement>document.getElementById("firstStep")).click();
+      Shared.openDialog("Pažnja", "Potrebno je da dodate ili izabere izvor podataka kako biste prešli na naredni korak (preprocesiranje).");
+      return;
+    }
   }
 }

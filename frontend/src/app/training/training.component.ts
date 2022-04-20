@@ -19,7 +19,7 @@ export class TrainingComponent implements OnInit {
 
   @ViewChild(ModelLoadComponent) modelLoadComponent?: ModelLoadComponent;
   @ViewChild("trainButton") trainButtonRef!: ElementRef;
-  
+
   @ViewChild(MetricViewComponent) metricViewComponent!: MetricViewComponent;
 
   myExperiments?: Experiment[];
@@ -43,11 +43,8 @@ export class TrainingComponent implements OnInit {
 
       this.authService.loggedInEvent.subscribe(_ => {
         this.fetchExperiments(experimentId);
-
-        this.signalRService.startConnection();
       });
 
-      console.log(this.signalRService.hubConnection);
       if (this.signalRService.hubConnection) {
         this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
           console.log(this.selectedModel?._id, mId);

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -7,7 +7,7 @@ import { Chart } from 'chart.js';
   styleUrls: ['./line-chart.component.css']
 })
 
-export class LineChartComponent implements OnInit {
+export class LineChartComponent implements AfterViewInit {
 
   dataAcc: number[] = [];
   dataMAE: number[] = [];
@@ -47,7 +47,7 @@ export class LineChartComponent implements OnInit {
     this.myChart.update();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.myChart = new Chart("myChart",
       {
         type: 'line',

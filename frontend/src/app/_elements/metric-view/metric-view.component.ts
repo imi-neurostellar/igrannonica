@@ -9,12 +9,12 @@ import { LineChartComponent } from '../line-chart/line-chart.component';
 export class MetricViewComponent implements OnInit {
   @ViewChild(LineChartComponent) linechartComponent!: LineChartComponent;
 
-  @Input() history!: any[];
-
-  constructor(private signalRService: SignalRService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
+
+  history: any[] = [];
 
   update(history: any[]) {
     const myAcc: number[] = [];
