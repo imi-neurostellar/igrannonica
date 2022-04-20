@@ -39,7 +39,7 @@ namespace api.Services
         public List<Dataset> GetGuestDatasets()
         {
             //Join Igranonica public datasetove sa svim temp uploadanim datasetovima
-            List<Dataset> datasets= _dataset.Find(dataset => dataset.uploaderId == "Igrannonica" && dataset.isPublic == true && dataset.isPreProcess).ToList();
+            List<Dataset> datasets= _dataset.Find(dataset => dataset.uploaderId == "000000000000000000000000" && dataset.isPublic == true && dataset.isPreProcess).ToList();
             datasets.AddRange(_dataset.Find(dataset => dataset.uploaderId == "" && dataset.isPreProcess).ToList());
             return datasets;
         }
@@ -85,7 +85,7 @@ namespace api.Services
 
         public string GetDatasetId(string fileId)
         {
-            Dataset dataset = _dataset.Find(dataset => dataset.fileId == fileId && dataset.uploaderId == "Igrannonica").FirstOrDefault();
+            Dataset dataset = _dataset.Find(dataset => dataset.fileId == fileId && dataset.uploaderId == "000000000000000000000000").FirstOrDefault();
 
             return dataset._id;
         }

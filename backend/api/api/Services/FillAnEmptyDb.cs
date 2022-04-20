@@ -18,7 +18,7 @@ namespace api.Services
         {
             var database = mongoClient.GetDatabase(settings.DatabaseName);
 
-            _fileService = new FileService(settings,mongoClient);
+            _fileService = new FileService(settings, mongoClient);
             _datasetService = new DatasetService(settings, mongoClient);
             _modelService = new ModelService(settings, mongoClient);
             _experimentService = new ExperimentService(settings, mongoClient);
@@ -37,12 +37,12 @@ namespace api.Services
                 FileModel file = new FileModel();
 
                 string folderName = "UploadedFiles";
-                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, "Igrannonica");
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, "000000000000000000000000");
                 var fullPath = Path.Combine(folderPath, "titanic.csv");
 
                 file._id = "";
                 file.type = ".csv";
-                file.uploaderId = "Igrannonica";
+                file.uploaderId = "000000000000000000000000";
                 file.path = fullPath;
                 file.date = DateTime.Now;
 
@@ -52,7 +52,7 @@ namespace api.Services
                 Dataset dataset = new Dataset();
 
                 dataset._id = "";
-                dataset.uploaderId = "Igrannonica";
+                dataset.uploaderId = "000000000000000000000000";
                 dataset.name = "Titanik dataset";
                 dataset.description = "Titanik dataset";
                 dataset.header = new string[] { "PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked" };
@@ -91,7 +91,7 @@ namespace api.Services
                 Model model = new Model();
 
                 model._id = "";
-                model.uploaderId = "Igrannonica";
+                model.uploaderId = "000000000000000000000000";
                 model.name = "Model Titanik";
                 model.description = "Model Titanik";
                 model.dateCreated = DateTime.Now;
@@ -118,7 +118,7 @@ namespace api.Services
                 experiment.description = "Binarno klasifikacioni, label";
                 experiment.ModelIds = new string[] { }.ToList();
                 experiment.datasetId = _datasetService.GetDatasetId(dataset.fileId);
-                experiment.uploaderId = "Igrannonica";
+                experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Embarked" };
                 experiment.outputColumn = "Survived";
                 experiment.randomOrder = true;
@@ -134,29 +134,21 @@ namespace api.Services
 
                 _experimentService.Create(experiment);
 
-                var experiment1 = _experimentService.Get(experiment._id);
-                var dataset1 = _datasetService.GetOneDataset(experiment.datasetId);
-                var filepath1 = _fileService.GetFilePath(dataset.fileId, "Igrannonica");
-                var model1 = _modelService.GetOneModel(model._id);
-
-                
-                //_mlService.TrainModel(model1, experiment1, filepath1, dataset1, "Igrannonica");
-
                 /*
-
                 Predictor predictor = new Predictor();
 
                 predictor._id = "";
-                predictor.username = "Igrannonica";
-                predictor.name = "Igrannonica Predictor 1";
-                predictor.description = "Opis predictora 1";
-                //predictor.inputs = { 1, 3, 5, 7, 9 };
-                predictor.output = "s";
+                predictor.uploaderId = "000000000000000000000000";
+                predictor.inputs = new string[] { "Embarked" };
+                predictor.output = "Survived";
                 predictor.isPublic = true;
                 predictor.accessibleByLink = true;
                 predictor.dateCreated = DateTime.Now;
-                predictor.experimentId = "0";
-                //izmeni experiment id
+                predictor.experimentId = experiment._id;//izmeni experiment id
+                predictor.modelId = _modelService.getModelId("000000000000000000000000");
+                predictor.h5FileId = ;
+                predictor.metrics = new Metric[] { };
+
 
                 _predictorService.Create(predictor);*/
 
@@ -167,17 +159,17 @@ namespace api.Services
                 fullPath = Path.Combine(folderPath, "diamonds.csv");
                 file._id = "";
                 file.type = ".csv";
-                file.uploaderId = "Igrannonica";
+                file.uploaderId = "000000000000000000000000";
                 file.path = fullPath;
                 file.date = DateTime.Now;
 
                 _fileService.Create(file);
 
-                
+
                 dataset = new Dataset();
 
                 dataset._id = "";
-                dataset.uploaderId = "Igrannonica";
+                dataset.uploaderId = "000000000000000000000000";
                 dataset.name = "Diamonds dataset";
                 dataset.description = "Diamonds dataset";
                 dataset.fileId = _fileService.GetFileId(fullPath);
@@ -187,7 +179,7 @@ namespace api.Services
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
                 dataset.delimiter = "";
-                dataset.hasHeader = true; 
+                dataset.hasHeader = true;
                 dataset.columnInfo = new[]
                  {
                     new ColumnInfo( "Unnamed: 0", true, 0, 26969.5f, 0, 53939, 26969.5f, new string[]{ }),
@@ -209,12 +201,12 @@ namespace api.Services
 
                 _datasetService.Create(dataset);
 
-                
-                
+
+
                 model = new Model();
 
                 model._id = "";
-                model.uploaderId = "Igrannonica";
+                model.uploaderId = "000000000000000000000000";
                 model.name = "Diamonds model";
                 model.description = "Diamonds model";
                 model.dateCreated = DateTime.Now;
@@ -232,7 +224,7 @@ namespace api.Services
                 model.epochs = 5;
 
                 _modelService.Create(model);
-                
+
 
                 experiment = new Experiment();
 
@@ -241,14 +233,14 @@ namespace api.Services
                 experiment.description = "Diamonds eksperiment";
                 experiment.ModelIds = new string[] { }.ToList();
                 experiment.datasetId = _datasetService.GetDatasetId(dataset.fileId);
-                experiment.uploaderId = "Igrannonica";
+                experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Unnamed: 0", "carat", "cut", "color", "clarity", "depth", "table", "x", "y", "z" };
                 experiment.outputColumn = "price";
                 experiment.randomOrder = true;
                 experiment.randomTestSet = true;
                 experiment.randomTestSetDistribution = 0.30000001192092896f;
                 experiment.nullValues = "delete_rows";
-                experiment.nullValuesReplacers = new NullValues[] { }; 
+                experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
                  {
                     new ColumnEncoding( "Unnamed: 0", "label" ),
@@ -265,30 +257,19 @@ namespace api.Services
                 };
 
                 _experimentService.Create(experiment);
-
-                experiment1 = _experimentService.Get(experiment._id);
-                dataset1 = _datasetService.GetOneDataset(experiment.datasetId);
-                filepath1 = _fileService.GetFilePath(dataset.fileId, "Igrannonica");
-                model1 = _modelService.GetOneModel(model._id);
-                //_mlService.TrainModel(model1, experiment1, filepath1, dataset1, "Igrannonica");
                 /*
-
-                predictor = new Predictor();
-
                 predictor._id = "";
-                predictor.username = "Igrannonica";
-                predictor.name = "Igrannonica Predictor 1";
-                predictor.description = "Opis predictora 1";
-                //predictor.inputs = { 1, 3, 5, 7, 9 };
-                predictor.output = "s";
+                predictor.uploaderId = "000000000000000000000000";
+                predictor.inputs = new string[] { "Unnamed: 0", "carat", "cut", "color", "clarity", "depth", "table", "x", "y", "z" };
+                predictor.output = "price";
                 predictor.isPublic = true;
                 predictor.accessibleByLink = true;
                 predictor.dateCreated = DateTime.Now;
-                predictor.experimentId = "0";
-                //izmeni experiment id
+                predictor.experimentId = experiment._id;//izmeni experiment id
+                predictor.modelId = _modelService.getModelId("000000000000000000000000");
+                predictor.h5FileId = ;
+                predictor.metrics = new Metric[] { };*/
 
-                _predictorService.Create(predictor);
-                */
                 //--------------------------------------------------------------------
 
                 file = new FileModel();
@@ -296,7 +277,7 @@ namespace api.Services
                 fullPath = Path.Combine(folderPath, "iris.csv");
                 file._id = "";
                 file.type = ".csv";
-                file.uploaderId = "Igrannonica";
+                file.uploaderId = "000000000000000000000000";
                 file.path = fullPath;
                 file.date = DateTime.Now;
 
@@ -306,7 +287,7 @@ namespace api.Services
                 dataset = new Dataset();
 
                 dataset._id = "";
-                dataset.uploaderId = "Igrannonica";
+                dataset.uploaderId = "000000000000000000000000";
                 dataset.name = "Iris dataset";
                 dataset.description = "Iris dataset";
                 dataset.fileId = _fileService.GetFileId(fullPath);
@@ -331,11 +312,11 @@ namespace api.Services
 
                 _datasetService.Create(dataset);
 
-                
+
                 model = new Model();
 
                 model._id = "";
-                model.uploaderId = "Igrannonica";
+                model.uploaderId = "000000000000000000000000";
                 model.name = "Model Iris";
                 model.description = "Model Iris";
                 model.dateCreated = DateTime.Now;
@@ -353,7 +334,7 @@ namespace api.Services
                 model.epochs = 1;
 
                 _modelService.Create(model);
-                
+
 
                 experiment = new Experiment();
 
@@ -362,14 +343,14 @@ namespace api.Services
                 experiment.description = "Iris eksperiment";
                 experiment.ModelIds = new string[] { }.ToList();
                 experiment.datasetId = _datasetService.GetDatasetId(dataset.fileId);
-                experiment.uploaderId = "Igrannonica";
+                experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "sepal_length", "sepal_width", "petal_length", "petal_width" };
                 experiment.outputColumn = "class";
                 experiment.randomOrder = true;
                 experiment.randomTestSet = true;
                 experiment.randomTestSetDistribution = 0.20000000298023224f;
                 experiment.nullValues = "delete_rows";
-                experiment.nullValuesReplacers = new NullValues[] { }; 
+                experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
                  {
                     new ColumnEncoding( "sepal_length", "label" ),
@@ -378,33 +359,21 @@ namespace api.Services
                     new ColumnEncoding( "petal_width", "label" ),
                     new ColumnEncoding( "class", "label" )
                 };
-                
+
                 _experimentService.Create(experiment);
-
-                experiment1 = _experimentService.Get(experiment._id);
-                dataset1 = _datasetService.GetOneDataset(experiment.datasetId);
-                filepath1 = _fileService.GetFilePath(dataset.fileId, "Igrannonica");
-                model1 = _modelService.GetOneModel(model._id);
-                //_mlService.TrainModel(model1, experiment1, filepath1, dataset1, "Igrannonica");
-
                 /*
-                predictor = new Predictor();
-
                 predictor._id = "";
-                predictor.username = "Igrannonica";
-                predictor.name = "Igrannonica Predictor 1";
-                predictor.description = "Opis predictora 1";
-                //predictor.inputs = { 1, 3, 5, 7, 9 };
-                predictor.output = "s";
+                predictor.uploaderId = "000000000000000000000000";
+                predictor.inputs = new string[] { "sepal_length", "sepal_width", "petal_length", "petal_width" };
+                predictor.output = "class";
                 predictor.isPublic = true;
                 predictor.accessibleByLink = true;
                 predictor.dateCreated = DateTime.Now;
-                predictor.experimentId = "0";
-                //izmeni experiment id
+                predictor.experimentId = experiment._id;//izmeni experiment id
+                predictor.modelId = _modelService.getModelId("000000000000000000000000");
+                predictor.h5FileId = ;
+                predictor.metrics = new Metric[] { };*/
 
-                _predictorService.Create(predictor);
-
-                */
             }
 
 
