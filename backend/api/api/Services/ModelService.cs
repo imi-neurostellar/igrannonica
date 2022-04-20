@@ -87,7 +87,7 @@ namespace api.Services
         public bool CheckDb()
         {
             Model? model = null;
-            model = _model.Find(model => model.uploaderId == "Igrannonica").FirstOrDefault();
+            model = _model.Find(model => model.uploaderId == "000000000000000000000000").FirstOrDefault();
 
             if (model != null)
                 return false;
