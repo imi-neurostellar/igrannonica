@@ -83,7 +83,6 @@ export class AuthService {
     }
     this.cookie.set('token', token, exp);
     this.updateUser();
-    this.loggedInEvent.emit(true);
   }
 
   updateUser() {
@@ -95,6 +94,7 @@ export class AuthService {
       this.shared.userId = decodedToken.id;
       this.enableAutoRefresh();
     }
+    this.loggedInEvent.emit(true);
   }
 
   logOut() {

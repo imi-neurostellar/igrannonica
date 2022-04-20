@@ -15,7 +15,7 @@
     <div *ngIf="showMyModels" class="px-5">
         <div class="overflow-auto" style="max-height: 500px;">
             <ul class="list-group">
-                <li class="list-group-item p-3" *ngFor="let model of myModels|filter:((forExperiment != undefined) ? forExperiment.type : '')" [ngClass]="{'selectedModelClass': this.selectedModel == model}">
+                <li class="list-group-item p-3" *ngFor="let model of myModels | filter:term | filter:((forExperiment != undefined) ? forExperiment.type : '')" [ngClass]="{'selectedModelClass': this.selectedModel == model}">
                     <app-item-model name="usersModel" [model]="model" (click)="selectThisModel(model);">
                     </app-item-model>
                 </li>

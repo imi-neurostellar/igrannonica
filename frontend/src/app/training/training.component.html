@@ -27,15 +27,8 @@
         </div>
 
         <h2 class="mt-5">Rezultati treniranja</h2>
-        <div class="m-3" *ngIf="trainingResult">
-            <h2 class="my-2">Rezultati treniranja:</h2>
-            <app-metric-view *ngIf="trainingResult" [metrics]="trainingResult"></app-metric-view>
+        <div class="m-3">
+            <app-metric-view></app-metric-view>
         </div>
-    </div>
-
-    <h2 class="mt-5">Rezultati treniranja</h2>
-    <div class="m-3" *ngIf="trainingResult">
-        <h2 class="my-2">Rezultati treniranja:</h2>
-        <app-metric-view *ngIf="trainingResult" [metrics]="trainingResult"></app-metric-view>
     </div>
 </div>
