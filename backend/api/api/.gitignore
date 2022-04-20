@@ -6,7 +6,8 @@
 ##Ignore contents for UploadedFiles Folder
 PredictorFiles/*
 UploadedFiles/*
-!UploadedFiles/Igrannonica
+!UploadedFiles/000000000000000000000000
+!PredictorFiles/000000000000000000000000
 TempFiles/*
 
 # User-specific files
