@@ -56,23 +56,6 @@ namespace api.Controllers
 
             return uploaderId;
         }
-        public string getUsername()
-        {
-            string username;
-            var header = Request.Headers[HeaderNames.Authorization];
-            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
-            {
-                var scheme = headerValue.Scheme;
-                var parameter = headerValue.Parameter;
-                username = jwtToken.TokenToUsername(parameter);
-                if (username == null)
-                    return null;
-            }
-            else
-                return null;
-
-            return username;
-        }
 
         [HttpPost("trainModel")]
         [Authorize(Roles = "User,Guest")]
@@ -81,28 +64,29 @@ namespace api.Controllers
             string experimentId = trainModelObject.ExperimentId;
             string modelId = trainModelObject.ModelId;
 
-            string uploaderId = getUserId();
+            string userId = getUserId();
 
-            if (uploaderId == null)
+            if (userId == null)
                 return BadRequest();
 
             var experiment=_experimentService.Get(experimentId);
             var dataset = _datasetService.GetOneDataset(experiment.datasetId);
-            var filepath = _fileService.GetFilePath(dataset.fileId, uploaderId);
+            var filepath = _fileService.GetFilePath(dataset.fileId, userId);
             var model = _modelService.GetOneModel(modelId);
-            _mlService.TrainModel(model,experiment,filepath,dataset,uploaderId);//To do  Obavestiti korisnika kada se model istrenira
+            _mlService.TrainModel(model,experiment,filepath,dataset, userId);//To do  Obavestiti korisnika kada se model istrenira
             return Ok();
         }
 
         [HttpPost("epoch")]
+        [ServiceFilter(typeof(MlApiCheckActionFilter))]
         public async Task<ActionResult<string>> Epoch([FromBody] Epoch info)
         {
             
             var model=_modelService.GetOneModel(info.ModelId);
-            var user = _userService.GetUserByUsername(model.username);
+            var user = _userService.GetUserById(model.uploaderId);
 
             if (ChatHub.CheckUser(user._id))
-                await _ichat.Clients.Client(ChatHub.Users[user._id]).SendAsync("NotifyEpoch",info.ModelId,info.Stat,model.epochs);
+                await _ichat.Clients.Client(ChatHub.Users[user._id]).SendAsync("NotifyEpoch",model.name,info.ModelId,info.Stat,model.epochs,info.EpochNum);
 
             return Ok();
         }
@@ -117,12 +101,30 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Model>> Get()
         {
-            string username = getUsername(); 
-            
-            if (username == null)
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
                 return BadRequest();
 
-            return _modelService.GetMyModels(username);
+            return _modelService.GetMyModels(uploaderId);
+        }
+
+        // GET: api/<ModelController>/mymodels
+        [HttpGet("mymodelsbytype/{problemtype}")]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<Model>> GetMyModelsByType(string problemType)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            List<Model> modeli = _modelService.GetMyModelsByType(uploaderId, problemType);
+            
+            if (modeli == null)
+                return NoContent();
+            else
+                return modeli;
         }
 
         // vraca svoj model prema nekom imenu
@@ -131,12 +133,12 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<Model> Get(string name)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
-            var model = _modelService.GetOneModel(username, name);
+            var model = _modelService.GetOneModel(userId, name);
 
             if (model == null)
                 return NotFound($"Model with name = {name} not found");
@@ -155,14 +157,14 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult<List<Model>> GetLatestModels(int latest)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
             //ako bude trebao ID, samo iz baze uzeti
 
-            List<Model> lista = _modelService.GetLatestModels(username);
+            List<Model> lista = _modelService.GetLatestModels(userId);
 
             List<Model> novaLista = new List<Model>();
 
@@ -185,7 +187,7 @@ namespace api.Controllers
             /*if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
                 return BadRequest("Bad parameters!");*/
 
-            var existingModel = _modelService.GetOneModel(model.username, model.name);
+            var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
 
             if (existingModel != null && !overwrite)
                 return NotFound($"Model with name = {model.name} exisits");
@@ -209,18 +211,18 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Put(string name, [FromBody] Model model)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
 
-            var existingModel = _modelService.GetOneModel(username, name);
+            var existingModel = _modelService.GetOneModel(userId, name);
 
             if (existingModel == null)
-                return NotFound($"Model with name = {name} or user with username = {username} not found");
+                return NotFound($"Model with name = {name} or user with ID = {userId} not found");
 
-            _modelService.Update(username, name, model);
+            _modelService.Update(userId, name, model);
             return NoContent();
         }
 
@@ -229,17 +231,17 @@ namespace api.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Delete(string name)
         {
-            string username = getUsername();
+            string userId = getUserId();
 
-            if (username == null)
+            if (userId == null)
                 return BadRequest();
 
-            var model = _modelService.GetOneModel(username, name);
+            var model = _modelService.GetOneModel(userId, name);
 
             if (model == null)
-                return NotFound($"Model with name = {name} or user with username = {username} not found");
+                return NotFound($"Model with name = {name} or user with ID = {userId} not found");
 
-            _modelService.Delete(model.username, model.name);
+            _modelService.Delete(model.uploaderId, model.name);
 
             return Ok($"Model with name = {name} deleted");
 
@@ -256,6 +258,7 @@ namespace api.Controllers
     public class Epoch
     {
         public string ModelId { get; set; }
+        public int EpochNum { get; set; }
         public string Stat { get; set; }
     }
 }

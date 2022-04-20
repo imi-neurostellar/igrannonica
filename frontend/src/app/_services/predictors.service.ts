@@ -24,7 +24,7 @@ export class PredictorsService {
   }
 
   deletePredictor(predictor: Predictor) {
-    return this.http.delete(`${Configuration.settings.apiURL}/predictor/` + predictor.name, { headers: this.authService.authHeader(), responseType: "text" });
+    return this.http.delete(`${Configuration.settings.apiURL}/predictor/` + predictor._id, { headers: this.authService.authHeader(), responseType: "text" });
   }
 
   getMyPredictors(): Observable<Predictor[]> {

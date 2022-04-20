@@ -16,13 +16,18 @@ export class SignalRService {
       }).build();
 
     this.hubConnection.on("Notify", (message: string) => {
-      console.log(" " + message);
+      //console.log(" " + message);
     });
 
     this.hubConnection
       .start()
-      .then(() => console.log("con Started"))
-      .catch(err => console.log("Error" + err))
+      .then(() => {})
+      .catch(err => {})
   }
+
+  public stopConnection = () => {
+    this.hubConnection?.stop();
+  }
+
   constructor(private cookie: CookieService) { }
 }

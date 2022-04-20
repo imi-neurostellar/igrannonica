@@ -1,19 +1,16 @@
-﻿using System;
-using api.Models;
+﻿using api.Models;
 
 namespace api.Services
 {
-	public interface IPredictorService
-	{
-        Predictor GetOnePredictor(string username, string name);
-        Predictor GetPredictor(string username, string GetPredictor);
-        List<Predictor> SearchPredictors(string name, string username);
-        List<Predictor> GetMyPredictors(string username);
-        List<Predictor> SortPredictors(string username, bool ascdsc, int latest);
-        List<Predictor> GetPublicPredictors();
+    public interface IPredictorService
+    {
         Predictor Create(Predictor predictor);
-        void Update(string username, string name, Predictor predictor);
-        void Delete(string username, string name);
+        void Delete(string id, string userId);
+        List<Predictor> GetMyPredictors(string userId);
+        Predictor GetOnePredictor(string id);
+        Predictor GetPredictor(string userId, string id);
+        List<Predictor> GetPublicPredictors();
+        List<Predictor> SortPredictors(string userId, bool ascdsc, int latest);
+        void Update(string id, Predictor predictor);
     }
 }
-

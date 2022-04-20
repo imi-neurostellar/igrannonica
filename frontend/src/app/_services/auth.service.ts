@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
@@ -11,6 +11,8 @@ const jwtHelper = new JwtHelperService();
   providedIn: 'root'
 })
 export class AuthService {
+
+  public loggedInEvent: EventEmitter<boolean> = new EventEmitter();
 
   shared = shared;
 
@@ -44,6 +46,7 @@ export class AuthService {
 
   enableAutoRefresh() {
     this.lastToken = this.cookie.get('token');
+    clearTimeout(this.refresher);
     let exp = jwtHelper.getTokenExpirationDate(this.lastToken);
     if (!exp) {
       exp = new Date();
@@ -51,6 +54,7 @@ export class AuthService {
     var property = jwtHelper.decodeToken(this.cookie.get('token'));
     var username = property['name'];
     if (username != "") {
+
       this.refresher = setTimeout(() => {
         this.http.post(`${Configuration.settings.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
           this.authenticate(response);
@@ -79,6 +83,7 @@ export class AuthService {
     }
     this.cookie.set('token', token, exp);
     this.updateUser();
+    this.loggedInEvent.emit(true);
   }
 
   updateUser() {

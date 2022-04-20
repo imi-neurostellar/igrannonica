@@ -16,10 +16,10 @@ export default class Model {
         public inputNeurons: number = 1,
         public hiddenLayerNeurons: number = 1,
         public hiddenLayers: number = 1,
-        public batchSize: number = 5,
+        public batchSize: number = 4,
         public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
-        public username: string = '',
+        public uploaderId: string = '',
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5 // TODO add to add-model form
     ) { }
@@ -73,7 +73,7 @@ export enum LossFunction {
     HingeLoss = 'hinge_loss',
     // multi-class classification loss functions
     CategoricalCrossEntropy = 'categorical_crossentropy',
-    SparseCategoricalCrossEntropy = 'sparse_categorical_crosentropy',
+    SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
     KLDivergence = 'kullback_leibler_divergence',
 
     // regression loss functions
@@ -94,8 +94,8 @@ export enum LossFunctionBinaryClassification {
     HingeLoss = 'hinge_loss',
 }
 export enum LossFunctionMultiClassification {
-    CategoricalCrossEntropy = 'categorical_crossentropy',
-    SparseCategoricalCrossEntropy = 'sparse_categorical_crosentropy',
+    //CategoricalCrossEntropy = 'categorical_crossentropy',
+    SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
     KLDivergence = 'kullback_leibler_divergence',
 }
 

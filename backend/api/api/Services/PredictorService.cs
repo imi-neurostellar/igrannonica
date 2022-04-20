@@ -14,10 +14,6 @@ namespace api.Services
             _predictor = database.GetCollection<Predictor>(settings.PredictorCollectionName);
         }
 
-        public List<Predictor> SearchPredictors(string name, string username)
-        {
-            return _predictor.Find(predictor => predictor.name == name && predictor.isPublic == true).ToList();
-        }
 
         public Predictor Create(Predictor predictor)
         {
@@ -25,30 +21,30 @@ namespace api.Services
             return predictor;
         }
 
-        public void Delete(string username, string name)
+        public void Delete(string id, string userId)
         {
-            _predictor.DeleteOne(predictor => (predictor.username == username && predictor.name == name));
+            _predictor.DeleteOne(predictor => (predictor._id == id && predictor.uploaderId == userId));
         }
 
-        public List<Predictor> GetMyPredictors(string username)
+        public List<Predictor> GetMyPredictors(string userId)
         {
-            return _predictor.Find(predictor => predictor.username == username).ToList();
+            return _predictor.Find(predictor => predictor.uploaderId == userId).ToList();
         }
 
-        public Predictor GetOnePredictor(string username, string name)
+        public Predictor GetOnePredictor(string id)
         {
-            return _predictor.Find(predictor => predictor.username == username && predictor.name == name).FirstOrDefault();
+            return _predictor.Find(predictor => predictor._id == id).FirstOrDefault();
 
         }
-        public Predictor GetPredictor(string username, string id)
+        public Predictor GetPredictor(string userId, string id)
         {
-            return _predictor.Find(predictor => predictor._id == id && (predictor.username == username || predictor.isPublic == true)).FirstOrDefault();
+            return _predictor.Find(predictor => predictor._id == id && (predictor.uploaderId == userId || predictor.isPublic == true)).FirstOrDefault();
 
         }
 
-        public List<Predictor> SortPredictors(string username, bool ascdsc, int latest)
+        public List<Predictor> SortPredictors(string userId, bool ascdsc, int latest)
         {
-            List<Predictor> list = _predictor.Find(predictor => predictor.username == username).ToList();
+            List<Predictor> list = _predictor.Find(predictor => predictor.uploaderId == userId).ToList();
 
             if (ascdsc)
                 list = list.OrderBy(predictor => predictor.dateCreated).ToList();
@@ -62,9 +58,9 @@ namespace api.Services
             return _predictor.Find(predictor => predictor.isPublic == true).ToList();
         }
 
-        public void Update(string username, string name, Predictor predictor)
+        public void Update(string id, Predictor predictor)
         {
-            _predictor.ReplaceOne(predictor => predictor.username == username && predictor.name == name, predictor);
+            _predictor.ReplaceOne(predictor => predictor._id == id, predictor);
         }
     }
 }

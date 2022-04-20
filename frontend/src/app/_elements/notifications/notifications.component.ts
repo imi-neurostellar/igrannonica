@@ -21,13 +21,33 @@ export class NotificationsComponent implements OnInit {
         this.notifications.push(new Notification(`Obrađen izvor podataka: ${dName}`, dId, 1.0, false));
       });
 
-      this.signalRService.hubConnection.on("NotifyEpoch", (epoch: string, mName: string, mId: string, numEpochs) => {
-        //todo epoch
-        this.notifications.push(new Notification(`Treniranje modela: ${mName}`, mId, 0.5));
+      this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
+        const existingNotification = this.notifications.find(x => x.id === mId)
+        const progress = ((currentEpoch + 1) / totalEpochs);
+        //console.log("Ukupno epoha", totalEpochs, "Trenutna epoha:", currentEpoch);
+        if (!existingNotification)
+          this.notifications.push(new Notification(`Treniranje modela: ${mName}`, mId, progress, true));
+        else {
+          existingNotification.progress = progress;
+        }
+      });
+
+      this.signalRService.hubConnection.on("NotifyModel", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
+        const existingNotification = this.notifications.find(x => x.id === mId)
+        const progress = ((currentEpoch + 1) / totalEpochs);
+        if (!existingNotification)
+          this.notifications.push(new Notification(`Treniranje modela: ${mName}`, mId, progress, true));
+        else {
+          existingNotification.progress = progress;
+        }
       });
     } else {
       console.warn("Notifications: No connection!");
     }
+  }
+
+  removeNotification(notification: Notification) {
+    this.notifications.splice(this.notifications.indexOf(notification), 1);
   }
 
 }

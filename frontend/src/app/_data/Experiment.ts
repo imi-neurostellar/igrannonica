@@ -1,3 +1,4 @@
+import { ProblemType } from "./Model";
 export default class Experiment {
     _id: string = '';
     uploaderId: string = '';
@@ -18,8 +19,8 @@ export default class Experiment {
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
 
-        //TODO - za svaku kolonu se bira enkoding
-        public encoding: Encoding = Encoding.Label
+        public encodings: ColumnEncoding[] = [],
+        public type: ProblemType = ProblemType.Regression
     ) { }
 }
 
@@ -65,4 +66,12 @@ export enum Encoding {
     WOE = 'woe',
     Quantile = 'quantile'
     */
+}
+
+export class ColumnEncoding {
+    constructor (
+        public columnName: string,
+        public encoding: Encoding
+    ) 
+    {}
 }

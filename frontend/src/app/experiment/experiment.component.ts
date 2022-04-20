@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import Experiment, { NullValReplacer, NullValueOptions, ReplaceWith, Encoding } from '../_data/Experiment';
-import Model from '../_data/Model';
+import Model,{ProblemType} from '../_data/Model';
 import Dataset, { ColumnInfo } from '../_data/Dataset';
 import { ModelsService } from '../_services/models.service';
 import Shared from '../Shared';
 import { ExperimentsService } from '../_services/experiments.service';
+import { ColumnEncoding } from '../_data/Experiment';
+import { Router } from '@angular/router';
+import { TrainingComponent } from '../training/training.component';
+import { NEVER, retryWhen } from 'rxjs';
 
 @Component({
   selector: 'app-experiment',
@@ -21,14 +25,16 @@ export class ExperimentComponent implements OnInit {
   NullValueOptions = NullValueOptions;
   ReplaceWith = ReplaceWith;
   Encoding = Encoding;
+  ColumnEncoding = ColumnEncoding;
   Object = Object;
-
+  ProblemType=ProblemType;
   selectedColumnsInfoArray: ColumnInfo[] = [];
   selectedNotNullColumnsArray: string[] = [];
 
   tempTestSetDistribution = 90;
+  carouselIndex: number = 0;
 
-  constructor(private modelsService: ModelsService, private experimentsService: ExperimentsService) {
+  constructor(private experimentsService: ExperimentsService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -38,6 +44,16 @@ export class ExperimentComponent implements OnInit {
     this.selectedDataset = dataset;
     this.selectedColumnsInfoArray = this.selectedDataset.columnInfo;
     this.selectedNotNullColumnsArray = [];
+    this.experiment.outputColumn = this.selectedDataset.columnInfo[this.selectedDataset.columnInfo.length - 1].columnName;
+
+    this.resetColumnEncodings();
+  }
+
+  resetColumnEncodings() {
+    this.experiment.encodings = [];
+    for (let i = 0; i < this.selectedColumnsInfoArray.length; i++) {
+      this.experiment.encodings.push(new ColumnEncoding(this.selectedColumnsInfoArray[i].columnName, Encoding.Label));
+    }
   }
 
   getInputById(id: string): HTMLInputElement {
@@ -153,7 +169,7 @@ export class ExperimentComponent implements OnInit {
   }
 
   saveExperiment() {
-    if (this.selectedDataset == undefined) {
+      if (this.selectedDataset == undefined) {
       Shared.openDialog("Greška", "Izvor podataka nije izabran!");
       return;
     }
@@ -184,10 +200,9 @@ export class ExperimentComponent implements OnInit {
     this.experimentsService.addExperiment(this.experiment).subscribe((response) => {
       this.experiment = response;
 
-      this.selectedColumnsInfoArray = [];
-      this.selectedNotNullColumnsArray = [];
-
-      Shared.openDialog("Obaveštenje", "Eksperiment je uspešno kreiran.");
+      Shared.openYesNoDialog("Obaveštenje", "Eksperiment je uspešno kreiran. Da li želite da pređete na treniranje modela?", () => {
+        this.router.navigate(['/training', this.experiment._id]);
+      });
     }, (error) => {
       if (error.error == "Experiment with this name exists") {
         Shared.openDialog("Greška", "Eksperiment sa unetim nazivom već postoji u Vašoj kolekciji. Unesite neki drugi naziv.");
@@ -204,5 +219,24 @@ export class ExperimentComponent implements OnInit {
         ++counter;
     }
     return counter;
+  }
+
+  updateCarouselIndex(newIndex: number) {
+    if (newIndex > 2)
+      newIndex = 2;
+    else if (newIndex < 0)
+      newIndex = 0; 
+
+    if (this.carouselIndex == 0 && (newIndex == 1 || newIndex == 2))
+      this.checkRequiredData();
+    this.carouselIndex = newIndex;
+  }
+
+  checkRequiredData() {
+      if (this.selectedDataset == undefined) {
+        (<HTMLAnchorElement>document.getElementById("firstStep")).click();
+        Shared.openDialog("Pažnja", "Potrebno je da dodate ili izabere izvor podataka kako biste prešli na naredni korak (preprocesiranje).");
+        return;
+      }
   }
 }

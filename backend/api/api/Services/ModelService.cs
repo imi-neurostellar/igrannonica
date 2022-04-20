@@ -26,18 +26,22 @@ namespace api.Services
             return model;
         }
 
-        public void Delete(string username, string name)
+        public void Delete(string userId, string name)
         {
-            _model.DeleteOne(model => (model.username == username && model.name == name));
+            _model.DeleteOne(model => (model.uploaderId == userId && model.name == name));
         }
 
-        public List<Model> GetMyModels(string username)
+        public List<Model> GetMyModels(string userId)
         {
-            return _model.Find(model => model.username == username).ToList();
+            return _model.Find(model => model.uploaderId == userId).ToList();
         }
-        public List<Model> GetLatestModels(string username)
+        public List<Model> GetMyModelsByType(string userId, string problemType)
         {
-            List<Model> list = _model.Find(model => model.username == username).ToList();
+            return _model.Find(model => (model.uploaderId == userId && model.type == problemType)).ToList();
+        }
+        public List<Model> GetLatestModels(string userId)
+        {
+            List<Model> list = _model.Find(model => model.uploaderId == userId).ToList();
 
             list = list.OrderByDescending(model => model.lastUpdated).ToList();
 
@@ -50,9 +54,9 @@ namespace api.Services
             return _model.Find(model => model.isPublic == true).ToList();
         }
         */
-        public Model GetOneModel(string username, string name)
+        public Model GetOneModel(string userId, string name)
         {
-            return _model.Find(model => model.username == username && model.name == name).FirstOrDefault();
+            return _model.Find(model => model.uploaderId == userId && model.name == name).FirstOrDefault();
         }
 
         public Model GetOneModel(string id)
@@ -60,9 +64,9 @@ namespace api.Services
             return _model.Find(model => model._id == id).FirstOrDefault();
         }
 
-        public void Update(string username, string name, Model model)
+        public void Update(string userId, string name, Model model)
         {
-            _model.ReplaceOne(model => model.username == username && model.name == name, model);
+            _model.ReplaceOne(model => model.uploaderId == userId && model.name == name, model);
         }
         public void Update(string id, Model model)
         {
@@ -83,7 +87,7 @@ namespace api.Services
         public bool CheckDb()
         {
             Model? model = null;
-            model = _model.Find(model => model.username == "igrannonica").FirstOrDefault();
+            model = _model.Find(model => model.uploaderId == "Igrannonica").FirstOrDefault();
 
             if (model != null)
                 return false;
