@@ -23,7 +23,10 @@ namespace api.Services
             if (token == null)
                 return;
             string id=_tokenService.TokenToId(token);
-            Users.Add(id,Context.ConnectionId);
+            if (!Users.ContainsKey(id))
+                Users.Add(id, Context.ConnectionId);
+            else
+                Users[id] = Context.ConnectionId;
             //await SendDirect(id, "poruka");
             //await Send(Context.ConnectionId);
             await base.OnConnectedAsync();
