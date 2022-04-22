@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
 import { CookieService } from 'ngx-cookie-service';
-import { Configuration } from '../configuration.service';
+import { Configuration } from './configuration.service';
 @Injectable({
   providedIn: 'root'
 })

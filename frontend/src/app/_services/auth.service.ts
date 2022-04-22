@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
 import shared from '../Shared';
-import { Configuration } from '../configuration.service';
+import { Configuration } from './configuration.service';
 
 const jwtHelper = new JwtHelperService();
 
@@ -52,7 +52,7 @@ export class AuthService {
     var property = jwtHelper.decodeToken(this.cookie.get('token'));
     var username = property['name'];
     if (username != "") {
-      
+
       this.refresher = setTimeout(() => {
         this.http.post(`${Configuration.settings.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
           this.authenticate(response);
