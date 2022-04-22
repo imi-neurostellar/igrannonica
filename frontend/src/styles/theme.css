@@ -1,0 +1,18 @@
+:root {
+    --ns-primary: #00a8e8;
+    --ns-bg: #003459;
+    --ns-bg-transparent: rgba(0, 152, 189, 0.3)
+}
+
+body {
+    /*background-image: url('/assets/images/add_model_background.jpg');*/
+    background-color: var(--ns-bg);
+}
+
+.bg-light {
+    background-color: var(--ns-bg-transparent) !important;
+}
+
+a {
+    color: var(--ns-primary) !important;
+}

@@ -1,0 +1,13 @@
+/*Mora da se ispravi za media kada je ekran premali pa se poredjaju u kolonu*/
+
+.align-items-view>*:first-child {
+    transform: perspective(100em) rotateY(25deg) translateZ(1em);
+}
+
+.align-items-view>* {
+    transform: perspective(100em) translateZ(-2em);
+}
+
+.align-items-view>*:last-child {
+    transform: perspective(100em) rotateY(-25deg) translateZ(1em);
+}

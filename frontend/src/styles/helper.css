@@ -1,0 +1,15 @@
+@keyframes logo-animation {
+    from {
+        transform: perspective(100em) rotateX(50deg) rotateZ(0deg);
+    }
+    to {
+        transform: perspective(100em) rotateX(50deg) rotateZ(360deg);
+    }
+}
+
+.ann-logo {
+    animation-name: logo-animation;
+    animation-duration: 3140ms;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
