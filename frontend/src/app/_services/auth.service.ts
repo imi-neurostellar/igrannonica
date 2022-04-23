@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
@@ -13,6 +13,7 @@ const jwtHelper = new JwtHelperService();
 export class AuthService {
 
   shared = shared;
+  public loggedInEvent: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private http: HttpClient, private cookie: CookieService) { }
 
