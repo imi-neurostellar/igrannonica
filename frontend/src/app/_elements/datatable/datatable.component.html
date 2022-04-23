@@ -1,18 +1,16 @@
 <div *ngIf="tableData.hasInput">
-    <div>
-        <div *ngIf="!tableData.loaded" backgroundColor="secondary" style="width: 100%; height: 100%;"
-            class="d-flex justify-content-center align-items-center">
+    <div class="text-white">
+        <div *ngIf="!tableData.loaded" style="width: 100%; height: 100%;" class="d-flex justify-content-center align-items-center">
             <app-loading></app-loading>
         </div>
         <div *ngIf="tableData.loaded && tableData.data">
-            <div id="info" *ngIf="tableData.data.length > 0 && tableData.data[0].length > 0"
-                class="d-flex flex-row justify-content-center align-items-center">
+            <div id="info" *ngIf="tableData.data.length > 0 && tableData.data[0].length > 0" class="d-flex flex-row justify-content-center align-items-center">
                 <div class="fs-5 mb-3">
                     Tabela {{tableData.numCols}}x{{tableData.numRows}}
                 </div>
             </div>
-            <div class="table-responsive" style="overflow: auto; border-radius: 5px;">
-                <table *ngIf="tableData.data.length > 0 && tableData.hasHeader && tableData.data[0].length > 0" class="table table-bordered table-light">
+            <div style="border-radius: 5px; overflow-x: auto; overflow-y: hidden;">
+                <table *ngIf="tableData.data.length && tableData.data[0].length > 0" class="table table-responsive table-sm text-offwhite row-height">
                     <thead>
                         <tr>
                             <th *ngFor="let item of tableData.data[0]; let i = index">{{item}}</th>
@@ -22,21 +20,17 @@
                         <tr *ngFor="let row of tableData.data | slice:1">
                             <td *ngFor="let col of row">{{col}}</td>
                         </tr>
-                        <tr>
-                            <td colspan="100" class="text-lg-center fs-6">+ {{tableData.numRows - 11}} redova...</td>
-                        </tr>
                     </tbody>
                 </table>
-                <table *ngIf="tableData.data.length > 0 && !tableData.hasHeader && tableData.data[0].length > 0" class="table table-bordered table-light">
-                    <tbody>
-                        <tr *ngFor="let row of tableData.data">
-                            <td *ngFor="let col of row">{{col}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="100" class="text-lg-center fs-6">+ {{tableData.numRows - 10}} redova...</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <tfoot>
+                    <tr>
+                        <td colspan="100" class="fs-6">
+                            <div class="footer-center">
+                                <div>+ {{tableData.numRows - 11}} redova...</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
             </div>
         </div>
     </div>

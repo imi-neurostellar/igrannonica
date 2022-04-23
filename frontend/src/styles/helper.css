@@ -25,3 +25,20 @@
     margin-left: auto;
     transform: translateX(-50%);
 }
+
+.footer-center {
+    position: relative;
+    height: 1rem;
+}
+
+.footer-center>* {
+    position: fixed;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.row-height {
+    white-space: nowrap;
+    height: 1rem;
+}

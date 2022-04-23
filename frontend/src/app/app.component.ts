@@ -6,7 +6,6 @@ import { AuthService } from './_services/auth.service';
 import { SignalRService } from './_services/signal-r.service';
 import { HttpClient } from '@angular/common/http';
 import Shared from './Shared';
-import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

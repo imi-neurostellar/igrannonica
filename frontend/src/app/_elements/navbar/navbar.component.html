@@ -9,9 +9,7 @@
                 <li><a routerLink="" class="nav-link px-2" [class]="(currentUrl === '') ? 'text-secondary' : 'text-white'">Početna</a></li>
                 <li><a routerLink="experiment" class="nav-link px-2" [class]="(currentUrl === '/experiment') ? 'text-secondary' : 'text-white'">Napravi eksperiment</a>
                 </li>
-                <li><a routerLink="training" class="nav-link px-2" [class]="(currentUrl === '/training') ? 'text-secondary' : 'text-white'">Treniraj model</a>
-                </li>
-                <li><a routerLink="my-predictors" class="nav-link px-2" [class]="(currentUrl === '/my-predictors') ? 'text-secondary' : 'text-white' + (shared.loggedIn) ? '' : 'disabled'">Predvidi</a>
+                <li><a routerLink="archive" class="nav-link px-2" [class]="(currentUrl === '/archive') ? 'text-secondary' : 'text-white'">Arhiva</a>
                 </li>
             </ul>
 
@@ -20,8 +18,6 @@
                     <img [src]="'/assets/profilePictures/'+ shared.photoId +'.png'" alt="mdo" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 34px);" data-popper-placement="bottom-end">
-                    <li><a class="dropdown-item" routerLink="add-model">Nov model...</a></li>
-                    <li><a class="dropdown-item" routerLink="settings">Podešavanja</a></li>
                     <li><a class="dropdown-item" routerLink="profile">Moj profil</a></li>
                     <li>
                         <hr class="dropdown-divider">

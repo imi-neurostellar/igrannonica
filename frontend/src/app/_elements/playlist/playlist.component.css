@@ -13,7 +13,7 @@
 .ns-cards {
     position: relative;
     width: 300%;
-    height: 36rem;
+    height: 26rem;
     margin-bottom: 20px;
 }
 
@@ -28,6 +28,10 @@
     cursor: pointer;
 }
 
+.ns-card:hover {
+    opacity: 1 !important;
+}
+
 input[type=radio] {
     display: none;
 }
@@ -36,7 +40,7 @@ input[type=radio] {
 #item-2:checked~.ns-cards #view-item-1,
 #item-3:checked~.ns-cards #view-item-2 {
     transform: translatex(-40%) scale(0.8);
-    opacity: 0.4;
+    opacity: 0.5;
     z-index: 0;
 }
 
@@ -44,7 +48,7 @@ input[type=radio] {
 #item-2:checked~.ns-cards #view-item-3,
 #item-3:checked~.ns-cards #view-item-1 {
     transform: translatex(40%) scale(0.8);
-    opacity: 0.4;
+    opacity: 0.5;
     z-index: 0;
 }
 

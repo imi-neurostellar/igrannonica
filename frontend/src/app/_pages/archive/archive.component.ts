@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import Dataset from 'src/app/_data/Dataset';
+import { DatasetsService } from 'src/app/_services/datasets.service';
 
 @Component({
   selector: 'app-archive',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ArchiveComponent implements OnInit {
 
-  constructor() { }
+  publicDatasets: Dataset[] = [];
+
+  constructor(private datasetsService: DatasetsService) { }
 
   ngOnInit(): void {
+    this.datasetsService.getPublicDatasets().subscribe((datasets) => {
+      this.publicDatasets = datasets;
+      this.publicDatasets.forEach((element, index) => {
+        this.publicDatasets[index] = (<Dataset>element);
+      })
+    });
   }
 
 }
