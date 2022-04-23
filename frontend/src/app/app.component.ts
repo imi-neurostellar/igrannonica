@@ -6,14 +6,16 @@ import { AuthService } from './_services/auth.service';
 import { SignalRService } from './_services/signal-r.service';
 import { HttpClient } from '@angular/common/http';
 import Shared from './Shared';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  constructor(private router: Router, private titleService: Title, private authService: AuthService, private signalRService: SignalRService, private http: HttpClient) {
 
-  constructor(private router: Router, private titleService: Title,private authService:AuthService,private signalRService:SignalRService,private http:HttpClient) { }
+  }
 
   ngOnInit() {
     this.router.events
@@ -36,12 +38,11 @@ export class AppComponent implements OnInit {
           this.titleService.setTitle(`${title} - Igrannonica`);
         }
       });
-      if(!this.authService.isAuthenticated())
-      {
-        this.authService.addGuestToken();
-      }
-      this.signalRService.startConnection();
-      //this.startHttpRequest();
+    if (!this.authService.isAuthenticated()) {
+      this.authService.addGuestToken();
+    }
+    this.signalRService.startConnection();
+    //this.startHttpRequest();
 
 
 

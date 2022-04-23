@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-reactive-background',
@@ -22,6 +23,9 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
   @Input() pointColor: string = '#ffffff';
   @Input() cursorLineColor: string = '#ff0000';
 
+  @Input() animate: boolean = true;
+  @Input() fill: number = 1.0;
+
   private fleeSpeed = 0.005;
 
   private points: Point[] = [];
@@ -35,7 +39,7 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
 
   private time: number = 0;
 
-  constructor() { }
+  constructor(private cookie: CookieService) { }
 
   private mouseX = 0;
   private mouseY = 0;
@@ -77,6 +81,13 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
     this.resize();
 
     setInterval(() => {
+      if (this.cookie.check('animateBackground')) {
+        this.animate = this.cookie.get('animateBackground') == 'true';
+      }
+      if (this.cookie.check('backgroundFill')) {
+        this.fill = parseFloat(this.cookie.get('backgroundFill'));
+      }
+
       this.drawBackground();
     }, 1000 / 60);
   }
@@ -85,7 +96,8 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
 
   scrollBackground(e: Event) {
     const scrolledAmount = window.scrollY - this.lastScrollY;
-    this.points.forEach((point) => {
+    this.points.forEach((point, index) => {
+      if (index > this.numPoints * this.fill) return;
       point.y = point.y - (scrolledAmount / this.height) * this.scrollSpeed;
       this.keepPointWithinBounds(point);
     })
@@ -100,19 +112,21 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
     //this.ctx.fillRect(0, 0, this.width, this.height);
 
     this.points.forEach((point, index) => {
-      this.updatePoint(point);
+      if (index > this.numPoints * this.fill) return;
+
       this.drawLines(point, index);
       this.drawPoint(point);
+
+      if (this.animate)
+        this.updatePoint(point);
     });
 
     //this.drawPoint(new Point(this.mouseX, this.mouseY, 12, 0));
-
-    this.time += 1;
   }
 
   drawLines(p: Point, index: number) {
     let i = index + 1;
-    while (i < this.points.length) {
+    while (i < this.points.length * this.fill) {
       const otherPoint = this.points[i];
 
       const dist = this.distance(p.x, p.y, otherPoint.x, otherPoint.y);
@@ -151,24 +165,22 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
   }
 
   updatePoint(p: Point) {
-    const vx = Math.sin(p.direction);
-    const vy = Math.cos(p.direction);
-
-    p.x = p.x + vx * this.speed;
-    p.y = p.y + vy * this.speed;
-
     const mx = this.mouseX;
     const my = this.mouseY;
     const distToCursor = this.distance(p.x, p.y, mx, my);
+
     if (distToCursor < this.cursorDistance) {
 
-      p.x -= ((mx - p.x) / distToCursor) * this.fleeSpeed;
-      p.y -= ((my - p.y) / distToCursor) * this.fleeSpeed;
+      const t = (distToCursor / this.cursorDistance);
+      p.x -= ((mx - p.x) / distToCursor) * this.speed * (1 + t * 2);
+      p.y -= ((my - p.y) / distToCursor) * this.speed * (1 + t * 2);
+
+      p.direction = this.lerp(p.direction, Math.atan2(my - p.y, mx - p.x) * 180 / Math.PI, t);
 
       const grd = this.ctx.createLinearGradient(p.x * this.width, p.y * this.height, mx * this.width, my * this.height);
       const alpha = HEX[Math.round(p.size / this.maxSize * (HEX.length - 1))];
       grd.addColorStop(0, this.cursorLineColor + alpha);
-      grd.addColorStop(1, this.cursorLineColor + '00');
+      grd.addColorStop(0.5, this.cursorLineColor + '00');
       this.ctx.strokeStyle = grd;
       this.ctx.beginPath();
       this.ctx.moveTo(p.x * this.width, p.y * this.height);
@@ -176,7 +188,17 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
       this.ctx.stroke();
     }
 
+    const vx = Math.sin(p.direction);
+    const vy = Math.cos(p.direction);
+
+    p.x = p.x + vx * this.speed;
+    p.y = p.y + vy * this.speed;
+
     this.keepPointWithinBounds(p);
+  }
+
+  lerp(start: number, end: number, amt: number) {
+    return (1 - amt) * start + amt * end
   }
 
   keepPointWithinBounds(p: Point) {
