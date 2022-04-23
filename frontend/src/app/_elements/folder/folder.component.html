@@ -1,1 +1,68 @@
-<p>folder works!</p>
+<div id="folder" style="width: 60rem;">
+    <div id="tabs" class="text-offwhite">
+        <div id="new-file-tab" class="folder-tab p-1 rounded-top" [style]="'z-index:' + newFileZIndex() + ' ;'" [ngClass]="{'selected-tab' : newFileSelected}">
+            <mat-icon class="text-offwhite">add</mat-icon>
+            <a class="stretched-link tab-link" (click)="selectNewFile()">
+                <p class="m-1" *ngIf="newFile != undefined">{{newFile.name}}</p>
+            </a>
+        </div>
+        <div class="folder-tab p-1 rounded-top" *ngFor="let file of files; let i = index" [style]="'z-index:' + calcZIndex(i) + ' ;'" [ngClass]="{'selected-tab' : selectedFileIndex == i, 'hover-tab' : hoveringOverFileIndex == i}">
+            <a class="m-1 stretched-link tab-link" (click)="selectFile(i)" (mouseenter)="hoverOverFile(i)" (mouseleave)="hoverOverFile(-1)">{{file.name}}</a>
+        </div>
+    </div>
+    <div id="selected-content" class="rounded-bottom text-offwhite">
+        <div id="searchbar">
+            <div id="path" class="ps-2">{{folderName}}
+            </div>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+            <div id="search">
+                <mat-form-field>
+                    <input matNativeControl>
+                </mat-form-field>
+            </div>
+            <div id="search-options">
+                <div id="collapseFilters" class="collapse collapse-horizontal show">
+                    <mat-chip-list aria-label="filter selection">
+                        <mat-chip class="text-offwhite ns-bg-dark-50">
+                            <mat-icon class="text-offwhite">timeline</mat-icon>
+                            Regresioni
+                        </mat-chip>
+                        <mat-chip class="text-offwhite ns-bg-dark-50">
+                            <mat-icon class="text-offwhite">looks_two</mat-icon>
+                            Binarni klasifikacioni
+                        </mat-chip>
+                        <mat-chip class="text-offwhite ns-bg-dark-50">
+                            <mat-icon class="text-offwhite">auto_awesome_motion</mat-icon>
+                            Multiklasifikacioni
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+                <a class="tab-link p-1" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="true" aria-controls="collapseFilters">
+                    <mat-icon>filter_alt</mat-icon>
+                </a>
+                <div id="collapseSort" class="collapse collapse-horizontal">
+                    [sort options here TODO]
+                </div>
+                <a class="tab-link p-1" data-bs-toggle="collapse" data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
+                    <mat-icon>sort</mat-icon>
+                </a>
+            </div>
+        </div>
+        {{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}
+    </div>
+    <div id="footer">
+        <div class="folder-bottom-button text-offwhite rounded-bottom" *ngIf="newFileSelected">
+            <a class="tab-link stretched-link">Sačuvaj</a>
+            <div>
+                <mat-icon>check</mat-icon>
+            </div>
+        </div>
+        <div class="folder-bottom-button text-offwhite rounded-bottom" *ngIf="!newFileSelected">
+            <a class="tab-link stretched-link">Ok</a>
+            <div class="icon-double">
+                <mat-icon>check</mat-icon>
+                <mat-icon>check</mat-icon>
+            </div>
+        </div>
+    </div>
+</div>

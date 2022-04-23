@@ -3,13 +3,13 @@
     <input type="radio" name="slider" id="item-2" value="1" [(ngModel)]="selectedId">
     <input type="radio" name="slider" id="item-3" value="2" [(ngModel)]="selectedId">
     <div class="ns-cards">
-        <label class="ns-card ns-bg-dark-100 overflow-x-auto overflow-y-none" for="item-1" id="view-item-1">
+        <label class="ns-card ns-bg-dark-100 ns-border-primary rounded" for="item-1" id="view-item-1">
             <app-datatable [tableData]="tableDatas[0]"></app-datatable>
         </label>
-        <label class="ns-card ns-bg-dark-100 overflow-x-auto overflow-y-none" for="item-2" id="view-item-2">
+        <label class="ns-card ns-bg-dark-100 ns-border-primary rounded" for="item-2" id="view-item-2">
             <app-datatable [tableData]="tableDatas[1]"></app-datatable>
         </label>
-        <label class="ns-card ns-bg-dark-100 overflow-x-auto overflow-y-none" for="item-3" id="view-item-3">
+        <label class="ns-card ns-bg-dark-100 ns-border-primary rounded" for="item-3" id="view-item-3">
             <app-datatable [tableData]="tableDatas[2]"></app-datatable>
         </label>
     </div>

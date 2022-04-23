@@ -1,10 +1,11 @@
 :root {
-    --ns-primary: #00a8e8;
+    --ns-primary: #0063AB;
+    --ns-accent: #00a8e8;
     --ns-bg: #003459;
     --ns-bg-light-30: rgba(0, 152, 189, 0.3);
     --ns-bg-dark-100: rgba(0, 65, 101, 1.0);
     --ns-bg-dark-50: rgba(0, 65, 101, 0.5);
-    --offwhite: #ebe6e6;
+    --offwhite: #dfd7d7;
 }
 
 body {
@@ -16,7 +17,13 @@ body {
     background-color: var(--ns-bg-light-30) !important;
 }
 
-.ns-bg-dark-50 {}
+.ns-border-primary {
+    border: 1px solid var(--ns-primary);
+}
+
+.ns-bg-dark-50 {
+    background-color: var(--ns-bg-dark-50) !important;
+}
 
 .ns-bg-dark-100 {
     background-color: var(--ns-bg-dark-100) !important;
@@ -27,5 +34,5 @@ a {
 }
 
 .text-offwhite {
-    color: var(--offwhite);
+    color: var(--offwhite) !important;
 }

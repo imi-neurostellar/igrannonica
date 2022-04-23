@@ -1,0 +1,124 @@
+#folder {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    height: 4rem;
+}
+
+#tabs>.folder-tab:not(:first-child) {
+    margin-left: -5px;
+}
+
+.folder-tab {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    background-color: var(--ns-bg-dark-100);
+    height: 2.5rem;
+    border-color: var(--ns-primary);
+    border-style: solid;
+    border-width: 1px 1px 0 1px;
+}
+
+.folder-tab:not(:first-child) {
+    margin-block-start: auto;
+    width: 4rem;
+}
+
+.selected-tab {
+    height: 3rem;
+    background-color: var(--ns-primary);
+}
+
+.hover-tab {
+    height: 3.2rem;
+}
+
+.selected-tab,
+.hover-tab {
+    width: fit-content !important;
+}
+
+.tab-link {
+    color: var(--offwhite) !important;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.tab-link:active {
+    color: var(--ns-accent) !important;
+}
+
+.selected-tab {
+    background-color: var(--ns-primary);
+}
+
+#searchbar {
+    height: 2.5rem;
+    background-color: var(--ns-bg-dark-100);
+    border-bottom: 1px solid var(--ns-primary);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.collapse-horizontal {
+    white-space: nowrap;
+    height: 2.5rem;
+    overflow-x: hidden;
+}
+
+#search-options {
+    margin-left: auto;
+    margin-top: 7px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#selected-content {
+    background-color: var(--ns-bg-dark-50);
+    width: 100%;
+    height: 36rem;
+    backdrop-filter: blur(2px);
+    border-color: var(--ns-primary);
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    border-top-right-radius: 4px;
+}
+
+#footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.folder-bottom-button {
+    font-size: large;
+    position: relative;
+    background-color: var(--ns-bg-dark-100);
+    width: 10rem;
+    height: 2.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-color: var(--ns-primary);
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;
+}
+
+.folder-bottom-button:hover {
+    background-color: var(--ns-primary);
+}

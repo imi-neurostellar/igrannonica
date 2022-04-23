@@ -33,7 +33,7 @@
 
 .footer-center>* {
     position: fixed;
-    bottom: 8%;
+    bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -41,4 +41,14 @@
 .row-height {
     white-space: nowrap;
     height: 1rem;
+}
+
+.icon-double>*:nth-child(2) {
+    margin-left: -1rem;
+}
+
+.no-wrap {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
