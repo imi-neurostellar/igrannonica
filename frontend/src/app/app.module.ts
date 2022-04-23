@@ -42,6 +42,7 @@ import { PlaylistComponent } from './_elements/playlist/playlist.component';
 import { FormDatasetComponent } from './_elements/form-dataset/form-dataset.component';
 import { FormModelComponent } from './_elements/form-model/form-model.component';
 import { ColumnTableComponent } from './_elements/column-table/column-table.component';
+import { FolderComponent } from './_elements/folder/folder.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -72,7 +73,8 @@ export function initializeApp(appConfig: Configuration) {
     FormModelComponent,
     ColumnTableComponent,
     PieChartComponent,
-    BoxPlotComponent
+    BoxPlotComponent,
+    FolderComponent
   ],
   imports: [
     BrowserModule,
