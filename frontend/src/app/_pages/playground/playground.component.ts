@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSliderChange } from '@angular/material/slider';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -13,10 +14,13 @@ export class PlaygroundComponent implements OnInit {
 
   constructor(private cookie: CookieService) { }
 
-  updateBGPrefs() {
-    this.cookie.set('animateBackground', "" + this.animateBackground);
+  updateFillPref(event: MatSliderChange) {
+    this.backgroundFill = event.value!;
     this.cookie.set('backgroundFill', "" + this.backgroundFill);
-    console.log(this.animateBackground, this.backgroundFill);
+  }
+
+  updateAnimPref() {
+    this.cookie.set('animateBackground', "" + this.animateBackground);
   }
 
   ngOnInit(): void {

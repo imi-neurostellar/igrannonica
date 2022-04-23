@@ -6,7 +6,9 @@
 <app-reactive-background [speed]="0.001" [scrollSpeed]="1" [minDistance]="0.14" [maxSize]="5" [cursorDistance]="0.22" lineColor="#00a8e8" pointColor="rgba(0, 188, 252, 1)" cursorLineColor="#00a8e8" [numPoints]="100">
 </app-reactive-background>
 <app-navbar></app-navbar>
-<a class="bg-controls" routerLink="playground">pozadina</a>
+<a class="bg-controls" routerLink="playground">
+    <mat-icon color="accent">settings_suggest</mat-icon>
+</a>
 <div class="h-100">
     <router-outlet></router-outlet>
 </div>
