@@ -145,10 +145,10 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
   }
 
   drawPoint(p: Point) {
-    this.ctx!.fillStyle = this.pointColor;
-    this.ctx!.beginPath();
-    this.ctx!.arc(p.x * this.width, p.y * this.height, p.size * this.screenDepth(p.x), 0, 2 * Math.PI);
-    this.ctx!.fill();
+    this.ctx.fillStyle = this.pointColor;
+    this.ctx.beginPath();
+    this.ctx.arc(p.x * this.width, p.y * this.height, p.size * this.screenDepth(p.x), 0, 2 * Math.PI);
+    this.ctx.fill();
   }
 
   resize() {
@@ -159,6 +159,13 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
     if (this.canvas) {
       this.canvas.width = this.width;
       this.canvas.height = this.height;
+    }
+
+    if (this.cookie.check('animateBackground')) {
+      this.animate = this.cookie.get('animateBackground') == 'true';
+    }
+    if (this.cookie.check('backgroundFill')) {
+      this.fill = parseFloat(this.cookie.get('backgroundFill'));
     }
 
     this.drawBackground();
