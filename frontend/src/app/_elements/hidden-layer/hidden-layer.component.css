@@ -1,0 +1,5 @@
+.container{
+    max-width: 15rem;
+    border: 1px solid white;
+    border-radius: 5px;
+}

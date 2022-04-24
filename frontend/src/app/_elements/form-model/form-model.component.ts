@@ -4,6 +4,8 @@ import Shared from 'src/app/Shared';
 import Experiment from 'src/app/_data/Experiment';
 import Model, { ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
 import { GraphComponent } from '../graph/graph.component';
+import {FormGroupDirective, NgForm} from '@angular/forms';
+import {ErrorStateMatcher} from '@angular/material/core';
 @Component({
   selector: 'app-form-model',
   templateUrl: './form-model.component.html',
@@ -18,15 +20,9 @@ export class FormModelComponent implements OnInit {
   
   ngOnInit(): void {
   }
-  animalControl = new FormControl('', Validators.required);
   selectFormControl = new FormControl('', Validators.required);
-  /*animals: Animal[] = [
-    {name: 'Dog', sound: 'Woof!'},
-    {name: 'Cat', sound: 'Meow!'},
-    {name: 'Cow', sound: 'Moo!'},
-    {name: 'Fox', sound: 'Wa-pa-pa-pa-pa-pa-pow!'},
-  ];
-  */
+  nameFormControl = new FormControl('', [Validators.required, Validators.email]);
+
   newModel: Model = new Model();
   myModels?: Model[];
   selectedModel?: Model;

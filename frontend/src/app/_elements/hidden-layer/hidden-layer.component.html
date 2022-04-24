@@ -1,0 +1,40 @@
+<div class="container">
+    <mat-form-field appearance="fill">
+        <mat-label>Aktivaciona funkcija</mat-label>
+        <mat-select matNativeControl required [formControl]="selectFormControl">
+          <mat-option label="--select something --"></mat-option>
+          <mat-option value="saab">Relu</mat-option>
+          <mat-option value="mercedes">Sigmoid</mat-option>
+          <mat-option value="audi">Softmax</mat-option>
+        </mat-select>
+        <mat-error *ngIf="selectFormControl.hasError('required')">
+            Obavezno polje
+        </mat-error>
+      </mat-form-field>
+<br>
+      Broj čvorova: <input type="number" min="1" class="form-control" name="hiddenLayersNeurons">
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label>Regularizacija</mat-label>
+        <mat-select matNativeControl required [formControl]="selectFormControl">
+          <mat-option label="--select something --"></mat-option>
+          <mat-option value="l1">L1</mat-option>
+          <mat-option value="l2">L2</mat-option>
+        </mat-select>
+        <mat-error *ngIf="selectFormControl.hasError('required')">
+            Obavezno polje
+        </mat-error>
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label>Stopa regularizacije</mat-label>
+        <mat-select matNativeControl required [formControl]="selectFormControl">
+          <mat-option value="saab">0.001</mat-option>
+          <mat-option value="mercedes">0.01</mat-option>
+          <mat-option value="audi">0.1</mat-option>
+        </mat-select>
+        <mat-error *ngIf="selectFormControl.hasError('required')">
+            Obavezno polje
+        </mat-error>
+      </mat-form-field>
+</div>
