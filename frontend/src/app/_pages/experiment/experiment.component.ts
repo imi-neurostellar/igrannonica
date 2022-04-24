@@ -7,13 +7,18 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 })
 export class ExperimentComponent implements OnInit {
 
+event:number=0;
+
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  test(event:StepperSelectionEvent){
-    console.log(event);
+  ChangePage(event:StepperSelectionEvent){
+    this.event=event.selectedIndex;
+    console.log(this.event);
+
   }
 
 }

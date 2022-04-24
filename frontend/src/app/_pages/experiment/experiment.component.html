@@ -1,9 +1,9 @@
-<app-folder></app-folder>
+
 <div class="wrapper">   
     
     <nav class="navmenu">
         <div class="navmenuwrapper text-offwhite">
-          <mat-stepper orientation="vertical" (selectionChange)="test($event)">
+          <mat-stepper orientation="vertical" (selectionChange)="ChangePage($event)">
             <mat-step>
               <ng-template matStepLabel><span class="label">Izvor podataka</span></ng-template>
               <ng-template matStepContent>
@@ -32,6 +32,15 @@
     
 
 </div>
+
+<div *ngIf="event==0"><app-folder></app-folder></div>
+<div *ngIf="event==1">
+  <div class="text-offwhite" style="height: 100px;width: 100px;background-color: red;top:50%;left: 50%;position: absolute;">Insert odabir kolona</div>
+</div>
+<div *ngIf="event==2">
+  <div class="text-offwhite" style="height: 100px;width: 100px;background-color: blue;top:50%;left: 50%;position: absolute;">Insert treniranje</div>
+</div>
+
 
 
 
