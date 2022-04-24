@@ -97,7 +97,6 @@ export class FolderComponent implements OnInit {
   newFileZIndex() {
     return (this.files.length + 1);
   }
-
 }
 
 export enum FolderType {

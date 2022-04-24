@@ -51,13 +51,13 @@
         {{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}
     </div>
     <div id="footer">
-        <div class="folder-bottom-button text-offwhite rounded-bottom" *ngIf="newFileSelected">
+        <div class="folder-bottom-button text-offwhite rounded-bottom bubble" *ngIf="newFileSelected">
             <a class="tab-link stretched-link">Sačuvaj</a>
             <div>
                 <mat-icon>check</mat-icon>
             </div>
         </div>
-        <div class="folder-bottom-button text-offwhite rounded-bottom" *ngIf="!newFileSelected">
+        <div class="folder-bottom-button text-offwhite rounded-bottom bubble" *ngIf="!newFileSelected">
             <a class="tab-link stretched-link">Ok</a>
             <div class="icon-double">
                 <mat-icon>check</mat-icon>

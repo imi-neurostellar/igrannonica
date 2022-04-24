@@ -1,37 +1,32 @@
-ul{
+ul {
     list-style: none;
 }
-.navmenu{
-    position: absolute;
-    background-color: var(--ns-bg-dark-50);
-    height: 90%;
+
+.holder {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.sidenav {
     width: 250px;
-}
-.navmenuwrapper{
-    position: relative;
-    top:40%;
-    transform: translateY(-50%);
+    background-color: var(--ns-bg-dark-50);
 }
 
+@media only screen and (max-width: 400px) {
+    .sidenav {
+        width: 100%;
+        background-color: var(--ns-bg-dark-100);
+    }
+    .holder {
+        flex-direction: column;
+    }
+}
 
-mat-stepper{
+mat-stepper {
     background-color: transparent;
 }
 
-::ng-deep .mat-step-header .mat-step-icon .mat-step-content{
-    background-color: white;
-    color:var(--ns-primary); 
-  }
-::ng-deep .mat-step-header .mat-step-icon{
-    color:white;
-}
-::ng-deep .mat-step-header .mat-step-icon-state-done{
-    background: var(--ns-primary);
-    color:var(--ns-primary)
-}
-::ng-deep .mat-step-header .mat-step-icon-state-done .label{
-    color:var(--ns-primary)
-}
-.label{
+.label {
     color: white;
 }

@@ -1,5 +1,10 @@
 /*Mora da se ispravi za media kada je ekran premali pa se poredjaju u kolonu*/
 
+html,
+body {
+    height: 100%;
+}
+
 .align-items-view>*:first-child {
     transform: perspective(100em) rotateY(25deg) translateZ(1em);
 }

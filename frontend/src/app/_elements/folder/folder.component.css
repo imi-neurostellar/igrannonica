@@ -55,7 +55,7 @@
 }
 
 .tab-link:active {
-    color: var(--ns-accent) !important;
+    text-decoration: underline !important;
 }
 
 .selected-tab {
@@ -107,7 +107,7 @@
 .folder-bottom-button {
     font-size: large;
     position: relative;
-    background-color: var(--ns-bg-dark-100);
+    background-color: var(--ns-bg-dark-50);
     width: 10rem;
     height: 2.5rem;
     display: flex;
