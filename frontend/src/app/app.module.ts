@@ -43,6 +43,7 @@ import { FormDatasetComponent } from './_elements/form-dataset/form-dataset.comp
 import { FormModelComponent } from './_elements/form-model/form-model.component';
 import { ColumnTableComponent } from './_elements/column-table/column-table.component';
 import { FolderComponent } from './_elements/folder/folder.component';
+import { TestComponent } from './_pages/test/test.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -74,7 +75,8 @@ export function initializeApp(appConfig: Configuration) {
     ColumnTableComponent,
     PieChartComponent,
     BoxPlotComponent,
-    FolderComponent
+    FolderComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,
