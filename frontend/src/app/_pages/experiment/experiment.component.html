@@ -1,2 +1,37 @@
-<p>experiment works!</p>
 <app-folder></app-folder>
+<div class="wrapper">   
+    
+    <nav class="navmenu">
+        <div class="navmenuwrapper text-offwhite">
+          <mat-stepper orientation="vertical" (selectionChange)="test($event)">
+            <mat-step>
+              <ng-template matStepLabel><span class="label">Izvor podataka</span></ng-template>
+              <ng-template matStepContent>
+                <p>Izaberite vas izvor podataka</p>
+              </ng-template>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel> <span class="label">Odabir kolona</span></ng-template>
+              <ng-template matStepContent>
+                <p>Pripremite podatke i izaberite izlazne kolone</p>
+              </ng-template>
+            </mat-step>
+            <mat-step >
+              <ng-template matStepLabel><span class="label">Treniranje</span></ng-template>
+              <p>Odaberite parametre i trenirajte model</p>
+            </mat-step>
+          </mat-stepper>
+        </div>
+
+          
+
+    </nav>
+    
+    
+
+    
+
+</div>
+
+
+
