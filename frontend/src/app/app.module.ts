@@ -44,6 +44,7 @@ import { FormModelComponent } from './_elements/form-model/form-model.component'
 import { ColumnTableComponent } from './_elements/column-table/column-table.component';
 import { FolderComponent } from './_elements/folder/folder.component';
 import { TestComponent } from './_pages/test/test.component';
+import { DoughnutChartComponent } from './_elements/_charts/doughnut-chart/doughnut-chart.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -76,7 +77,8 @@ export function initializeApp(appConfig: Configuration) {
     PieChartComponent,
     BoxPlotComponent,
     FolderComponent,
-    TestComponent
+    TestComponent,
+    DoughnutChartComponent
   ],
   imports: [
     BrowserModule,

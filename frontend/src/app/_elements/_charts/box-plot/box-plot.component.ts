@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {Chart} from 'node_modules/chart.js';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-box-plot',
