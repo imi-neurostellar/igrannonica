@@ -16,7 +16,10 @@ export class FormModelComponent implements OnInit {
   @Input() forExperiment?: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
 
-  constructor() { }
+  constructor() { 
+  this.newModel.epochs=1;
+  this.newModel.batchSize=1;
+}
   
   ngOnInit(): void {
   }
@@ -29,7 +32,9 @@ export class FormModelComponent implements OnInit {
   selectEpochFormControl=new FormControl('', Validators.required);
   selectAFFormControl=new FormControl('', Validators.required);
   selectBSFormControl=new FormControl('', Validators.required);
-
+  selectActivationFormControl = new FormControl('', Validators.required);
+  selectRegularisationFormControl = new FormControl('', Validators.required);
+  selectRRateFormControl = new FormControl('', Validators.required);
   newModel: Model = new Model();
   myModels?: Model[];
   selectedModel?: Model;
@@ -49,17 +54,18 @@ export class FormModelComponent implements OnInit {
 
   showMyModels: boolean = true;
   
-  batchSizePower: number = 2;
-
+  
+ 
 
 
   updateGraph() {
     this.graph.update();
   }
   removeLayer(){
-    if(this.newModel.hiddenLayers>0)
+    if(this.newModel.hiddenLayers>1)
     {
       this.newModel.hiddenLayers-=1;
+      this.updateGraph();
     }
     else
     {
@@ -71,10 +77,87 @@ export class FormModelComponent implements OnInit {
     if(this.newModel.hiddenLayers<12)
     {
       this.newModel.hiddenLayers+=1;
+      this.updateGraph();
     }
     else
     {
       this.newModel.hiddenLayers=this.newModel.hiddenLayers;
+      
+    }
+  }
+  removeBatch(){
+    if(this.newModel.batchSize>1)
+    {
+      this.newModel.batchSize=this.newModel.batchSize/2;
+    }
+    else
+    {
+      this.newModel.batchSize=this.newModel.batchSize;
+    }
+    
+  }
+  addBatch(){
+    if(this.newModel.batchSize<600)
+    {
+      this.newModel.batchSize=this.newModel.batchSize*2;
+    }
+    else
+    {
+      this.newModel.batchSize=this.newModel.batchSize;
+      
+    }
+  }
+  removeEpoch(){
+    if(this.newModel.epochs>1)
+    {
+      this.newModel.epochs=this.newModel.epochs-1;
+    }
+    else
+    {
+      this.newModel.epochs=this.newModel.epochs;
+    }
+    
+  }
+  addEpoch(){
+    if(this.newModel.epochs<100)
+    {
+      this.newModel.epochs=this.newModel.epochs+1;
+    }
+    else
+    {
+      this.newModel.epochs=this.newModel.epochs;
+      
+    }
+  }
+  /*
+  setNeurons()
+  {
+    for(let i=0;i<this.newModel.hiddenLayers;i++){
+      this.newModel.hiddenLayerNeurons[i]=1;
+    }
+  }*/
+  removeNeuron(){
+    if(this.newModel.hiddenLayerNeurons>1)
+    {
+      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons-1;
+      this.updateGraph();
+    }
+    else
+    {
+      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons;
+    }
+    
+  }
+  addNeuron(){
+    if(this.newModel.hiddenLayerNeurons<100)
+    {
+      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons+1;
+      this.updateGraph();
+    }
+    else
+    {
+      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons;
+      
     }
   }
 }

@@ -26,3 +26,23 @@ mat-icon{
     margin-bottom:-50px;
     padding: 0;
 }
+.neuron{
+  
+    text-align: justify;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 0;
+    color: white!important;
+    background-color: var(--ns-bg-dark-100) !important;
+   
+}
+mat-form-field{
+    font-size: 12px;
+}
+col-1{
+    text-align: center;
+}
+mat-icon{
+    margin-right: 5px;
+    margin-left: -7px;
+}
