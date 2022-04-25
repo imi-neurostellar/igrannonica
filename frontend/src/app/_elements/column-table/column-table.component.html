@@ -23,9 +23,9 @@
         <tr>
             <th>Grafik</th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                <app-box-plot *ngIf="colInfo.isNumber"></app-box-plot>
-                <!--TODO: dodati [data]-->
-                <app-pie-chart *ngIf="!colInfo.isNumber"></app-pie-chart>
+                <!-- <app-box-plot *ngIf="colInfo.isNumber"></app-box-plot>
+                TODO: dodati [data]
+                <app-pie-chart *ngIf="!colInfo.isNumber"></app-pie-chart> -->
             </td>
         </tr>
         <tr>
