@@ -32,6 +32,7 @@
     "csv-parser": "^3.0.0",
     "d3-graphviz": "^2.6.1",
     "jquery": "^3.6.0",
+    "material-icons": "^1.10.8",
     "mdb-angular-ui-kit": "^2.0.0",
     "ng-multiselect-dropdown": "^0.3.8",
     "ng-uikit-pro-standard": "^1.0.0",

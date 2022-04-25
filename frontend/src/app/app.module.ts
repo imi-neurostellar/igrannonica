@@ -19,6 +19,8 @@ import { LoginModalComponent } from './_modals/login-modal/login-modal.component
 import { RegisterModalComponent } from './_modals/register-modal/register-modal.component';
 import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.component';
 import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
+import { EncodingDialogComponent } from './_modals/encoding-dialog/encoding-dialog.component';
+import { MissingvaluesDialogComponent } from './_modals/missingvalues-dialog/missingvalues-dialog.component';
 // Pages
 import { HomeComponent } from './_pages/home/home.component';
 import { ProfileComponent } from './_pages/profile/profile.component';
@@ -74,7 +76,9 @@ export function initializeApp(appConfig: Configuration) {
     ColumnTableComponent,
     PieChartComponent,
     BoxPlotComponent,
-    FolderComponent
+    FolderComponent,
+    EncodingDialogComponent,
+    MissingvaluesDialogComponent
   ],
   imports: [
     BrowserModule,
