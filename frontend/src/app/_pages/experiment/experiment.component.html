@@ -20,6 +20,7 @@
     <div class="d-flex flex-colum align-items-center sidenav">
         <mat-stepper orientation="vertical" (selectionChange)="changePage($event)">
             <mat-step>
+                <!--editable="false"-->
                 <ng-template matStepLabel><span class="label">Izvor podataka</span></ng-template>
                 <ng-template matStepContent>
                     <p>Izaberite vas izvor podataka</p>
@@ -37,14 +38,14 @@
             </mat-step>
         </mat-stepper>
     </div>
-    <div class="d-flex flex-colum w-100 position-relative">
-        <div *ngIf="event==0">
-            <app-folder></app-folder>
+    <div #stepsContainer class="steps-container">
+        <div #steps id="step_1" class="step-content">
+            <app-folder (okPressed)="goToPage(1)"></app-folder>
         </div>
-        <div *ngIf="event==1">
+        <div #steps id="step_2" class="step-content">
             <div class="text-offwhite" style="height: 100px;width: 100px;background-color: red;top:50%;left: 50%;position: absolute;">Insert odabir kolona</div>
         </div>
-        <div *ngIf="event==2">
+        <div #steps id="step_3" class="step-content">
             <div class="text-offwhite" style="height: 100px;width: 100px;background-color: blue;top:50%;left: 50%;position: absolute;">Insert treniranje</div>
         </div>
     </div>

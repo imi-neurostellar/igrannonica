@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import Shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-reactive-background',
@@ -90,18 +91,32 @@ export class ReactiveBackgroundComponent implements AfterViewInit {
 
       this.drawBackground();
     }, 1000 / 60);
+
+    Shared.bgScroll.subscribe((amount) => {
+      this.scrollBackgroundFromSharedEvent(amount);
+    })
   }
 
   private lastScrollY: number = 0;
 
+  scrollBackgroundFromSharedEvent(amount: number) {
+    const scrolledAmount = amount - this.lastScrollY;
+    this.scrollPoints(scrolledAmount);
+    this.lastScrollY = amount;
+  }
+
   scrollBackground(e: Event) {
     const scrolledAmount = window.scrollY - this.lastScrollY;
+    this.scrollPoints(scrolledAmount);
+    this.lastScrollY = window.scrollY;
+  }
+
+  scrollPoints(amount: number) {
     this.points.forEach((point, index) => {
       if (index > this.numPoints * this.fill) return;
-      point.y = point.y - (scrolledAmount / this.height) * this.scrollSpeed;
+      point.y = point.y - (amount / this.height) * this.scrollSpeed;
       this.keepPointWithinBounds(point);
     })
-    this.lastScrollY = window.scrollY;
   }
 
   drawBackground() {

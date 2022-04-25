@@ -1,7 +1,7 @@
 #folder {
-    position: absolute;
+    /*position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%);*/
 }
 
 #tabs {
@@ -22,9 +22,10 @@
     align-items: center;
     position: relative;
     overflow-x: hidden;
-    background-color: var(--ns-bg-dark-100);
     height: 2.5rem;
+    background-color: var(--ns-bg-dark-100);
     border-color: var(--ns-primary);
+    color: var(--ns-primary);
     border-style: solid;
     border-width: 1px 1px 0 1px;
 }
@@ -37,6 +38,7 @@
 .selected-tab {
     height: 3rem;
     background-color: var(--ns-primary);
+    color: var(--offwhite);
 }
 
 .hover-tab {
@@ -91,7 +93,7 @@
     background-color: var(--ns-bg-dark-50);
     width: 100%;
     height: 36rem;
-    backdrop-filter: blur(2px);
+    /*backdrop-filter: blur(2px);*/
     border-color: var(--ns-primary);
     border-style: solid;
     border-width: 1px 1px 1px 1px;
@@ -104,21 +106,18 @@
     justify-content: center;
 }
 
-.folder-bottom-button {
+.bottom-button {
     font-size: large;
     position: relative;
-    background-color: var(--ns-bg-dark-50);
+    background-color: var(--ns-primary);
     width: 10rem;
-    height: 2.5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+    height: 2.3rem;
     border-color: var(--ns-primary);
     border-style: solid;
     border-width: 0px 1px 1px 1px;
 }
 
-.folder-bottom-button:hover {
-    background-color: var(--ns-primary);
+.rounded-bottom {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
 }
