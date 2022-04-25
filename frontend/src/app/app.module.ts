@@ -45,7 +45,7 @@ import { ColumnTableComponent } from './_elements/column-table/column-table.comp
 import { FolderComponent } from './_elements/folder/folder.component';
 import { TestComponent } from './_pages/test/test.component';
 import { DoughnutChartComponent } from './_elements/_charts/doughnut-chart/doughnut-chart.component';
-import { HiddenLayerComponent } from './_elements/hidden-layer/hidden-layer.component';
+
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
 }
@@ -79,7 +79,7 @@ export function initializeApp(appConfig: Configuration) {
     FolderComponent,
     TestComponent,
     DoughnutChartComponent,
-    HiddenLayerComponent
+
   ],
   imports: [
     BrowserModule,

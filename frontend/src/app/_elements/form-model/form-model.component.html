@@ -114,15 +114,7 @@
     </div><!--kraj unosa parametara-->
   <hr>
     <div class="m-5">
-                <app-graph [model]="newModel" [inputCols]="newModel.inputColNum"></app-graph>
-                <!--<div class="row" style="position: center;">
-                  <div class="col-3"></div>
-                  <label class="col-2" style="color: white;">Broj skrivenih slojeva:</label>  
-                  <div class="col-1">
-                      <input type="number" min="1" class="form-control" name="hiddenLayers" [(ngModel)]="newModel.hiddenLayers" (change)="newModel.hiddenLayerActivationFunctions = [].constructor(newModel.hiddenLayers).fill(newModel.hiddenLayerActivationFunctions[0])" (ngModelChange)="updateGraph()">
-                  </div>
-                </div>
-            </div>-->
+            <app-graph [model]="newModel" [inputCols]="newModel.inputColNum"></app-graph>
             <div class="row" id="rowhn">
                 <div class="col-3"></div>
                 <div class="col-2">Broj Skrivenih Slojeva</div>
