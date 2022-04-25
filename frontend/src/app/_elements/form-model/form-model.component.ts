@@ -54,6 +54,7 @@ export class FormModelComponent implements OnInit {
 
   showMyModels: boolean = true;
   
+  hiddenLayers=[];
   
  
 
@@ -136,6 +137,9 @@ export class FormModelComponent implements OnInit {
       this.newModel.hiddenLayerNeurons[i]=1;
     }
   }*/
+  numSequence(n: number): Array<number> {
+    return Array(n);
+  }
   removeNeuron(){
     if(this.newModel.hiddenLayerNeurons>1)
     {

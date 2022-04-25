@@ -124,13 +124,15 @@
             </div>
   </div>
   <hr>
-  <div class="row">
+  <div class="row" style="max-width:60rem ;">
 
-      <div class="col text-center" *ngFor="let item of [1,2,3,4,5]">
+      <div class="col text-center" *ngFor="let item of numSequence(newModel.hiddenLayers)" >
+        {{item}}
         <div class="neuron">
-          <div>
-            <label>Skriveni sloj {{item}}</label>
+          <div style="text-align: center;">
+            <label >Skriveni sloj</label>
           </div>
+          <div class="row" style="margin-bottom: -10px;">
             <mat-form-field appearance="fill">
                 <mat-label>Aktivaciona funkcija</mat-label>
                 <mat-select matNativeControl required [formControl]="selectActivationFormControl">
@@ -142,17 +144,15 @@
                     Obavezno polje
                 </mat-error>
               </mat-form-field>
-        <br>
+            </div>
         <div class="row" >
-              <!--<label style="width: 7rem;" for="hiddenLayersNeurons">Broj čvorova:</label> <input type="number" min="1" class="form-control" name="hiddenLayersNeurons" style="max-width: 5rem;">-->
-
                 <div class="col-6" style="font-size: 13px;" >Broj čvorova</div>
                 <mat-icon (click)="addNeuron()">add_circle</mat-icon>
                 <div class="col-1">{{newModel.hiddenLayerNeurons}}</div>
                 <mat-icon (click)="removeNeuron()">remove_circle</mat-icon>
           
         </div>
-              <br>
+              <div class='row' style="margin-bottom: -7px;">
               <mat-form-field appearance="fill">
                 <mat-label>Regularizacija</mat-label>
                 <mat-select matNativeControl required [formControl]="selectRegularisationFormControl">
@@ -163,7 +163,8 @@
                     Obavezno polje
                 </mat-error>
               </mat-form-field>
-              <br>
+              </div>
+            <div class="row" style="margin-bottom: -7px;">
               <mat-form-field appearance="fill">
                 <mat-label>Stopa regularizacije</mat-label>
                 <mat-select matNativeControl required [formControl]="selectRRateFormControl">
@@ -175,6 +176,9 @@
                     Obavezno polje
                 </mat-error>
               </mat-form-field>
+            </div>
         </div>
+        <br>
       </div>
+      
   </div>

@@ -34,6 +34,8 @@ mat-icon{
     padding: 0;
     color: white!important;
     background-color: var(--ns-bg-dark-100) !important;
+    min-width: none;
+    max-width: 12.5rem;
    
 }
 mat-form-field{
