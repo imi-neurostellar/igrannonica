@@ -1,31 +1,29 @@
-<div class="container">
+<div id="container">
     <div class="row">
       <div class="col-sm">
         <div class="row">
-            <mat-form-field appearance="fill">
-                <mat-label>Naziv</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl">
-                  <option label="--select something --"></option>
-                  <option value="saab">Saab</option>
-                  <option value="mercedes">Mercedes</option>
-                  <option value="audi">Audi</option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
-                    Obavezno polje
-                </mat-error>
-              </mat-form-field>
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Naziv</mat-label>
+            <input type="text" matInput [formControl]="nameFormControl">
+            <mat-error *ngIf="nameFormControl.hasError('name') && !nameFormControl.hasError('required')">
+              Unesite naziv
+            </mat-error>
+            <mat-error *ngIf="nameFormControl.hasError('required')">
+              Naziv je <strong>obavezan</strong>
+            </mat-error>
+          </mat-form-field>
         </div>
         <div class="row">
             <mat-form-field appearance="fill">
                 <mat-label>Tip problema</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl">
-                    <option
+                <mat-select matNativeControl required [formControl]="selectTypeFormControl">
+                    <mat-option
                     *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)"
                     [value]="option">
                     {{ optionName }}
-                </option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="selectTypeFormControl.hasError('required')">
                     Obavezno polje
                 </mat-error>
               </mat-form-field>
@@ -35,105 +33,152 @@
         <div class="row">
             <mat-form-field appearance="fill">
                 <mat-label>Optimizacija</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl">
-                    <option
+                <mat-select matNativeControl required [formControl]="selectOptFormControl">
+                    <mat-option
                     *ngFor="let option of Object.keys(Optimizer); let optionName of Object.values(Optimizer)"
                     [value]="option">
                     {{ optionName }}
-                </option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="selectOptFormControl.hasError('required')">
                     Obavezno polje
                 </mat-error>
               </mat-form-field>
         </div>
         <div class="row">
-            <mat-form-field appearance="fill">
-                <mat-label>Learning rate</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl">
-                  <option label="--select something --"></option>
-                  <option value="saab">Saab</option>
-                  <option value="mercedes">Mercedes</option>
-                  <option value="audi">Audi</option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
-                    Obavezno polje
-                </mat-error>
-              </mat-form-field>
-        </div>
-      </div>
-      <div class="col-sm">
-        <div class="row">
-            <mat-form-field appearance="fill">
-                <mat-label>Broj epoha</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl">
-                  <option label="--select something --"></option>
-                  <option value="saab">Saab</option>
-                  <option value="mercedes">Mercedes</option>
-                  <option value="audi">Audi</option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
-                    Obavezno polje
-                </mat-error>
-              </mat-form-field>
-        </div>
-        <div class="row">
-            <mat-form-field appearance="fill">
-                <mat-label>Broj uzoraka po iteraciji</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl">
-                  <option label="--select something --"></option>
-                  <option value="saab">Saab</option>
-                  <option value="mercedes">Mercedes</option>
-                  <option value="audi">Audi</option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
-                    Obavezno polje
-                </mat-error>
-              </mat-form-field>
-        </div>
-      </div>
-      <div class="col-sm">
-        <div class="row">
-            <mat-form-field appearance="fill">
-                <mat-label>Funkcija aktivacije izlaznog sloja</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl" name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction">
-                    <option
-                    *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
-                    [value]="option">
-                    {{ optionName }}
-                </option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
-                    Obavezno polje
-                </mat-error>
-              </mat-form-field>
-        </div>
-        <div class="row">
-            <mat-form-field appearance="fill">
+                  <mat-form-field appearance="fill">
                 <mat-label>Funkcija troška</mat-label>
-                <select matNativeControl required [formControl]="selectFormControl">
-                    <option
+                <mat-select matNativeControl required [formControl]="selectLFFormControl">
+                    <mat-option
                             *ngFor="let option of Object.keys(lossFunction); let optionName of Object.values(lossFunction)"
                             [value]="option">
                             {{ optionName }}
-                        </option>
-                </select>
-                <mat-error *ngIf="selectFormControl.hasError('required')">
+                        </mat-option>
+                </mat-select>
+                <mat-error *ngIf="selectLFFormControl.hasError('required')">
                   Obavezno polje
                 </mat-error>
               </mat-form-field>
         </div>
       </div>
+      <div class="col-sm">
+        <div class="row">
+              
+              <mat-form-field appearance="fill">
+                  <mat-label>Funkcija aktivacije izlaznog sloja</mat-label>
+                  <mat-select matNativeControl required [formControl]="selectAFFormControl" name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction">
+                      <mat-option
+                      *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)"
+                      [value]="option">
+                      {{ optionName }}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="selectAFFormControl.hasError('required')">
+                      Obavezno polje
+                  </mat-error>
+                </mat-form-field>
+          
+        </div>
+        <div class="row">
+              <mat-form-field appearance="fill">
+                <mat-label>Funkcija troška</mat-label>
+                <mat-select matNativeControl required [formControl]="selectLFFormControl">
+                    <mat-option
+                            *ngFor="let option of Object.keys(lossFunction); let optionName of Object.values(lossFunction)"
+                            [value]="option">
+                            {{ optionName }}
+                        </mat-option>
+                </mat-select>
+                <mat-error *ngIf="selectLFFormControl.hasError('required')">
+                  Obavezno polje
+                </mat-error>
+              </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="col-7">Broj Epoha</div>
+          <mat-icon (click)="addEpoch()">add_circle</mat-icon>
+          <div class="col-1">{{newModel.epochs}}</div>
+          <mat-icon (click)="removeEpoch()">remove_circle</mat-icon>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+          <div class="col-7">Broj Uzoraka Po Iteraciji</div>
+          <mat-icon (click)="addBatch()">add_circle</mat-icon>
+          <div class="col-1">{{newModel.batchSize}}</div>
+          <mat-icon (click)="removeBatch()">remove_circle</mat-icon>
+        </div>
+      </div>
     </div><!--kraj unosa parametara-->
-    
-    <div class="col-1">
-        <input type="number" min="1" class="form-control" name="hiddenLayerNeurons" [(ngModel)]="newModel.hiddenLayerNeurons" (ngModelChange)="updateGraph()">
-    </div>
+  <hr>
     <div class="m-5">
-                <app-graph [model]="newModel" [inputCols]="4"></app-graph>
-                <div class="col-1">
-                    <input type="number" min="1" class="form-control" name="hiddenLayers" [(ngModel)]="newModel.hiddenLayers" (change)="newModel.hiddenLayerActivationFunctions = [].constructor(newModel.hiddenLayers).fill(newModel.hiddenLayerActivationFunctions[0])" (ngModelChange)="updateGraph()">
-                </div>
+            <app-graph [model]="newModel" [inputCols]="newModel.inputColNum"></app-graph>
+            <div class="row" id="rowhn">
+                <div class="col-3"></div>
+                <div class="col-2">Broj Skrivenih Slojeva</div>
+                <div class="col-1"><mat-icon (click)="addLayer()" (ngModelChange)="updateGraph()">add_circle</mat-icon></div>
+                <div class="col-1">{{newModel.hiddenLayers}}</div>
+                <div class="col-1"><mat-icon (click)="removeLayer()" (ngModelChange)="updateGraph()">remove_circle</mat-icon></div>
             </div>
+  </div>
+  <hr>
+  <div class="row" style="max-width:60rem ;">
 
+      <div class="col text-center" *ngFor="let item of numSequence(newModel.hiddenLayers)" >
+        {{item}}
+        <div class="neuron">
+          <div style="text-align: center;">
+            <label >Skriveni sloj</label>
+          </div>
+          <div class="row" style="margin-bottom: -10px;">
+            <mat-form-field appearance="fill">
+                <mat-label>Aktivaciona funkcija</mat-label>
+                <mat-select matNativeControl required [formControl]="selectActivationFormControl">
+                  <mat-option value="saab">Relu</mat-option>
+                  <mat-option value="mercedes">Sigmoid</mat-option>
+                  <mat-option value="audi">Softmax</mat-option>
+                </mat-select>
+                <mat-error *ngIf="selectActivationFormControl.hasError('required')">
+                    Obavezno polje
+                </mat-error>
+              </mat-form-field>
+            </div>
+        <div class="row" >
+                <div class="col-6" style="font-size: 13px;" >Broj čvorova</div>
+                <mat-icon (click)="addNeuron()">add_circle</mat-icon>
+                <div class="col-1">{{newModel.hiddenLayerNeurons}}</div>
+                <mat-icon (click)="removeNeuron()">remove_circle</mat-icon>
+          
+        </div>
+              <div class='row' style="margin-bottom: -7px;">
+              <mat-form-field appearance="fill">
+                <mat-label>Regularizacija</mat-label>
+                <mat-select matNativeControl required [formControl]="selectRegularisationFormControl">
+                  <mat-option value="l1">L1</mat-option>
+                  <mat-option value="l2">L2</mat-option>
+                </mat-select>
+                <mat-error *ngIf="selectRegularisationFormControl.hasError('required')">
+                    Obavezno polje
+                </mat-error>
+              </mat-form-field>
+              </div>
+            <div class="row" style="margin-bottom: -7px;">
+              <mat-form-field appearance="fill">
+                <mat-label>Stopa regularizacije</mat-label>
+                <mat-select matNativeControl required [formControl]="selectRRateFormControl">
+                  <mat-option value="saab">0.001</mat-option>
+                  <mat-option value="mercedes">0.01</mat-option>
+                  <mat-option value="audi">0.1</mat-option>
+                </mat-select>
+                <mat-error *ngIf="selectRRateFormControl.hasError('required')">
+                    Obavezno polje
+                </mat-error>
+              </mat-form-field>
+            </div>
+        </div>
+        <br>
+      </div>
+      
   </div>

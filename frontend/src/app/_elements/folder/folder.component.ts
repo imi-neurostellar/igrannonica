@@ -20,11 +20,15 @@ export class FolderComponent implements OnInit {
   newFileSelected: boolean = true;
 
   selectedFileIndex: number = -1;
+  selectedFile?: (Dataset | Model);
   hoveringOverFileIndex: number = -1;
 
   fileToDisplay?: (Dataset | Model);
 
   @Output() selectedFileChanged: EventEmitter<(Dataset | Model)> = new EventEmitter();
+  @Output() okPressed: EventEmitter<string> = new EventEmitter();
+
+  searchTerm: string = '';
 
   constructor() {
     //PLACEHOLDER
@@ -33,6 +37,9 @@ export class FolderComponent implements OnInit {
       new Dataset('Dijamanti'),
       new Dataset('Filmovi'),
     ]
+
+    this.filteredFiles.length = 0;
+    this.filteredFiles.push(...this.files);
   }
 
   ngOnInit(): void {
@@ -60,17 +67,19 @@ export class FolderComponent implements OnInit {
     if (!this.newFile) {
       this.createNewFile();
     }
-    this.fileToDisplay = this.newFile;
     this.selectedFileIndex = -1;
+    this.fileToDisplay = this.newFile;
+    this.selectedFile = this.newFile;
     this.newFileSelected = true;
     this.selectedFileChanged.emit(this.newFile);
   }
 
   selectFile(index: number) {
     this.selectedFileIndex = index;
-    this.fileToDisplay = this.files[index];
+    this.selectedFile = this.filteredFiles[index];
+    this.fileToDisplay = this.filteredFiles[index];
     this.newFileSelected = false;
-    this.selectedFileChanged.emit(this.files[index]);
+    this.selectedFileChanged.emit(this.selectedFile);
   }
 
   createNewFile() {
@@ -79,6 +88,10 @@ export class FolderComponent implements OnInit {
     } else if (this.type == FolderType.Model) {
       this.newFile = new Model();
     }
+  }
+
+  ok() {
+    this.okPressed.emit();
   }
 
   saveNewFile() {
@@ -98,6 +111,23 @@ export class FolderComponent implements OnInit {
     return (this.files.length + 1);
   }
 
+  clearSearchTerm() {
+    this.searchTerm = '';
+  }
+
+  filteredFiles: (Dataset | Model)[] = [];
+
+  searchTermsChanged() {
+    this.filteredFiles.length = 0;
+    this.filteredFiles.push(...this.files.filter((file) => file.name.toLowerCase().includes(this.searchTerm.toLowerCase())));
+    if (this.selectedFile) {
+      if (!this.filteredFiles.includes(this.selectedFile)) {
+        this.selectFile(-1);
+      } else {
+        this.selectedFileIndex = this.filteredFiles.indexOf(this.selectedFile);
+      }
+    }
+  }
 }
 
 export enum FolderType {

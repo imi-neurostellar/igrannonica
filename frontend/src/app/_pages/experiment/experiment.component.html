@@ -1,37 +1,35 @@
-<app-folder></app-folder>
-<div class="wrapper">   
-    
-    <nav class="navmenu">
-        <div class="navmenuwrapper text-offwhite">
-          <mat-stepper orientation="vertical" (selectionChange)="test($event)">
+<div class="container-fluid p-0 text-offwhite holder" style="height: calc(100vh - 64px);">
+    <div class="d-flex flex-colum align-items-center sidenav">
+        <mat-stepper orientation="vertical" (selectionChange)="changePage($event)">
             <mat-step>
-              <ng-template matStepLabel><span class="label">Izvor podataka</span></ng-template>
-              <ng-template matStepContent>
-                <p>Izaberite vas izvor podataka</p>
-              </ng-template>
+                <!--editable="false"-->
+                <ng-template matStepLabel><span class="label">Izvor podataka</span></ng-template>
+                <ng-template matStepContent>
+                    <p>Izaberite vas izvor podataka</p>
+                </ng-template>
             </mat-step>
             <mat-step>
-              <ng-template matStepLabel> <span class="label">Odabir kolona</span></ng-template>
-              <ng-template matStepContent>
-                <p>Pripremite podatke i izaberite izlazne kolone</p>
-              </ng-template>
+                <ng-template matStepLabel> <span class="label">Odabir kolona</span></ng-template>
+                <ng-template matStepContent>
+                    <p>Pripremite podatke i izaberite izlazne kolone</p>
+                </ng-template>
             </mat-step>
-            <mat-step >
-              <ng-template matStepLabel><span class="label">Treniranje</span></ng-template>
-              <p>Odaberite parametre i trenirajte model</p>
+            <mat-step>
+                <ng-template matStepLabel><span class="label">Treniranje</span></ng-template>
+                <p>Odaberite parametre i trenirajte model</p>
             </mat-step>
-          </mat-stepper>
+        </mat-stepper>
+    </div>
+    <div #stepsContainer class="steps-container">
+        <div #steps id="step_1" class="step-content">
+            <app-folder (okPressed)="goToPage(1)"></app-folder>
         </div>
-
-          
-
-    </nav>
-    
-    
-
-    
-
+        <div #steps id="step_2" class="step-content">
+            <div class="text-offwhite" style="height: 100px;width: 100px;background-color: red;top:50%;left: 50%;position: absolute;">Insert odabir kolona</div>
+        </div>
+        <div #steps id="step_3" class="step-content">
+            
+            <app-form-model></app-form-model>
+        </div>
+    </div>
 </div>
-
-
-

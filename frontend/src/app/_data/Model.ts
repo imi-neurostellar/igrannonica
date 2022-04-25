@@ -14,14 +14,16 @@ export default class Model {
         public optimizer: Optimizer = Optimizer.Adam,
         public lossFunction: LossFunction = LossFunction.MeanSquaredError,
         public inputNeurons: number = 1,
-        public hiddenLayerNeurons: number = 1,
+        public hiddenLayerNeurons: number=1,
         public hiddenLayers: number = 1,
         public batchSize: number = 5,
         public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public uploaderId: string = '',
         public metrics: string[] = [], // TODO add to add-model form
-        public epochs: number = 5 // TODO add to add-model form
+        public epochs: number = 5, // TODO add to add-model form
+        public inputColNum:number=5,
+        public learningRate:number=0.01
     ) { }
 }
 

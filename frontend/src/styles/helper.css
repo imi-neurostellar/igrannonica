@@ -52,3 +52,26 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.btn-clear {
+    border: unset;
+    background-color: unset;
+    outline: unset;
+    position: relative;
+}
+
+.input-icon {
+    color: var(--offwhite);
+    transform: translateY(25%);
+}
+
+.input-icon:hover {
+    color: var(--ns-primary);
+}
+
+.f-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
