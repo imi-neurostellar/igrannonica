@@ -32,7 +32,7 @@ export class ExperimentComponent implements AfterViewInit {
 
     setInterval(() => {
       this.updatePageIfScrolled();
-    }, 200);
+    }, 100);
 
     this.stepsContainer.nativeElement.addEventListener('scroll', (event: Event) => {
       Shared.emitBGScrollEvent(this.stepsContainer.nativeElement.scrollTop);
@@ -63,7 +63,10 @@ export class ExperimentComponent implements AfterViewInit {
     this.updatePage(pageNum);
   }
 
+  scrollTimeout: any;
+
   updatePage(pageNum: number) {
+    this.scrolling = true;
     this.event = pageNum;
     let scrollAmount = 0;
     this.steps.forEach((step, index) => {
@@ -71,10 +74,10 @@ export class ExperimentComponent implements AfterViewInit {
         scrollAmount = step.nativeElement.offsetTop;
       }
     })
-    this.scrolling = true;
-    setTimeout(() => {
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
       this.scrolling = false;
-    }, 1000);
+    }, 800);
     this.stepsContainer.nativeElement.scroll({
       top: scrollAmount,
       behavior: 'smooth' //auto, smooth, initial, inherit
