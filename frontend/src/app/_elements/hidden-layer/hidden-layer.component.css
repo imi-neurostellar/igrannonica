@@ -1,5 +1,17 @@
 .container{
-    max-width: 15rem;
+  
+    text-align: justify;
     border: 1px solid white;
     border-radius: 5px;
+    padding: 0;
+    color: white!important;
+    background-color: var(--ns-bg-dark-100) !important;
+   
+}
+mat-form-field{
+    font-size: 10px;
+}
+input{
+    background-color: #004165;
+    color: aliceblue;
 }

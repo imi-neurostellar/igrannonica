@@ -22,6 +22,13 @@ export class FormModelComponent implements OnInit {
   }
   selectFormControl = new FormControl('', Validators.required);
   nameFormControl = new FormControl('', [Validators.required, Validators.email]);
+  selectTypeFormControl=new FormControl('', Validators.required);
+  selectOptFormControl=new FormControl('', Validators.required);
+  selectLFFormControl=new FormControl('', Validators.required);
+  selectLRFormControl=new FormControl('', Validators.required);
+  selectEpochFormControl=new FormControl('', Validators.required);
+  selectAFFormControl=new FormControl('', Validators.required);
+  selectBSFormControl=new FormControl('', Validators.required);
 
   newModel: Model = new Model();
   myModels?: Model[];
@@ -41,10 +48,33 @@ export class FormModelComponent implements OnInit {
   lossFunction: any = LossFunction;
 
   showMyModels: boolean = true;
-
+  
   batchSizePower: number = 2;
+
+
 
   updateGraph() {
     this.graph.update();
+  }
+  removeLayer(){
+    if(this.newModel.hiddenLayers>0)
+    {
+      this.newModel.hiddenLayers-=1;
+    }
+    else
+    {
+      this.newModel.hiddenLayers=this.newModel.hiddenLayers;
+    }
+    
+  }
+  addLayer(){
+    if(this.newModel.hiddenLayers<12)
+    {
+      this.newModel.hiddenLayers+=1;
+    }
+    else
+    {
+      this.newModel.hiddenLayers=this.newModel.hiddenLayers;
+    }
   }
 }
