@@ -4,7 +4,7 @@ import Model from '../_data/Model';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 import Dataset from '../_data/Dataset';
-import { Configuration } from '../configuration.service';
+import { Configuration } from '../_services/configuration.service';
 
 @Injectable({
   providedIn: 'root'

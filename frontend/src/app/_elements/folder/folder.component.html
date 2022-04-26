@@ -43,7 +43,8 @@
                 </a>
             </div>
         </div>
-        {{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}
+        <!--        {{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
+        <app-form-dataset></app-form-dataset>
     </div>
     <div id="footer" [ngSwitch]="newFileSelected">
         <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" *ngSwitchCase="true">
