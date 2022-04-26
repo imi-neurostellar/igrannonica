@@ -102,3 +102,31 @@
         </tr>
     </tbody>
 </table>
+
+<div class="container text-offwhite belowColumn">
+    <div class="row " >
+        <div class="col-sm slider">
+            Trening<mat-slider thumbLabel min="10" max="90" step="10" value="50"></mat-slider>Test
+        </div>
+        <div class="col-sm d-flex">
+            <mat-form-field appearance="fill" style="width: 270px;">
+                <mat-label>Tip problema</mat-label>
+                <mat-select value="ToDo1">
+                    <mat-option value="ToDo1">Regresioni</mat-option>
+                    <mat-option value="ToDo2">Binarni-Klasifikacioni</mat-option>
+                    <mat-option value="ToDo3">Multi-Klasifikacioni</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-sm d-flex">
+            <mat-form-field appearance="fill" >
+                <mat-label>Izlazna kolona</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let item of dataset?.columnInfo" [value]="item.columnName">{{item.columnName}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+    </div>
+
+</div>

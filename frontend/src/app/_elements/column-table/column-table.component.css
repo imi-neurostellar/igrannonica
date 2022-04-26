@@ -3,3 +3,12 @@ table {
     overflow-x: auto;
     white-space: nowrap;
 }
+mat-slider{
+    width: 300px;
+}
+.belowColumn{
+    background-color: var(--ns-bg-dark-50);
+}
+.slider{
+    background-color: var(--ns-bg-dark-100);
+}
