@@ -12,8 +12,10 @@ mat-form-field{
     padding: 0;
 }
 hr{
-    color: var(--offwhite) !important;
-    margin-bottom: 30px;;
+    color:var(--ns-primary) 100%;
+    margin-bottom: 30px;
+    height: 2px;
+
 }
 .row{
     margin: 0;
@@ -29,7 +31,7 @@ mat-icon{
 .neuron{
   
     text-align: justify;
-    border: 1px solid white;
+    border: 1px solid  var(--ns-primary);
     border-radius: 5px;
     padding: 0;
     color: white!important;
@@ -39,7 +41,7 @@ mat-icon{
    
 }
 mat-form-field{
-    font-size: 12px;
+    font-size: 15px;
 }
 col-1{
     text-align: center;

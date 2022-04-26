@@ -2,7 +2,7 @@ import { Component, OnInit ,Input, ViewChild, Output, EventEmitter} from '@angul
 import {FormControl, Validators} from '@angular/forms';
 import Shared from 'src/app/Shared';
 import Experiment from 'src/app/_data/Experiment';
-import Model, {Layer, ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
+import Model, {Layer, ActivationFunction, LossFunction,LearningRate, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType ,Regularisation,RegularisationRate} from 'src/app/_data/Model';
 import { GraphComponent } from '../graph/graph.component';
 import {FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
@@ -35,19 +35,25 @@ export class FormModelComponent implements OnInit {
   selectActivationFormControl = new FormControl('', Validators.required);
   selectRegularisationFormControl = new FormControl('', Validators.required);
   selectRRateFormControl = new FormControl('', Validators.required);
+
   newModel: Model = new Model();
   myModels?: Model[];
+
   selectedModel?: Model;
 
   ProblemType = ProblemType;
   ActivationFunction = ActivationFunction;
+  RegularisationRate=RegularisationRate;
+  Regularisation=Regularisation;
   metrics: any = Metrics;
   LossFunction = LossFunction;
   Optimizer = Optimizer;
   Object = Object;
   document = document;
   shared = Shared;
-
+  LearningRate=LearningRate;
+  Layer=Layer;
+  
   term: string = "";
   selectedMetrics = [];
   lossFunction: any = LossFunction;
