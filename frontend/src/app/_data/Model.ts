@@ -21,7 +21,7 @@ export default class Model {
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5, // TODO add to add-model form
         public inputColNum:number=5,
-        public learningRate:number=0.01,
+        public learningRate:LearningRate=LearningRate.LR1,
         public layers:Layer[]=[new Layer()]
 
     ) { }
@@ -32,15 +32,40 @@ export class Layer{
         public activationFunction:ActivationFunction=ActivationFunction.Sigmoid,
         public neurons:number=1,
         public regularisation:Regularisation=Regularisation.L1,
-        public regularisationRate:number=0.01
+        public regularisationRate:RegularisationRate=RegularisationRate.RR1,
 
     )
     {}   
     
 }
+export enum LearningRate{
+    LR1='0.00001',
+    LR2='0.0001',
+    LR3='0.001',
+    LR4='0.003',
+    LR5='0.01',
+    LR6='0.03',
+    LR7='0.1',
+    LR8='0.3',
+    LR9='1',
+    LR10='3',
+    LR11='10',
+}
 export enum Regularisation{
     L1='l1',
     L2='l2'
+}
+export enum RegularisationRate{
+    RR1='0',
+    RR2='0.001',
+    RR3='0.003',
+    RR4='0.01',
+    RR5='0.03',
+    RR6='0.1',
+    RR7='0.3',
+    RR8='1',
+    RR9='3',
+    RR10='10',
 }
 export enum ProblemType {
     Regression = 'regresioni',

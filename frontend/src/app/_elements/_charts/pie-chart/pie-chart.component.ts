@@ -8,7 +8,7 @@ import {Chart} from 'chart.js';
 })
 export class PieChartComponent implements AfterViewInit {
 
-  @Input()width: number = 800;
+  @Input()width: number = 600;
   @Input()height: number = 450;
   
   @ViewChild('piechart') chartRef!: ElementRef;
@@ -25,12 +25,17 @@ export class PieChartComponent implements AfterViewInit {
         data: [2478,5267,734,784,433]
       }]
     },
-    /*options: {
-      title: {
+    options: {
+      /*title: {
         display: true,
         text: 'Predicted world population (millions) in 2050'
-      }
-    }*/
+      }*/
+      plugins:{   
+        legend: {
+          display: false
+                },
+             }
+    }
 });
 
   }
