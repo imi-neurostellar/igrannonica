@@ -1,5 +1,31 @@
-table {
+table.fixed {
+    table-layout: fixed;
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+}
+
+table.fixed td {
+    overflow: hidden;
+    max-width: 200px;
+    vertical-align: middle;
+}
+
+table.fixed th {
+    overflow: hidden;
+    max-width: 350px;
+    vertical-align: middle;
+}
+
+table.fixed th:first-child {
+    text-align: center;
+    background-color: var(--ns-primary-25);
+}
+
+.columnNames {
+    background-color: var(--ns-primary-50) !important;
+}
+
+.brighter {
+    background-color: var(--ns-primary) !important;
 }

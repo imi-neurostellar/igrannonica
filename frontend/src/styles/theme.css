@@ -1,5 +1,7 @@
 :root {
     --ns-primary: #0063AB;
+    --ns-primary-25: rgba(0, 99, 171, 0.25);
+    --ns-primary-50: rgba(0, 99, 171, 0.5);
     --ns-accent: #00a8e8;
     --ns-bg: #003459;
     --ns-bg-light-30: rgba(0, 152, 189, 0.3);

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChildren } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import Experiment, { ColumnEncoding, Encoding, NullValReplacer, NullValueOptions } from 'src/app/_data/Experiment';
 import { DatasetsService } from 'src/app/_services/datasets.service';
@@ -13,17 +13,22 @@ import { MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
   templateUrl: './column-table.component.html',
   styleUrls: ['./column-table.component.css']
 })
-export class ColumnTableComponent implements OnInit {
+export class ColumnTableComponent implements AfterViewInit {
 
   @Input() dataset?: Dataset;
   @Input() experiment?: Experiment;
+  @ViewChildren("nullValMenu") nullValMenus!: ElementRef[];
 
   Object = Object;
   Encoding = Encoding;
   NullValueOptions = NullValueOptions;
+  tableData?: any[][];
 
   constructor(private datasetService: DatasetsService, public dialog: MatDialog) { 
     //ovo mi nece trebati jer primam dataset iz druge komponente
+  }
+
+  ngAfterViewInit(): void {
     this.datasetService.getMyDatasets().subscribe((datasets) => {
       this.dataset = datasets[0];
       //console.log(this.dataset);
@@ -32,10 +37,36 @@ export class ColumnTableComponent implements OnInit {
         this.experiment?.inputColumns.push(this.dataset.columnInfo[i].columnName);
       }
       this.resetColumnEncodings(Encoding.Label);
+      this.setDeleteColumnsForMissingValTreatment();
+
+      /*this.tableData = this.datasetService.getDatasetFile(this.dataset._id).subscribe((file: string | undefined) => {
+        if (file) {
+          //this.tableData = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
+        }
+      });*/
     });
   }
 
-  ngOnInit(): void {
+  setDeleteColumnsForMissingValTreatment() {
+    console.log("USAOOOO");
+    if (this.experiment != undefined) {
+      this.experiment.nullValues = NullValueOptions.DeleteColumns;
+      this.experiment.nullValuesReplacers = [];
+      console.log("duzina",this.experiment.inputColumns.length);
+      for (let i = 0; i < this.experiment.inputColumns.length; i++) {
+        this.experiment.nullValuesReplacers.push({
+          column: this.experiment.inputColumns[i],
+          option: NullValueOptions.DeleteColumns,
+          value: ""
+        });
+        console.log(i);
+      }
+      //console.log("len",this.nullValMenus.length);
+      this.nullValMenus.forEach((menu) => {
+        //console.log(menu.nativeElement);
+        menu.nativeElement.textContent = "Obriši kolonu";
+      });
+    }
   }
 
   changeInputColumns(targetMatCheckbox: MatCheckboxChange, columnName: string) {
@@ -49,6 +80,8 @@ export class ColumnTableComponent implements OnInit {
         this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != columnName);
         //console.log("Input columns: ", this.experiment.inputColumns);
         //TODO: da se zatamni kolona koja je unchecked
+        //this.experiment.encodings = this.experiment.encodings.filter(x => x.columnName != columnName); samo na kraju iz enkodinga skloni necekirane
+        this.experiment.nullValuesReplacers = this.experiment.nullValuesReplacers.filter(x => x.column != columnName);
       }
     }
   }
@@ -84,6 +117,7 @@ export class ColumnTableComponent implements OnInit {
             option: NullValueOptions.DeleteColumns,
             value: ""
           });
+          (<HTMLInputElement>document.getElementById("main_" + this.experiment.inputColumns[i])).textContent = "Obriši kolonu";
         }
       } 
       else if (selectedMissingValuesOption == NullValueOptions.DeleteRows) {
@@ -95,9 +129,9 @@ export class ColumnTableComponent implements OnInit {
             option: NullValueOptions.DeleteRows,
             value: ""
           });
+          (<HTMLInputElement>document.getElementById("main_" + this.experiment.inputColumns[i])).textContent = "Obriši redove";
         }
       }
-
     }
   }
   openMissingValuesDialog() {
@@ -157,4 +191,4 @@ export class ColumnTableComponent implements OnInit {
     return '0';
   }
 
-}
+} 

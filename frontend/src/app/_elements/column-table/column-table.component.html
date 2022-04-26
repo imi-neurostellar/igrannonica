@@ -1,8 +1,8 @@
-<table *ngIf="dataset && experiment" class="table text-offwhite">
+<table *ngIf="dataset && experiment" class="table text-offwhite fixed">
     <thead>
         <tr>
             <th>Naziv</th>
-            <th *ngFor="let colInfo of dataset.columnInfo; let i = index">
+            <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index">
                 #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
                 <mat-checkbox checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
             </th>
@@ -29,7 +29,7 @@
             </td>
         </tr>
         <tr>
-            <th>Statistika</th>
+            <th class="brighter">Statistika</th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
                 <span *ngIf="colInfo.isNumber">
                     Mean: {{colInfo.mean}}<br>
@@ -49,7 +49,7 @@
             </td>
         </tr>
         <tr>
-            <th (click)="openEncodingDialog()">Enkoding&nbsp;
+            <th class="brighter" (click)="openEncodingDialog()">Enkoding&nbsp;
                 <span class="material-icons-round">settings</span>
             </th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
@@ -63,12 +63,14 @@
             </td>
         </tr>
         <tr>
-            <th (click)="openMissingValuesDialog()">Regulisanje nedostajućih vrednosti&nbsp;
+            <th class="brighter" (click)="openMissingValuesDialog()">Regulisanje<br>nedostajućih<br>vrednosti<br>
                 <span class="material-icons-round">settings</span>
             </th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
 
-                <button mat-button [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}">Prikaži opcije</button>
+                <button mat-button [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}" #nullValMenu>
+                    Prikaži opcije<span class="material-icons">arrow_drop_down</span>
+                </button>
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteColumns)" value={{colInfo.columnName}}>Obriši kolonu</button>
                     <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteRows)" value={{colInfo.columnName}}>Obriši redove</button>
@@ -95,6 +97,13 @@
                     <button [disabled]="getValue(colInfo.columnName) == ''" mat-menu-item value={{getValue(colInfo.columnName)}} (click)="MissValsReplaceClicked($event, colInfo.columnName)">Potvrdi unos</button>
                 </mat-menu>
 
+            </td>
+        </tr>
+        <tr *ngFor="let element of [1, 2]; let i = index">
+            <th *ngIf="i == 0" rowspan="2">Vrednosti</th>
+
+            <td *ngFor="let colInfo of dataset.columnInfo; let j = index">
+                <!--<app-datatable [data]=""></app-datatable>-->ok
             </td>
         </tr>
     </tbody>
