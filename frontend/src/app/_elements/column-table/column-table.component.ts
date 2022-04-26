@@ -8,6 +8,7 @@ import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dial
 import { MatSliderChange } from '@angular/material/slider';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { CsvParseService } from 'src/app/_services/csv-parse.service';
 
 @Component({
   selector: 'app-column-table',
@@ -24,9 +25,10 @@ export class ColumnTableComponent implements AfterViewInit {
   Encoding = Encoding;
   NullValueOptions = NullValueOptions;
   tableData?: any[][];
+  nesto = 10;
 
   testSetDistribution:number=70;
-  constructor(private datasetService: DatasetsService, public dialog: MatDialog) { 
+  constructor(private datasetService: DatasetsService, public csvParseService: CsvParseService, public dialog: MatDialog) { 
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
 
@@ -41,11 +43,17 @@ export class ColumnTableComponent implements AfterViewInit {
       this.resetColumnEncodings(Encoding.Label);
       this.setDeleteColumnsForMissingValTreatment();
 
-      /*this.tableData = this.datasetService.getDatasetFile(this.dataset._id).subscribe((file: string | undefined) => {
+      /*this.datasetService.getDatasetFile(this.dataset._id).subscribe((file: string | undefined) => {
         if (file) {
           //this.tableData = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
         }
       });*/
+      this.datasetService.getDatasetFilePartial(this.dataset.fileId, 0, 10).subscribe((response: string | undefined) => {
+        if (response && this.dataset != undefined) {
+          this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter);
+          console.log(this.tableData);
+        }
+      });
     });
   }
 
