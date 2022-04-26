@@ -5,6 +5,7 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
 import { EncodingDialogComponent } from 'src/app/_modals/encoding-dialog/encoding-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dialog/missingvalues-dialog.component';
+import { MatSliderChange } from '@angular/material/slider';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
@@ -24,6 +25,7 @@ export class ColumnTableComponent implements AfterViewInit {
   NullValueOptions = NullValueOptions;
   tableData?: any[][];
 
+  testSetDistribution:number=70;
   constructor(private datasetService: DatasetsService, public dialog: MatDialog) { 
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
@@ -143,6 +145,10 @@ export class ColumnTableComponent implements AfterViewInit {
         this.resetMissingValuesTreatment(selectedMissingValuesOption);
     });
   }
+  updateTestSet(event:MatSliderChange){
+    this.testSetDistribution=event.value!;
+  }
+
 
   MissValsDeleteClicked(event: Event, replacementType: NullValueOptions) {
     if (this.experiment != undefined) {

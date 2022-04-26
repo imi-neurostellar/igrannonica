@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {Chart} from 'node_modules/chart.js';
 
 @Component({
@@ -8,6 +8,9 @@ import {Chart} from 'node_modules/chart.js';
 })
 export class DoughnutChartComponent implements AfterViewInit {
 
+  @Input()width: number = 800;
+  @Input()height: number = 450;
+  
   @ViewChild('doughnut') chartRef!: ElementRef;
   constructor() { }
 

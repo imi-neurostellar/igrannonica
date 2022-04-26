@@ -1,1 +1,75 @@
-<p>form-dataset works!</p>
+<div class="folderBox">
+        
+    <div >
+        <mat-icon class="icon-display">upload</mat-icon>
+    </div>
+    <!--
+
+    <div class="px-5 mt-5">
+        <app-datatable [tableData]="tableData"></app-datatable>
+    </div>
+    -->
+
+    
+    <div class="bottomBar">
+        <div class="row">
+          <div class="col-sm">
+            <div  role="group">
+                <div class="row">
+                    <mat-form-field class="example-full-width" appearance="fill">
+                      <mat-label>Naziv</mat-label>
+                      <input type="text" matInput value="titanik.csv"  ><!--[formControl]="nameFormControl"-->
+                      
+                      <mat-error *ngIf="nameFormControl.hasError('required')">
+                        Naziv je <strong>obavezan</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+            </div>
+          </div>
+          <div class="col-sm mb-3">
+            
+            <input id="fileInput" class="form-control btn-lg" type="file" class="upload" (change)="changeListener($event)" accept=".csv">
+        
+          </div>
+          <div class="col-sm">
+              
+            <mat-form-field appearance="fill">
+                <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (change)="update()">
+                    <mat-option *ngFor="let option of delimiterOptions">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+          </div>
+          
+          <div class="col-sm">
+
+            <input type="checkbox" class="btn-check" id="checkboxAccessibleByLink" 
+                 [(ngModel)]="dataset.accessibleByLink" value="">
+            <label class="btn btn-outline-primary" for="checkboxAccessibleByLink">
+                <mat-icon>link</mat-icon>
+            </label>
+
+          </div>
+          <div class="col-sm">
+            <button mat-button id="bottomButton">
+                <mat-icon>zoom_in</mat-icon>
+            </button>
+        </div>
+        </div>
+      </div>
+
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+        
+    
+
+    </div>
+
+
+<!--
+    <div class="d-flex flex-row align-items-center justify-content-center w-100 my-2">
+        <button (click)="uploadDataset()" class="btn btn-lg col-4" style="background-color:#003459; color:white;">Dodaj izvor podataka</button>
+    </div>
+-->
+</div>

@@ -25,7 +25,9 @@
             <app-folder (okPressed)="goToPage(1)"></app-folder>
         </div>
         <div #steps id="step_2" class="step-content">
-            <div class="text-offwhite" style="height: 100px;width: 100px;background-color: red;top:50%;left: 50%;position: absolute;">Insert odabir kolona</div>
+            <div class="mx-3" style="overflow-x: auto;">
+            <app-column-table></app-column-table>
+        </div>
         </div>
         <div #steps id="step_3" class="step-content">
             

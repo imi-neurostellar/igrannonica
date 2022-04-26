@@ -14,19 +14,34 @@ export default class Model {
         public optimizer: Optimizer = Optimizer.Adam,
         public lossFunction: LossFunction = LossFunction.MeanSquaredError,
         public inputNeurons: number = 1,
-        public hiddenLayerNeurons: number=1,
         public hiddenLayers: number = 1,
         public batchSize: number = 5,
-        public hiddenLayerActivationFunctions: string[] = ['sigmoid'],
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public uploaderId: string = '',
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5, // TODO add to add-model form
         public inputColNum:number=5,
-        public learningRate:number=0.01
+        public learningRate:number=0.01,
+        public layers:Layer[]=[new Layer()]
+
     ) { }
 }
+export class Layer{
+    constructor(
+        public layerNumber:number=0,
+        public activationFunction:ActivationFunction=ActivationFunction.Sigmoid,
+        public neurons:number=1,
+        public regularisation:Regularisation=Regularisation.L1,
+        public regularisationRate:number=0.01
 
+    )
+    {}   
+    
+}
+export enum Regularisation{
+    L1='l1',
+    L2='l2'
+}
 export enum ProblemType {
     Regression = 'regresioni',
     BinaryClassification = 'binarni-klasifikacioni',

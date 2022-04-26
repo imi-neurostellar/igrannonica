@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
-import Model from 'src/app/_data/Model';
+import Model,{Layer} from 'src/app/_data/Model';
 
 @Component({
   selector: 'app-graph',
@@ -26,6 +26,7 @@ export class GraphComponent implements AfterViewInit {
   @Input() outputNodeColor: string = '#44ee22';
 
   private ctx?: CanvasRenderingContext2D;
+  @Input() inputNeurons: number=1;
 
   constructor() { }
 
@@ -50,7 +51,7 @@ export class GraphComponent implements AfterViewInit {
     let inputNodeIndex = 0;
     const inputLayer: Node[] = [];
     while (inputNodeIndex < this.inputCols) {
-      const x = 0.5 / (this.model!.hiddenLayers + 2);
+      const x = 0.5 / (this.inputNeurons + 2);
       const y = (inputNodeIndex + 0.5) / this.inputCols;
       const node = new Node(x, y, this.inputNodeColor);
       inputLayer.push(node);
@@ -62,9 +63,9 @@ export class GraphComponent implements AfterViewInit {
     while (layerIndex < this.model!.hiddenLayers + 1) {
       const newLayer: Node[] = [];
       let nodeIndex = 0;
-      while (nodeIndex < this.model!.hiddenLayerNeurons) {
+      while (nodeIndex < this.model!.layers[layerIndex].neurons) {
         const x = (layerIndex + 0.5) / (this.model!.hiddenLayers + 2);
-        const y = (nodeIndex + 0.5) / this.model!.hiddenLayerNeurons;
+        const y = (nodeIndex + 0.5) / this.model!.layers[layerIndex].neurons;
         const node = new Node(x, y, this.nodeColor);
         newLayer.push(node);
         nodeIndex += 1;

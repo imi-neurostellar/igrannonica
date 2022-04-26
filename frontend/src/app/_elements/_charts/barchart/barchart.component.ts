@@ -8,6 +8,7 @@ import {Chart} from 'node_modules/chart.js';
 })
 export class BarchartComponent implements OnInit {
 
+  
   constructor() { }
 
     ngOnInit(){

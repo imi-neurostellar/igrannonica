@@ -29,3 +29,15 @@ table.fixed th:first-child {
 .brighter {
     background-color: var(--ns-primary) !important;
 }
+
+mat-slider {
+    width: 300px;
+}
+
+.belowColumn {
+    background-color: var(--ns-bg-dark-50);
+}
+
+.slider {
+    background-color: var(--ns-bg-dark-100);
+}

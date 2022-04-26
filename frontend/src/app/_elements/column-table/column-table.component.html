@@ -23,9 +23,9 @@
         <tr>
             <th>Grafik</th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                <!--<app-box-plot *ngIf="colInfo.isNumber"></app-box-plot>-->
-                <!--TODO: dodati [data]-->
-                <!--<app-pie-chart *ngIf="!colInfo.isNumber"></app-pie-chart>-->
+                <!-- <app-box-plot *ngIf="colInfo.isNumber"></app-box-plot>
+                TODO: dodati [data]
+                <app-pie-chart *ngIf="!colInfo.isNumber"></app-pie-chart> -->
             </td>
         </tr>
         <tr>
@@ -108,3 +108,34 @@
         </tr>
     </tbody>
 </table>
+
+<div class="container text-offwhite belowColumn">
+    <div class="row " >
+        <div class="col-sm slider rounded">
+            <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
+            <div class="text-center pt-0 mt-0">Trening<mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>Test</div>
+            
+        </div>
+        
+        <div class="col-sm-3 d-flex pt-3">
+            <mat-form-field appearance="fill" style="width: 270px;">
+                <mat-label>Tip problema</mat-label>
+                <mat-select value="ToDo1">
+                    <mat-option value="ToDo1">Regresioni</mat-option>
+                    <mat-option value="ToDo2">Binarni-Klasifikacioni</mat-option>
+                    <mat-option value="ToDo3">Multi-Klasifikacioni</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 d-flex pt-3">
+            <mat-form-field appearance="fill" >
+                <mat-label>Izlazna kolona</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let item of dataset?.columnInfo" [value]="item.columnName">{{item.columnName}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+    </div>
+
+</div>
