@@ -2,7 +2,7 @@ import { Component, OnInit ,Input, ViewChild, Output, EventEmitter} from '@angul
 import {FormControl, Validators} from '@angular/forms';
 import Shared from 'src/app/Shared';
 import Experiment from 'src/app/_data/Experiment';
-import Model, { ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
+import Model, {Layer, ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
 import { GraphComponent } from '../graph/graph.component';
 import {FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
@@ -65,26 +65,20 @@ export class FormModelComponent implements OnInit {
   removeLayer(){
     if(this.newModel.hiddenLayers>1)
     {
+      this.newModel.layers.splice(this.newModel.layers.length-1,1);
       this.newModel.hiddenLayers-=1;
       this.updateGraph();
     }
-    else
-    {
-      this.newModel.hiddenLayers=this.newModel.hiddenLayers;
-    }
-    
   }
   addLayer(){
     if(this.newModel.hiddenLayers<12)
     {
+      this.newModel.layers.push(new Layer(this.newModel.layers.length));
+
       this.newModel.hiddenLayers+=1;
       this.updateGraph();
     }
-    else
-    {
-      this.newModel.hiddenLayers=this.newModel.hiddenLayers;
-      
-    }
+  
   }
   removeBatch(){
     if(this.newModel.batchSize>1)
@@ -140,28 +134,19 @@ export class FormModelComponent implements OnInit {
   numSequence(n: number): Array<number> {
     return Array(n);
   }
-  removeNeuron(){
-    if(this.newModel.hiddenLayerNeurons>1)
+  
+  removeNeuron(index:number){
+    if(this.newModel.layers[index].neurons>1)
     {
-      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons-1;
+      this.newModel.layers[index].neurons-=1;
       this.updateGraph();
     }
-    else
-    {
-      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons;
-    }
-    
   }
-  addNeuron(){
-    if(this.newModel.hiddenLayerNeurons<100)
+  addNeuron(index:number){
+    if(this.newModel.layers[index].neurons<100)
     {
-      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons+1;
+      this.newModel.layers[index].neurons+=1;
       this.updateGraph();
-    }
-    else
-    {
-      this.newModel.hiddenLayerNeurons=this.newModel.hiddenLayerNeurons;
-      
     }
   }
 }

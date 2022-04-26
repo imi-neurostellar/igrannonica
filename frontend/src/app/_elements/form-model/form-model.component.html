@@ -126,7 +126,7 @@
   <hr>
   <div class="row" style="max-width:60rem ;">
 
-      <div class="col text-center" *ngFor="let item of numSequence(newModel.hiddenLayers)" >
+      <div class="col text-center" *ngFor="let item of numSequence(newModel.hiddenLayers); let i=index" >
         {{item}}
         <div class="neuron">
           <div style="text-align: center;">
@@ -147,9 +147,9 @@
             </div>
         <div class="row" >
                 <div class="col-6" style="font-size: 13px;" >Broj čvorova</div>
-                <mat-icon (click)="addNeuron()">add_circle</mat-icon>
-                <div class="col-1">{{newModel.hiddenLayerNeurons}}</div>
-                <mat-icon (click)="removeNeuron()">remove_circle</mat-icon>
+                <mat-icon (click)="addNeuron(i)">add_circle</mat-icon>
+                <div class="col-1">{{newModel.layers[i].neurons}}</div>
+                <mat-icon (click)="removeNeuron(i)">remove_circle</mat-icon>
           
         </div>
               <div class='row' style="margin-bottom: -7px;">
