@@ -4,7 +4,7 @@
             <th>Naziv</th>
             <th *ngFor="let colInfo of dataset.columnInfo; let i = index">
                 #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
-                <input type="checkbox" class="btn-primary" checked (click)="changeInputColumns($event, colInfo.columnName)">
+                <mat-checkbox checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
             </th>
         </tr>
     </thead>
@@ -13,19 +13,19 @@
             <th>Tip</th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
                 <mat-form-field>
-                    <select matNativeControl class="form-control btn-primary" (change)="changeColumnType($event, i)">
-                        <option [selected]="!colInfo.isNumber" value="Kategorijski">Kategorijski</option>
-                        <option [selected]="colInfo.isNumber" value="Numerički">Numerički</option>
-                    </select>
+                    <mat-select matNativeControl [(value)]="colInfo.isNumber">
+                        <mat-option [value]="false">Kategorijski</mat-option>
+                        <mat-option [value]="true">Numerički</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </td>
         </tr>
         <tr>
             <th>Grafik</th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                <app-box-plot *ngIf="colInfo.isNumber"></app-box-plot>
+                <!--<app-box-plot *ngIf="colInfo.isNumber"></app-box-plot>-->
                 <!--TODO: dodati [data]-->
-                <app-pie-chart *ngIf="!colInfo.isNumber"></app-pie-chart>
+                <!--<app-pie-chart *ngIf="!colInfo.isNumber"></app-pie-chart>-->
             </td>
         </tr>
         <tr>
@@ -42,7 +42,7 @@
                     -->
                 </span>
                 <span *ngIf="!colInfo.isNumber">
-                    <span *ngFor="let uniqueValue of colInfo.uniqueValues | slice:0:5; let i = index">
+                    <span *ngFor="let uniqueValue of colInfo.uniqueValues | slice:0:6; let i = index">
                         {{uniqueValue}}<br><!-- TODO na ML-u: broj ponavljanja unique values-a u zagradi nek pise -->
                     </span>
                 </span>
@@ -54,13 +54,11 @@
             </th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
                 <mat-form-field>
-                    <select matNativeControl class="form-control btn-primary" [(ngModel)]="experiment.encodings[i].encoding">
-                        <option
-                            *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)"
-                            [value]="option">
+                    <mat-select matNativeControl [(value)]="experiment.encodings[i].encoding">
+                        <mat-option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)" [value]="option">
                             {{ optionName }}
-                        </option>
-                    </select>
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </td>
         </tr>
@@ -69,35 +67,34 @@
                 <span class="material-icons-round">settings</span>
             </th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                <!--
-                <mat-form-field appearance="fill">
-                    <mat-select matNativeControl>
-                        <mat-option [value]="NullValueOptions.DeleteColumns">Obriši kolonu</mat-option>
-                        <mat-option [value]="NullValueOptions.DeleteRows">Obriši redove</mat-option>
-                        <mat-option>Popuni sa _____
-                            <mat-select matNativeControl>
-                                <mat-option>a</mat-option>
-                                <mat-option>b</mat-option>
-                                <mat-option>c</mat-option>
-                            </mat-select>
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            -->
-                <button mat-button [matMenuTriggerFor]="animals">Izabrana opcija</button>
-                <mat-menu #animals="matMenu">
-                    <button mat-menu-item>Obriši kolonu</button>
-                    <button mat-menu-item>Obriši redove</button>
+
+                <button mat-button [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}">Prikaži opcije</button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteColumns)" value={{colInfo.columnName}}>Obriši kolonu</button>
+                    <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteRows)" value={{colInfo.columnName}}>Obriši redove</button>
                     <button mat-menu-item [matMenuTriggerFor]="fillWith">Popuni sa ____</button>
                 </mat-menu>
 
                 <mat-menu #fillWith="matMenu">
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.mean}}>Mean ({{colInfo.mean}})</button>
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.median}}>Median ({{colInfo.median}})</button>
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.max}}>Max ({{colInfo.max}})</button>
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.min}}>Min ({{colInfo.min}})</button>
+
+                    <button *ngIf="!colInfo.isNumber" mat-menu-item [matMenuTriggerFor]="uniques">Najčešće vrednosti</button>
+
                     <button mat-menu-item [matMenuTriggerFor]="replaceWith">Unesi vrednost...</button>
                 </mat-menu>
 
-                <mat-menu #replaceWith="matMenu">
-                    <input type="text" mat-menu-item placeholder="Unesi vrednost...">
+                <mat-menu #uniques="matMenu">
+                    <button mat-menu-item *ngFor="let uniqueValue of colInfo.uniqueValues" (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{uniqueValue}}>{{uniqueValue}}</button>
                 </mat-menu>
+
+                <mat-menu #replaceWith="matMenu">
+                    <input type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value]>
+                    <button [disabled]="getValue(colInfo.columnName) == ''" mat-menu-item value={{getValue(colInfo.columnName)}} (click)="MissValsReplaceClicked($event, colInfo.columnName)">Potvrdi unos</button>
+                </mat-menu>
+
             </td>
         </tr>
     </tbody>

@@ -1,13 +1,13 @@
 <h1 mat-dialog-title>Enkodiranje svih kolona</h1>
 <div mat-dialog-content>
     <p>Odaberite tip enkodinga za sve kolone zajedno:</p>
-    <select matNativeControl class="form-control btn-primary" [(ngModel)]="selectedEncodingType">
-        <option
-            *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)"
-            [value]="option">
-            {{ optionName }}
-        </option>
-    </select>
+    <mat-form-field>
+        <mat-select matNativeControl [(value)]="selectedEncodingType">
+            <mat-option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)" [value]="option">
+                {{ optionName }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <p>Da li ste sigurni u izbor?</p>
 </div>
 <div mat-dialog-actions>
