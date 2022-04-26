@@ -6,6 +6,8 @@ import { EncodingDialogComponent } from 'src/app/_modals/encoding-dialog/encodin
 import { MatDialog } from '@angular/material/dialog';
 import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dialog/missingvalues-dialog.component';
 import { MatSliderChange } from '@angular/material/slider';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-column-table',
@@ -37,9 +39,9 @@ export class ColumnTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  changeInputColumns(target: any, columnName: string) {
+  changeInputColumns(targetMatCheckbox: MatCheckboxChange, columnName: string) {
     if (this.experiment != undefined) {
-      if (target.currentTarget.checked) {
+      if (targetMatCheckbox.checked) {
         if (this.experiment.inputColumns.filter(x => x == columnName)[0] == undefined) {
           this.experiment.inputColumns.push(columnName);
         }
@@ -48,17 +50,6 @@ export class ColumnTableComponent implements OnInit {
         this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != columnName);
         //console.log("Input columns: ", this.experiment.inputColumns);
         //TODO: da se zatamni kolona koja je unchecked
-      }
-    }
-  }
-
-  changeColumnType(target: any, indexOfCol: number) {
-    if (this.dataset != undefined) {
-      if (target.currentTarget.value == "Numerički") {
-        this.dataset.columnInfo[indexOfCol].isNumber = true;
-      }
-      else {
-        this.dataset.columnInfo[indexOfCol].isNumber = false;
       }
     }
   }
@@ -123,5 +114,52 @@ export class ColumnTableComponent implements OnInit {
     this.testSetDistribution=event.value!;
   }
 
+
+  MissValsDeleteClicked(event: Event, replacementType: NullValueOptions) {
+    if (this.experiment != undefined) {
+      let columnName = (<HTMLInputElement>event.currentTarget).value;
+      let arrayElement = this.experiment.nullValuesReplacers.filter(x => x.column == columnName)[0];
+
+      if (arrayElement == undefined) {
+        this.experiment.nullValuesReplacers.push({
+          column: columnName,
+          option: (replacementType == NullValueOptions.DeleteColumns) ? NullValueOptions.DeleteColumns : NullValueOptions.DeleteRows,
+          value: ""
+        });
+      }
+      else {
+        arrayElement.option = (replacementType == NullValueOptions.DeleteColumns) ? NullValueOptions.DeleteColumns : NullValueOptions.DeleteRows;
+        arrayElement.value = "";
+      }
+
+      (<HTMLInputElement>document.getElementById("main_" + columnName)).textContent = (replacementType == NullValueOptions.DeleteColumns) ? "Obriši kolonu" : "Obriši redove";
+    }
+  }
+
+  MissValsReplaceClicked(event: Event, columnName: string) {
+    if (this.experiment != undefined) {
+      let fillValue = (<HTMLInputElement>event.currentTarget).value;
+      let arrayElement = this.experiment.nullValuesReplacers.filter(x => x.column == columnName)[0];
+      
+      if (arrayElement == undefined) {
+        this.experiment.nullValuesReplacers.push({
+          column: columnName,
+          option: NullValueOptions.Replace,
+          value: fillValue
+        });
+      }
+      else {
+        arrayElement.option = NullValueOptions.Replace;
+        arrayElement.value = fillValue;
+      }
+
+      (<HTMLInputElement>document.getElementById("main_" + columnName)).textContent = "Popuni sa: " + fillValue;
+    }
+  }
+  getValue(columnName: string): string {
+    if (<HTMLInputElement>document.getElementById(columnName) != undefined)
+      return (<HTMLInputElement>document.getElementById(columnName)).value;
+    return '0';
+  }
 
 }
