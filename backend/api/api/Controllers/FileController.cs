@@ -115,6 +115,26 @@ namespace api.Controllers
                 return String.Join("\n", System.IO.File.ReadLines(filePath).Take(10));
         }
 
+        [HttpGet("csvread/{hasHeader}/{fileId}/{skipRows}/{takeRows}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<string> CsvRead(bool hasHeader, string fileId, int skipRows, int takeRows)
+        {
+
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            //String csvContent = System.IO.File.ReadAllText(fileModel.path);
+            string filePath = _fileservice.GetFilePath(fileId, uploaderId);
+
+
+
+            if (hasHeader)
+                return String.Join("\n", System.IO.File.ReadLines(filePath).Skip(skipRows+1).Take(takeRows));
+            else
+                return String.Join("\n", System.IO.File.ReadLines(filePath).Skip(skipRows).Take(takeRows));
+        }
 
 
         [HttpPost("Csv")]
