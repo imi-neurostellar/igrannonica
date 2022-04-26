@@ -19,7 +19,7 @@ export class ColumnTableComponent implements OnInit {
   Object = Object;
   Encoding = Encoding;
   NullValueOptions = NullValueOptions;
-
+  testSetDistribution:number=70;
   constructor(private datasetService: DatasetsService, public dialog: MatDialog) { 
     //ovo mi nece trebati jer primam dataset iz druge komponente
     this.datasetService.getMyDatasets().subscribe((datasets) => {

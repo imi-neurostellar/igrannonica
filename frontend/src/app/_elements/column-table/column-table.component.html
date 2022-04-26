@@ -105,10 +105,12 @@
 
 <div class="container text-offwhite belowColumn">
     <div class="row " >
-        <div class="col-sm slider">
-            Trening<mat-slider thumbLabel min="10" max="90" step="10" value="50"></mat-slider>Test
+        <div class="col-sm slider rounded">
+            <div class="text-center">Trening<mat-slider thumbLabel min="10" max="90" step="10" [(ngModel)]="testSetDistribution"></mat-slider>Test</div>
+            <div class="text-center">Trening:<b>{{testSetDistribution}}%</b> : Test:<b>{{100-testSetDistribution}}%</b></div>
         </div>
-        <div class="col-sm d-flex">
+        
+        <div class="col-sm-3 d-flex pt-3">
             <mat-form-field appearance="fill" style="width: 270px;">
                 <mat-label>Tip problema</mat-label>
                 <mat-select value="ToDo1">
@@ -118,7 +120,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="col-sm d-flex">
+        <div class="col-sm-3 d-flex pt-3">
             <mat-form-field appearance="fill" >
                 <mat-label>Izlazna kolona</mat-label>
                 <mat-select>
