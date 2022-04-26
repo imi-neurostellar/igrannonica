@@ -106,8 +106,9 @@
 <div class="container text-offwhite belowColumn">
     <div class="row " >
         <div class="col-sm slider rounded">
-            <div class="text-center">Trening<mat-slider thumbLabel min="10" max="90" step="10" [(ngModel)]="testSetDistribution"></mat-slider>Test</div>
-            <div class="text-center">Trening:<b>{{testSetDistribution}}%</b> : Test:<b>{{100-testSetDistribution}}%</b></div>
+            <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
+            <div class="text-center pt-0 mt-0">Trening<mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>Test</div>
+            
         </div>
         
         <div class="col-sm-3 d-flex pt-3">

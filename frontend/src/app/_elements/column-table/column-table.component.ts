@@ -5,6 +5,7 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
 import { EncodingDialogComponent } from 'src/app/_modals/encoding-dialog/encoding-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dialog/missingvalues-dialog.component';
+import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-column-table',
@@ -118,4 +119,9 @@ export class ColumnTableComponent implements OnInit {
         this.resetMissingValuesTreatment(selectedMissingValuesOption);
     });
   }
+  updateTestSet(event:MatSliderChange){
+    this.testSetDistribution=event.value!;
+  }
+
+
 }
