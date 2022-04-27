@@ -1,12 +1,18 @@
 <div class="folderBox">
 
-    <mat-icon class="icon-display">upload</mat-icon>
-    <!--
-
-    <div class="px-5 mt-5">
-        <app-datatable [tableData]="tableData"></app-datatable>
+    <div class="file-container">
+        <div class="px-5 mt-5 ">
+            <!--<app-datatable [tableData]="tableData"></app-datatable>-->
+        </div>
+        <i class="material-icons-outlined icon-display">file_upload</i>
+        <input type="file" class="file"  (change)="changeListener($event)" accept=".csv">
+        
+        
     </div>
-    -->
+    
+
+    
+    
 
     <div class="bottomBar">
         <div class="row">
