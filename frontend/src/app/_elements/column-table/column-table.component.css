@@ -31,13 +31,30 @@ table.fixed th:first-child {
 }
 
 mat-slider {
-    width: 300px;
+    width: 150px;
+    
 }
 
 .belowColumn {
-    background-color: var(--ns-bg-dark-50);
+    background-color: transparent;
 }
 
 .slider {
-    background-color: var(--ns-bg-dark-100);
+    background-color: var(--ns-bg-dark-50);
+}
+
+.bottom-button {
+    font-size: large;
+    position: relative;
+    background-color: var(--ns-primary);
+    width: 10rem;
+    height: 2.3rem;
+    border-color: var(--ns-primary);
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;
+}
+#footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }

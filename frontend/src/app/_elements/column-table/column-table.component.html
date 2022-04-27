@@ -111,34 +111,56 @@
     </tbody>
 </table>
 
-<div class="container text-offwhite belowColumn">
+<div class="container-fluid text-offwhite belowColumn">
     <div class="row ">
-        <div class="col-sm slider rounded">
-            <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
-            <div class="text-center pt-0 mt-0">Trening
-                <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>Test</div>
-
+        <div class="col-sm-3 slider rounded" style="border:1px solid var(--ns-primary)">
+            
+                <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
+                <div class="text-center pt-0 mt-0">Trening
+                <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
+                Test</div>
+            
+        </div>
+        <div class="col-sm-3 slider rounded" style="border:1px solid var(--ns-primary);margin-left: 10px;">
+            <div class="text-center text-offwhite justify-content-center align-items-center">
+                <mat-checkbox class="pt-4" color="accent" >Nasumicni redosled podataka</mat-checkbox>
+            </div>
         </div>
 
-        <div class="col-sm-3 d-flex pt-3">
-            <mat-form-field appearance="fill" style="width: 270px;">
-                <mat-label>Tip problema</mat-label>
-                <mat-select value="ToDo1">
-                    <mat-option value="ToDo1">Regresioni</mat-option>
-                    <mat-option value="ToDo2">Binarni-Klasifikacioni</mat-option>
-                    <mat-option value="ToDo3">Multi-Klasifikacioni</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="col-sm-2 rounded">
+            
+                <mat-form-field appearance="fill"  class="align-items-center justify-content-center pt-3 w-100">
+                    <mat-label>Tip problema</mat-label>
+                    <mat-select value="ToDo1">
+                        <mat-option value="ToDo1">Regresioni</mat-option>
+                        <mat-option value="ToDo2">Binarni-Klasifikacioni</mat-option>
+                        <mat-option value="ToDo3">Multi-Klasifikacioni</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            
         </div>
-        <div class="col-sm-3 d-flex pt-3">
-            <mat-form-field appearance="fill">
-                <mat-label>Izlazna kolona</mat-label>
-                <mat-select>
-                    <mat-option *ngFor="let item of dataset?.columnInfo" [value]="item.columnName">{{item.columnName}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="col-sm-2 rounded">
+            
+                <mat-form-field appearance="fill" class="align-items-center justify-content-center pt-3 w-100">
+                    <mat-label>Izlazna kolona</mat-label>
+                    <mat-select>
+                        <mat-option *ngFor="let item of dataset?.columnInfo" [value]="item.columnName">{{item.columnName}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+           
         </div>
-
+        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+            <button mat-button (click)="ok()" class="bottom-button text-offwhite rounded-bottom">
+                <div class="f-row" style="justify-content: space-around;">
+                    <div>Potvrdi</div>
+                    <div class="icon-double pt-1">
+                        <mat-icon>check</mat-icon>
+                        <mat-icon>check</mat-icon>
+                    </div>
+                </div>
+            </button>
+        </div>
     </div>
-
 </div>
+
+

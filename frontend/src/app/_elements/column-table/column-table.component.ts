@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import Experiment, { ColumnEncoding, Encoding, NullValReplacer, NullValueOptions } from 'src/app/_data/Experiment';
 import { DatasetsService } from 'src/app/_services/datasets.service';
@@ -20,7 +20,7 @@ export class ColumnTableComponent implements AfterViewInit {
   @Input() dataset?: Dataset;
   @Input() experiment?: Experiment;
   @ViewChildren("nullValMenu") nullValMenus!: ElementRef[];
-
+  @Output() okPressed: EventEmitter<string> = new EventEmitter();
   Object = Object;
   Encoding = Encoding;
   NullValueOptions = NullValueOptions;
@@ -204,5 +204,9 @@ export class ColumnTableComponent implements AfterViewInit {
       return (<HTMLInputElement>document.getElementById(columnName)).value;
     return '0';
   }
+  ok() {
+    this.okPressed.emit();
+  }
+
 
 } 
