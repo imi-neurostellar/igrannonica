@@ -4,8 +4,7 @@ import Shared from 'src/app/Shared';
 import Experiment from 'src/app/_data/Experiment';
 import Model, { Layer, ActivationFunction, LossFunction, LearningRate, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType, Regularisation, RegularisationRate, BatchSize } from 'src/app/_data/Model';
 import { GraphComponent } from '../graph/graph.component';
-import { FormGroupDirective, NgForm } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+
 
 @Component({
   selector: 'app-form-model',
@@ -104,4 +103,40 @@ export class FormModelComponent implements AfterViewInit {
       this.updateGraph();
     }
   }
+  selectedActivation: ActivationFunction = ActivationFunction.Sigmoid;
+  selectedRegularisationRate: RegularisationRate = RegularisationRate.RR1;
+  selectedRegularisation: Regularisation = Regularisation.L1;
+  selectedNumberOfNeurons:number=1;
+
+  changeAllActivation(){
+    for(let i=0;i<this.newModel.layers.length;i++)
+    {
+      this.newModel.layers[i].activationFunction=this.selectedActivation;
+      
+    }
+    
+  }
+  changeAllRegularisation(){
+    for(let i=0;i<this.newModel.layers.length;i++)
+    {
+      this.newModel.layers[i].regularisation=this.selectedRegularisation;
+    }
+  }
+  changeAllRegularisationRate(){
+
+    for(let i=0;i<this.newModel.layers.length;i++)
+    {
+      this.newModel.layers[i].regularisationRate=this.selectedRegularisationRate;
+    }
+  }
+  changeAllNumberOfNeurons(){
+    for(let i=0;i<this.newModel.layers.length;i++)
+    {
+      this.newModel.layers[i].neurons=this.selectedNumberOfNeurons;
+      this.updateGraph();
+    }
+  }
+  
+   
+  
 }

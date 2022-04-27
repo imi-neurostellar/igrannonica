@@ -21,7 +21,7 @@ mat-form-field {
 hr {
     color: var(--offwhite) !important;
     margin-bottom: 30px;
-    ;
+    
 }
 
 .neuron {
@@ -33,11 +33,9 @@ hr {
     background-color: var(--ns-bg-dark-100) !important;
     min-width: none;
     max-width: 12.5rem;
+
 }
 
-col-1 {
-    text-align: center;
-}
 
 .row {
     margin: 0;
@@ -70,11 +68,14 @@ col-1 {
     border: 1px solid var(--ns-primary);
     border-radius: 4px;
     margin: 5px;
-    padding: 3px;
+    padding: 0px;
     width: 12rem;
-    height: 13rem;
+    height: 13.5rem;
 }
 
 .layer>mat-form-field {
     margin-left: 0;
+}
+.m-2{
+    max-height: 20 rem;
 }
