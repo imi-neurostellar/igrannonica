@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { ModelsService } from 'src/app/_services/models.service';
@@ -29,9 +29,14 @@ export class FormDatasetComponent {
 
   tableData: TableData = new TableData();
 
+  @ViewChild('fileInput') fileInput! : ElementRef
+
+  filename: String;
+
   constructor(private modelsService: ModelsService, private datasetsService: DatasetsService, private csv: CsvParseService) {
     this.dataset = new Dataset();
     this.dataset.delimiter = ',';
+    this.filename = "";
   }
 
   //@ViewChild('fileImportInput', { static: false }) fileImportInput: any; cemu je ovo sluzilo?
@@ -45,6 +50,7 @@ export class FormDatasetComponent {
     else
       this.tableData.hasInput = true;
 
+    this.filename = this.files[0].name;
     this.tableData.loaded = false;
     this.update();
   }
