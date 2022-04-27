@@ -156,12 +156,15 @@
 <div id="layers">
 
     <div class="layer" *ngFor="let item of newModel.layers; let i=index">
-        <div class="text-center">
-            #{{i+1}}
-        </div>
+
 
         <mat-form-field appearance="fill">
-            <mat-label>Aktivaciona funkcija</mat-label>
+            <mat-label>Aktivacija</mat-label>
+            <button matPrefix class="btn-clear center-center text-offwhite">        
+                <div>
+                    #{{i+1}}
+                </div>
+            </button>
             <mat-select [(ngModel)]="newModel.layers[i].activationFunction">
                 <mat-option *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)" [value]="option">
                     {{ optionName }}

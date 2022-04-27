@@ -64,6 +64,10 @@
     background-color: var(--ns-primary);
 }
 
+#search ::ng-deep .mat-form-field-wrapper {
+    margin-top: -2.1rem;
+}
+
 #searchbar {
     height: 2.5rem;
     background-color: var(--ns-bg-dark-100);
