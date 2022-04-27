@@ -186,8 +186,8 @@
 </div>
 
 <div class="container-fluid text-offwhite belowColumn">
-    <div class="row ">
-        <div class="col-sm-3 slider rounded" style="border:1px solid var(--ns-primary)">
+    <div class="ns-row">
+        <div class="ns-col slider rounded" style="border:1px solid var(--ns-primary)">
 
             <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
             <div class="text-center pt-0 mt-0">Trening
@@ -195,14 +195,15 @@
                 Test</div>
 
         </div>
-        <div class="col-sm-3 slider rounded" style="border:1px solid var(--ns-primary);margin-left: 10px;">
+        <div class="ns-col slider rounded" style="border:1px solid var(--ns-primary);margin-left: 10px;">
             <div class="text-center text-offwhite justify-content-center align-items-center">
-                <mat-checkbox class="pt-4" color="accent">Nasumicni redosled podataka</mat-checkbox>
+                <mat-checkbox class="pt-4" color="accent">Nasumični redosled podataka</mat-checkbox>
             </div>
         </div>
 
-        <div class="col-sm-2 rounded">
+        <div class="break-2"></div>
 
+        <div class="ns-col rounded">
             <mat-form-field appearance="fill" class="align-items-center justify-content-center pt-3 w-100">
                 <mat-label>Tip problema</mat-label>
                 <mat-select value="ToDo1">
@@ -211,19 +212,17 @@
                     <mat-option value="ToDo3">Multi-Klasifikacioni</mat-option>
                 </mat-select>
             </mat-form-field>
-
         </div>
-        <div class="col-sm-2 rounded">
-
+        <div class="ns-col rounded">
             <mat-form-field appearance="fill" class="align-items-center justify-content-center pt-3 w-100">
                 <mat-label>Izlazna kolona</mat-label>
                 <mat-select>
                     <mat-option *ngFor="let item of dataset?.columnInfo" [value]="item.columnName">{{item.columnName}}</mat-option>
                 </mat-select>
             </mat-form-field>
-
         </div>
-        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+        <div class="break-1"></div>
+        <div class="ns-col d-flex align-items-center justify-content-center">
             <button mat-button (click)="ok()" class="bottom-button text-offwhite rounded-bottom">
                 <div class="f-row" style="justify-content: space-around;">
                     <div>Potvrdi</div>
