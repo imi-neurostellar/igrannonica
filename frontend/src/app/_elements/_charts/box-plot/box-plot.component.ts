@@ -16,8 +16,8 @@ Chart.register(BoxPlotController, BoxAndWiskers, LinearScale, CategoryScale);
 })
 export class BoxPlotComponent implements AfterViewInit {
 
-  @Input()width: number = 600;
-  @Input()height: number = 800;
+  @Input()width?: number;
+  @Input()height?: number;
   
   @ViewChild('boxplot') chartRef!: ElementRef;
   constructor() { }
@@ -27,10 +27,11 @@ export class BoxPlotComponent implements AfterViewInit {
     labels: ['January'/*, 'February', 'March', 'April', 'May', 'June', 'July'*/],
       datasets: [{
       label: 'Dataset 1',
-      backgroundColor: 'rgba(255,0,0,0.5)',
-      borderColor: 'red',
+      backgroundColor: 'rgba(0, 65, 101, 1.0)',
+      borderColor: '#0063AB',
       borderWidth: 1,
       outlierColor: '#999999',
+      scaleFontColor: '#0063AB',
       padding: 10,
       itemRadius: 0,
       data: [
@@ -75,9 +76,23 @@ export class BoxPlotComponent implements AfterViewInit {
                 },
              },
              scales : {
+               x: {
+                ticks: {
+                  color: 'rgba(0, 65, 101, 1.0)'
+                },
+                grid: {
+                  color: "rgba(0, 99, 171, 0.5)"
+                }
+               },
               y : {
                   min: -50,
-                  max: 200
+                  max: 200,
+                  ticks: {
+                    color: 'rgba(0, 65, 101, 1.0)'
+                  },
+                  grid: {
+                    color: "rgba(0, 99, 171, 0.5)"
+                  }
               }
           }
     }

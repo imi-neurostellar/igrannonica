@@ -8,8 +8,8 @@ import {Chart} from 'chart.js';
 })
 export class PieChartComponent implements AfterViewInit {
 
-  @Input()width: number = 600;
-  @Input()height: number = 450;
+  @Input()width?: number;
+  @Input()height?: number;
   
   @ViewChild('piechart') chartRef!: ElementRef;
   constructor() { }
@@ -22,7 +22,7 @@ export class PieChartComponent implements AfterViewInit {
       datasets: [{
         label: "Population (millions)",
         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-        data: [2478,5267,734,784,433]
+        data: [2478,5267,734,784,433],
       }]
     },
     options: {
@@ -34,7 +34,9 @@ export class PieChartComponent implements AfterViewInit {
         legend: {
           display: false
                 },
-             }
+             },
+             layout: {
+              padding: 15}
     }
 });
 

@@ -123,3 +123,9 @@
 .bg-blur {
     backdrop-filter: blur(2px);
 }
+
+.chart-wrapper {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+}

@@ -3,18 +3,25 @@ table.fixed {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+    border: 1px solid var(--ns-primary-50);
+    font-size: 12px;
+    border-radius: 4px;
 }
 
 table.fixed td {
     overflow: hidden;
     max-width: 200px;
     vertical-align: middle;
+    background-color: var(--ns-bg-dark-100);
+    margin: 4px;
 }
 
 table.fixed th {
     overflow: hidden;
     max-width: 350px;
     vertical-align: middle;
+    background-color: var(--ns-bg-dark-100);
+    font-size: 14px;
 }
 
 table.fixed th:first-child {
@@ -28,6 +35,11 @@ table.fixed th:first-child {
 
 .brighter {
     background-color: var(--ns-primary) !important;
+    border-color: var(--offwhite);
+}
+
+.border-bottom {
+    border-bottom-color: var(--offwhite) !important;
 }
 
 mat-slider {
@@ -57,4 +69,53 @@ mat-slider {
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+
+#missingValuesHeader {
+    font-size: 12px;
+    line-height: 110% !important;
+}
+
+.verticalAlign {
+    vertical-align: center;
+}
+
+.cell-align {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+table ::ng-deep .mat-form-field-wrapper {
+    margin-top: -2rem;
+}
+
+.graphics-row {
+    height: 100px;
+    padding: 1px;
+    margin: 0;
+}
+
+.no-pad {
+    padding: 1px;
+    margin: 0;
+}
+
+.text-overflow {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.row-height {
+    height: 30px;
+    border: none;
+    outline: none;
+}
+
+.graphic-class {
+    background-color: white !important;
 }
