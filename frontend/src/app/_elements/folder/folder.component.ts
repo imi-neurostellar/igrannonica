@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
+import { FolderFile, FolderType } from 'src/app/_data/FolderFile';
 import Model from 'src/app/_data/Model';
 
 @Component({
@@ -11,7 +12,7 @@ export class FolderComponent implements OnInit {
 
   @Input() folderName: string = 'Moji podaci';
 
-  @Input() files!: (Dataset | Model)[]
+  @Input() files!: FolderFile[]
 
   newFile!: Dataset | Model;
 
@@ -20,12 +21,12 @@ export class FolderComponent implements OnInit {
   newFileSelected: boolean = true;
 
   selectedFileIndex: number = -1;
-  selectedFile?: (Dataset | Model);
+  selectedFile?: FolderFile;
   hoveringOverFileIndex: number = -1;
 
-  fileToDisplay?: (Dataset | Model);
+  fileToDisplay?: FolderFile;
 
-  @Output() selectedFileChanged: EventEmitter<(Dataset | Model)> = new EventEmitter();
+  @Output() selectedFileChanged: EventEmitter<FolderFile> = new EventEmitter();
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
 
   searchTerm: string = '';
@@ -71,6 +72,7 @@ export class FolderComponent implements OnInit {
     this.fileToDisplay = this.newFile;
     this.selectedFile = this.newFile;
     this.newFileSelected = true;
+    this.listView = false;
     this.selectedFileChanged.emit(this.newFile);
   }
 
@@ -79,6 +81,7 @@ export class FolderComponent implements OnInit {
     this.selectedFile = this.filteredFiles[index];
     this.fileToDisplay = this.filteredFiles[index];
     this.newFileSelected = false;
+    this.listView = false;
     this.selectedFileChanged.emit(this.selectedFile);
   }
 
@@ -113,9 +116,10 @@ export class FolderComponent implements OnInit {
 
   clearSearchTerm() {
     this.searchTerm = '';
+    this.searchTermsChanged();
   }
 
-  filteredFiles: (Dataset | Model)[] = [];
+  filteredFiles: FolderFile[] = [];
 
   searchTermsChanged() {
     this.filteredFiles.length = 0;
@@ -128,9 +132,21 @@ export class FolderComponent implements OnInit {
       }
     }
   }
+
+  listView: boolean = false;
+
+  toggleListView() {
+    this.listView = !this.listView;
+  }
+
+  deleteFile() {
+    console.log('delete');
+  }
+
+  FolderType = FolderType;
 }
 
-export enum FolderType {
-  Dataset,
-  Model
-} 
+export enum Privacy {
+  Private,
+  Public
+}

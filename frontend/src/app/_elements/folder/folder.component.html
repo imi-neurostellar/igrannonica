@@ -1,4 +1,4 @@
-<div id="folder" style="width: 60rem;">
+<div id="folder">
     <div id="tabs">
         <div id="new-file-tab" class="folder-tab p-1 rounded-top" [style]="'z-index:' + newFileZIndex() + ' ;'" [ngClass]="{'selected-tab' : newFileSelected, 'hover-tab' : hoveringOverFileIndex == -2}">
             <mat-icon class="text-offwhite">add</mat-icon>
@@ -24,7 +24,6 @@
             </div>
             <div id="search-options">
                 <div id="collapseFilters" class="collapse collapse-horizontal">
-
                     <mat-icon class="text-offwhite ">timeline</mat-icon>
                     Regresioni
                     <mat-icon class="text-offwhite ">looks_two</mat-icon>
@@ -32,19 +31,48 @@
                     <mat-icon class="text-offwhite ">auto_awesome_motion</mat-icon>
                     Multiklasifikacioni
                 </div>
-                <a class="tab-link p-1" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+                <button class="btn-clear icon-toggle" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
                     <mat-icon>filter_alt</mat-icon>
-                </a>
+                </button>
                 <div id="collapseSort" class="collapse collapse-horizontal">
                     [sort options here TODO]
                 </div>
-                <a class="tab-link p-1" data-bs-toggle="collapse" data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
+                <button class="btn-clear icon-toggle" data-bs-toggle="collapse" data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
                     <mat-icon>sort</mat-icon>
-                </a>
+                </button>
+                <button class="btn-clear icon-toggle separator" [ngClass]="{'icon-toggle-on': listView}" (click)="toggleListView()">
+                    <mat-icon>view_list</mat-icon>
+                </button>
             </div>
         </div>
-        <!--        {{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
-        <app-form-dataset></app-form-dataset>
+        <!--{{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
+        <div [ngSwitch]="listView" class="folder-inside">
+            <div class="file-content" [ngSwitch]="type" *ngSwitchCase="false">
+                <div class="file-bottom-buttons">
+                    <button class="btn-clear file-button" (click)="deleteFile()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button class="btn-clear file-button">
+                        <mat-icon>link</mat-icon>
+                    </button>
+                    <button class="btn-clear file-button">
+                        <mat-icon>zoom_out_map</mat-icon>
+                    </button>
+                </div>
+                <app-form-model [model]="fileToDisplay" *ngSwitchCase="FolderType.Model"></app-form-model>
+                <app-form-dataset *ngSwitchCase="FolderType.Dataset"></app-form-dataset>
+            </div>
+            <div *ngSwitchCase="true" class="list-view">
+                <div *ngFor="let file of filteredFiles; let i = index" class="list-item">
+                    <div class="mx-2">
+                        <a class="force-link" (click)="selectFile(i)">{{file.name}}</a>
+                    </div>
+                    <div class="mx-2 hover-hide">
+                        {{file.lastUpdated | date}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="footer" [ngSwitch]="newFileSelected">
         <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" *ngSwitchCase="true">

@@ -1,12 +1,13 @@
 import { NgIf } from "@angular/common";
+import { FolderFile } from "./FolderFile";
 
-export default class Model {
+export default class Model extends FolderFile {
     _id: string = '';
     constructor(
-        public name: string = 'Novi model',
+        name: string = 'Novi model',
         public description: string = '',
-        public dateCreated: Date = new Date(),
-        public lastUpdated: Date = new Date(),
+        dateCreated: Date = new Date(),
+        lastUpdated: Date = new Date(),
         //public experimentId: string = '',
 
         // Neural net training settings
@@ -15,57 +16,56 @@ export default class Model {
         public lossFunction: LossFunction = LossFunction.MeanSquaredError,
         public inputNeurons: number = 1,
         public hiddenLayers: number = 1,
-        public batchSize: number = 5,
+        public batchSize: BatchSize = BatchSize.O3,
         public outputLayerActivationFunction: ActivationFunction = ActivationFunction.Sigmoid,
         public uploaderId: string = '',
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5, // TODO add to add-model form
-        public inputColNum:number=5,
-        public learningRate:LearningRate=LearningRate.LR1,
-        public layers:Layer[]=[new Layer()]
+        public inputColNum: number = 5,
+        public learningRate: LearningRate = LearningRate.LR1,
+        public layers: Layer[] = [new Layer()]
 
+    ) {
+        super(name, dateCreated, lastUpdated);
+    }
+}
+export class Layer {
+    constructor(
+        public layerNumber: number = 0,
+        public activationFunction: ActivationFunction = ActivationFunction.Sigmoid,
+        public neurons: number = 1,
+        public regularisation: Regularisation = Regularisation.L1,
+        public regularisationRate: RegularisationRate = RegularisationRate.RR1,
     ) { }
 }
-export class Layer{
-    constructor(
-        public layerNumber:number=0,
-        public activationFunction:ActivationFunction=ActivationFunction.Sigmoid,
-        public neurons:number=1,
-        public regularisation:Regularisation=Regularisation.L1,
-        public regularisationRate:RegularisationRate=RegularisationRate.RR1,
-
-    )
-    {}   
-    
+export enum LearningRate {
+    LR1 = '0.00001',
+    LR2 = '0.0001',
+    LR3 = '0.001',
+    LR4 = '0.003',
+    LR5 = '0.01',
+    LR6 = '0.03',
+    LR7 = '0.1',
+    LR8 = '0.3',
+    LR9 = '1',
+    LR10 = '3',
+    LR11 = '10',
 }
-export enum LearningRate{
-    LR1='0.00001',
-    LR2='0.0001',
-    LR3='0.001',
-    LR4='0.003',
-    LR5='0.01',
-    LR6='0.03',
-    LR7='0.1',
-    LR8='0.3',
-    LR9='1',
-    LR10='3',
-    LR11='10',
+export enum Regularisation {
+    L1 = 'l1',
+    L2 = 'l2'
 }
-export enum Regularisation{
-    L1='l1',
-    L2='l2'
-}
-export enum RegularisationRate{
-    RR1='0',
-    RR2='0.001',
-    RR3='0.003',
-    RR4='0.01',
-    RR5='0.03',
-    RR6='0.1',
-    RR7='0.3',
-    RR8='1',
-    RR9='3',
-    RR10='10',
+export enum RegularisationRate {
+    RR1 = '0',
+    RR2 = '0.001',
+    RR3 = '0.003',
+    RR4 = '0.01',
+    RR5 = '0.03',
+    RR6 = '0.1',
+    RR7 = '0.3',
+    RR8 = '1',
+    RR9 = '3',
+    RR10 = '10',
 }
 export enum ProblemType {
     Regression = 'regresioni',
@@ -198,4 +198,17 @@ export enum MetricsMultiClassification {
     Precision = 'precision_score',
     Recall = 'recall_score',
     F1 = 'f1_score',
+}
+
+export enum BatchSize {
+    O1 = '2',
+    O2 = '4',
+    O3 = '8',
+    O4 = '16',
+    O5 = '32',
+    O6 = '64',
+    O7 = '128',
+    O8 = '256',
+    O9 = '512',
+    O10 = '1024'
 }

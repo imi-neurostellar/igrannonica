@@ -1,4 +1,4 @@
-<header class="bg-dark text-white">
+<header class="text-offwhite" style="background-color: #002b49;">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a routerLink="" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
@@ -6,10 +6,10 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a routerLink="" class="nav-link px-2" [class]="(currentUrl === '') ? 'text-secondary' : 'text-white'">Početna</a></li>
-                <li><a routerLink="experiment" class="nav-link px-2" [class]="(currentUrl === '/experiment') ? 'text-secondary' : 'text-white'">Napravi eksperiment</a>
+                <li><a routerLink="" class="nav-link px-2" [class]="(currentUrl === '') ? 'text-primary' : 'text-offwhite'">Početna</a></li>
+                <li><a routerLink="experiment" class="nav-link px-2" [class]="(currentUrl === '/experiment') ? 'text-primary' : 'text-offwhite'">Napravi eksperiment</a>
                 </li>
-                <li><a routerLink="archive" class="nav-link px-2" [class]="(currentUrl === '/archive') ? 'text-secondary' : 'text-white'">Arhiva</a>
+                <li><a routerLink="archive" class="nav-link px-2" [class]="(currentUrl === '/archive') ? 'text-primary' : 'text-offwhite'">Arhiva</a>
                 </li>
             </ul>
 

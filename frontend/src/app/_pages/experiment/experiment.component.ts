@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild, ViewChildren } from '@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import Shared from 'src/app/Shared';
+import { FolderType } from 'src/app/_data/FolderFile';
 
 @Component({
   selector: 'app-experiment',
@@ -85,5 +86,7 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   scrolling: boolean = false;
+
+  FolderType = FolderType;
 
 }

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
-import Model,{Layer} from 'src/app/_data/Model';
+import Model, { Layer } from 'src/app/_data/Model';
 
 @Component({
   selector: 'app-graph',
@@ -22,11 +22,11 @@ export class GraphComponent implements AfterViewInit {
   @Input() lineColor: string = '#00a8e8';
   @Input() nodeColor: string = '#222277';
   @Input() borderColor: string = '#00a8e8';
-  @Input() inputNodeColor: string = '#ffdd11';
-  @Input() outputNodeColor: string = '#44ee22';
+  @Input() inputNodeColor: string = '#00a8e8';
+  @Input() outputNodeColor: string = '#dfd7d7';
 
-  private ctx?: CanvasRenderingContext2D;
-  @Input() inputNeurons: number=1;
+  private ctx!: CanvasRenderingContext2D;
+  @Input() inputNeurons: number = 1;
 
   constructor() { }
 
@@ -51,7 +51,7 @@ export class GraphComponent implements AfterViewInit {
     let inputNodeIndex = 0;
     const inputLayer: Node[] = [];
     while (inputNodeIndex < this.inputCols) {
-      const x = 0.5 / (this.inputNeurons + 2);
+      const x = 0.5 / (this.model!.hiddenLayers + 2);
       const y = (inputNodeIndex + 0.5) / this.inputCols;
       const node = new Node(x, y, this.inputNodeColor);
       inputLayer.push(node);
@@ -63,9 +63,9 @@ export class GraphComponent implements AfterViewInit {
     while (layerIndex < this.model!.hiddenLayers + 1) {
       const newLayer: Node[] = [];
       let nodeIndex = 0;
-      while (nodeIndex < this.model!.layers[layerIndex].neurons) {
+      while (nodeIndex < this.model!.layers[layerIndex - 1].neurons) {
         const x = (layerIndex + 0.5) / (this.model!.hiddenLayers + 2);
-        const y = (nodeIndex + 0.5) / this.model!.layers[layerIndex].neurons;
+        const y = (nodeIndex + 0.5) / this.model!.layers[layerIndex - 1].neurons;
         const node = new Node(x, y, this.nodeColor);
         newLayer.push(node);
         nodeIndex += 1;
@@ -81,7 +81,7 @@ export class GraphComponent implements AfterViewInit {
   }
 
   draw() {
-    this.ctx!.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     let index = 0;
     while (index < this.layers!.length - 1) {
@@ -101,22 +101,22 @@ export class GraphComponent implements AfterViewInit {
   }
 
   drawLine(node1: Node, node2: Node) {
-    this.ctx!.strokeStyle = this.lineColor;
-    this.ctx!.lineWidth = this.lineThickness;
-    this.ctx!.beginPath();
-    this.ctx!.moveTo(node1.x * this.width, node1.y * this.height);
-    this.ctx!.lineTo(node2.x * this.width, node2.y * this.height);
-    this.ctx!.stroke();
+    this.ctx.strokeStyle = this.lineColor;
+    this.ctx.lineWidth = this.lineThickness;
+    this.ctx.beginPath();
+    this.ctx.moveTo(node1.x * this.width, node1.y * this.height);
+    this.ctx.lineTo(node2.x * this.width, node2.y * this.height);
+    this.ctx.stroke();
   }
 
   drawNode(node: Node) {
-    this.ctx!.fillStyle = node.color;
-    this.ctx!.strokeStyle = this.borderColor;
-    this.ctx!.lineWidth = this.lineThickness;
-    this.ctx!.beginPath();
-    this.ctx!.arc(node.x * this.width, node.y * this.height, this.nodeRadius, 0, 2 * Math.PI);
-    this.ctx!.fill();
-    this.ctx!.stroke();
+    this.ctx.fillStyle = node.color;
+    this.ctx.strokeStyle = this.borderColor;
+    this.ctx.lineWidth = this.lineThickness;
+    this.ctx.beginPath();
+    this.ctx.arc(node.x * this.width, node.y * this.height, this.nodeRadius, 0, 2 * Math.PI);
+    this.ctx.fill();
+    this.ctx.stroke();
   }
 
   width = 200;

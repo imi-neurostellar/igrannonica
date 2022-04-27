@@ -47,3 +47,9 @@ mat-stepper {
     justify-content: center;
     align-items: center;
 }
+
+.step-content-inside {
+    width: 90%;
+    height: 90%;
+    overflow-y: auto;
+}

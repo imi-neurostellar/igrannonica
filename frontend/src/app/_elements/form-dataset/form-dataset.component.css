@@ -1,28 +1,24 @@
+.folderBox {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
 
-
- .folderBox
- {
-     width: 100%;
-     height: 93%;
-     position: relative;
- }
-
- .icon-display {
+.icon-display {
     position: absolute;
-    transform: scale(4);
-    vertical-align: middle;
-    top: 40%;
+    top: 50%;
     left: 50%;
- }
- .bottomBar
- {
-     position: absolute;
-     bottom: 0%;
-     left: 5%;
- }
+    transform: translate(-50%, -50%) scale(4);
+}
 
- #bottomButton{
+.bottomBar {
+    position: absolute;
+    bottom: 0%;
+    left: 5%;
+}
+
+#bottomButton {
     background-color: var(--ns-bg-dark-100);
     width: 10%;
     height: 65%;
- }
+}
