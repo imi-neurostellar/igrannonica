@@ -26,8 +26,8 @@ export class ColumnTableComponent implements AfterViewInit {
   tableData?: any[][];
   nullValOption: string[] = [];
 
-  testSetDistribution:number=70;
-  constructor(private datasetService: DatasetsService, public csvParseService: CsvParseService, public dialog: MatDialog) { 
+  testSetDistribution: number = 70;
+  constructor(private datasetService: DatasetsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
 
@@ -92,13 +92,13 @@ export class ColumnTableComponent implements AfterViewInit {
     }
   }
   openEncodingDialog() {
-      const dialogRef = this.dialog.open(EncodingDialogComponent, {
-        width: '300px'
-      });
-      dialogRef.afterClosed().subscribe(selectedEncoding => {
-        if (selectedEncoding != undefined)
-          this.resetColumnEncodings(selectedEncoding);
-      });
+    const dialogRef = this.dialog.open(EncodingDialogComponent, {
+      width: '300px'
+    });
+    dialogRef.afterClosed().subscribe(selectedEncoding => {
+      if (selectedEncoding != undefined)
+        this.resetColumnEncodings(selectedEncoding);
+    });
   }
 
   resetMissingValuesTreatment(selectedMissingValuesOption: NullValueOptions) {
@@ -115,7 +115,7 @@ export class ColumnTableComponent implements AfterViewInit {
           });
           this.nullValOption[i] = "Obriši kolonu";
         }
-      } 
+      }
       else if (selectedMissingValuesOption == NullValueOptions.DeleteRows) {
         this.experiment.nullValues = NullValueOptions.DeleteRows;
         this.experiment.nullValuesReplacers = [];
@@ -135,12 +135,12 @@ export class ColumnTableComponent implements AfterViewInit {
       width: '400px'
     });
     dialogRef.afterClosed().subscribe(selectedMissingValuesOption => {
-      if (selectedMissingValuesOption != undefined) 
+      if (selectedMissingValuesOption != undefined)
         this.resetMissingValuesTreatment(selectedMissingValuesOption);
     });
   }
-  updateTestSet(event:MatSliderChange){
-    this.testSetDistribution=event.value!;
+  updateTestSet(event: MatSliderChange) {
+    this.testSetDistribution = event.value!;
   }
 
 
@@ -160,7 +160,7 @@ export class ColumnTableComponent implements AfterViewInit {
         arrayElement.option = (replacementType == NullValueOptions.DeleteColumns) ? NullValueOptions.DeleteColumns : NullValueOptions.DeleteRows;
         arrayElement.value = "";
       }
-      
+
       this.nullValOption[index] = (replacementType == NullValueOptions.DeleteColumns) ? "Obriši kolonu" : "Obriši redove";
     }
   }
@@ -169,7 +169,7 @@ export class ColumnTableComponent implements AfterViewInit {
     if (this.experiment != undefined) {
       let fillValue = (<HTMLInputElement>event.currentTarget).value;
       let arrayElement = this.experiment.nullValuesReplacers.filter(x => x.column == columnName)[0];
-      
+
       if (arrayElement == undefined) {
         this.experiment.nullValuesReplacers.push({
           column: columnName,
@@ -195,4 +195,54 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
 
-} 
+  tabs = [
+    new Tab(0, 'Podešavanja kolona', Table.Columns),
+    new Tab(1, 'Podaci', Table.Data),
+    new Tab(2, 'Korelaciona matrica', Table.CorrelationMatrix)
+  ]
+
+  selectedTab: Tab = this.tabs[0];
+  hoveringOverTab: (Tab | null) = null;
+
+  tabToDisplay: Table = Table.Columns;
+
+  selectTab(index: number) {
+    this.selectedTab = this.tabs[index];
+    this.tabToDisplay = this.tabs[index].value;
+  }
+
+  hoverOverTab(index: number) {
+    if (index < 0) {
+      this.hoveringOverTab = null;
+      this.tabToDisplay = this.selectedTab.value;
+    } else {
+      this.hoveringOverTab = this.tabs[index];
+      this.tabToDisplay = this.tabs[index].value;
+    }
+  }
+
+  calcZIndex(i: number) {
+    let zIndex = (this.tabs.length - i - 1)
+    if (this.selectedTab.index == i)
+      zIndex = this.tabs.length + 1;
+    if (this.hoveringOverTab?.index == i)
+      zIndex = this.tabs.length + 2;
+    return zIndex;
+  }
+
+  Table = Table;
+}
+
+export enum Table {
+  Columns,
+  Data,
+  CorrelationMatrix
+}
+
+export class Tab {
+  constructor(
+    public index: number,
+    public name: string,
+    public value: Table
+  ) { }
+}
