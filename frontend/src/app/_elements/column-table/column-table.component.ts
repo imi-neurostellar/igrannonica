@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dialog/missingvalues-dialog.component';
 import { MatSliderChange } from '@angular/material/slider';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 
 @Component({
@@ -25,7 +24,7 @@ export class ColumnTableComponent implements AfterViewInit {
   Encoding = Encoding;
   NullValueOptions = NullValueOptions;
   tableData?: any[][];
-  nesto = 10;
+  nullValOption: string[] = [];
 
   testSetDistribution:number=70;
   constructor(private datasetService: DatasetsService, public csvParseService: CsvParseService, public dialog: MatDialog) { 
@@ -35,7 +34,6 @@ export class ColumnTableComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.datasetService.getMyDatasets().subscribe((datasets) => {
       this.dataset = datasets[0];
-      //console.log(this.dataset);
       this.experiment = new Experiment();
       for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
         this.experiment?.inputColumns.push(this.dataset.columnInfo[i].columnName);
@@ -43,39 +41,27 @@ export class ColumnTableComponent implements AfterViewInit {
       this.resetColumnEncodings(Encoding.Label);
       this.setDeleteColumnsForMissingValTreatment();
 
-      /*this.datasetService.getDatasetFile(this.dataset._id).subscribe((file: string | undefined) => {
-        if (file) {
-          //this.tableData = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
-        }
-      });*/
+      this.nullValOption = [].constructor(this.dataset.columnInfo.length).fill('Obriši redove');
+
       this.datasetService.getDatasetFilePartial(this.dataset.fileId, 0, 10).subscribe((response: string | undefined) => {
         if (response && this.dataset != undefined) {
           this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter);
-          console.log(this.tableData);
         }
       });
     });
   }
 
   setDeleteColumnsForMissingValTreatment() {
-    console.log("USAOOOO");
     if (this.experiment != undefined) {
-      this.experiment.nullValues = NullValueOptions.DeleteColumns;
+      this.experiment.nullValues = NullValueOptions.DeleteRows;
       this.experiment.nullValuesReplacers = [];
-      console.log("duzina",this.experiment.inputColumns.length);
       for (let i = 0; i < this.experiment.inputColumns.length; i++) {
         this.experiment.nullValuesReplacers.push({
           column: this.experiment.inputColumns[i],
-          option: NullValueOptions.DeleteColumns,
+          option: NullValueOptions.DeleteRows,
           value: ""
         });
-        console.log(i);
       }
-      //console.log("len",this.nullValMenus.length);
-      this.nullValMenus.forEach((menu) => {
-        //console.log(menu.nativeElement);
-        menu.nativeElement.textContent = "Obriši kolonu";
-      });
     }
   }
 
@@ -127,7 +113,7 @@ export class ColumnTableComponent implements AfterViewInit {
             option: NullValueOptions.DeleteColumns,
             value: ""
           });
-          (<HTMLInputElement>document.getElementById("main_" + this.experiment.inputColumns[i])).textContent = "Obriši kolonu";
+          this.nullValOption[i] = "Obriši kolonu";
         }
       } 
       else if (selectedMissingValuesOption == NullValueOptions.DeleteRows) {
@@ -139,7 +125,7 @@ export class ColumnTableComponent implements AfterViewInit {
             option: NullValueOptions.DeleteRows,
             value: ""
           });
-          (<HTMLInputElement>document.getElementById("main_" + this.experiment.inputColumns[i])).textContent = "Obriši redove";
+          this.nullValOption[i] = "Obriši redove";
         }
       }
     }
@@ -158,7 +144,7 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
 
-  MissValsDeleteClicked(event: Event, replacementType: NullValueOptions) {
+  MissValsDeleteClicked(event: Event, replacementType: NullValueOptions, index: number) {
     if (this.experiment != undefined) {
       let columnName = (<HTMLInputElement>event.currentTarget).value;
       let arrayElement = this.experiment.nullValuesReplacers.filter(x => x.column == columnName)[0];
@@ -174,12 +160,12 @@ export class ColumnTableComponent implements AfterViewInit {
         arrayElement.option = (replacementType == NullValueOptions.DeleteColumns) ? NullValueOptions.DeleteColumns : NullValueOptions.DeleteRows;
         arrayElement.value = "";
       }
-
-      (<HTMLInputElement>document.getElementById("main_" + columnName)).textContent = (replacementType == NullValueOptions.DeleteColumns) ? "Obriši kolonu" : "Obriši redove";
+      
+      this.nullValOption[index] = (replacementType == NullValueOptions.DeleteColumns) ? "Obriši kolonu" : "Obriši redove";
     }
   }
 
-  MissValsReplaceClicked(event: Event, columnName: string) {
+  MissValsReplaceClicked(event: Event, columnName: string, index: number) {
     if (this.experiment != undefined) {
       let fillValue = (<HTMLInputElement>event.currentTarget).value;
       let arrayElement = this.experiment.nullValuesReplacers.filter(x => x.column == columnName)[0];
@@ -196,7 +182,7 @@ export class ColumnTableComponent implements AfterViewInit {
         arrayElement.value = fillValue;
       }
 
-      (<HTMLInputElement>document.getElementById("main_" + columnName)).textContent = "Popuni sa: " + fillValue;
+      this.nullValOption[index] = "Popuni sa: " + fillValue;
     }
   }
   getValue(columnName: string): string {

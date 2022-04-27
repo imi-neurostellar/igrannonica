@@ -3,8 +3,10 @@
         <tr>
             <th>Naziv</th>
             <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
-                <mat-checkbox checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                <div class="cell-align">
+                    #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                    <mat-checkbox checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                </div>
             </th>
         </tr>
     </thead>
@@ -20,11 +22,11 @@
                 </mat-form-field>
             </td>
         </tr>
-        <tr>
-            <th>Grafik</th>
-            <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                <app-box-plot *ngIf="colInfo.isNumber"></app-box-plot>
-                <app-pie-chart *ngIf="!colInfo.isNumber"></app-pie-chart>
+        <tr class="graphics-row">
+            <th class="no-pad border-bottom">Grafik</th>
+            <td class="graphic-class no-pad" *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                <app-box-plot *ngIf="colInfo.isNumber" [width]="150" [height]="150"></app-box-plot>
+                <app-pie-chart *ngIf="!colInfo.isNumber" [width]="150" [height]="150"></app-pie-chart>
             </td>
         </tr>
         <tr>
@@ -40,16 +42,17 @@
                     Q3: {{colInfo.q3}}<br>
                     -->
                 </span>
-                <span *ngIf="!colInfo.isNumber">
+                <div class="text-overflow" *ngIf="!colInfo.isNumber">
                     <span *ngFor="let uniqueValue of colInfo.uniqueValues | slice:0:6; let i = index">
                         {{uniqueValue}}<br><!-- TODO na ML-u: broj ponavljanja unique values-a u zagradi nek pise -->
                     </span>
-                </span>
+                </div>
             </td>
         </tr>
         <tr style="padding: 0">
-            <th class="brighter" (click)="openEncodingDialog()">Enkoding
-                <span class="material-icons-round">settings</span>
+            <th class="brighter cell-align" (click)="openEncodingDialog()">
+                <span class="verticalAlign">Enkodiranje</span>&nbsp;
+                <span class="material-icons-round verticalAlign">settings</span>
             </th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
                 <mat-form-field>
@@ -62,25 +65,29 @@
             </td>
         </tr>
         <tr>
-            <th class="brighter" (click)="openMissingValuesDialog()">Regulisanje<br>nedostajućih<br>vrednosti<br>
+            <th class="brighter cell-align" (click)="openMissingValuesDialog()">
+                <div id="missingValuesHeader">Regulisanje<br>nedostajućih<br>vrednosti<br></div>
                 <span class="material-icons-round">settings</span>
             </th>
             <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
 
-                <button mat-button [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}" #nullValMenu>
-                    Prikaži opcije<span class="material-icons">arrow_drop_down</span>
+                <button class="w-100" mat-raised-button [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}" #nullValMenu>
+                    <div class="cell-align">
+                        {{nullValOption[i]}}
+                        <mat-icon>arrow_drop_down</mat-icon>
+                    </div>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteColumns)" value={{colInfo.columnName}}>Obriši kolonu</button>
-                    <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteRows)" value={{colInfo.columnName}}>Obriši redove</button>
+                    <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteColumns, i)" value={{colInfo.columnName}}>Obriši kolonu</button>
+                    <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteRows, i)" value={{colInfo.columnName}}>Obriši redove</button>
                     <button mat-menu-item [matMenuTriggerFor]="fillWith">Popuni sa ____</button>
                 </mat-menu>
 
                 <mat-menu #fillWith="matMenu">
-                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.mean}}>Mean ({{colInfo.mean}})</button>
-                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.median}}>Median ({{colInfo.median}})</button>
-                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.max}}>Max ({{colInfo.max}})</button>
-                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{colInfo.min}}>Min ({{colInfo.min}})</button>
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.mean}}>Mean ({{colInfo.mean}})</button>
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.median}}>Median ({{colInfo.median}})</button>
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.max}}>Max ({{colInfo.max}})</button>
+                    <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.min}}>Min ({{colInfo.min}})</button>
 
                     <button *ngIf="!colInfo.isNumber" mat-menu-item [matMenuTriggerFor]="uniques">Najčešće vrednosti</button>
 
@@ -88,22 +95,22 @@
                 </mat-menu>
 
                 <mat-menu #uniques="matMenu">
-                    <button mat-menu-item *ngFor="let uniqueValue of colInfo.uniqueValues" (click)="MissValsReplaceClicked($event, colInfo.columnName)" value={{uniqueValue}}>{{uniqueValue}}</button>
+                    <button mat-menu-item *ngFor="let uniqueValue of colInfo.uniqueValues" (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{uniqueValue}}>{{uniqueValue}}</button>
                 </mat-menu>
 
                 <mat-menu #replaceWith="matMenu">
                     <input type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value]>
-                    <button [disabled]="getValue(colInfo.columnName) == ''" mat-menu-item value={{getValue(colInfo.columnName)}} (click)="MissValsReplaceClicked($event, colInfo.columnName)">Potvrdi unos</button>
+                    <button [disabled]="getValue(colInfo.columnName) == ''" mat-menu-item value={{getValue(colInfo.columnName)}} (click)="MissValsReplaceClicked($event, colInfo.columnName, i)">Potvrdi unos</button>
                 </mat-menu>
 
             </td>
         </tr>
-        <tr *ngFor="let row of tableData; let i = index">
+        <tr class="row-height" *ngFor="let row of tableData; let i = index">
             <th *ngIf="i == 0" [attr.rowspan]="tableData!.length">Vrednosti</th>
 
 
-            <td *ngFor="let col of row; let j = index">
-                <div style="overflow: auto">
+            <td class="text-center" *ngFor="let col of row; let j = index">
+                <div class="text-overflow">
                     {{col}}
                 </div>
             </td>
