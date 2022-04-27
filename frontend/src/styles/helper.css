@@ -119,3 +119,7 @@
     width: 28px;
     height: 28px;
 }
+
+.bg-blur {
+    backdrop-filter: blur(2px);
+}

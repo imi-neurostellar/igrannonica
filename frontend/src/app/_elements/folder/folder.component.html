@@ -46,7 +46,7 @@
             </div>
         </div>
         <!--{{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
-        <div [ngSwitch]="listView" class="folder-inside">
+        <div [ngSwitch]="listView" class="folder-inside bg-blur">
             <div class="file-content" [ngSwitch]="type" *ngSwitchCase="false">
                 <div class="file-bottom-buttons">
                     <button class="btn-clear file-button" (click)="deleteFile()">
