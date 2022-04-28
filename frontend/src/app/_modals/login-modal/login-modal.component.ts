@@ -44,6 +44,7 @@ export class LoginModalComponent implements OnInit {
           this.passwordInput.nativeElement.type = "password";
         }
         else {
+          this.wrongCreds = false;
           this.authService.authenticate(response);
           (<HTMLSelectElement>this.closeButton?.nativeElement).click();
           this.userInfoService.getUserInfo().subscribe((response) => {
@@ -70,5 +71,9 @@ export class LoginModalComponent implements OnInit {
       this.passwordInput.nativeElement.type = "text";
     else 
       this.passwordInput.nativeElement.type = "password";
+  }
+
+  cleanWarnings() {
+    this.wrongCreds = false;
   }
 }

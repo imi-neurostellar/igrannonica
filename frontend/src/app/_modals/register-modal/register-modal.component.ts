@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
 import User from 'src/app/_data/User';
 import { DOCUMENT } from '@angular/common';
@@ -34,6 +34,13 @@ export class RegisterModalComponent implements OnInit {
 
   shared = shared;
 
+  password1Shown: boolean = false;
+  password2Shown: boolean = false;
+  @ViewChild('password1') password1Input!: ElementRef;
+  @ViewChild('password2') password2Input!: ElementRef;
+  @ViewChild('closeButton') closeButton!: ElementRef;
+
+
   constructor(
     private authService: AuthService,
     @Inject(DOCUMENT) document: Document
@@ -48,6 +55,8 @@ export class RegisterModalComponent implements OnInit {
   resetData() {
     this.firstName = this.lastName = this.username = this.email = this.pass1 = this.pass2 = '';
     this.wrongFirstNameBool = this.wrongLastNameBool = this.wrongUsernameBool = this.wrongEmailBool = this.wrongPass1Bool = this.wrongPass2Bool = false;
+    this.password1Shown = false;
+    this.password2Shown = false;
   }
 
   isCorrectName(element: string): boolean {
@@ -76,7 +85,7 @@ export class RegisterModalComponent implements OnInit {
       this.wrongFirstNameBool = false;
       return;
     }
-    (<HTMLSelectElement>document.getElementById('firstName')).focus();
+    //(<HTMLSelectElement>document.getElementById('firstName')).focus();
     this.wrongFirstNameBool = true;
   }
   lastNameValidation() {
@@ -84,7 +93,7 @@ export class RegisterModalComponent implements OnInit {
       this.wrongLastNameBool = false;
       return;
     }
-    (<HTMLSelectElement>document.getElementById('lastName')).focus();
+    //(<HTMLSelectElement>document.getElementById('lastName')).focus();
     this.wrongLastNameBool = true;
   }
   usernameValidation() {
@@ -92,7 +101,7 @@ export class RegisterModalComponent implements OnInit {
       this.wrongUsernameBool = false;
       return;
     }
-    (<HTMLSelectElement>document.getElementById('username-register')).focus();
+    //(<HTMLSelectElement>document.getElementById('username-register')).focus();
     this.wrongUsernameBool = true;
   }
   emailValidation() {
@@ -100,7 +109,7 @@ export class RegisterModalComponent implements OnInit {
       this.wrongEmailBool = false;
       return;
     }
-    (<HTMLSelectElement>document.getElementById('email')).focus();
+    //(<HTMLSelectElement>document.getElementById('email')).focus();
     this.wrongEmailBool = true;
   }
   passwordValidation() {
@@ -111,7 +120,11 @@ export class RegisterModalComponent implements OnInit {
     }
     this.pass1 = ''; //brisi obe ukucane lozinke
     this.pass2 = '';
-    (<HTMLSelectElement>document.getElementById('pass1')).focus();
+    this.password1Shown = false;
+    this.password2Shown = false;
+    this.password1Input.nativeElement.type = "password";
+    this.password2Input.nativeElement.type = "password";
+    //(<HTMLSelectElement>document.getElementById('pass1')).focus();
     this.wrongPass1Bool = true;
     this.wrongPass2Bool = true;
   }
@@ -148,7 +161,7 @@ export class RegisterModalComponent implements OnInit {
               this.authService.login(this.username, this.pass1).subscribe((response) => {
 
                 this.authService.authenticate(response);
-                (<HTMLSelectElement>document.getElementById('closeButtonReg')).click();
+                this.closeButton.nativeElement.click();
                 //(<HTMLSelectElement>document.getElementById('linkToLoginModal')).click();
               }, (error) => console.warn(error));             
             }
@@ -165,5 +178,25 @@ export class RegisterModalComponent implements OnInit {
     }
   }
 
+  togglePasswordShown(whichPassword: number) {
+    if (whichPassword == 1) {
+      this.password1Shown = !this.password1Shown;
 
+      if (this.password1Shown)
+        this.password1Input.nativeElement.type = "text";
+      else 
+        this.password1Input.nativeElement.type = "password";
+    }
+    else {
+      this.password2Shown = !this.password2Shown;
+
+      if (this.password2Shown)
+        this.password2Input.nativeElement.type = "text";
+      else 
+        this.password2Input.nativeElement.type = "password";
+    }
+  }
+  cleanWarnings() {
+    this.resetData();
+  }
 }
