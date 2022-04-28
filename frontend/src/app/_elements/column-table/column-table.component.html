@@ -12,7 +12,7 @@
 </div>
 <div id="folder-table" *ngIf="dataset && experiment">
     <!--<div [ngSwitch]="tabToDisplay">-->
-    <div>
+    <div id="divTable">
 
         <div [ngClass]="{'hidden': tabToDisplay != Table.Data}">
             <table class="table text-offwhite fixed bg-blur">
@@ -20,8 +20,10 @@
                     <tr>
                         <th>#</th>
                         <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                            #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
-                            <mat-checkbox checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                            <div class="cell-align">
+                                #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                <mat-checkbox color="primary" checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                            </div>
                         </th>
                     </tr>
                 </thead>
@@ -50,7 +52,11 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                        <th>#{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}</th>
+                        <th>
+                            <div class="text-left">
+                                {{colInfo.columnName}}
+                            </div>
+                        </th>
                         <td *ngFor="let colInfo of dataset.columnInfo; let j = index">
                             <div class="text-overflow">
                                 0.1
@@ -69,7 +75,7 @@
                         <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index">
                             <div class="cell-align">
                                 #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
-                                <mat-checkbox checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                                <mat-checkbox color="primary" checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                             </div>
                         </th>
                     </tr>
@@ -185,7 +191,7 @@
     </div>
 </div>
 
-<div class="container-fluid text-offwhite belowColumn">
+<div class="container-fluid text-offwhite belowColumn mt-3">
     <div class="ns-row">
         <div class="ns-col slider rounded" style="border:1px solid var(--ns-primary)">
 

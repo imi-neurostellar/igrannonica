@@ -94,8 +94,8 @@
     <app-graph [model]="newModel" [inputCols]="newModel.inputColNum"></app-graph>
 </div>
 <div class="ns-row">
-   
-    <div class ="ns-col" id="layers-control">
+
+    <div class="ns-col" id="layers-control">
         <div>Broj Skrivenih Slojeva</div>
         <button class="btn-clear btn-icon" (click)="addLayer()">
             <mat-icon>add</mat-icon>
@@ -104,21 +104,21 @@
         <button class="btn-clear btn-icon" (click)="removeLayer()">
             <mat-icon>remove</mat-icon>
         </button>
-   
+
     </div>
     <div class="break-1"></div>
     <div class="ns-col">
         <mat-form-field appearance="fill">
             <mat-label>Aktivaciona funkcija svih slojeva</mat-label>
-            
-            <mat-select  [(ngModel)]="selectedActivation" (selectionChange)="changeAllActivation()"  >
+
+            <mat-select [(ngModel)]="selectedActivation" (selectionChange)="changeAllActivation()">
                 <mat-option *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)" [value]="option">
                     {{ optionName }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
-   
+
     <div class="ns-col">
         <mat-form-field appearance="fill">
             <mat-label>Broj Neurona svih slojeva</mat-label>
@@ -136,7 +136,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    
+
     <div class="ns-col">
         <mat-form-field appearance="fill">
             <mat-label>Stopa regularizacije svih slojeva</mat-label>
@@ -146,7 +146,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        </div>
+    </div>
 
 
 </div>
@@ -177,7 +177,7 @@
             <button class="btn-clear btn-icon" (click)="addNeuron(i)">
                 <mat-icon>add</mat-icon>
             </button>
-            <div class="col-2 text-center" >{{newModel.layers[i].neurons}}</div>
+            <div class="col-2 text-center">{{newModel.layers[i].neurons}}</div>
             <button class="btn-clear btn-icon" (click)="removeNeuron(i)">
                 <mat-icon>remove</mat-icon>
             </button>

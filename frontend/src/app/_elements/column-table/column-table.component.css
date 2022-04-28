@@ -8,9 +8,15 @@ table.fixed {
     border-radius: 4px;
 }
 
+#divTable {
+    height: 100%;
+    overflow-y: auto;
+}
+
 table.fixed td {
     overflow: hidden;
     max-width: 200px;
+    min-width: 200px;
     vertical-align: middle;
     background-color: var(--ns-bg-dark-100);
     margin: 4px;
@@ -18,7 +24,8 @@ table.fixed td {
 
 table.fixed th {
     overflow: hidden;
-    max-width: 350px;
+    max-width: 120px;
+    min-width: 120px;
     vertical-align: middle;
     background-color: var(--ns-bg-dark-100);
     font-size: 14px;
@@ -43,32 +50,11 @@ table.fixed th:first-child {
 }
 
 mat-slider {
-    width: 150px;
-}
-
-.belowColumn {
-    background-color: transparent;
+    width: 300px;
 }
 
 .slider {
-    background-color: var(--ns-bg-dark-50);
-}
-
-.bottom-button {
-    font-size: large;
-    position: relative;
-    background-color: var(--ns-primary);
-    width: 10rem;
-    height: 2.3rem;
-    border-color: var(--ns-primary);
-    border-style: solid;
-    border-width: 0px 1px 1px 1px;
-}
-
-#footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    background-color: var(--ns-bg-dark-100);
 }
 
 #missingValuesHeader {
@@ -85,7 +71,12 @@ mat-slider {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    vertical-align: middle;
     height: 100%;
+}
+
+.text-left {
+    text-align: left !important;
 }
 
 table ::ng-deep .mat-form-field-wrapper {
@@ -125,6 +116,7 @@ table ::ng-deep .mat-form-field-wrapper {
 #folder-table {
     border: 1px solid var(--ns-primary);
     border-radius: 4px;
+    height: 70%;
 }
 
 #tabs {
@@ -201,4 +193,21 @@ table ::ng-deep .mat-form-field-wrapper {
 
 .hidden {
     display: none;
+}
+
+.bottom-button {
+    font-size: large;
+    position: relative;
+    background-color: var(--ns-primary);
+    width: 10rem;
+    height: 2.3rem;
+    border-color: var(--ns-primary);
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;
+}
+
+#footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
