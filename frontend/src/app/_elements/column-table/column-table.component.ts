@@ -45,7 +45,7 @@ export class ColumnTableComponent implements AfterViewInit {
 
       this.datasetService.getDatasetFilePartial(this.dataset.fileId, 0, 10).subscribe((response: string | undefined) => {
         if (response && this.dataset != undefined) {
-          this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter);
+          this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter.toString() == "") ? "," : this.dataset.delimiter);
         }
       });
     });

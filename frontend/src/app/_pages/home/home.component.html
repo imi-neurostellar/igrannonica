@@ -1,20 +1,32 @@
 <div class="d-flex flex-column align-items-center">
-    <div class="ann-logo">
-        <img src="../../../assets/images/logo_igrannonica_temp.png" class="bi me-2" width="256" height="256" role="img">
+    <div class="logo">
+        <img src="../../../assets/images/logo.png" class="bi me-2" width="256" height="256" role="img">
     </div>
 
-    <div class="d-flex flex-column align-items-center">
+    <div id="title">
+        <h1>Igr<span class="highlight">ann</span>onica</h1>
+    </div>
 
-        <div class="rounded-pill bg-light px-4 m-4 shadow-accent position-relative">
-            <a routerLink="experiment" class="stretched-link">
-                <h2 class="my-4">Započnite sa eksperimentisanjem!
-                    <mat-icon>lightbulb</mat-icon>
-                </h2>
-            </a>
+    <div id="cards" class="row align-items-view align-items-stretch justify-content-center">
+        <div class="card shadowed bg-light text-light col-3 m-3" style="width: 18rem;">
+            <div class="card-body">
+                <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">model_training</mat-icon>
+                <h3 class="card-title my-2">Experimentiši</h3>
+                <p class="card-text">
+                    U tri koraka <a class="stretched-link" routerLink="experiment">napravite novu neuronsku mrežu</a>. Koristite postojeće izvore podataka, modele, itd.
+                </p>
+            </div>
         </div>
-
-
-
+        <div class="card shadowed bg-light text-light col-3 m-3" style="width: 18rem;">
+            <div class="card-body">
+                <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">storage
+                </mat-icon>
+                <h3 class="card-title my-2">Arhiva</h3>
+                <p class="card-text">
+                    <a class="stretched-link" routerLink="archive">Upravljajte</a> izvorima podataka, eksperimentima, modelima, i rezultatima treniranja. Pogledajte podatke koje su podelili drugi korisnici.
+                </p>
+            </div>
+        </div>
     </div>
 
 </div>

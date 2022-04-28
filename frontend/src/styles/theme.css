@@ -45,6 +45,10 @@ a {
     color: var(--offwhite) !important;
 }
 
+.highlight {
+    color: var(--ns-accent);
+}
+
 
 /* Ripple effect */
 

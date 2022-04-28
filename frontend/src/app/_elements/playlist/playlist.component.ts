@@ -37,7 +37,7 @@ export class PlaylistComponent implements OnInit {
             tableData.loaded = true;
             tableData.numRows = dataset.rowCount;
             tableData.numCols = dataset.columnInfo.length;
-            tableData.data = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter == "") ? "," : dataset.delimiter);
+            tableData.data = this.csv.csvToArray(file, (dataset.delimiter == "razmak") ? " " : (dataset.delimiter.toString() == "") ? "," : dataset.delimiter);
             this.tableDatas!.push(tableData);
           }
         });

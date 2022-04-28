@@ -1,17 +1,23 @@
 <div class="d-flex flex-column align-items-center">
-    <div *ngIf="publicDatasets.length > 0" class="my-5">
+    <div class="my-5" style="height: fit-content;">
         <app-playlist [datasets]="publicDatasets"></app-playlist>
-
-        <div class="rounded-pill bg-light p-4 m-2 text-center position-relative">
-            <a routerLink="browse-datasets" class="stretched-link">Pogledaj sve javne izvore podataka...</a>
-        </div>
     </div>
 
     <div id="cards" class="row align-items-view align-items-stretch justify-content-center">
         <div class="card shadowed bg-light text-light col-3 m-3" style="width: 18rem;">
             <div class="card-body">
+                <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">model_training
+                </mat-icon>
+                <h3 class="card-title my-2">Moji eksperimenti</h3>
+                <p class="card-text">
+                    <a class="stretched-link" routerLink="my-models">Pregledajte</a> vaše modele, menjajte ih, napravite nove modele, ili ih obrišite.
+                </p>
+            </div>
+        </div>
+        <div class="card shadowed bg-light text-light col-3 m-3" style="width: 18rem;">
+            <div class="card-body">
                 <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">storage</mat-icon>
-                <h3 class="card-title my-2">Moji izvori podataka</h3>
+                <h3 class="card-title my-2">Izvori podataka</h3>
                 <p class="card-text">
                     <a class="stretched-link" routerLink="my-datasets">Preuredite</a> vaše izvore podataka, ili dodajte novi.
                 </p>
@@ -21,7 +27,7 @@
             <div class="card-body">
                 <mat-icon width="48px" height="48px" style="font-size: 48px; margin-left: 50%; transform: translateX(-100%);">model_training
                 </mat-icon>
-                <h3 class="card-title my-2">Moji modeli</h3>
+                <h3 class="card-title my-2">Modeli</h3>
                 <p class="card-text">
                     <a class="stretched-link" routerLink="my-models">Pregledajte</a> vaše modele, menjajte ih, napravite nove modele, ili ih obrišite.
                 </p>

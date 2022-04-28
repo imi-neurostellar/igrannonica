@@ -31,9 +31,26 @@ body {
     padding: 2px;
     margin-bottom: 0;
     padding-bottom: 0;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 50%;
 }
 
-.break-1,
+@media screen and (min-width: 1200px) {
+    .ns-col {
+        flex-basis: 25%;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .ns-col {
+        flex-basis: 12.5%;
+        width: 10%;
+    }
+}
+
+*/
+/*.break-1,
 .break-2 {
     height: 1px;
     width: 100%;
@@ -45,11 +62,11 @@ body {
     }
 }
 
-@media screen and (min-width: 2175px) {
+@media screen and (min-width: 1600px) {
     .break-2 {
         display: none;
     }
-}
+}*/
 
 .center-center {
     text-align: center;

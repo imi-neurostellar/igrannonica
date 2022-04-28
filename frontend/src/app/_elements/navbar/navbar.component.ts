@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
 import { AuthService } from '../../_services/auth.service';
 import shared from 'src/app/Shared';
@@ -8,7 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class NavbarComponent implements OnInit {
 
