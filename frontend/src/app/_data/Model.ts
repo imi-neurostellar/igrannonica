@@ -33,7 +33,7 @@ export class Layer {
     constructor(
         public layerNumber: number = 0,
         public activationFunction: ActivationFunction = ActivationFunction.Sigmoid,
-        public neurons: number = 1,
+        public neurons: number = 3,
         public regularisation: Regularisation = Regularisation.L1,
         public regularisationRate: RegularisationRate = RegularisationRate.RR1,
     ) { }

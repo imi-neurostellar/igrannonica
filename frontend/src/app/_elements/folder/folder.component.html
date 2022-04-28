@@ -59,7 +59,7 @@
                         <mat-icon>zoom_out_map</mat-icon>
                     </button>
                 </div>
-                <app-form-model [model]="fileToDisplay" *ngSwitchCase="FolderType.Model"></app-form-model>
+                <app-form-model [model]="fileToDisplay" [forExperiment]="forExperiment" *ngSwitchCase="FolderType.Model"></app-form-model>
                 <app-form-dataset *ngSwitchCase="FolderType.Dataset"></app-form-dataset>
             </div>
             <div *ngSwitchCase="true" class="list-view">

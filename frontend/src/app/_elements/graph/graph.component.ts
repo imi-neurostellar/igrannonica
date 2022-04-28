@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import Dataset from 'src/app/_data/Dataset';
+import { RgbColor } from '@syncfusion/ej2-angular-heatmap';
+import Dataset, { ColumnInfo } from 'src/app/_data/Dataset';
 import Model, { Layer } from 'src/app/_data/Model';
 
 @Component({
@@ -15,18 +16,19 @@ export class GraphComponent implements AfterViewInit {
   canvas!: ElementRef;
 
   @Input() model?: Model;
-  @Input() inputCols: number = 1;
+  //@Input() inputCols: number = 1;
 
   @Input() lineThickness: number = 2;
   @Input() nodeRadius: number = 15;
-  @Input() lineColor: string = '#00a8e8';
+  @Input() lineColor1: RgbColor = new RgbColor(0, 168, 232);
+  @Input() lineColor2: RgbColor = new RgbColor(0, 70, 151);
   @Input() nodeColor: string = '#222277';
   @Input() borderColor: string = '#00a8e8';
   @Input() inputNodeColor: string = '#00a8e8';
   @Input() outputNodeColor: string = '#dfd7d7';
 
   private ctx!: CanvasRenderingContext2D;
-  @Input() inputNeurons: number = 1;
+  @Input() inputColumns?: string[] = [];
 
   constructor() { }
 
@@ -43,16 +45,16 @@ export class GraphComponent implements AfterViewInit {
     this.resize();
   }
 
-  layers?: Node[][];
+  layers: Node[][] = [];
 
   update() {
-    this.layers = [];
+    this.layers.length = 0;
 
     let inputNodeIndex = 0;
     const inputLayer: Node[] = [];
-    while (inputNodeIndex < this.inputCols) {
+    while (this.inputColumns && inputNodeIndex < this.inputColumns.length) {
       const x = 0.5 / (this.model!.hiddenLayers + 2);
-      const y = (inputNodeIndex + 0.5) / this.inputCols;
+      const y = (inputNodeIndex + 0.5) / this.inputColumns.length;
       const node = new Node(x, y, this.inputNodeColor);
       inputLayer.push(node);
       inputNodeIndex += 1;
@@ -94,27 +96,36 @@ export class GraphComponent implements AfterViewInit {
     }
 
     for (let layer of this.layers!) {
-      for (let node of layer) {
-        this.drawNode(node);
-      }
+      layer.forEach((node, index) => {
+        this.drawNode(node, 0.5 / layer.length + 0.5);
+      });
     }
   }
 
+  bezierOffset = 5;
+
   drawLine(node1: Node, node2: Node) {
-    this.ctx.strokeStyle = this.lineColor;
+    const lineColor: RgbColor = this.lerpColor(this.lineColor1, this.lineColor2, node1.y);
+    this.ctx.strokeStyle = `rgb(${lineColor.R}, ${lineColor.G}, ${lineColor.B})`;
     this.ctx.lineWidth = this.lineThickness;
     this.ctx.beginPath();
     this.ctx.moveTo(node1.x * this.width, node1.y * this.height);
-    this.ctx.lineTo(node2.x * this.width, node2.y * this.height);
+    //this.ctx.lineTo(node2.x * this.width, node2.y * this.height);
+    const middle = (node1.x + (node2.x - node1.x) / 2) * this.width;
+    this.ctx.bezierCurveTo(
+      middle, node1.y * this.height,
+      middle, node2.y * this.height,
+      node2.x * this.width, node2.y * this.height);
     this.ctx.stroke();
   }
 
-  drawNode(node: Node) {
+  drawNode(node: Node, sizeMult: number) {
+    const lineColor: RgbColor = this.lerpColor(this.lineColor1, this.lineColor2, node.y);
+    this.ctx.strokeStyle = `rgb(${lineColor.R}, ${lineColor.G}, ${lineColor.B})`;
     this.ctx.fillStyle = node.color;
-    this.ctx.strokeStyle = this.borderColor;
     this.ctx.lineWidth = this.lineThickness;
     this.ctx.beginPath();
-    this.ctx.arc(node.x * this.width, node.y * this.height, this.nodeRadius, 0, 2 * Math.PI);
+    this.ctx.arc(node.x * this.width, node.y * this.height, this.nodeRadius * sizeMult, 0, 2 * Math.PI);
     this.ctx.fill();
     this.ctx.stroke();
   }
@@ -135,6 +146,16 @@ export class GraphComponent implements AfterViewInit {
 
     this.draw();
   }
+
+  lerpColor(value1: RgbColor, value2: RgbColor, amount: number): RgbColor {
+    const newColor = new RgbColor(0, 0, 0);
+    amount = amount < 0 ? 0 : amount;
+    amount = amount > 1 ? 1 : amount;
+    newColor.R = value1.R + (value2.R - value1.R) * amount;
+    newColor.G = value1.G + (value2.G - value1.G) * amount;
+    newColor.B = value1.B + (value2.B - value1.B) * amount;
+    return newColor;
+  };
 }
 
 class Node {

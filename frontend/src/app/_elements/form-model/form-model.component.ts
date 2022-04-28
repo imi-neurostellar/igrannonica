@@ -60,7 +60,7 @@ export class FormModelComponent implements AfterViewInit {
   showMyModels: boolean = true;
 
   updateGraph() {
-    console.log(this.newModel.layers);
+    //console.log(this.newModel.layers);
     this.graph.update();
   }
 
@@ -73,7 +73,7 @@ export class FormModelComponent implements AfterViewInit {
   }
   addLayer() {
     if (this.newModel.hiddenLayers < 128) {
-      this.newModel.layers.push(new Layer(this.newModel.layers.length));
+      this.newModel.layers.push(new Layer(this.newModel.layers.length, this.selectedActivation, this.selectedNumberOfNeurons, this.selectedRegularisation, this.selectedRegularisationRate));
 
       this.newModel.hiddenLayers += 1;
       this.updateGraph();
@@ -106,37 +106,33 @@ export class FormModelComponent implements AfterViewInit {
   selectedActivation: ActivationFunction = ActivationFunction.Sigmoid;
   selectedRegularisationRate: RegularisationRate = RegularisationRate.RR1;
   selectedRegularisation: Regularisation = Regularisation.L1;
-  selectedNumberOfNeurons:number=1;
+  selectedNumberOfNeurons: number = 3;
 
-  changeAllActivation(){
-    for(let i=0;i<this.newModel.layers.length;i++)
-    {
-      this.newModel.layers[i].activationFunction=this.selectedActivation;
-      
-    }
-    
-  }
-  changeAllRegularisation(){
-    for(let i=0;i<this.newModel.layers.length;i++)
-    {
-      this.newModel.layers[i].regularisation=this.selectedRegularisation;
-    }
-  }
-  changeAllRegularisationRate(){
+  changeAllActivation() {
+    for (let i = 0; i < this.newModel.layers.length; i++) {
+      this.newModel.layers[i].activationFunction = this.selectedActivation;
 
-    for(let i=0;i<this.newModel.layers.length;i++)
-    {
-      this.newModel.layers[i].regularisationRate=this.selectedRegularisationRate;
+    }
+
+  }
+  changeAllRegularisation() {
+    for (let i = 0; i < this.newModel.layers.length; i++) {
+      this.newModel.layers[i].regularisation = this.selectedRegularisation;
     }
   }
-  changeAllNumberOfNeurons(){
-    for(let i=0;i<this.newModel.layers.length;i++)
-    {
-      this.newModel.layers[i].neurons=this.selectedNumberOfNeurons;
+  changeAllRegularisationRate() {
+
+    for (let i = 0; i < this.newModel.layers.length; i++) {
+      this.newModel.layers[i].regularisationRate = this.selectedRegularisationRate;
+    }
+  }
+  changeAllNumberOfNeurons() {
+    for (let i = 0; i < this.newModel.layers.length; i++) {
+      this.newModel.layers[i].neurons = this.selectedNumberOfNeurons;
       this.updateGraph();
     }
   }
-  
-   
-  
+
+
+
 }

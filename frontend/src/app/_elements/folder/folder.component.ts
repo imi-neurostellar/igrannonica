@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import Dataset from 'src/app/_data/Dataset';
+import Dataset, { ColumnInfo } from 'src/app/_data/Dataset';
+import Experiment from 'src/app/_data/Experiment';
 import { FolderFile, FolderType } from 'src/app/_data/FolderFile';
 import Model from 'src/app/_data/Model';
 import { DatasetsService } from 'src/app/_services/datasets.service';
@@ -19,6 +20,8 @@ export class FolderComponent implements OnInit {
 
   @Input() type: FolderType = FolderType.Dataset;
 
+  @Input() forExperiment?: Experiment;
+
   newFileSelected: boolean = true;
 
   selectedFileIndex: number = -1;
@@ -32,10 +35,12 @@ export class FolderComponent implements OnInit {
 
   searchTerm: string = '';
 
-  myDatasets : Dataset[] = [];
+  myDatasets: Dataset[] = [];
 
   constructor(private datasets: DatasetsService) {
     //PLACEHOLDER
+    this.forExperiment = new Experiment();
+    this.forExperiment.inputColumns = ['kolona1', 'kol2', '???', 'test'];
 
     this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;

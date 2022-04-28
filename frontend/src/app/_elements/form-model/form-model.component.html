@@ -90,7 +90,7 @@
 <!--kraj unosa parametara-->
 <hr>
 <div class="m-2">
-    <app-graph [model]="newModel" [inputCols]="newModel.inputColNum"></app-graph>
+    <app-graph [model]="newModel" [inputColumns]="forExperiment?.inputColumns"></app-graph>
 </div>
 <div class="ns-row">
 
@@ -121,7 +121,7 @@
     <div class="ns-col">
         <mat-form-field appearance="fill" class="mat-fix">
             <mat-label>Broj Neurona svih slojeva</mat-label>
-            <input matInput type="number" [(ngModel)]="selectedNumberOfNeurons" (change)="changeAllNumberOfNeurons()">
+            <input matInput type="number" min="1" max="18" [(ngModel)]="selectedNumberOfNeurons" (change)="changeAllNumberOfNeurons()">
         </mat-form-field>
     </div>
     <div class="break-2"></div>
