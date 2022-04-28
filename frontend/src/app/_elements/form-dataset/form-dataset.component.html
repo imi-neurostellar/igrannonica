@@ -30,7 +30,7 @@
                     <div class="row">
                         <mat-form-field class="example-full-width" appearance="fill">
                             <mat-label>Naziv</mat-label>
-                            <input type="text" matInput value="titanik.csv">
+                            <input type="text" matInput value="{{filename.slice(0, this.filename.length - 4)}}">
                             <!--[formControl]="nameFormControl"-->
 
                             <mat-error *ngIf="nameFormControl.hasError('required')">
@@ -47,9 +47,12 @@
             </div>
             <div class="col-sm">
 
+
+
                 <mat-form-field appearance="fill">
-                    <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (change)="update()">
-                        <mat-option *ngFor="let option of delimiterOptions">
+                    <mat-label>Delimiter</mat-label>
+                    <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (change)="update()" value=",">
+                        <mat-option *ngFor="let option of delimiterOptions" [value]="option">
                             {{ option }}
                         </mat-option>
                     </mat-select>

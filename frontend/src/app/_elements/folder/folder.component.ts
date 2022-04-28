@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import { FolderFile, FolderType } from 'src/app/_data/FolderFile';
 import Model from 'src/app/_data/Model';
+import { DatasetsService } from 'src/app/_services/datasets.service';
 
 @Component({
   selector: 'app-folder',
@@ -31,13 +32,17 @@ export class FolderComponent implements OnInit {
 
   searchTerm: string = '';
 
-  constructor() {
+  myDatasets : Dataset[] = [];
+
+  constructor(private datasets: DatasetsService) {
     //PLACEHOLDER
-    this.files = [
-      new Dataset('Titanik'),
-      new Dataset('Dijamanti'),
-      new Dataset('Filmovi'),
-    ]
+
+    this.datasets.getMyDatasets().subscribe((datasets) => {
+      this.myDatasets = datasets;
+    });
+
+    this.files = this.myDatasets;
+
 
     this.filteredFiles.length = 0;
     this.filteredFiles.push(...this.files);
