@@ -14,9 +14,12 @@ import {AfterViewInit, ElementRef} from '@angular/core';
 export class LoginModalComponent implements OnInit {
 
   @ViewChild('closeButton') closeButton?: ElementRef;
+  @ViewChild('pass') passwordInput!: ElementRef;
 
   username: string = '';
   password: string = '';
+
+  passwordShown: boolean = false;
 
   wrongCreds: boolean = false;
 
@@ -37,6 +40,8 @@ export class LoginModalComponent implements OnInit {
         if (response == "Username doesn't exist" || response == "Wrong password") {
           this.wrongCreds = true;
           this.password = '';
+          this.passwordShown = false;
+          this.passwordInput.nativeElement.type = "password";
         }
         else {
           this.authService.authenticate(response);
@@ -56,5 +61,14 @@ export class LoginModalComponent implements OnInit {
     this.wrongCreds = false;
     this.username = '';
     this.password = '';
+  }
+
+  togglePasswordShown() {
+    this.passwordShown = !this.passwordShown;
+
+    if (this.passwordShown)
+      this.passwordInput.nativeElement.type = "text";
+    else 
+      this.passwordInput.nativeElement.type = "password";
   }
 }

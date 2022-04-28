@@ -129,3 +129,11 @@
     height: 150px;
     margin: auto;
 }
+
+.close-button {
+    background-color: none;
+    color: white;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
