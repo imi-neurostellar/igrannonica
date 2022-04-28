@@ -43,15 +43,32 @@ table.fixed th:first-child {
 }
 
 mat-slider {
-    width: 300px;
+    width: 150px;
 }
 
 .belowColumn {
-    background-color: var(--ns-bg-dark-50);
+    background-color: transparent;
 }
 
 .slider {
-    background-color: var(--ns-bg-dark-100);
+    background-color: var(--ns-bg-dark-50);
+}
+
+.bottom-button {
+    font-size: large;
+    position: relative;
+    background-color: var(--ns-primary);
+    width: 10rem;
+    height: 2.3rem;
+    border-color: var(--ns-primary);
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;
+}
+
+#footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #missingValuesHeader {
@@ -100,4 +117,88 @@ table ::ng-deep .mat-form-field-wrapper {
 
 .graphic-class {
     background-color: white !important;
+}
+
+
+/* TABS STYLE */
+
+#folder-table {
+    border: 1px solid var(--ns-primary);
+    border-radius: 4px;
+}
+
+#tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    height: 3.2rem;
+}
+
+#tabs>.folder-tab:not(:first-child) {
+    margin-left: -5px;
+}
+
+.folder-tab-end {
+    margin-left: auto;
+    color: var(--offwhite) !important;
+    overflow: hidden;
+}
+
+.folder-tab,
+.folder-tab-end {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    height: 2.5rem;
+    background-color: var(--ns-bg-dark-100);
+    border-color: var(--ns-primary);
+    color: var(--ns-primary);
+    border-style: solid;
+    border-width: 1px 1px 0 1px;
+}
+
+.folder-tab:not(:first-child) {
+    margin-block-start: auto;
+}
+
+.folder-tab {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.selected-tab {
+    height: 3rem;
+    background-color: var(--ns-primary);
+    color: var(--offwhite);
+}
+
+.hover-tab {
+    height: 3.2rem;
+}
+
+.selected-tab,
+.hover-tab {
+    width: fit-content !important;
+}
+
+.tab-link {
+    color: var(--offwhite) !important;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.tab-link:active {
+    text-decoration: underline !important;
+}
+
+.selected-tab {
+    background-color: var(--ns-primary);
+}
+
+.hidden {
+    display: none;
 }

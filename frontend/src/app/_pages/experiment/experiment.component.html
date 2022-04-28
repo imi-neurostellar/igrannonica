@@ -28,7 +28,7 @@
         </div>
         <div #steps id="step_2" class="step-content">
             <div class="step-content-inside">
-                <app-column-table></app-column-table>
+                <app-column-table (okPressed)="goToPage(2)"></app-column-table>
             </div>
         </div>
         <div #steps id="step_3" class="step-content">

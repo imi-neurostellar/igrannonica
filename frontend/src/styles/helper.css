@@ -29,14 +29,9 @@
 .footer-center {
     position: relative;
     height: 1rem;
+    text-align: center;
 }
 
-.footer-center>* {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-}
 
 .row-height {
     white-space: nowrap;

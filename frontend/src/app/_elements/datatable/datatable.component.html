@@ -1,4 +1,4 @@
-<div *ngIf="tableData.hasInput">
+<div *ngIf="tableData.hasInput" class="position-relative">
     <div class="text-white">
         <div *ngIf="!tableData.loaded" style="width: 100%; height: 100%;" class="d-flex justify-content-center align-items-center">
             <app-loading></app-loading>
@@ -22,15 +22,9 @@
                         </tr>
                     </tbody>
                 </table>
-                <tfoot>
-                    <tr>
-                        <td colspan="100" class="fs-6">
-                            <div class="footer-center">
-                                <div>+ {{tableData.numRows - 11}} redova...</div>
-                            </div>
-                        </td>
-                    </tr>
-                </tfoot>
+            </div>
+            <div class="footer-center" >
+                <div>+ {{tableData.numRows - 11}} redova...</div>
             </div>
         </div>
     </div>
