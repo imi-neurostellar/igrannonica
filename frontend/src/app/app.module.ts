@@ -47,6 +47,8 @@ import { ColumnTableComponent } from './_elements/column-table/column-table.comp
 import { FolderComponent } from './_elements/folder/folder.component';
 import { TestComponent } from './_pages/test/test.component';
 import { DoughnutChartComponent } from './_elements/_charts/doughnut-chart/doughnut-chart.component';
+import { HeatmapComponent } from './_elements/_charts/heatmap/heatmap.component';
+import { HeatMapAllModule } from '@syncfusion/ej2-angular-heatmap';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -83,6 +85,7 @@ export function initializeApp(appConfig: Configuration) {
     MissingvaluesDialogComponent,
     TestComponent,
     DoughnutChartComponent,
+    HeatmapComponent
   ],
   imports: [
     BrowserModule,
@@ -97,6 +100,7 @@ export function initializeApp(appConfig: Configuration) {
     MatIconModule,
     NgChartsModule,
     Ng2SearchPipeModule,
+    HeatMapAllModule
   ],
   providers: [
     Configuration,
