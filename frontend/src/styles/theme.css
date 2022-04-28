@@ -54,11 +54,11 @@ a {
 
 .bubble {
     background-position: center;
-    transition: background 0.8s;
+    transition: background 0.2s;
 }
 
 .bubble:hover {
-    background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) center/15000%;
+    background: var(--ns-primary-50) radial-gradient(circle, transparent 1%, var(--ns-accent) 1%) center/15000%;
 }
 
 .bubble:active {

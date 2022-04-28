@@ -98,7 +98,7 @@ export class FormModelComponent implements AfterViewInit {
     }
   }
   addNeuron(index: number) {
-    if (this.newModel.layers[index].neurons < 100) {
+    if (this.newModel.layers[index].neurons < 18) {
       this.newModel.layers[index].neurons += 1;
       this.updateGraph();
     }

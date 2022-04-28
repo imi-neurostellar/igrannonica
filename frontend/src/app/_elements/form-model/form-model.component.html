@@ -96,11 +96,11 @@
 
     <div class="ns-col" id="layers-control">
         <div>Broj Skrivenih Slojeva</div>
-        <button class="btn-clear btn-icon" (click)="addLayer()">
+        <button class="btn-clear btn-icon bubble" (click)="addLayer()">
             <mat-icon>add</mat-icon>
         </button>
         <div>{{newModel.hiddenLayers}}</div>
-        <button class="btn-clear btn-icon" (click)="removeLayer()">
+        <button class="btn-clear btn-icon bubble" (click)="removeLayer()">
             <mat-icon>remove</mat-icon>
         </button>
 
@@ -120,7 +120,7 @@
 
     <div class="ns-col">
         <mat-form-field appearance="fill" class="mat-fix">
-            <mat-label>Broj Neurona svih slojeva</mat-label>
+            <mat-label>Broj neurona svih slojeva</mat-label>
             <input matInput type="number" min="1" max="18" [(ngModel)]="selectedNumberOfNeurons" (change)="changeAllNumberOfNeurons()">
         </mat-form-field>
     </div>
@@ -172,11 +172,11 @@
 
         <div class="d-flex flex-row align-items-center justify-content-center tm">
             <div class="col-6" style="font-size: 13px;">Broj čvorova</div>
-            <button class="btn-clear btn-icon" (click)="addNeuron(i)">
+            <button class="btn-clear btn-icon bubble" (click)="addNeuron(i)">
                 <mat-icon>add</mat-icon>
             </button>
             <div class="col-2 text-center">{{newModel.layers[i].neurons}}</div>
-            <button class="btn-clear btn-icon" (click)="removeNeuron(i)">
+            <button class="btn-clear btn-icon bubble" (click)="removeNeuron(i)">
                 <mat-icon>remove</mat-icon>
             </button>
         </div>
