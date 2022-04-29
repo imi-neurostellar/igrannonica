@@ -192,7 +192,8 @@ table ::ng-deep .mat-form-field-wrapper {
 }
 
 .hidden {
-    display: none;
+    visibility: hidden;
+    height: 1px;
 }
 
 .bottom-button {
@@ -210,4 +211,13 @@ table ::ng-deep .mat-form-field-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+.pad-fix {
+    padding-top: 0.6rem;
+    padding-bottom: 0;
+}
+
+.long {
+    height: 3rem;
 }

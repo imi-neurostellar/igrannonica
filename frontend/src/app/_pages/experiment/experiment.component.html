@@ -23,7 +23,7 @@
     <div #stepsContainer class="steps-container">
         <div #steps id="step_1" class="step-content">
             <div class="step-content-inside">
-                <app-folder [type]="FolderType.Dataset" (okPressed)="goToPage(1)"></app-folder>
+                <app-folder [type]="FolderType.Dataset" [tabsToShow]="[TabType.MyDatasets, TabType.PublicDatasets, TabType.File]" (okPressed)="goToPage(1)"></app-folder>
             </div>
         </div>
         <div #steps id="step_2" class="step-content">
@@ -33,7 +33,7 @@
         </div>
         <div #steps id="step_3" class="step-content">
             <div class="step-content-inside">
-                <app-folder [type]="FolderType.Model" (okPressed)="goToPage(0)"></app-folder>
+                <app-folder [type]="FolderType.Model" [tabsToShow]="[TabType.MyModels, TabType.PublicModels, TabType.File]" (okPressed)="goToPage(0)"></app-folder>
             </div>
         </div>
     </div>

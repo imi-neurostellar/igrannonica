@@ -21,7 +21,6 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
-    overflow-x: hidden;
     height: 2.5rem;
     background-color: var(--ns-bg-dark-100);
     border-color: var(--ns-primary);
@@ -32,7 +31,6 @@
 
 .folder-tab:not(:first-child) {
     margin-block-start: auto;
-    width: 4rem;
 }
 
 .selected-tab {
@@ -54,6 +52,7 @@
     color: var(--offwhite) !important;
     text-decoration: none !important;
     cursor: pointer;
+    padding: 0.5rem;
 }
 
 .tab-link:active {

@@ -83,7 +83,7 @@
                 <tbody>
                     <tr>
                         <th>Tip</th>
-                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix">
                             <mat-form-field>
                                 <mat-select matNativeControl [(value)]="colInfo.isNumber">
                                     <mat-option [value]="false">Kategorijski</mat-option>
@@ -120,11 +120,11 @@
                         </td>
                     </tr>
                     <tr style="padding: 0">
-                        <th class="brighter cell-align" (click)="openEncodingDialog()">
+                        <th class="brighter cell-align long" (click)="openEncodingDialog()">
                             <span class="verticalAlign">Enkodiranje</span>&nbsp;
                             <span class="material-icons-round verticalAlign">settings</span>
                         </th>
-                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix">
                             <mat-form-field>
                                 <mat-select matNativeControl [(value)]="experiment.encodings[i].encoding">
                                     <mat-option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)" [value]="option">
