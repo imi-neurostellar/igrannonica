@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { ModelsService } from 'src/app/_services/models.service';
@@ -25,7 +25,7 @@ export class FormDatasetComponent {
   rowsNumber: number = 0;
   colsNumber: number = 0;
 
-  dataset: Dataset; //dodaj ! potencijalno
+  @Input() dataset: Dataset; //dodaj ! potencijalno
 
   tableData: TableData = new TableData();
 
@@ -81,6 +81,8 @@ export class FormDatasetComponent {
       }
     }
     fileReader.readAsText(this.files[0]);
+
+    this.dataset.name = this.filename.slice(0, this.filename.length - 4);
   }
 
   checkAccessible() {

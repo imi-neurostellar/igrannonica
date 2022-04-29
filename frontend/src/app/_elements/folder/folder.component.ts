@@ -1,8 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import { FolderFile, FolderType } from 'src/app/_data/FolderFile';
 import Model from 'src/app/_data/Model';
 import { DatasetsService } from 'src/app/_services/datasets.service';
+import shared from 'src/app/Shared';
+import { ModelsService } from 'src/app/_services/models.service';
+import { FormDatasetComponent } from '../form-dataset/form-dataset.component';
+
 
 @Component({
   selector: 'app-folder',
@@ -10,6 +14,8 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
   styleUrls: ['./folder.component.css']
 })
 export class FolderComponent implements OnInit {
+
+  @ViewChild(FormDatasetComponent) formDataset?: FormDatasetComponent;
 
   @Input() folderName: string = 'Moji podaci';
 
@@ -34,18 +40,11 @@ export class FolderComponent implements OnInit {
 
   myDatasets : Dataset[] = [];
 
-  constructor(private datasets: DatasetsService) {
+  constructor(private datasets: DatasetsService, private modelsService: ModelsService) {
     //PLACEHOLDER
 
-    this.datasets.getMyDatasets().subscribe((datasets) => {
-      this.myDatasets = datasets;
-    });
+    this.refreshFiles();
 
-    this.files = this.myDatasets;
-
-
-    this.filteredFiles.length = 0;
-    this.filteredFiles.push(...this.files);
   }
 
   ngOnInit(): void {
@@ -54,6 +53,11 @@ export class FolderComponent implements OnInit {
     else {
       this.selectNewFile();
     }
+  }
+
+  displayFile(){
+    if(this.type == FolderType.Dataset)
+      this.formDataset!.dataset = <Dataset>this.fileToDisplay;
   }
 
   hoverOverFile(i: number) {
@@ -67,6 +71,7 @@ export class FolderComponent implements OnInit {
         this.fileToDisplay = this.files[this.selectedFileIndex];
       }
     }
+    this.displayFile();
   }
 
   selectNewFile() {
@@ -79,6 +84,7 @@ export class FolderComponent implements OnInit {
     this.newFileSelected = true;
     this.listView = false;
     this.selectedFileChanged.emit(this.newFile);
+    this.displayFile();
   }
 
   selectFile(index: number) {
@@ -88,6 +94,7 @@ export class FolderComponent implements OnInit {
     this.newFileSelected = false;
     this.listView = false;
     this.selectedFileChanged.emit(this.selectedFile);
+    this.displayFile();
   }
 
   createNewFile() {
@@ -102,8 +109,17 @@ export class FolderComponent implements OnInit {
     this.okPressed.emit();
   }
 
+  refreshFiles(){
+    this.datasets.getMyDatasets().subscribe((datasets) => {
+      this.myDatasets = datasets;
+      this.files = this.myDatasets;
+      this.searchTermsChanged();
+    });
+  }
+
   saveNewFile() {
-    // TODO
+    if(this.type == FolderType.Dataset)
+      this.formDataset!.uploadDataset();
   }
 
   calcZIndex(i: number) {

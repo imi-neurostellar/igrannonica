@@ -13,7 +13,7 @@ export default class Dataset extends FolderFile {
         dateCreated: Date = new Date(),
         lastUpdated: Date = new Date(),
         public uploaderId: string = '',
-        public delimiter: string = '',
+        public delimiter: string = ',',
         public hasHeader: boolean = true,
 
         public columnInfo: ColumnInfo[] = [],

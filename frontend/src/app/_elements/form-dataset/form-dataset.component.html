@@ -30,7 +30,7 @@
                     <div class="row">
                         <mat-form-field class="example-full-width" appearance="fill">
                             <mat-label>Naziv</mat-label>
-                            <input type="text" matInput value="{{filename.slice(0, this.filename.length - 4)}}">
+                            <input type="text" matInput value="{{dataset.name}}">
                             <!--[formControl]="nameFormControl"-->
 
                             <mat-error *ngIf="nameFormControl.hasError('required')">
