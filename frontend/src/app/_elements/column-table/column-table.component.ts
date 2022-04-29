@@ -35,6 +35,8 @@ export class ColumnTableComponent implements AfterViewInit {
     this.datasetService.getMyDatasets().subscribe((datasets) => {
       this.dataset = datasets[0];
       this.experiment = new Experiment();
+
+      console.log(datasets);
       for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
         this.experiment?.inputColumns.push(this.dataset.columnInfo[i].columnName);
       }

@@ -6,7 +6,9 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
 import shared from 'src/app/Shared';
 import { ModelsService } from 'src/app/_services/models.service';
 import { FormDatasetComponent } from '../form-dataset/form-dataset.component';
-
+import Experiment from 'src/app/_data/Experiment';
+import { ExperimentsService } from 'src/app/_services/experiments.service';
+import { PredictorsService } from 'src/app/_services/predictors.service';
 
 @Component({
   selector: 'app-folder',
@@ -25,6 +27,8 @@ export class FolderComponent implements OnInit {
 
   @Input() type: FolderType = FolderType.Dataset;
 
+  @Input() forExperiment?: Experiment;
+
   newFileSelected: boolean = true;
 
   selectedFileIndex: number = -1;
@@ -38,13 +42,17 @@ export class FolderComponent implements OnInit {
 
   searchTerm: string = '';
 
-  myDatasets : Dataset[] = [];
-
-  constructor(private datasets: DatasetsService, private modelsService: ModelsService) {
+  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService) {
     //PLACEHOLDER
+    this.forExperiment = new Experiment();
+    this.forExperiment.inputColumns = ['kolona1', 'kol2', '???', 'test'];
+
+    this.folders[TabType.File] = [];
+    this.folders[TabType.NewFile] = [];
 
     this.refreshFiles();
 
+    
   }
 
   ngOnInit(): void {
@@ -78,7 +86,6 @@ export class FolderComponent implements OnInit {
     if (!this.newFile) {
       this.createNewFile();
     }
-    this.selectedFileIndex = -1;
     this.fileToDisplay = this.newFile;
     this.selectedFile = this.newFile;
     this.newFileSelected = true;
@@ -88,7 +95,6 @@ export class FolderComponent implements OnInit {
   }
 
   selectFile(index: number) {
-    this.selectedFileIndex = index;
     this.selectedFile = this.filteredFiles[index];
     this.fileToDisplay = this.filteredFiles[index];
     this.newFileSelected = false;
@@ -110,11 +116,34 @@ export class FolderComponent implements OnInit {
   }
 
   refreshFiles(){
-    this.datasets.getMyDatasets().subscribe((datasets) => {
-      this.myDatasets = datasets;
-      this.files = this.myDatasets;
-      this.searchTermsChanged();
+    this.datasetsService.getMyDatasets().subscribe((datasets) => {
+      this.folders[TabType.MyDatasets] = datasets;
     });
+
+    this.datasetsService.getPublicDatasets().subscribe((datasets) => {
+      this.folders[TabType.PublicDatasets] = datasets;
+    });
+
+    this.modelsService.getMyModels().subscribe((models) => {
+      this.folders[TabType.MyModels] = models;
+    });
+
+    /*this.modelsService.getMyModels().subscribe((models) => {
+      this.folders[TabType.PublicModels] = models;
+    });*/
+    this.folders[TabType.PublicModels] = [];
+
+    this.experimentsService.getMyExperiments().subscribe((experiments) => {
+      this.folders[TabType.MyExperiments] = experiments;
+    });
+
+    this.files = [];
+
+    this.filteredFiles.length = 0;
+    this.filteredFiles.push(...this.files);
+
+    this.searchTermsChanged();
+
   }
 
   saveNewFile() {
@@ -122,7 +151,7 @@ export class FolderComponent implements OnInit {
       this.formDataset!.uploadDataset();
   }
 
-  calcZIndex(i: number) {
+  /*calcZIndex(i: number) {
     let zIndex = (this.files.length - i - 1)
     if (this.selectedFileIndex == i)
       zIndex = this.files.length + 2;
@@ -133,7 +162,7 @@ export class FolderComponent implements OnInit {
 
   newFileZIndex() {
     return (this.files.length + 1);
-  }
+  }*/
 
   clearSearchTerm() {
     this.searchTerm = '';
@@ -164,10 +193,84 @@ export class FolderComponent implements OnInit {
     console.log('delete');
   }
 
+  folders: { [tab: number]: FolderFile[] } = {};
+
+  tabTitles: { [tab: number]: string } = {
+    [TabType.File]: 'Fajl',
+    [TabType.NewFile]: 'Novi fajl',
+    [TabType.MyDatasets]: 'Moji izvori podataka',
+    [TabType.PublicDatasets]: 'Javni izvori podataka',
+    [TabType.MyModels]: 'Moje konfiguracije neuronske mreže',
+    [TabType.PublicModels]: 'Javne konfiguracije neuronske mreže',
+    [TabType.MyExperiments]: 'Eksperimenti',
+  };
+
   FolderType = FolderType;
+
+  TabType = TabType;
+
+  @Input() tabsToShow: TabType[] = [
+    TabType.MyDatasets,
+    TabType.PublicDatasets,
+    TabType.MyModels,
+    TabType.PublicModels,
+    TabType.MyExperiments,
+    TabType.File
+  ]
+
+  @Input() selectedTab: TabType = TabType.NewFile;
+  hoverTab: TabType = TabType.None;
+
+  selectTab(tab: TabType) {
+    this.checkListView(tab);
+    this.selectedTab = tab;
+    this.files = this.folders[tab];
+
+    this.searchTermsChanged();
+  }
+
+  checkListView(tab: TabType) {
+    switch (tab) {
+      case TabType.File:
+      case TabType.NewFile:
+      case TabType.None:
+        this.listView = false;
+        break;
+      case TabType.MyExperiments:
+      case TabType.MyDatasets:
+      case TabType.MyModels:
+      case TabType.PublicDatasets:
+      case TabType.PublicModels:
+        this.listView = true;
+        break;
+    }
+  }
+
+  hoverOverTab(tab: TabType) {
+    this.checkListView(tab);
+    this.hoverTab = tab;
+    if (tab == TabType.None) {
+      this.checkListView(this.selectedTab);
+      this.files = this.folders[this.selectedTab];
+    } else {
+      this.files = this.folders[tab];
+    }
+    this.searchTermsChanged();
+  }
 }
 
 export enum Privacy {
   Private,
   Public
+}
+
+export enum TabType {
+  NewFile,
+  File,
+  MyDatasets,
+  PublicDatasets,
+  MyModels,
+  PublicModels,
+  MyExperiments,
+  None
 }

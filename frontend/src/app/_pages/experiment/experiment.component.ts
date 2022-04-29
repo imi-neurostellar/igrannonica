@@ -3,6 +3,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import Shared from 'src/app/Shared';
 import { FolderType } from 'src/app/_data/FolderFile';
+import { TabType } from 'src/app/_elements/folder/folder.component';
 
 @Component({
   selector: 'app-experiment',
@@ -88,5 +89,7 @@ export class ExperimentComponent implements AfterViewInit {
   scrolling: boolean = false;
 
   FolderType = FolderType;
+
+  TabType = TabType;
 
 }

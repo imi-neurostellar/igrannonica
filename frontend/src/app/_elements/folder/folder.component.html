@@ -1,21 +1,24 @@
 <div id="folder">
     <div id="tabs">
-        <div id="new-file-tab" class="folder-tab p-1 rounded-top" [style]="'z-index:' + newFileZIndex() + ' ;'" [ngClass]="{'selected-tab' : newFileSelected, 'hover-tab' : hoveringOverFileIndex == -2}">
+        <div id="new-file-tab" class="folder-tab p-1 rounded-top" [style]="'z-index:' + (selectedTab == TabType.NewFile ? 11 : 10) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.NewFile, 'hover-tab' : hoverTab == TabType.NewFile}">
             <mat-icon class="text-offwhite">add</mat-icon>
-            <a class="stretched-link tab-link" (click)="selectNewFile()" (mouseenter)="hoverOverFile(-2)" (mouseleave)="hoverOverFile(-1)">
-                <p class="m-1" *ngIf="newFile != undefined">{{newFile.name}}</p>
+            <a class="stretched-link tab-link" (click)="selectTab(TabType.NewFile)" (mouseenter)="hoverOverTab(TabType.NewFile)" (mouseleave)="hoverOverTab(TabType.None)">
+                {{tabTitles[TabType.NewFile]}}
             </a>
         </div>
-        <div class="folder-tab p-1 rounded-top" *ngFor="let file of filteredFiles; let i = index" [style]="'z-index:' + calcZIndex(i) + ' ;'" [ngClass]="{'selected-tab' : selectedFileIndex == i, 'hover-tab' : hoveringOverFileIndex == i}">
+        <!--<div class="folder-tab p-1 rounded-top" *ngFor="let file of filteredFiles; let i = index" [style]="'z-index:' + calcZIndex(i) + ' ;'" [ngClass]="{'selected-tab' : selectedFileIndex == i, 'hover-tab' : hoveringOverFileIndex == i}">
             <a class="m-1 stretched-link tab-link" (click)="selectFile(i)" (mouseenter)="hoverOverFile(i)" (mouseleave)="hoverOverFile(-1)">{{file.name}}</a>
+        </div>-->
+        <div class="folder-tab p-1 rounded-top" *ngFor="let tab of tabsToShow; let i = index" [style]="'z-index:' + (selectedTab == tab ? 11 : (tabsToShow.length - i)) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == tab, 'hover-tab' : hoverTab == tab}">
+            <a class="m-1 stretched-link tab-link" (click)="selectTab(tab)" (mouseenter)="hoverOverTab(tab)" (mouseleave)="hoverOverTab(TabType.None)">{{tabTitles[tab]}}</a>
         </div>
     </div>
     <div id="selected-content" class="rounded-bottom text-offwhite">
-        <div id="searchbar">
-            <div id="path" class="ps-2">{{folderName}}
+        <div id="searchbar" *ngIf="listView">
+            <!-- <div id="path" class="ps-2">{{folderName}}
             </div>
-            <mat-icon>keyboard_arrow_right</mat-icon>
-            <div id="search" class="text-offwhite">
+            <mat-icon>keyboard_arrow_right</mat-icon> -->
+            <div id="search" class="text-offwhite mx-1">
                 <mat-form-field>
                     <button matPrefix class="btn-clear input-icon"><mat-icon>search</mat-icon></button>
                     <input type="search" matInput name="search" [(ngModel)]="searchTerm" (input)="searchTermsChanged()">
@@ -40,9 +43,9 @@
                 <button class="btn-clear icon-toggle" data-bs-toggle="collapse" data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
                     <mat-icon>sort</mat-icon>
                 </button>
-                <button class="btn-clear icon-toggle separator" [ngClass]="{'icon-toggle-on': listView}" (click)="toggleListView()">
+                <!-- <button class="btn-clear icon-toggle separator" [ngClass]="{'icon-toggle-on': listView}" (click)="toggleListView()">
                     <mat-icon>view_list</mat-icon>
-                </button>
+                </button> -->
             </div>
         </div>
         <!--{{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
@@ -59,7 +62,7 @@
                         <mat-icon>zoom_out_map</mat-icon>
                     </button>
                 </div>
-                <app-form-model [model]="fileToDisplay" *ngSwitchCase="FolderType.Model"></app-form-model>
+                <app-form-model [forExperiment]="forExperiment" [model]="fileToDisplay" *ngSwitchCase="FolderType.Model"></app-form-model>
                 <app-form-dataset *ngSwitchCase="FolderType.Dataset" ></app-form-dataset>
             </div>
             <div *ngSwitchCase="true" class="list-view">
