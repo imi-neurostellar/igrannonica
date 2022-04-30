@@ -64,6 +64,7 @@ export class AuthService {
   addGuestToken() {
     this.getGuestToken().subscribe((token) => {
       this.authenticate(token);
+      location.reload();
     });
   }
 
