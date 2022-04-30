@@ -1,4 +1,4 @@
-<div class="container-fluid p-0 text-offwhite holder" style="height: calc(100vh - 64px);">
+<div class="container-fluid p-0 text-offwhite holder" style="height: calc(100vh - 64px); text-align: center;">
     <div class="d-flex flex-colum align-items-center sidenav">
         <mat-stepper orientation="vertical" (selectionChange)="changePage($event)">
             <mat-step>
@@ -18,6 +18,10 @@
                 <ng-template matStepLabel><span class="label">Treniranje</span></ng-template>
                 <p>Odaberite parametre i trenirajte model</p>
             </mat-step>
+            <mat-step>
+                <ng-template matStepLabel><span class="label">Pregled rezultata treniranja</span></ng-template>
+                <p>Pregledajte tok treniranja i grafički prikaz rezultata</p>
+            </mat-step>
         </mat-stepper>
     </div>
     <div #stepsContainer class="steps-container">
@@ -33,7 +37,12 @@
         </div>
         <div #steps id="step_3" class="step-content">
             <div class="step-content-inside">
-                <app-folder [type]="FolderType.Model" [tabsToShow]="[TabType.MyModels, TabType.PublicModels, TabType.File]" (okPressed)="goToPage(0)"></app-folder>
+                <app-folder [type]="FolderType.Model" (okPressed)="goToPage(3)"></app-folder>
+            </div>
+        </div>
+        <div #steps id="step_4" class="step-content">
+            <div class="step-content-inside" >
+                <app-metric-view></app-metric-view>
             </div>
         </div>
     </div>
