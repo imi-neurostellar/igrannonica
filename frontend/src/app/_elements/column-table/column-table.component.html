@@ -4,11 +4,12 @@
             {{tab.name}}
         </a>
     </div>
+    <!--
     <button mat-button class="p-1 folder-tab-end rounded-top">
         Kolone
         <mat-icon>keyboard_double_arrow_down</mat-icon>
-        <!--meni ovde-->
     </button>
+    -->
 </div>
 <div id="folder-table" *ngIf="dataset && experiment">
     <!--<div [ngSwitch]="tabToDisplay">-->
@@ -16,13 +17,17 @@
 
         <div [ngClass]="{'hidden': tabToDisplay != Table.Data}">
             <table class="table text-offwhite fixed bg-blur">
+                <colgroup>
+                    <col class="col-first">
+                    <col *ngFor="let column of dataset.columnInfo; let i = index" [ngClass]="{'col-disabled' : !experiment.inputColumns.includes(column.columnName)}">
+                </colgroup>
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                             <div class="cell-align">
                                 #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
-                                <mat-checkbox color="primary" checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                                <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                             </div>
                         </th>
                     </tr>
@@ -30,7 +35,7 @@
                 <tbody>
                     <tr *ngFor="let row of tableData; let i = index">
                         <th>#{{i}}</th>
-                        <td *ngFor="let col of row; let j = index">
+                        <td *ngFor="let col of row; let j = index" [ngClass]="{'text-disabled' : !columnsChecked[j]}">
                             <div class="text-overflow">
                                 {{col}}
                             </div>
@@ -42,22 +47,29 @@
 
         <div [ngClass]="{'hidden': tabToDisplay != Table.CorrelationMatrix}">
             <table class="table text-offwhite fixed bg-blur">
+                <colgroup>
+                    <col class="col-first">
+                    <col *ngFor="let column of dataset.columnInfo; let i = index" [ngClass]="{'col-disabled' : !experiment.inputColumns.includes(column.columnName)}">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th>Naziv</th>
-                        <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                            #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                        <th>Kolona</th>
+                        <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
+                            <div class="cell-align">
+                                #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                            </div>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let colInfo of dataset.columnInfo; let i = index">
-                        <th>
+                        <th [ngClass]="{'header-disabled col-disabled' : !columnsChecked[i]}">
                             <div class="text-left">
                                 {{colInfo.columnName}}
                             </div>
                         </th>
-                        <td *ngFor="let colInfo of dataset.columnInfo; let j = index">
+                        <td *ngFor="let colInfo of dataset.columnInfo; let j = index" [ngClass]="{'text-disabled col-disabled' : !columnsChecked[j] || !columnsChecked[i]}">
                             <div class="text-overflow">
                                 0.1
                             </div>
@@ -69,13 +81,17 @@
 
         <div [ngClass]="{'hidden': tabToDisplay != Table.Columns}">
             <table class="table text-offwhite fixed bg-blur">
+                <colgroup>
+                    <col class="col-first">
+                    <col *ngFor="let column of dataset.columnInfo; let i = index" [ngClass]="{'col-disabled' : !experiment.inputColumns.includes(column.columnName)}">
+                </colgroup>
                 <thead>
                     <tr>
                         <th>Naziv</th>
-                        <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                             <div class="cell-align">
                                 #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
-                                <mat-checkbox color="primary" checked (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
+                                <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                             </div>
                         </th>
                     </tr>
@@ -83,9 +99,9 @@
                 <tbody>
                     <tr>
                         <th>Tip</th>
-                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix">
+                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix" [ngClass]="{'text-disabled' : !columnsChecked[i]}">
                             <mat-form-field>
-                                <mat-select matNativeControl [(value)]="colInfo.isNumber">
+                                <mat-select matNativeControl [(value)]="colInfo.isNumber" [disabled]="!columnsChecked[i]">
                                     <mat-option [value]="false">Kategorijski</mat-option>
                                     <mat-option [value]="true">Numerički</mat-option>
                                 </mat-select>
@@ -93,15 +109,15 @@
                         </td>
                     </tr>
                     <tr class="graphics-row">
-                        <th class="no-pad border-bottom">Grafik</th>
-                        <td class="graphic-class no-pad" *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <th class="no-pad">Grafik</th>
+                        <td class="no-pad" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'graphic-class' : !columnsChecked[i]}">
                             <app-box-plot *ngIf="colInfo.isNumber" [width]="150" [height]="150"></app-box-plot>
                             <app-pie-chart *ngIf="!colInfo.isNumber" [width]="150" [height]="150"></app-pie-chart>
                         </td>
                     </tr>
                     <tr>
-                        <th class="brighter">Statistika</th>
-                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <th class="border-bottom">Statistika</th>
+                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'text-disabled' : !columnsChecked[i]}">
                             <span *ngIf="colInfo.isNumber">
                     Mean: {{colInfo.mean}}<br>
                     Median: {{colInfo.median}}<br>
@@ -124,9 +140,9 @@
                             <span class="verticalAlign">Enkodiranje</span>&nbsp;
                             <span class="material-icons-round verticalAlign">settings</span>
                         </th>
-                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix">
+                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix" [ngClass]="{'text-disabled' : !columnsChecked[i]}">
                             <mat-form-field>
-                                <mat-select matNativeControl [(value)]="experiment.encodings[i].encoding">
+                                <mat-select matNativeControl [(value)]="experiment.encodings[i].encoding" [disabled]="!columnsChecked[i]">
                                     <mat-option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)" [value]="option">
                                         {{ optionName }}
                                     </mat-option>
@@ -139,9 +155,9 @@
                             <div id="missingValuesHeader">Regulisanje<br>nedostajućih<br>vrednosti<br></div>
                             <span class="material-icons-round">settings</span>
                         </th>
-                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <td *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'text-disabled' : !columnsChecked[i]}">
 
-                            <button class="w-100" mat-raised-button [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}" #nullValMenu>
+                            <button class="w-100" mat-raised-button [ngClass]="{ 'menu-disabled' : !columnsChecked[i]}" [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}" #nullValMenu>
                     <div class="cell-align">
                         {{nullValOption[i]}}
                         <mat-icon>arrow_drop_down</mat-icon>

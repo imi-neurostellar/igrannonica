@@ -3,7 +3,6 @@ table.fixed {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
-    border: 1px solid var(--ns-primary-50);
     font-size: 12px;
     border-radius: 4px;
 }
@@ -18,7 +17,6 @@ table.fixed td {
     max-width: 200px;
     min-width: 200px;
     vertical-align: middle;
-    background-color: var(--ns-bg-dark-100);
     margin: 4px;
 }
 
@@ -27,13 +25,12 @@ table.fixed th {
     max-width: 120px;
     min-width: 120px;
     vertical-align: middle;
-    background-color: var(--ns-bg-dark-100);
+    background-color: var(--ns-primary-50);
     font-size: 14px;
 }
 
 table.fixed th:first-child {
     text-align: center;
-    background-color: var(--ns-primary-25);
 }
 
 .columnNames {
@@ -107,7 +104,7 @@ table ::ng-deep .mat-form-field-wrapper {
 }
 
 .graphic-class {
-    background-color: white !important;
+    opacity: 0.5;
 }
 
 
@@ -220,4 +217,29 @@ table ::ng-deep .mat-form-field-wrapper {
 
 .long {
     height: 3rem;
+}
+
+.col-disabled {
+    background-color: rgb(0, 45, 69);
+}
+
+.text-disabled {
+    color: gray;
+}
+
+.header-disabled {
+    color: gray;
+}
+
+.menu-disabled {
+    pointer-events: none;
+    opacity: .5;
+}
+
+col:not(.col-disabled) {
+    background-color: var(--ns-bg-dark-100);
+}
+
+.col-first {
+    background-color: rgb(1, 56, 86) !important;
 }

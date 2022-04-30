@@ -4,9 +4,10 @@
     {
         public ColumnInfo() { }
 
-        public ColumnInfo(string columnName, bool isNumber, int numNulls, float mean, float min, float max, float median, string[] uniqueValues)
+        public ColumnInfo(string columnName, string columnType, bool isNumber, int numNulls, float mean, float min, float max, float median, string[] uniqueValues)
         {
             this.columnName = columnName;
+            this.columnType = columnType;
             this.isNumber = isNumber;
             this.numNulls = numNulls;
             this.mean = mean;
@@ -17,6 +18,7 @@
         }
 
         public string columnName { get; set; }
+        public string columnType { get; set; }
         public bool isNumber { get; set; }
         public int numNulls { get; set; }
         public float mean { get; set; }

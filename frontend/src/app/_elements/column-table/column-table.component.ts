@@ -26,6 +26,8 @@ export class ColumnTableComponent implements AfterViewInit {
   tableData?: any[][];
   nullValOption: string[] = [];
 
+  columnsChecked: boolean[] = []; //niz svih kolona
+
   testSetDistribution: number = 70;
   constructor(private datasetService: DatasetsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
     //ovo mi nece trebati jer primam dataset iz druge komponente
@@ -35,7 +37,9 @@ export class ColumnTableComponent implements AfterViewInit {
     this.datasetService.getMyDatasets().subscribe((datasets) => {
       this.dataset = datasets[0];
       this.experiment = new Experiment();
-
+      this.dataset.columnInfo.forEach(column => {
+        this.columnsChecked.push(true);
+      });
       console.log(datasets);
       for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
         this.experiment?.inputColumns.push(this.dataset.columnInfo[i].columnName);
