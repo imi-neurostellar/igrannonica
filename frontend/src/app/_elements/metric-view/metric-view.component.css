@@ -1,0 +1,10 @@
+#container{
+    width: 100%;
+    height: 90%;
+    border-radius: 5px;
+    background-color:var(--ns-primary-25);
+    border:1px solid var(--ns-accent);
+}
+#line{
+    background-color:#dfd7d7f0 ;
+}
