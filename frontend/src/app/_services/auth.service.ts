@@ -106,4 +106,15 @@ export class AuthService {
   authHeader() {
     return new HttpHeaders().set("Authorization", "Bearer " + this.cookie.get('token'));
   }
+  alreadyGuest(){
+    if(this.cookie.check('token')){
+      const token = this.cookie.get('token');
+      const decodedToken = jwtHelper.decodeToken(token);
+      if(decodedToken.role=="Guest")
+        return true;
+    }
+    return false;
+  }
+
+
 }
