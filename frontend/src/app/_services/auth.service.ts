@@ -52,21 +52,13 @@ export class AuthService {
     }
     var property = jwtHelper.decodeToken(this.cookie.get('token'));
     var username = property['name'];
-    if (username != "") {
 
       this.refresher = setTimeout(() => {
         this.http.post(`${Configuration.settings.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
           this.authenticate(response);
         });
       }, exp.getTime() - new Date().getTime() - 60000);
-    }
-    else {
-      this.refresher = setTimeout(() => {
-        this.getGuestToken().subscribe((response) => {
-          this.authenticate(response);
-        });
-      }, exp.getTime() - new Date().getTime() - 60000);
-    }
+  
   }
 
   addGuestToken() {

@@ -43,7 +43,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       if(!this.authService.alreadyGuest())
         this.authService.addGuestToken();
     }
-    this.signalRService.startConnection();
+    //this.signalRService.startConnection();
     //this.startHttpRequest();
   }
 }

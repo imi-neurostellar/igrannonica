@@ -29,7 +29,7 @@ namespace api.Services
             List<User> tempUsers=_user.Find(u=>u.isPermament==false).ToList();
             foreach (User user in tempUsers)
             {
-                if ((DateTime.Now.ToUniversalTime() - user.dateCreated).TotalMinutes < 1)
+                if ((DateTime.Now.ToUniversalTime() - user.dateCreated).TotalDays < 1)
                     continue;
                 List<Predictor> tempPredictors=_predictor.Find(p=>p.uploaderId==user._id).ToList();
                 List<Model> tempModels=_model.Find(m=>m.uploaderId==user._id).ToList();
