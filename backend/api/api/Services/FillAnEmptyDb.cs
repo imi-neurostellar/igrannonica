@@ -55,7 +55,7 @@ namespace api.Services
                 dataset.uploaderId = "000000000000000000000000";
                 dataset.name = "Titanik dataset";
                 dataset.description = "Titanik dataset";
-                dataset.header = new string[] { "PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked" };
+                //dataset.header = new string[] { "PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked" };
                 dataset.fileId = _fileService.GetFileId(fullPath);
                 dataset.extension = ".csv";
                 dataset.isPublic = true;

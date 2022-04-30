@@ -98,6 +98,7 @@ export class FormDatasetComponent {
 
     this.modelsService.uploadData(this.files[0]).subscribe((file) => {
       //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+      this.dataset._id = "";
       this.dataset.fileId = file._id;
       this.dataset.uploaderId = shared.userId;
 

@@ -5,7 +5,6 @@ export default class Dataset extends FolderFile {
     constructor(
         name: string = 'Novi izvor podataka',
         public description: string = '',
-        public header: string[] = [],
         public fileId?: number,
         public extension: string = '.csv',
         public isPublic: boolean = false,
