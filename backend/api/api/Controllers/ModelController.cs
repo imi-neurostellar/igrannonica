@@ -98,7 +98,7 @@ namespace api.Controllers
 
         // GET: api/<ModelController>/mymodels
         [HttpGet("mymodels")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Model>> Get()
         {
             string uploaderId = getUserId();

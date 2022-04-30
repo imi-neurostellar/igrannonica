@@ -136,7 +136,7 @@ namespace api.Controllers
             var existingDataset = _datasetService.GetOneDataset(dataset.uploaderId, dataset.name);
 
             if (existingDataset != null)
-                return NotFound($"Dateset with name = {dataset.name} exisits");
+                return NotFound($"Dataset with this name already exists");
             else
             {
                 FileModel fileModel = _fileService.getFile(dataset.fileId);

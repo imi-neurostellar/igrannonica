@@ -45,7 +45,7 @@ namespace api.Controllers
         }
 
         [HttpPost("renewJwt")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<string>> RenewJwt() {
             var authorization = Request.Headers[HeaderNames.Authorization];
             

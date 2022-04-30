@@ -1,0 +1,46 @@
+<div id="header">
+    <h1>Trenirajte veštačku neuronsku mrežu</h1>
+</div>
+<div id="wrapper" class="mb-4">
+    <div id="container" class="container p-5 row" style="background-color: white; min-height: 100%;">
+        <div class="col"></div>
+
+        <div class="col-10">
+
+            <h2>1. Izaberite eksperiment iz kolekcije</h2>
+            <div class="px-5 mt-5 mb-3">
+                <input type="text" class="form-control" placeholder="Pretraga"
+                    [(ngModel)]="term">
+            </div>
+            <div class="overflow-auto px-5" style="max-height: 500px;">
+                <ul class="list-group">
+                    <li class="list-group-item p-3" *ngFor="let experiment of myExperiments|filter:term"
+                        [ngClass]="{'selectedExperimentClass': this.selectedExperiment == experiment}">
+                        <app-item-experiment [experiment]="experiment"
+                            (click)="selectThisExperiment(experiment);"></app-item-experiment>
+                    </li>
+                </ul>
+            </div>
+    
+            <h2 class="mt-5 mb-2">2. Izaberite model</h2>
+            <app-model-load (selectedModelChangeEvent)="selectModel($event)" [forExperiment]="selectedExperiment"></app-model-load>
+    
+            <h2 class="my-5">3. Treniranje modela</h2>
+
+            <div class="d-flex flex-row justify-content-center align-items-center my-3">
+                <button class="btn btn-lg col-4" style="background-color:#003459; color:white;" (click)="trainModel();">Treniraj
+                    model</button>
+            </div>
+    
+            <h2 class="mt-5">Rezultati treniranja</h2>
+            <div class="m-3" *ngIf="trainingResult">
+                <h2 class="my-2">Rezultati treniranja:</h2>
+                <p>
+                    {{trainingResult}}
+                </p>
+            </div>
+        </div>
+
+        <div class="col"></div>
+    </div>
+</div>

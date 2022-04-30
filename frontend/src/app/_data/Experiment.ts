@@ -1,3 +1,4 @@
+import { ProblemType } from "./Model";
 export default class Experiment {
     _id: string = '';
     uploaderId: string = '';

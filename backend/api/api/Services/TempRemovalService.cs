@@ -10,6 +10,8 @@ namespace api.Services
         private readonly IMongoCollection<Model> _model;
         private readonly IMongoCollection<Dataset> _dataset;
         private readonly IMongoCollection<Experiment> _experiment;
+        private readonly IMongoCollection<User> _user;
+        private readonly IMongoCollection<Predictor> _predictor;
 
         public TempRemovalService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
         {
@@ -18,43 +20,42 @@ namespace api.Services
             _model= database.GetCollection<Model>(settings.ModelCollectionName);
             _dataset = database.GetCollection<Dataset>(settings.DatasetCollectionName);
             _experiment= database.GetCollection<Experiment>(settings.ExperimentCollectionName);
+            _user = database.GetCollection<User>(settings.CollectionName);
+            _predictor = database.GetCollection<Predictor>(settings.PredictorCollectionName);
+
         }
-        public void DeleteTemps()
+        public void DeleteTemps()                
         {
-            List<FileModel> files = _file.Find(file => file.uploaderId == "").ToList();
-            foreach (var file in files)
+            List<User> tempUsers=_user.Find(u=>u.isPermament==false).ToList();
+            foreach (User user in tempUsers)
             {
-                if ((DateTime.Now.ToUniversalTime() - file.date).TotalDays >= 1)
+                if ((DateTime.Now.ToUniversalTime() - user.dateCreated).TotalMinutes < 1)
+                    continue;
+                List<Predictor> tempPredictors=_predictor.Find(p=>p.uploaderId==user._id).ToList();
+                List<Model> tempModels=_model.Find(m=>m.uploaderId==user._id).ToList();
+                List<Experiment> tempExperiment = _experiment.Find(e => e.uploaderId == user._id).ToList();
+                List<Dataset> tempDatasets = _dataset.Find(d => d.uploaderId == user._id).ToList();
+                List<FileModel> tempFiles = _file.Find(f => f.uploaderId == user._id).ToList();
+
+
+                foreach (Predictor predictor in tempPredictors)
+                    DeletePredictor(predictor._id);
+                foreach(Model model in tempModels)
+                    DeleteModel(model._id);
+                foreach(Experiment experiment in tempExperiment)
+                    DeleteExperiment(experiment._id);
+                foreach(Dataset dataset in tempDatasets)
+                    DeleteDataset(dataset._id);
+                foreach(FileModel file in tempFiles)
                 {
                     DeleteFile(file._id);
-                    List<Dataset> datasets = _dataset.Find(dataset => dataset.fileId == file._id && dataset.uploaderId=="").ToList();
-                    foreach(var dataset in datasets)
-                    {
-                        DeleteDataset(dataset._id);
-                        List<Experiment> experiments = _experiment.Find(experiment=>experiment.datasetId== dataset._id && experiment.uploaderId=="").ToList();
-                        foreach(var experiment in experiments)
-                        {
-                            DeleteExperiment(experiment._id);
-                            foreach(var modelId in experiment.ModelIds)
-                            {
-                                var delModel=_model.Find(model=> modelId== model._id && model.uploaderId=="").FirstOrDefault();
-                                if(delModel!= null)
-                                    DeleteModel(delModel._id);
-                            }
-                        }     
-                    }
-                    if (File.Exists(file.path))
+                    if(File.Exists(file.path))
                         File.Delete(file.path);
                 }
-            }
-            //Brisanje modela ukoliko gost koristi vec postojeci dataset
-            List<Model> models1= _model.Find(model =>model.uploaderId == "").ToList();
-            foreach(var model in models1)
-            {
-                if ((DateTime.Now.ToUniversalTime() - model.dateCreated.ToUniversalTime()).TotalDays >= 1)
-                {
-                    DeleteModel(model._id);
-                }
+                DeleteUser(user._id);
+
+
+
             }
             
 
@@ -78,6 +79,14 @@ namespace api.Services
         public void DeleteExperiment(string id)
         {
             _experiment.DeleteOne(experiment => experiment._id == id);
+        }
+        public void DeletePredictor(string id)
+        {
+            _predictor.DeleteOne(predictor=> predictor._id == id);
+        }
+        public void DeleteUser(string id)
+        {
+            _user.DeleteOne(user=>user._id == id);
         }
 
 
