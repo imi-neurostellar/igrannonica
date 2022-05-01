@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewChildren, Input } from '@angular/core';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import Shared from 'src/app/Shared';
 import { FolderType } from 'src/app/_data/FolderFile';
 import { TabType } from 'src/app/_elements/folder/folder.component';
+import Experiment from 'src/app/_data/Experiment';
 
 @Component({
   selector: 'app-experiment',
@@ -17,8 +18,24 @@ export class ExperimentComponent implements AfterViewInit {
   @ViewChildren('steps') steps!: ElementRef[];
 
   event: number = 0;
+  @Input() experiment: Experiment; 
 
-  constructor() { }
+
+  constructor() {
+    this.experiment = new Experiment();
+  }
+
+  updateExperiment(){
+
+  }
+
+  addNewExperiment(){
+
+  }
+
+  trainModel(){
+
+  }
 
   stepHeight = this.calcStepHeight();
 
