@@ -1,6 +1,7 @@
 from enum import unique
 from itertools import count
 import os
+from sys import breakpointhook
 import pandas as pd
 from sklearn import datasets, multiclass
 import tensorflow as tf
@@ -38,27 +39,38 @@ def returnColumnsInfo(dataset):
             unique=datafront[kolona].value_counts()
             uniquevalues=[]
             uniquevaluescount=[]
+            uniquevaluespercent=[]
             for val, count in unique.iteritems():
-                uniquevalues.append(val)
-                uniquevaluescount.append(count)
+                if(val):
+                    uniquevalues.append(val)
+                    uniquevaluescount.append(count)
+                    percent=count/rowCount
+                    uniquevaluespercent.append(percent)
             #print(uniquevalues)
             #print(uniquevaluescount)
             mean=0
             median=0
             minimum=0
             maximum=0
+            q1=0
+            q3=0
             nullCount=datafront[kolona].isnull().sum()
             if(nullCount>0):
                 allNullCols=allNullCols+1
-            frontreturn={'columnName':kolona,
+            frontreturn={
+                        'columnName':kolona,
                         'isNumber':False,
                         'uniqueValues':uniquevalues,
                         'uniqueValuesCount':uniquevaluescount,
-                        'median':float(mean),
-                        'mean':float(median),
+                        'uniqueValuesPercent':uniquevaluespercent,
+                        'mean':float(mean),
+                        'median':float(median),
                         'numNulls':int(nullCount),
                         'min':float(minimum),
                         'max':float(maximum),
+                        'q1':float(q1),
+                        'q3':float(q3),
+
             }
             dict.append(frontreturn)
         else:
@@ -66,18 +78,39 @@ def returnColumnsInfo(dataset):
             maximum=max(datafront[kolona])
             mean=datafront[kolona].mean()
             median=s.median(datafront[kolona].copy().dropna())
+            q1= np.percentile(datafront[kolona].copy().dropna(), 25)
+            q3= np.percentile(datafront[kolona].copy().dropna(), 75)
             nullCount=datafront[kolona].isnull().sum()
             if(nullCount>0):
                 allNullCols=allNullCols+1
-            frontreturn={'columnName':kolona,
+
+            #pretvaranje u kategorijsku
+            datafront = datafront.astype({kolona: str})
+            print(datafront.dtypes)
+            unique=datafront[kolona].value_counts()
+            uniquevaluesn=[]
+            uniquevaluescountn=[]
+            uniquevaluespercentn=[]
+            for val, count in unique.iteritems():
+                if(val):
+                    uniquevaluesn.append(val)
+                    uniquevaluescountn.append(count)
+                    percent=count/rowCount
+                    uniquevaluespercentn.append(percent)
+            frontreturn={
+                        'columnName':kolona,
                         'isNumber':1,
-                        'uniqueValues':[],
-                        'uniqueValuesCount':[],
+                        'uniqueValues':uniquevaluesn,
+                        'uniqueValuesCount':uniquevaluescountn,
+                        'uniqueValuesPercent':uniquevaluespercentn,
                         'mean':float(mean),
                         'median':float(median),
                         'numNulls':int(nullCount),
                         'min':float(minimum),
                         'max':float(maximum),
+                        'q1':float(q1),
+                        'q3':float(q3),
+
             }
             dict.append(frontreturn)
         NullRows = datafront[datafront.isnull().any(axis=1)]
