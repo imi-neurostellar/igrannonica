@@ -32,16 +32,21 @@ export class ColumnInfo {
         public isNumber: boolean = false,
         public numNulls: number = 0,
         public uniqueValues?: string[],
+        public uniqueValuesCount?:number[],
+        public uniqueValuesPrecent?:number[],
         public median?: number,
         public mean?: number,
         public min?: number,
-        public max?: number
+        public max?: number,
+        public q1?:number,
+        public q3?:number,
     ) { 
         if (isNumber)
             columnType = ColumnType.numerical;
         else 
             columnType = ColumnType.categorical;
     }
+        
 }
 
 export enum ColumnType {
