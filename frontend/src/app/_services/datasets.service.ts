@@ -25,10 +25,10 @@ export class DatasetsService {
   }
 
   getDatasetFile(fileId: any): any {
-    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/true/${fileId}`, { headers: this.authService.authHeader(), responseType: 'text' });
+    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
   getDatasetFilePartial(fileId: any, startRow: number, rowNum: number): Observable<any> {
-    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/true/${fileId}/${startRow}/${rowNum}`, { headers: this.authService.authHeader(), responseType: 'text' });
+    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/${startRow}/${rowNum}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
 
   editDataset(dataset: Dataset): Observable<Dataset> {

@@ -18,7 +18,6 @@ export class DatatableComponent implements OnInit {
 
 export class TableData {
   constructor(
-    public hasHeader = true,
     public hasInput = false,
     public loaded = false,
     public numRows = 0,
