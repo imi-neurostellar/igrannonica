@@ -38,5 +38,8 @@ namespace api.Models
         public int epochs { get; set; }
         //public bool isTrained { get; set; }
         //public NullValues[] nullValues { get; set; }
+        public bool randomOrder { get; set; }
+        public bool randomTestSet { get; set; }
+        public float randomTestSetDistribution { get; set; }
     }
 }

@@ -62,9 +62,14 @@ namespace api.Services
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
                 dataset.delimiter = "";
+<<<<<<< HEAD
+=======
+                //dataset.hasHeader = true;
+>>>>>>> f9b96fc9234802ba78a64be094ebc4b4525cde8e
                 dataset.columnInfo = new ColumnInfo[] { };
-                dataset.columnInfo = new[]
+                /*dataset.columnInfo = new[]
                 {
+<<<<<<< HEAD
                     new ColumnInfo( "PassengerId", "columnType", true, 0, 446, 1, 891, 446, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                     new ColumnInfo( "Survived", "columnType", true, 0, 0.38383838534355164f, 0, 1, 0, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                     new ColumnInfo( "Pclass", "columnType", true, 0, 2.3086419105529785f, 1, 3, 3, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
@@ -78,6 +83,21 @@ namespace api.Services
                     new ColumnInfo( "Cabin", "columnType", false, 687, 0, 0, 0, 0, new string[]{ "B96 B98", "G6", "C23 C25 C27", "C22 C26", "F33", "F2", "E101", "D", "C78", "C93" }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                     new ColumnInfo( "Embarked", "columnType", false, 2, 0.3815937042236328f, 0, 6, 0, new string[]{ "S", "C", "Q" }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                 };
+=======
+                    new ColumnInfo( "PassengerId", true, 0, 446, 1, 891, 446, new string[]{ }),
+                    new ColumnInfo( "Survived", true, 0, 0.38383838534355164f, 0, 1, 0, new string[]{ }),
+                    new ColumnInfo( "Pclass", true, 0, 2.3086419105529785f, 1, 3, 3, new string[]{ }),
+                    new ColumnInfo( "Name", false, 0, 0, 0, 0, 0, new string[]{"Braund, Mr. Owen Harris", "Boulos, Mr. Hanna", "Frolicher-Stehli, Mr. Maxmillian", "Gilinski, Mr. Eliezer", "Murdlin, Mr. Joseph", "Rintamaki, Mr. Matti", "Stephenson, Mrs. Walter Bertram (Martha Eustis)", "Elsbury, Mr. William James", "Bourke, Miss. Mary", "Chapman, Mr. John Henry"}),
+                    new ColumnInfo( "Sex", false, 0, 0, 0, 0, 0, new string[]{ "male", "female" }),
+                    new ColumnInfo( "Age", true, 177, 29.69911766052246f, 0.41999998688697815f, 80, 28, new string[]{ }),
+                    new ColumnInfo( "SibSp", true, 0, 0.523007869720459f, 0, 8, 0, new string[]{ }),
+                    new ColumnInfo( "Parch", true, 0, 0.3815937042236328f, 0, 6, 0, new string[]{ }),
+                    new ColumnInfo( "Ticket", false, 0, 0, 0, 0, 0, new string[]{ "347082", "CA. 2343", "1601", "3101295", "CA 2144", "347088", "S.O.C. 14879", "382652", "LINE", "PC 17757" }),
+                    new ColumnInfo( "Fare", true, 0, 32.20420837402344f, 0, 512.3292236328125f, 14.45419979095459f, new string[]{ }),
+                    new ColumnInfo( "Cabin", false, 687, 0, 0, 0, 0, new string[]{ "B96 B98", "G6", "C23 C25 C27", "C22 C26", "F33", "F2", "E101", "D", "C78", "C93" }),
+                    new ColumnInfo( "Embarked", false, 2, 0.3815937042236328f, 0, 6, 0, new string[]{ "S", "C", "Q" }),
+                };*/
+>>>>>>> f9b96fc9234802ba78a64be094ebc4b4525cde8e
                 dataset.rowCount = 891;
                 dataset.nullCols = 3;
                 dataset.nullRows = 708;
@@ -119,9 +139,9 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Embarked" };
                 experiment.outputColumn = "Survived";
-                experiment.randomOrder = true;
-                experiment.randomTestSet = true;
-                experiment.randomTestSetDistribution = 0.30000001192092896f;
+                //experiment.randomOrder = true;
+                //experiment.randomTestSet = true;
+                //experiment.randomTestSetDistribution = 0.30000001192092896f;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
@@ -177,6 +197,7 @@ namespace api.Services
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
                 dataset.delimiter = "";
+<<<<<<< HEAD
                 dataset.columnInfo = new[]
                  {
                     new ColumnInfo( "Unnamed: 0", "columnType", true, 0, 26969.5f, 0, 53939, 26969.5f, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
@@ -191,6 +212,23 @@ namespace api.Services
                     new ColumnInfo( "y", "columnType", true, 0, 5.73452615737915f, 0, 58.900001525878906f, 5.710000038146973f, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                     new ColumnInfo( "z", "columnType", true, 0, 3.538733720779419f, 0, 31.799999237060547f, 3.5299999713897705f, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f )
                     };
+=======
+                //dataset.hasHeader = true;
+                /*dataset.columnInfo = new[]
+                 {
+                    new ColumnInfo( "Unnamed: 0", true, 0, 26969.5f, 0, 53939, 26969.5f, new string[]{ }),
+                    new ColumnInfo( "carat", true, 0, 0.7979397773742676f, 0.20000000298023224f, 5.010000228881836f, 0.699999988079071f, new string[]{ }),
+                    new ColumnInfo( "cut", false, 0, 0, 0, 0, 0, new string[]{ "Ideal", "Premium", "Very Good", "Good", "Fair" }),
+                    new ColumnInfo( "color", false, 0, 0, 0, 0, 0, new string[]{"G", "E", "F", "H", "D", "I", "I", "J"}),
+                    new ColumnInfo( "clarity", false, 0, 0, 0, 0, 0, new string[]{ "SI1", "VS2","SI2", "VS1", "VVS2", "VVS1", "IF", "I1"  }),
+                    new ColumnInfo( "depth", true, 0, 61.74940490722656f, 43, 79, 61.79999923706055f, new string[]{ }),
+                    new ColumnInfo( "table", true, 0, 57.457183837890625f, 43, 95, 57, new string[]{ }),
+                    new ColumnInfo( "price", true, 0, 3932.7998046875f, 326, 18823, 2401, new string[]{ }),
+                    new ColumnInfo( "x", true, 0, 5.731157302856445f, 0, 10.739999771118164f, 5.699999809265137f, new string[]{  }),
+                    new ColumnInfo( "y", true, 0, 5.73452615737915f, 0, 58.900001525878906f, 5.710000038146973f, new string[]{ }),
+                    new ColumnInfo( "z", true, 0, 3.538733720779419f, 0, 31.799999237060547f, 3.5299999713897705f, new string[]{ })
+                    };*/
+>>>>>>> f9b96fc9234802ba78a64be094ebc4b4525cde8e
                 dataset.rowCount = 53940;
                 dataset.nullCols = 0;
                 dataset.nullRows = 0;
@@ -233,9 +271,9 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Unnamed: 0", "carat", "cut", "color", "clarity", "depth", "table", "x", "y", "z" };
                 experiment.outputColumn = "price";
-                experiment.randomOrder = true;
-                experiment.randomTestSet = true;
-                experiment.randomTestSetDistribution = 0.30000001192092896f;
+                //experiment.randomOrder = true;
+                //experiment.randomTestSet = true;
+                //experiment.randomTestSetDistribution = 0.30000001192092896f;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
@@ -294,6 +332,7 @@ namespace api.Services
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
                 dataset.delimiter = "";
+<<<<<<< HEAD
                 dataset.columnInfo = new[]
                   {
                     new ColumnInfo( "sepal_length", "columnType", true, 0, 5.8433332443237305f, 4.300000190734863f, 7.900000095367432f, 5.800000190734863f, new string[]{ }, new int[] {}, new float[] {}, 0.01f, 0.1f ),
@@ -302,6 +341,17 @@ namespace api.Services
                     new ColumnInfo( "petal_width", "columnType", true, 0, 1.1986666917800903f, 0.10000000149011612f, 2.5f, 1.2999999523162842f, new string[]{}, new int[] {}, new float[] {}, 0.01f,0.1f ),
                     new ColumnInfo( "class", "columnType", false, 0, 0, 0, 0, 0, new string[]{ "Iris-setosa", "Iris-versicolor", "Iris-virginica" }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                 };
+=======
+                //dataset.hasHeader = true;
+                /*dataset.columnInfo = new[]
+                  {
+                    new ColumnInfo( "sepal_length", true, 0, 5.8433332443237305f, 4.300000190734863f, 7.900000095367432f, 5.800000190734863f, new string[]{ }),
+                    new ColumnInfo( "sepal_width", true, 0, 3.053999900817871f, 2, 4.400000095367432f, 3, new string[]{ }),
+                    new ColumnInfo( "petal_length", true, 0, 3.758666753768921f, 1, 6.900000095367432f, 4.349999904632568f, new string[]{ }),
+                    new ColumnInfo( "petal_width", true, 0, 1.1986666917800903f, 0.10000000149011612f, 2.5f, 1.2999999523162842f, new string[]{}),
+                    new ColumnInfo( "class", false, 0, 0, 0, 0, 0, new string[]{ "Iris-setosa", "Iris-versicolor", "Iris-virginica" }),
+                };*/
+>>>>>>> f9b96fc9234802ba78a64be094ebc4b4525cde8e
                 dataset.nullCols = 150;
                 dataset.nullRows = 0;
                 dataset.isPreProcess = true;
@@ -342,9 +392,9 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "sepal_length", "sepal_width", "petal_length", "petal_width" };
                 experiment.outputColumn = "class";
-                experiment.randomOrder = true;
-                experiment.randomTestSet = true;
-                experiment.randomTestSetDistribution = 0.20000000298023224f;
+                //experiment.randomOrder = true;
+                //experiment.randomTestSet = true;
+                //experiment.randomTestSetDistribution = 0.20000000298023224f;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]

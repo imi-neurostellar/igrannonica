@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
-import Dataset from 'src/app/_data/Dataset';
+import Dataset, { ColumnType } from 'src/app/_data/Dataset';
 import Experiment, { ColumnEncoding, Encoding, NullValReplacer, NullValueOptions } from 'src/app/_data/Experiment';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { EncodingDialogComponent } from 'src/app/_modals/encoding-dialog/encoding-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dialog/missingvalues-dialog.component';
-import { MatSliderChange } from '@angular/material/slider';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 
@@ -23,19 +22,22 @@ export class ColumnTableComponent implements AfterViewInit {
   Object = Object;
   Encoding = Encoding;
   NullValueOptions = NullValueOptions;
+  ColumnType = ColumnType;
   tableData?: any[][];
   nullValOption: string[] = [];
 
   columnsChecked: boolean[] = []; //niz svih kolona
 
-  testSetDistribution: number = 70;
+ 
   constructor(private datasetService: DatasetsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
 
   ngAfterViewInit(): void {
     this.datasetService.getMyDatasets().subscribe((datasets) => {
-      this.dataset = datasets[0];
+      this.dataset = datasets[1];
+
+      this.setColumnTypeInitial();
       this.experiment = new Experiment();
       this.dataset.columnInfo.forEach(column => {
         this.columnsChecked.push(true);
@@ -55,6 +57,14 @@ export class ColumnTableComponent implements AfterViewInit {
         }
       });
     });
+  }
+
+  setColumnTypeInitial() {
+    if (this.dataset != undefined) {
+      for (let i = 0; i < this.dataset.columnInfo.length; i++) {
+        this.dataset.columnInfo[i].columnType = (this.dataset.columnInfo[i].isNumber) ? ColumnType.numerical : ColumnType.categorical;
+      }
+    }
   }
 
   setDeleteColumnsForMissingValTreatment() {
@@ -145,9 +155,7 @@ export class ColumnTableComponent implements AfterViewInit {
         this.resetMissingValuesTreatment(selectedMissingValuesOption);
     });
   }
-  updateTestSet(event: MatSliderChange) {
-    this.testSetDistribution = event.value!;
-  }
+ 
 
 
   MissValsDeleteClicked(event: Event, replacementType: NullValueOptions, index: number) {
