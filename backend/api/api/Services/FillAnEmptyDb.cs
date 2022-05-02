@@ -62,9 +62,9 @@ namespace api.Services
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
                 dataset.delimiter = "";
-                dataset.columnInfo = new ColumnInfo[] { };
                 dataset.columnInfo = new[]
                 {
+
                     new ColumnInfo( "PassengerId", "columnType", true, 0, 446, 1, 891, 446, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                     new ColumnInfo( "Survived", "columnType", true, 0, 0.38383838534355164f, 0, 1, 0, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
                     new ColumnInfo( "Pclass", "columnType", true, 0, 2.3086419105529785f, 1, 3, 3, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
@@ -119,9 +119,6 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Embarked" };
                 experiment.outputColumn = "Survived";
-                experiment.randomOrder = true;
-                experiment.randomTestSet = true;
-                experiment.randomTestSetDistribution = 0.30000001192092896f;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
@@ -233,9 +230,6 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Unnamed: 0", "carat", "cut", "color", "clarity", "depth", "table", "x", "y", "z" };
                 experiment.outputColumn = "price";
-                experiment.randomOrder = true;
-                experiment.randomTestSet = true;
-                experiment.randomTestSetDistribution = 0.30000001192092896f;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
@@ -342,9 +336,6 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "sepal_length", "sepal_width", "petal_length", "petal_width" };
                 experiment.outputColumn = "class";
-                experiment.randomOrder = true;
-                experiment.randomTestSet = true;
-                experiment.randomTestSetDistribution = 0.20000000298023224f;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
