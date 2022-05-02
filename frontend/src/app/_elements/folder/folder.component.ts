@@ -9,7 +9,6 @@ import { FormDatasetComponent } from '../form-dataset/form-dataset.component';
 import Experiment from 'src/app/_data/Experiment';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
-import { ExperimentComponent } from 'src/app/_pages/experiment/experiment.component';
 
 @Component({
   selector: 'app-folder',
@@ -20,7 +19,7 @@ export class FolderComponent implements OnInit {
 
   @ViewChild(FormDatasetComponent) formDataset?: FormDatasetComponent;
 
-  @ViewChild(ExperimentComponent) formExperiment?: ExperimentComponent;
+ 
 
 
   @Input() folderName: string = 'Moji podaci';
@@ -72,12 +71,6 @@ export class FolderComponent implements OnInit {
       this.formDataset!.dataset = <Dataset>this.fileToDisplay;
   }
 
-  displayExp(){
-    if(this.type == FolderType.Dataset)
-      this.formExperiment!.experiment = <Experiment>this.fileToDisplay;
-  }
-
-
   hoverOverFile(i: number) {
     this.hoveringOverFileIndex = i;
     if (i != -1) {
@@ -90,7 +83,6 @@ export class FolderComponent implements OnInit {
       }
     }
     this.displayFile();
-    this.displayExp();
   }
 
   selectNewFile() {
@@ -103,7 +95,6 @@ export class FolderComponent implements OnInit {
     this.listView = false;
     this.selectedFileChanged.emit(this.newFile);
     this.displayFile();
-    this.displayExp();
   }
 
   selectFile(index: number) {
@@ -113,7 +104,6 @@ export class FolderComponent implements OnInit {
     this.listView = false;
     this.selectedFileChanged.emit(this.selectedFile);
     this.displayFile();
-    this.displayExp();
   }
 
   createNewFile() {
@@ -168,10 +158,6 @@ export class FolderComponent implements OnInit {
       this.formDataset!.uploadDataset();
   }
 
-  saveNewExperiment() {
-    if(this.forExperiment == this.forExperiment)
-      this.formExperiment!.addNewExperiment();
-  }
 
   /*calcZIndex(i: number) {
     let zIndex = (this.files.length - i - 1)

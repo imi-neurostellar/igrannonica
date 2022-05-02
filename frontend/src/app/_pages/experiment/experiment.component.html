@@ -27,17 +27,17 @@
     <div #stepsContainer class="steps-container">
         <div #steps id="step_1" class="step-content">
             <div class="step-content-inside">
-                <app-folder [type]="FolderType.Dataset" [tabsToShow]="[TabType.MyDatasets, TabType.PublicDatasets, TabType.File]" (okPressed)="goToPage(1)"></app-folder>
+                <app-folder #folderDataset [type]="FolderType.Dataset" [forExperiment]="experiment" [tabsToShow]="[TabType.MyDatasets, TabType.PublicDatasets, TabType.File]" (okPressed)="goToPage(1)"></app-folder>
             </div>
         </div>
         <div #steps id="step_2" class="step-content">
             <div class="step-content-inside">
-                <app-column-table (okPressed)="goToPage(2)"></app-column-table>
+                <app-column-table (okPressed)="goToPage(2)" [forExperiment]="experiment"></app-column-table>
             </div>
         </div>
         <div #steps id="step_3" class="step-content">
             <div class="step-content-inside">
-                <app-folder [type]="FolderType.Model" (okPressed)="goToPage(3)"></app-folder>
+                <app-folder #folderModel [type]="FolderType.Model" [forExperiment]="experiment" (okPressed)="goToPage(3)"></app-folder>
             </div>
         </div>
         <div #steps id="step_4" class="step-content">
