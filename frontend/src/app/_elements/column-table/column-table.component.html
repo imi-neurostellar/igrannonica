@@ -209,20 +209,6 @@
 
 <div class="container-fluid text-offwhite belowColumn mt-3">
     <div class="ns-row">
-        <div class="ns-col slider rounded" style="border:1px solid var(--ns-primary)">
-
-            <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
-            <div class="text-center pt-0 mt-0">Trening
-                <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
-                Test</div>
-
-        </div>
-        <div class="ns-col slider rounded" style="border:1px solid var(--ns-primary);margin-left: 10px;">
-            <div class="text-center text-offwhite justify-content-center align-items-center">
-                <mat-checkbox class="pt-4" color="accent">Nasumični redosled podataka</mat-checkbox>
-            </div>
-        </div>
-
         <div class="break-2"></div>
 
         <div class="ns-col rounded">

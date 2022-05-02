@@ -85,3 +85,11 @@ hr {
 .m-2 {
     max-height: 20 rem;
 }
+
+mat-slider {
+    width: 40%;
+}
+
+.slider {
+    background-color: var(--ns-bg-dark-100);
+}

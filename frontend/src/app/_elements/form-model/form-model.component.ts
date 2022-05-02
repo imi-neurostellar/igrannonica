@@ -4,7 +4,7 @@ import Shared from 'src/app/Shared';
 import Experiment from 'src/app/_data/Experiment';
 import Model, { Layer, ActivationFunction, LossFunction, LearningRate, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType, Regularisation, RegularisationRate, BatchSize } from 'src/app/_data/Model';
 import { GraphComponent } from '../graph/graph.component';
-
+import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-form-model',
@@ -15,7 +15,7 @@ export class FormModelComponent implements AfterViewInit {
   @ViewChild(GraphComponent) graph!: GraphComponent;
   @Input() forExperiment?: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
-
+  testSetDistribution: number = 70;
   constructor() { }
 
   ngAfterViewInit(): void {
@@ -131,6 +131,9 @@ export class FormModelComponent implements AfterViewInit {
       this.newModel.layers[i].neurons = this.selectedNumberOfNeurons;
       this.updateGraph();
     }
+  }
+  updateTestSet(event: MatSliderChange) {
+    this.testSetDistribution = event.value!;
   }
 
 
