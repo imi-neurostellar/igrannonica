@@ -65,16 +65,13 @@ export class FormDatasetComponent {
       if (typeof fileReader.result === 'string') {
         const result = this.csv.csvToArray(fileReader.result, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter)
 
-        if (this.dataset.hasHeader)
-          this.csvRecords = result.splice(0, 11);
-        else
-          this.csvRecords = result.splice(0, 10);
+        
+        this.csvRecords = result.splice(0, 11);
 
         this.colsNumber = result[0].length;
         this.rowsNumber = result.length;
 
-        this.tableData.data = this.csvRecords
-        this.tableData.hasHeader = this.dataset.hasHeader;
+        this.tableData.data = this.csvRecords;
         this.tableData.loaded = true;
         this.tableData.numCols = this.colsNumber;
         this.tableData.numRows = this.rowsNumber;
