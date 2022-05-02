@@ -37,10 +37,10 @@ export class ColumnInfo {
         public min?: number,
         public max?: number
     ) { 
-        if (isNumber)
-            columnType = ColumnType.numerical;
+        /*if (isNumber)
+            this.columnType = ColumnType.numerical;
         else 
-            columnType = ColumnType.categorical;
+            this.columnType = ColumnType.categorical;*/
     }
 }
 

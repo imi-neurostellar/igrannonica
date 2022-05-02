@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
-import Dataset from 'src/app/_data/Dataset';
+import Dataset, { ColumnType } from 'src/app/_data/Dataset';
 import Experiment, { ColumnEncoding, Encoding, NullValReplacer, NullValueOptions } from 'src/app/_data/Experiment';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { EncodingDialogComponent } from 'src/app/_modals/encoding-dialog/encoding-dialog.component';
@@ -23,6 +23,7 @@ export class ColumnTableComponent implements AfterViewInit {
   Object = Object;
   Encoding = Encoding;
   NullValueOptions = NullValueOptions;
+  ColumnType = ColumnType;
   tableData?: any[][];
   nullValOption: string[] = [];
 
@@ -35,7 +36,9 @@ export class ColumnTableComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.datasetService.getMyDatasets().subscribe((datasets) => {
-      this.dataset = datasets[0];
+      this.dataset = datasets[1];
+
+      this.setColumnTypeInitial();
       this.experiment = new Experiment();
       this.dataset.columnInfo.forEach(column => {
         this.columnsChecked.push(true);
@@ -55,6 +58,14 @@ export class ColumnTableComponent implements AfterViewInit {
         }
       });
     });
+  }
+
+  setColumnTypeInitial() {
+    if (this.dataset != undefined) {
+      for (let i = 0; i < this.dataset.columnInfo.length; i++) {
+        this.dataset.columnInfo[i].columnType = (this.dataset.columnInfo[i].isNumber) ? ColumnType.numerical : ColumnType.categorical;
+      }
+    }
   }
 
   setDeleteColumnsForMissingValTreatment() {
