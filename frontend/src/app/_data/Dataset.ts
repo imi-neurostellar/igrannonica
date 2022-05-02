@@ -41,10 +41,10 @@ export class ColumnInfo {
         public q1?:number,
         public q3?:number,
     ) { 
-        if (isNumber)
-            columnType = ColumnType.numerical;
+        /*if (isNumber)
+            this.columnType = ColumnType.numerical;
         else 
-            columnType = ColumnType.categorical;
+            this.columnType = ColumnType.categorical;*/
     }
         
 }

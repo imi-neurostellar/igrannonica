@@ -55,8 +55,8 @@ mat-slider {
 }
 
 #missingValuesHeader {
-    font-size: 12px;
-    line-height: 110% !important;
+    font-size: 13px;
+    line-height: 140% !important;
 }
 
 .verticalAlign {
@@ -242,4 +242,24 @@ col:not(.col-disabled) {
 
 .col-first {
     background-color: rgb(1, 56, 86) !important;
+}
+
+
+/* mat-icon rotate */
+
+.rotate {
+    animation: rotation 3s infinite linear;
+}
+
+.rotate:hover {
+    cursor: pointer;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
 }
