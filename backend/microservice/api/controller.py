@@ -107,26 +107,32 @@ def predict():
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
     print("********************************PREPROCESS*******************************")
+   
     dataset = json.loads(request.form["dataset"])
     file = request.files.get("file")
     data=pd.read_csv(file)
-    
-    #dataset={}
+    '''
     #f = request.json['filepath']
     #data=pd.read_csv(f)
-
+    dataset={}
+    '''
     preprocess = newmlservice.returnColumnsInfo(data)
     #samo 10 jedinstvenih posto ih ima previse, bilo bi dobro da promenimo ovo da to budu 10 najzastupljenijih vrednosti
+    
     for col in preprocess["columnInfo"]:
-        col["uniqueValues"] = col["uniqueValues"][0:10]
-        col["uniqueValuesCount"] = col["uniqueValuesCount"][0:10]
+        col["uniqueValues"] = col["uniqueValues"][0:5]
+        col["uniqueValuesCount"] = col["uniqueValuesCount"][0:5]
+        col['uniqueValuesPercent']=col['uniqueValuesPercent'][0:5]
     dataset["columnInfo"] = preprocess["columnInfo"]
     dataset["nullCols"] = preprocess["allNullColl"]
     dataset["nullRows"] = preprocess["allNullRows"]
     dataset["colCount"] = preprocess["colCount"]
     dataset["rowCount"] = preprocess["rowCount"]
     dataset["isPreProcess"] = True
-    print(dataset)
+    #print(dataset)
+    
+    
+   
     return jsonify(dataset)
     
 print("App loaded.")
