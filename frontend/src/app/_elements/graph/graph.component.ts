@@ -28,7 +28,7 @@ export class GraphComponent implements AfterViewInit {
   @Input() outputNodeColor: string = '#dfd7d7';
 
   private ctx!: CanvasRenderingContext2D;
-  @Input() inputColumns?: string[] = [];
+  @Input() inputColumns?: string[] = ['Nije odabran eksperiment'];
 
   constructor() { }
 
@@ -43,6 +43,7 @@ export class GraphComponent implements AfterViewInit {
     window.addEventListener('resize', () => { this.resize() });
     this.update();
     this.resize();
+    console.log(this.layers);
   }
 
   layers: Node[][] = [];

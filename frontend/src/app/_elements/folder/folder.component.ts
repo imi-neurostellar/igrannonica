@@ -9,6 +9,7 @@ import { FormDatasetComponent } from '../form-dataset/form-dataset.component';
 import Experiment from 'src/app/_data/Experiment';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
+import { FormModelComponent } from '../form-model/form-model.component';
 
 @Component({
   selector: 'app-folder',
@@ -17,18 +18,16 @@ import { PredictorsService } from 'src/app/_services/predictors.service';
 })
 export class FolderComponent implements AfterViewInit {
 
-  @ViewChild(FormDatasetComponent) formDataset?: FormDatasetComponent;
-
- 
-
+  @ViewChild(FormDatasetComponent) formDataset!: FormDatasetComponent;
+  @ViewChild(FormModelComponent) formModel!: FormModelComponent;
 
   @Input() folderName: string = 'Moji podaci';
   @Input() files!: FolderFile[]
 
-  newFile!: Dataset | Model;
+  newFile?: Dataset | Model;
 
   @Input() type: FolderType = FolderType.Dataset;
-  @Input() forExperiment?: Experiment;
+  @Input() forExperiment!: Experiment;
   @Input() startingTab: TabType = TabType.MyDatasets;
 
   newFileSelected: boolean = true;
@@ -45,24 +44,22 @@ export class FolderComponent implements AfterViewInit {
   searchTerm: string = '';
 
   constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService) {
-    //PLACEHOLDER
-    this.forExperiment = new Experiment();
-    this.forExperiment.inputColumns = ['kolona1', 'kol2', '???', 'test'];
+    this.tabsToShow.forEach(tab => this.folders[tab] = []);
 
-    this.folders[TabType.File] = [];
-    this.folders[TabType.NewFile] = [];
-
+    this.files = [];
+    this.filteredFiles = []
+    this.selectTab(this.startingTab);
   }
 
   ngAfterViewInit(): void {
     this.refreshFiles();
   }
 
-  _initialized = false;
-
   displayFile() {
     if (this.type == FolderType.Dataset)
-      this.formDataset!.dataset = <Dataset>this.fileToDisplay;
+      this.formDataset.dataset = <Dataset>this.fileToDisplay;
+    else if (this.type == FolderType.Model)
+      this.formModel.newModel = <Model>this.fileToDisplay;
   }
 
   hoverOverFile(i: number) {
@@ -142,12 +139,7 @@ export class FolderComponent implements AfterViewInit {
       this.folders[TabType.MyExperiments] = experiments;
     });
 
-    if (!this._initialized) {
-      this.selectTab(this.startingTab);
-      this._initialized = true;
-    }
-    else
-      this.searchTermsChanged();
+    this.searchTermsChanged();
   }
 
   saveNewFile() {
@@ -232,7 +224,6 @@ export class FolderComponent implements AfterViewInit {
 
   selectTab(tab: TabType) {
     if (tab == TabType.NewFile) {
-
       this.selectNewFile();
     }
 

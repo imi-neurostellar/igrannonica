@@ -66,7 +66,7 @@
                         <mat-icon>zoom_out_map</mat-icon>
                     </button>
                 </div>
-                <app-form-model [forExperiment]="forExperiment" [model]="fileToDisplay" [ngClass]="{'form-hidden': type != FolderType.Model}"></app-form-model>
+                <app-form-model [ngClass]="{'form-hidden': type != FolderType.Model}"></app-form-model>
                 <app-form-dataset [ngClass]="{'form-hidden': type != FolderType.Dataset}"></app-form-dataset>
             </div>
             <div [ngClass]="{'form-hidden' : !listView}" class="list-view">
