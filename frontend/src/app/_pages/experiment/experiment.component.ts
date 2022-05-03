@@ -92,4 +92,9 @@ export class ExperimentComponent implements AfterViewInit {
 
   TabType = TabType;
 
+  columnTableChangedEvent() {
+    //sta se desi kad se nesto promeni u column-table komponenti...
+    console.log("promenio se column-table");
+  }
+
 }

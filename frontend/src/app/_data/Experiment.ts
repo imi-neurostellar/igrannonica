@@ -1,9 +1,12 @@
+import { ProblemType } from "./Model";
+
 export default class Experiment {
     _id: string = '';
     uploaderId: string = '';
     constructor(
         public name: string = 'Novi eksperiment',
         public description: string = '',
+        public type: ProblemType = ProblemType.Regression,
         public datasetId: string = '',
         public inputColumns: string[] = [],
         public outputColumn: string = '',
