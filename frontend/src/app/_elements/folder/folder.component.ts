@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import { FolderFile, FolderType } from 'src/app/_data/FolderFile';
 import Model from 'src/app/_data/Model';
@@ -15,19 +15,18 @@ import { PredictorsService } from 'src/app/_services/predictors.service';
   templateUrl: './folder.component.html',
   styleUrls: ['./folder.component.css']
 })
-export class FolderComponent implements OnInit {
+export class FolderComponent implements AfterViewInit {
 
   @ViewChild(FormDatasetComponent) formDataset?: FormDatasetComponent;
 
   @Input() folderName: string = 'Moji podaci';
-
   @Input() files!: FolderFile[]
 
   newFile!: Dataset | Model;
 
   @Input() type: FolderType = FolderType.Dataset;
-
   @Input() forExperiment?: Experiment;
+  @Input() startingTab: TabType = TabType.MyDatasets;
 
   newFileSelected: boolean = true;
 
@@ -50,26 +49,21 @@ export class FolderComponent implements OnInit {
     this.folders[TabType.File] = [];
     this.folders[TabType.NewFile] = [];
 
+  }
+
+  ngAfterViewInit(): void {
     this.refreshFiles();
-
-    
   }
 
-  ngOnInit(): void {
-    if (this.files.length > 0)
-      this.selectFile(0);
-    else {
-      this.selectNewFile();
-    }
-  }
+  _initialized = false;
 
-  displayFile(){
-    if(this.type == FolderType.Dataset)
+  displayFile() {
+    if (this.type == FolderType.Dataset)
       this.formDataset!.dataset = <Dataset>this.fileToDisplay;
   }
 
   hoverOverFile(i: number) {
-    this.hoveringOverFileIndex = i;
+    /*this.hoveringOverFileIndex = i;
     if (i != -1) {
       this.fileToDisplay = this.files[i];
     } else {
@@ -79,7 +73,7 @@ export class FolderComponent implements OnInit {
         this.fileToDisplay = this.files[this.selectedFileIndex];
       }
     }
-    this.displayFile();
+    this.displayFile();*/
   }
 
   selectNewFile() {
@@ -87,20 +81,20 @@ export class FolderComponent implements OnInit {
       this.createNewFile();
     }
     this.fileToDisplay = this.newFile;
-    this.selectedFile = this.newFile;
     this.newFileSelected = true;
     this.listView = false;
     this.selectedFileChanged.emit(this.newFile);
     this.displayFile();
   }
 
-  selectFile(index: number) {
-    this.selectedFile = this.filteredFiles[index];
-    this.fileToDisplay = this.filteredFiles[index];
+  selectFile(file?: FolderFile) {
+    this.selectedFile = file;
+    this.fileToDisplay = file;
     this.newFileSelected = false;
     this.listView = false;
     this.selectedFileChanged.emit(this.selectedFile);
     this.displayFile();
+    this.selectTab(TabType.File);
   }
 
   createNewFile() {
@@ -115,7 +109,11 @@ export class FolderComponent implements OnInit {
     this.okPressed.emit();
   }
 
-  refreshFiles(){
+  refreshFiles() {
+    this.tabsToShow.forEach(tab => {
+      this.folders[tab] = [];
+    })
+
     this.datasetsService.getMyDatasets().subscribe((datasets) => {
       this.folders[TabType.MyDatasets] = datasets;
     });
@@ -137,17 +135,16 @@ export class FolderComponent implements OnInit {
       this.folders[TabType.MyExperiments] = experiments;
     });
 
-    this.files = [];
-
-    this.filteredFiles.length = 0;
-    this.filteredFiles.push(...this.files);
-
-    this.searchTermsChanged();
-
+    if (!this._initialized) {
+      this.selectTab(this.startingTab);
+      this._initialized = true;
+    }
+    else
+      this.searchTermsChanged();
   }
 
   saveNewFile() {
-    if(this.type == FolderType.Dataset)
+    if (this.type == FolderType.Dataset)
       this.formDataset!.uploadDataset();
   }
 
@@ -159,7 +156,7 @@ export class FolderComponent implements OnInit {
       zIndex = this.files.length + 3;
     return zIndex;
   }
-
+  
   newFileZIndex() {
     return (this.files.length + 1);
   }*/
@@ -174,16 +171,19 @@ export class FolderComponent implements OnInit {
   searchTermsChanged() {
     this.filteredFiles.length = 0;
     this.filteredFiles.push(...this.files.filter((file) => file.name.toLowerCase().includes(this.searchTerm.toLowerCase())));
-    if (this.selectedFile) {
+    /*if (this.selectedFile) {
       if (!this.filteredFiles.includes(this.selectedFile)) {
-        this.selectFile(-1);
+        if (this.hoverTab === TabType.None && this.getFolderType(this.selectedTab) === this.type) {
+          this.selectFile(undefined);
+          console.log(this.getFolderType(this.selectedTab), this.type);
+        }
       } else {
-        this.selectedFileIndex = this.filteredFiles.indexOf(this.selectedFile);
+        //this.selectedFileIndex = this.filteredFiles.indexOf(this.selectedFile);
       }
-    }
+    }*/
   }
 
-  listView: boolean = false;
+  listView: boolean = true;
 
   toggleListView() {
     this.listView = !this.listView;
@@ -206,51 +206,92 @@ export class FolderComponent implements OnInit {
   };
 
   FolderType = FolderType;
-
+  Privacy = Privacy;
   TabType = TabType;
+
+  privacy: Privacy = Privacy.Private;
 
   @Input() tabsToShow: TabType[] = [
     TabType.MyDatasets,
     TabType.PublicDatasets,
     TabType.MyModels,
     TabType.PublicModels,
-    TabType.MyExperiments,
-    TabType.File
+    TabType.MyExperiments
   ]
 
   @Input() selectedTab: TabType = TabType.NewFile;
   hoverTab: TabType = TabType.None;
 
   selectTab(tab: TabType) {
-    this.checkListView(tab);
+    if (tab == TabType.NewFile) {
+
+      this.selectNewFile();
+    }
+
+    this.listView = this.getListView(tab);
+    this.type = this.getFolderType(tab);
+    this.previousPrivacy = this.privacy;
+    this.privacy = this.getPrivacy(tab);
     this.selectedTab = tab;
     this.files = this.folders[tab];
 
-    this.searchTermsChanged();
+    if (tab !== TabType.File && tab !== TabType.NewFile)
+      this.searchTermsChanged();
   }
 
-  checkListView(tab: TabType) {
+  getListView(tab: TabType) {
     switch (tab) {
       case TabType.File:
       case TabType.NewFile:
       case TabType.None:
-        this.listView = false;
-        break;
+        return false;
       case TabType.MyExperiments:
       case TabType.MyDatasets:
       case TabType.MyModels:
       case TabType.PublicDatasets:
       case TabType.PublicModels:
-        this.listView = true;
-        break;
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  getFolderType(tab: TabType) {
+    switch (tab) {
+      case TabType.MyExperiments:
+        return FolderType.Experiment;
+      case TabType.MyDatasets:
+      case TabType.PublicDatasets:
+        return FolderType.Dataset;
+      case TabType.MyModels:
+      case TabType.PublicModels:
+        return FolderType.Model;
+      default:
+        return this.type;
+    }
+  }
+
+  previousPrivacy: Privacy = Privacy.Private;
+
+  getPrivacy(tab: TabType) {
+    switch (tab) {
+      case TabType.PublicDatasets:
+      case TabType.PublicModels:
+        return Privacy.Public;
+      case TabType.None:
+        return this.previousPrivacy;
+      default:
+        return Privacy.Private;
     }
   }
 
   hoverOverTab(tab: TabType) {
-    this.checkListView(tab);
+    this.listView = this.getListView(tab);
+    this.previousPrivacy = this.privacy;
+    this.privacy = this.getPrivacy(tab);
     this.hoverTab = tab;
     if (tab == TabType.None) {
-      this.checkListView(this.selectedTab);
+      this.listView = this.getListView(this.selectedTab);
       this.files = this.folders[this.selectedTab];
     } else {
       this.files = this.folders[tab];

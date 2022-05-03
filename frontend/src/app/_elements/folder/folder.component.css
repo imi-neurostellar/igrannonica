@@ -129,6 +129,8 @@
 .list-view {
     height: 100%;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .list-item {
@@ -138,6 +140,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--ns-primary);
+    flex-shrink: 0;
 }
 
 .list-item:hover {
@@ -147,6 +150,15 @@
 
 .list-item:hover>.hover-hide {
     display: none;
+}
+
+.list-add {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    height: 100%;
 }
 
 .folder-inside {
@@ -186,4 +198,8 @@
 
 .file-button:hover {
     background-color: var(--ns-primary);
+}
+
+.form-hidden {
+    display: none;
 }

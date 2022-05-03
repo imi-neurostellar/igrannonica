@@ -1,10 +1,10 @@
-<div class="folderBox">
+<div class="folderBox" *ngIf="dataset">
 
     <div class="row">
         <div class="bottomBar">
             <div class="row">
                 <div class="col-sm mb-3">
-                    <div class="fileButton">   
+                    <div class="fileButton">
                         <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
                         <label>{{filename}}</label>
                     </div>
@@ -15,8 +15,8 @@
                         <div class="row">
                             <mat-form-field class="example-full-width" appearance="fill">
                                 <mat-label>Naziv</mat-label>
-                                <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name" >
-                                
+                                <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name">
+
 
                                 <mat-error *ngIf="nameFormControl.hasError('required')">
                                     Naziv je <strong>obavezan</strong>
@@ -39,19 +39,19 @@
         </div>
     </div>
 
-    
+
     <div class="row">
         <div class="file-container" [ngClass]="{'dottedClass': !tableData.hasInput}">
-            
+
             <i class="material-icons-outlined icon-display" [ngClass]="{'hidden': tableData.hasInput}">file_upload</i>
-            
-            <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file"  accept=".csv">
-            
+
+            <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file" accept=".csv">
+
             <div class="mt-5 datatable">
                 <app-datatable [tableData]="tableData"></app-datatable>
             </div>
-            
-            
+
+
         </div>
     </div>
 
