@@ -3,7 +3,7 @@ import Dataset from 'src/app/_data/Dataset';
 import { FolderFile, FolderType } from 'src/app/_data/FolderFile';
 import Model from 'src/app/_data/Model';
 import { DatasetsService } from 'src/app/_services/datasets.service';
-import shared from 'src/app/Shared';
+import Shared from 'src/app/Shared';
 import { ModelsService } from 'src/app/_services/models.service';
 import { FormDatasetComponent } from '../form-dataset/form-dataset.component';
 import Experiment from 'src/app/_data/Experiment';
@@ -18,6 +18,9 @@ import { PredictorsService } from 'src/app/_services/predictors.service';
 export class FolderComponent implements AfterViewInit {
 
   @ViewChild(FormDatasetComponent) formDataset?: FormDatasetComponent;
+
+ 
+
 
   @Input() folderName: string = 'Moji podaci';
   @Input() files!: FolderFile[]
@@ -118,6 +121,10 @@ export class FolderComponent implements AfterViewInit {
       this.folders[TabType.MyDatasets] = datasets;
     });
 
+    this.experimentsService.getMyExperiments().subscribe((experiments) => {
+      this.folders[TabType.MyExperiments] = experiments;
+    });
+
     this.datasetsService.getPublicDatasets().subscribe((datasets) => {
       this.folders[TabType.PublicDatasets] = datasets;
     });
@@ -147,6 +154,7 @@ export class FolderComponent implements AfterViewInit {
     if (this.type == FolderType.Dataset)
       this.formDataset!.uploadDataset();
   }
+
 
   /*calcZIndex(i: number) {
     let zIndex = (this.files.length - i - 1)

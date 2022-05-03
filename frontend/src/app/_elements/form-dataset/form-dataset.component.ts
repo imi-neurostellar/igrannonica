@@ -82,6 +82,10 @@ export class FormDatasetComponent {
     this.dataset.name = this.filename.slice(0, this.filename.length - 4);
   }
 
+  /*exportAsXLSX():void {
+    this.excelService.exportAsExcelFile(this.data, 'sample');
+  }*/
+
   checkAccessible() {
     if (this.dataset.isPublic)
       this.dataset.accessibleByLink = true;

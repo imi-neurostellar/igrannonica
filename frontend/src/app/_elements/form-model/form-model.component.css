@@ -87,9 +87,9 @@ hr {
 }
 
 mat-slider {
-    width: 40%;
+    width: 50%;
 }
 
 .slider {
-    background-color: var(--ns-bg-dark-100);
+    background-color: transparent;
 }

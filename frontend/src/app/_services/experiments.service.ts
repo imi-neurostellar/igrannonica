@@ -19,4 +19,8 @@ export class ExperimentsService {
   getMyExperiments(): Observable<Experiment[]> {
     return this.http.get<Experiment[]>(`${Configuration.settings.apiURL}/experiment/getmyexperiments`, { headers: this.authService.authHeader() });
   }
+
+  /*updateExperiment(){
+
+  }*/
 }
