@@ -87,9 +87,18 @@ hr {
 }
 
 mat-slider {
-    width: 40%;
+    width: 50%;
 }
 
 .slider {
-    background-color: var(--ns-bg-dark-100);
+    background-color: transparent;
+}
+
+.center-center {
+    text-align: center;
+    margin-right: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+    font-size: 20px !important;
+    font-weight: 600;
 }
