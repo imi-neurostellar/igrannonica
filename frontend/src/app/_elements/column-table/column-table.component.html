@@ -1,4 +1,3 @@
-{{forExperiment.name}}
 <div id="tabs">
     <div class="folder-tab p-1 rounded-top" *ngFor="let tab of tabs; let i = index" [style]="'z-index:' + calcZIndex(i) + ' ;'" [ngClass]="{'selected-tab' : selectedTab.index == i, 'hover-tab' : hoveringOverTab?.index == i}">
         <a class="m-1 stretched-link tab-link" (click)="selectTab(i)" (mouseenter)="hoverOverTab(i)" (mouseleave)="hoverOverTab(-1)">

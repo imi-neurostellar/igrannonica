@@ -7,6 +7,7 @@ import { FolderComponent, TabType } from 'src/app/_elements/folder/folder.compon
 import Experiment from 'src/app/_data/Experiment';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { ModelsService } from 'src/app/_services/models.service';
+import Model from 'src/app/_data/Model';
 
 @Component({
   selector: 'app-experiment',
@@ -20,9 +21,9 @@ export class ExperimentComponent implements AfterViewInit {
   @ViewChildren('steps') steps!: ElementRef[];
 
   event: number = 0;
-  @Input() experiment: Experiment; 
-  @ViewChild("folderDataset") folderDataset?: FolderComponent;
-  @ViewChild("folderModel") folderModel?: FolderComponent;
+  @Input() experiment: Experiment;
+  @ViewChild("folderDataset") folderDataset!: FolderComponent;
+  @ViewChild("folderModel") folderModel!: FolderComponent;
 
   constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService) {
     this.experiment = new Experiment("exp1");
@@ -32,12 +33,12 @@ export class ExperimentComponent implements AfterViewInit {
 
   }*/
 
-  addNewExperiment(){
-    this.experimentsService.addExperiment(this.experiment).subscribe(()=>{console.log("new Experiment")});
+  addNewExperiment() {
+    this.experimentsService.addExperiment(this.experiment).subscribe(() => { console.log("new Experiment") });
   }
 
-  trainModel(){
-    this.modelsService.trainModel((<Model>this.folderModel.selectedFile)._id, this.experiment._id).subscribe(()=>{console.log("pocelo treniranje")})
+  trainModel() {
+    this.modelsService.trainModel((<Model>this.folderModel.selectedFile)._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") })
   }
 
   stepHeight = this.calcStepHeight();

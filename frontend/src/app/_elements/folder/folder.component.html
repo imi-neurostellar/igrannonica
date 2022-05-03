@@ -1,4 +1,3 @@
-{{forExperiment.name}}
 <div id="folder">
     <div id="tabs">
         <div id="new-file-tab" class="folder-tab p-1 rounded-top" [style]="'z-index:' + (selectedTab == TabType.NewFile ? 11 : 10) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.NewFile, 'hover-tab' : hoverTab == TabType.NewFile}">
@@ -64,7 +63,7 @@
                     </button>
                 </div>
                 <app-form-model [forExperiment]="forExperiment" [model]="fileToDisplay" *ngSwitchCase="FolderType.Model"></app-form-model>
-                <app-form-dataset *ngSwitchCase="FolderType.Dataset" ></app-form-dataset>
+                <app-form-dataset *ngSwitchCase="FolderType.Dataset"></app-form-dataset>
             </div>
             <div *ngSwitchCase="true" class="list-view">
                 <div *ngFor="let file of filteredFiles; let i = index" class="list-item">
