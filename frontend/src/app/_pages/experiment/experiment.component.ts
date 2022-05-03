@@ -1,9 +1,13 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewChildren, Input } from '@angular/core';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import Shared from 'src/app/Shared';
 import { FolderType } from 'src/app/_data/FolderFile';
-import { TabType } from 'src/app/_elements/folder/folder.component';
+import { FolderComponent, TabType } from 'src/app/_elements/folder/folder.component';
+import Experiment from 'src/app/_data/Experiment';
+import { ExperimentsService } from 'src/app/_services/experiments.service';
+import { ModelsService } from 'src/app/_services/models.service';
+import Model from 'src/app/_data/Model';
 
 @Component({
   selector: 'app-experiment',
@@ -17,8 +21,25 @@ export class ExperimentComponent implements AfterViewInit {
   @ViewChildren('steps') steps!: ElementRef[];
 
   event: number = 0;
+  @Input() experiment: Experiment;
+  @ViewChild("folderDataset") folderDataset!: FolderComponent;
+  @ViewChild("folderModel") folderModel!: FolderComponent;
 
-  constructor() { }
+  constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService) {
+    this.experiment = new Experiment("exp1");
+  }
+
+  /*updateExperiment(){
+
+  }*/
+
+  addNewExperiment() {
+    this.experimentsService.addExperiment(this.experiment).subscribe(() => { console.log("new Experiment") });
+  }
+
+  trainModel() {
+    this.modelsService.trainModel((<Model>this.folderModel.selectedFile)._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") })
+  }
 
   stepHeight = this.calcStepHeight();
 
