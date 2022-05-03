@@ -9,6 +9,7 @@ import { FormDatasetComponent } from '../form-dataset/form-dataset.component';
 import Experiment from 'src/app/_data/Experiment';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
+import { SignalRService } from 'src/app/_services/signal-r.service';
 
 @Component({
   selector: 'app-folder',
@@ -18,9 +19,6 @@ import { PredictorsService } from 'src/app/_services/predictors.service';
 export class FolderComponent implements AfterViewInit {
 
   @ViewChild(FormDatasetComponent) formDataset?: FormDatasetComponent;
-
- 
-
 
   @Input() folderName: string = 'Moji podaci';
   @Input() files!: FolderFile[]
@@ -44,18 +42,26 @@ export class FolderComponent implements AfterViewInit {
 
   searchTerm: string = '';
 
-  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService) {
+  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService, private signalRService: SignalRService) {
     //PLACEHOLDER
     this.forExperiment = new Experiment();
     this.forExperiment.inputColumns = ['kolona1', 'kol2', '???', 'test'];
 
     this.folders[TabType.File] = [];
     this.folders[TabType.NewFile] = [];
-
   }
 
   ngAfterViewInit(): void {
-    this.refreshFiles();
+    this.refreshFiles(null);
+
+    if (this.signalRService.hubConnection) {
+      this.signalRService.hubConnection.on("NotifyDataset", (dName: string, dId: string) => {
+        this.refreshFiles(dId);
+
+      });
+    } else {
+      console.warn("Dataset-Load: No connection!");
+    }
   }
 
   _initialized = false;
@@ -86,7 +92,6 @@ export class FolderComponent implements AfterViewInit {
     this.fileToDisplay = this.newFile;
     this.newFileSelected = true;
     this.listView = false;
-    this.selectedFileChanged.emit(this.newFile);
     this.displayFile();
   }
 
@@ -112,13 +117,16 @@ export class FolderComponent implements AfterViewInit {
     this.okPressed.emit();
   }
 
-  refreshFiles() {
+  refreshFiles(selectedDatasetId: string | null) {
     this.tabsToShow.forEach(tab => {
       this.folders[tab] = [];
     })
 
     this.datasetsService.getMyDatasets().subscribe((datasets) => {
       this.folders[TabType.MyDatasets] = datasets;
+      if (selectedDatasetId) {
+        this.selectFile(datasets.filter(x => x._id == selectedDatasetId)[0]);
+      }
     });
 
     this.experimentsService.getMyExperiments().subscribe((experiments) => {

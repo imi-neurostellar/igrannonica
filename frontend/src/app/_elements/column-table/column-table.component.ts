@@ -8,6 +8,8 @@ import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dial
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 import { ProblemType } from 'src/app/_data/Model';
+import { ExperimentsService } from 'src/app/_services/experiments.service';
+import { SaveExperimentDialogComponent } from 'src/app/_modals/save-experiment-dialog/save-experiment-dialog.component';
 
 @Component({
   selector: 'app-column-table',
@@ -17,7 +19,7 @@ import { ProblemType } from 'src/app/_data/Model';
 export class ColumnTableComponent implements AfterViewInit {
 
   @Input() dataset?: Dataset;
-  @Input() experiment?: Experiment;
+  @Input() experiment!: Experiment;
   @ViewChildren("nullValMenu") nullValMenus!: ElementRef[];
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
   @Output() columnTableChanged = new EventEmitter();
@@ -31,37 +33,44 @@ export class ColumnTableComponent implements AfterViewInit {
   nullValOption: string[] = [];
 
   columnsChecked: boolean[] = []; //niz svih kolona
+  loaded: boolean = false;
 
  
-  constructor(private datasetService: DatasetsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
+  constructor(private datasetService: DatasetsService, private experimentService: ExperimentsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
 
-  ngAfterViewInit(): void {
-    this.datasetService.getMyDatasets().subscribe((datasets) => {
-      this.dataset = datasets[2];
+  loadDataset(dataset: Dataset) {
+    this.dataset = dataset;
 
-      this.setColumnTypeInitial();
-      this.experiment = new Experiment();
-      this.dataset.columnInfo.forEach(column => {
-        this.columnsChecked.push(true);
-      });
-      console.log(datasets);
-      for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
-        this.experiment?.inputColumns.push(this.dataset.columnInfo[i].columnName);
-      }
-      this.experiment.outputColumn = this.experiment.inputColumns[0];
-      this.resetColumnEncodings(Encoding.Label);
-      this.setDeleteRowsForMissingValTreatment();
-
-      this.nullValOption = [].constructor(this.dataset.columnInfo.length).fill('Obriši redove');
-
-      this.datasetService.getDatasetFilePartial(this.dataset.fileId, 0, 10).subscribe((response: string | undefined) => {
-        if (response && this.dataset != undefined) {
-          this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter.toString() == "") ? "," : this.dataset.delimiter);
-        }
-      });
+    this.setColumnTypeInitial();
+      
+    this.dataset.columnInfo.forEach(column => {
+      this.columnsChecked.push(true);
     });
+    
+    for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
+      this.experiment.inputColumns.push(this.dataset.columnInfo[i].columnName);
+    }
+    this.experiment.outputColumn = this.experiment.inputColumns[0];
+    this.resetColumnEncodings(Encoding.Label);
+    this.setDeleteRowsForMissingValTreatment();
+
+    this.nullValOption = [];
+    this.dataset.columnInfo.forEach(colInfo => {
+      this.nullValOption.push(`Obriši redove (${colInfo.numNulls})`);
+    });
+
+    this.datasetService.getDatasetFilePartial(this.dataset.fileId, 0, 10).subscribe((response: string | undefined) => {
+      if (response && this.dataset != undefined) {
+        this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter.toString() == "") ? "," : this.dataset.delimiter);
+      }
+    });
+    this.loaded = true;
+  }
+
+  ngAfterViewInit(): void {
+      
   }
 
   setColumnTypeInitial() {
@@ -90,6 +99,13 @@ export class ColumnTableComponent implements AfterViewInit {
     this.columnTableChanged.emit();
   }
 
+  columnTypeChanged(columnName: string) {
+    if (this.experiment.outputColumn == columnName)
+      this.changeOutputColumn(columnName);
+    else 
+      this.columnTableChangeDetected();
+  }
+
   changeInputColumns(targetMatCheckbox: MatCheckboxChange, columnName: string) {
     if (this.experiment != undefined) {
 
@@ -111,7 +127,7 @@ export class ColumnTableComponent implements AfterViewInit {
     }
   }
 
-  changeOutputColumn() {
+  changeOutputColumn(columnName: string) {
     if (this.experiment != undefined && this.dataset != undefined) {
       let column = this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.outputColumn)[0];
       if (column.columnType == ColumnType.numerical) {
@@ -187,6 +203,20 @@ export class ColumnTableComponent implements AfterViewInit {
         this.resetMissingValuesTreatment(selectedMissingValuesOption);
     });
   }
+
+  openSaveExperimentDialog() {
+    const dialogRef = this.dialog.open(SaveExperimentDialogComponent, {
+      width: '400px'
+    });
+    dialogRef.afterClosed().subscribe(selectedName => {
+      this.experiment.name = selectedName;
+      //napravi odvojene dugmice za save i update -> za update nece da se otvara dijalog za ime
+      this.experimentService.addExperiment(this.experiment).subscribe((response) => {
+        console.log(response);
+        this.okPressed.emit();
+      });
+    });
+  }
  
 
 
@@ -239,8 +269,8 @@ export class ColumnTableComponent implements AfterViewInit {
       return (<HTMLInputElement>document.getElementById(columnName)).value;
     return '0';
   }
-  ok() {
-    this.okPressed.emit();
+  saveExperiment() {
+    this.openSaveExperimentDialog();
   }
 
 

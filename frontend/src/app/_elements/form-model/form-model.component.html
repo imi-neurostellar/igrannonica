@@ -77,7 +77,7 @@
             <mat-form-field appearance="fill" class="mat-fix">
                 <mat-label>Broj uzoraka po iteraciji</mat-label>
 
-                <mat-select matNativeControl required [(value)]="newModel.batchSize">
+                <mat-select matNativeControl [(value)]="newModel.batchSize">
                     <mat-option *ngFor="let option of Object.keys(BatchSize); let optionName of Object.values(BatchSize)" [value]="option">{{option}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -93,12 +93,12 @@
             <div class="text-center pt-0 mt-0">Trening
                 <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
                 Test</div>
-        
+
         </div>
         <div class="ns-col slider rounded text-offwhite justify-content-center align-items-center" style="border:1px solid var(--ns-primary);margin-left: 10px;">
-                    <mat-checkbox class="pt-4" color="accent">Nasumični redosled podataka</mat-checkbox>
+            <mat-checkbox class="pt-4" color="accent">Nasumični redosled podataka</mat-checkbox>
         </div>
-        
+
 
     </div>
 </div>
@@ -216,4 +216,3 @@
         </mat-form-field>
     </div>
 </div>
-
