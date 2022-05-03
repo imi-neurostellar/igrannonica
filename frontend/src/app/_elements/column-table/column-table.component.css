@@ -189,8 +189,9 @@ table ::ng-deep .mat-form-field-wrapper {
 }
 
 .hidden {
-    visibility: hidden;
-    height: 1px;
+    /*visibility: hidden;
+    height: 1px;*/
+    display: none;
 }
 
 .bottom-button {
