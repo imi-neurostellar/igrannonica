@@ -1,74 +1,58 @@
 <div class="folderBox">
 
-    <div class="file-container" [ngClass]="{'dottedClass': !tableData.hasInput}">
-        
-        <i class="material-icons-outlined icon-display" [ngClass]="{'hidden': tableData.hasInput}">file_upload</i>
-        
-        <div class="fileButton">   
-                <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
-                <label>{{filename}}</label>
-        </div>
-                
-        <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file"  accept=".csv">
-        
-        
-        <div class="mt-5 datatable">
-            <app-datatable [tableData]="tableData"></app-datatable>
-        </div>
-        
-        
-    </div>
-    
-
-    
-    
-
-    <div class="bottomBar">
-        <div class="row">
-            <div class="col-sm">
-                <div role="group">
-                    <div class="row">
-                        <mat-form-field class="example-full-width" appearance="fill">
-                            <mat-label>Naziv</mat-label>
-                            <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name" >
-                            <!--[formControl]="nameFormControl"-->
-
-                            <mat-error *ngIf="nameFormControl.hasError('required')">
-                                Naziv je <strong>obavezan</strong>
-                            </mat-error>
-                        </mat-form-field>
+    <div class="row">
+        <div class="bottomBar">
+            <div class="row">
+                <div class="col-sm mb-3">
+                    <div class="fileButton">   
+                        <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+                        <label>{{filename}}</label>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm mb-3">
 
-                <!--<input id="fileInput" class="form-control btn-lg" type="file" class="upload" (change)="changeListener($event)" accept=".csv">
-                -->
-            </div>
-            <div class="col-sm">
+                <div class="col-sm">
+                    <div role="group">
+                        <div class="row">
+                            <mat-form-field class="example-full-width" appearance="fill">
+                                <mat-label>Naziv</mat-label>
+                                <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name" >
+                                
 
-
-
-                <mat-form-field appearance="fill">
-                    <mat-label>Delimiter</mat-label>
-                    <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (change)="update()" value=",">
-                        <mat-option *ngFor="let option of delimiterOptions" [value]="option">
-                            {{ option }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                                <mat-error *ngIf="nameFormControl.hasError('required')">
+                                    Naziv je <strong>obavezan</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Delimiter</mat-label>
+                        <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (change)="update()" value=",">
+                            <mat-option *ngFor="let option of delimiterOptions" [value]="option">
+                                {{ option }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-
+    
+    <div class="row">
+        <div class="file-container" [ngClass]="{'dottedClass': !tableData.hasInput}">
+            
+            <i class="material-icons-outlined icon-display" [ngClass]="{'hidden': tableData.hasInput}">file_upload</i>
+            
+            <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file"  accept=".csv">
+            
+            <div class="mt-5 datatable">
+                <app-datatable [tableData]="tableData"></app-datatable>
+            </div>
+            
+            
+        </div>
     </div>
 
-
-    <!--
-    <div class="d-flex flex-row align-items-center justify-content-center w-100 my-2">
-        <button (click)="uploadDataset()" class="btn btn-lg col-4" style="background-color:#003459; color:white;">Dodaj izvor podataka</button>
-    </div>
--->
 </div>
