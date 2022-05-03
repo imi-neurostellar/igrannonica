@@ -120,9 +120,9 @@ def returnColumnsInfo():
     #samo 10 jedinstvenih posto ih ima previse, bilo bi dobro da promenimo ovo da to budu 10 najzastupljenijih vrednosti
     
     for col in preprocess["columnInfo"]:
-        col["uniqueValues"] = col["uniqueValues"][0:5]
-        col["uniqueValuesCount"] = col["uniqueValuesCount"][0:5]
-        col['uniqueValuesPercent']=col['uniqueValuesPercent'][0:5]
+        col["uniqueValues"] = col["uniqueValues"][0:6]
+        col["uniqueValuesCount"] = col["uniqueValuesCount"][0:6]
+        col['uniqueValuesPercent']=col['uniqueValuesPercent'][0:6]
     dataset["columnInfo"] = preprocess["columnInfo"]
     dataset["nullCols"] = preprocess["allNullColl"]
     dataset["nullRows"] = preprocess["allNullRows"]

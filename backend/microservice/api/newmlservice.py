@@ -148,6 +148,7 @@ class TrainingResult:
 '''
 
 def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
+    ###UCITAVANJE SETA
     problem_type = paramsModel["type"]
     #print(problem_type)
     data = pd.DataFrame()
@@ -158,6 +159,15 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     output_column = paramsExperiment["outputColumn"]
     data[output_column] = dataset[output_column]
     #print(data)
+
+    ###KATEGORIJSKE KOLONE
+    kategorijskekolone=[]
+    ###PRETVARANJE NUMERICKIH U KATREGORIJSKE AKO JE KORISNIK TAKO OZNACIO
+    columnInfo=paramsDataset['columnInfo']
+    for col in columnInfo:
+        if(col['columnType']=="Kategorijski"):
+            data[col['columnName']]=data[col['columnName']].apply(str)
+            kategorijskekolone.append(col['coumnName'])
 
     ###NULL
     null_value_options = paramsExperiment["nullValues"]
@@ -182,16 +192,18 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #
     # Brisanje kolona koje ne uticu na rezultat
     #
+    '''
     num_rows=data.shape[0]
     for col in data.columns:
         if((data[col].nunique()==(num_rows)) and (data[col].dtype==np.object_)):
             data.pop(col)
     #
+    '''
     ### Enkodiranje
     encodings=paramsExperiment["encodings"]
     datafront=dataset.copy()
-    svekolone=datafront.columns
-    kategorijskekolone=datafront.select_dtypes(include=['object']).columns
+    #svekolone=datafront.columns
+    #kategorijskekolone=datafront.select_dtypes(include=['object']).columns
     for kolonaEncoding in encodings:
         
         kolona = kolonaEncoding["columnName"]
