@@ -21,6 +21,7 @@ import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.compon
 import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
 import { EncodingDialogComponent } from './_modals/encoding-dialog/encoding-dialog.component';
 import { MissingvaluesDialogComponent } from './_modals/missingvalues-dialog/missingvalues-dialog.component';
+import { SaveExperimentDialogComponent } from './_modals/save-experiment-dialog/save-experiment-dialog.component';
 // Pages
 import { HomeComponent } from './_pages/home/home.component';
 import { ProfileComponent } from './_pages/profile/profile.component';
@@ -89,8 +90,8 @@ export function initializeApp(appConfig: Configuration) {
     DoughnutChartComponent,
     HeatmapComponent,
     MetricViewComponent,
-    LineChartComponent
-    
+    LineChartComponent,
+    SaveExperimentDialogComponent
   ],
   imports: [
     BrowserModule,

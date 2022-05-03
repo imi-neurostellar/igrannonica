@@ -155,7 +155,8 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #print(data)
     for col in paramsExperiment["inputColumns"]:
         #print(col)
-        data[col]=dataset[col]
+        if(col!=paramsExperiment["outputColumn"]):
+            data[col]=dataset[col]
     output_column = paramsExperiment["outputColumn"]
     data[output_column] = dataset[output_column]
     #print(data)
@@ -201,7 +202,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     '''
     ### Enkodiranje
     encodings=paramsExperiment["encodings"]
-    datafront=dataset.copy()
+    #datafront=dataset.copy()
     #svekolone=datafront.columns
     #kategorijskekolone=datafront.select_dtypes(include=['object']).columns
     for kolonaEncoding in encodings:
