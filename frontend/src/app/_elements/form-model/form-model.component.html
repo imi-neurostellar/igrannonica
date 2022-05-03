@@ -85,28 +85,36 @@
 
     </div>
 </div>
-<div>
-    <div class="ns-row" style="margin-top: 10px;">
-        <div class="ns-col slider rounded" style="border:1px solid var(--ns-primary);margin-left: 10px;">
-
-            <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
-            <div class="text-center pt-0 mt-0">Trening
-                <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
-                Test</div>
-        
-        </div>
-        <div class="ns-col slider rounded text-offwhite justify-content-center align-items-center" style="border:1px solid var(--ns-primary);margin-left: 10px;">
-                    <mat-checkbox class="pt-4" color="accent">Nasumični redosled podataka</mat-checkbox>
-        </div>
-        
-
-    </div>
-</div>
 
 <!--kraj unosa parametara-->
-<hr>
 <div class="m-2">
-    <app-graph [model]="newModel" [inputColumns]="forExperiment?.inputColumns"></app-graph>
+    <div class="row">
+        <div class="col-sm-3 rounded" style="border:1px solid var(--ns-primary);margin-top: 10px;">
+            <div class="row slider rounded mb-3" style="margin-left: 10px;">
+    
+                <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
+                <div class="text-center pt-0 mt-0">Trening
+                    <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
+                    Test</div>
+            
+            </div>
+            <div class="row slider rounded text-offwhite justify-content-center align-items-center" style="margin-left: 10px;">
+                        <mat-checkbox class="pt-4 mb-3" color="accent">Nasumični redosled podataka</mat-checkbox>
+            </div>
+            
+    
+        </div>
+
+        <div class="col-sm-9">
+            <app-graph [model]="newModel" [inputColumns]="forExperiment?.inputColumns"></app-graph>
+        </div>
+
+
+    </div>
+    
+    
+
+
 </div>
 <div class="ns-row">
 
