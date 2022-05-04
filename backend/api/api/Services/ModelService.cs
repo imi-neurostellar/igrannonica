@@ -5,14 +5,16 @@ using MongoDB.Driver;
 
 namespace api.Services
 {
-	public class ModelService : IModelService
+    public class ModelService : IModelService
     {
         private readonly IMongoCollection<Model> _model;
+        private readonly IMongoCollection<Predictor> _predictor;
 
         public ModelService(IUserStoreDatabaseSettings settings, IMongoClient mongoClient)
         {
             var database = mongoClient.GetDatabase(settings.DatabaseName);
             _model = database.GetCollection<Model>(settings.ModelCollectionName);
+            _predictor = database.GetCollection<Predictor>(settings.PredictorCollectionName);
         }
 
         public Model Create(Model model)
@@ -28,7 +30,11 @@ namespace api.Services
 
         public void Delete(string userId, string name)
         {
+            Model model = _model.Find(model => model.uploaderId == userId && model.name == name).FirstOrDefault();
+
             _model.DeleteOne(model => (model.uploaderId == userId && model.name == name));
+            _predictor.DeleteMany(predictor => (predictor.uploaderId == userId && predictor.modelId == model._id));
+
         }
 
         public List<Model> GetMyModels(string userId)
@@ -48,12 +54,12 @@ namespace api.Services
             return list;
         }
 
-        /*
+
         public List<Model> GetPublicModels()
         {
             return _model.Find(model => model.isPublic == true).ToList();
         }
-        */
+
         public Model GetOneModel(string userId, string name)
         {
             return _model.Find(model => model.uploaderId == userId && model.name == name).FirstOrDefault();
@@ -93,7 +99,7 @@ namespace api.Services
                 return false;
             else
                 return true;
-        
+
         }
     }
 }
