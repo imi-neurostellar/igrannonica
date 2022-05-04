@@ -180,17 +180,20 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     kategorijskekolone=[]
     ###PRETVARANJE NUMERICKIH U KATREGORIJSKE AKO JE KORISNIK TAKO OZNACIO
     columnInfo=paramsDataset['columnInfo']
-    for col in columnInfo:
-        if(col['columnType']=="Kategorijski"):
+    columnTypes=paramsExperiment['columnTypes']
+    for i in range(len(columnInfo)):
+        col=columnInfo[i]
+        if(columnTypes[i]=="categorical"):
             data[col['columnName']]=data[col['columnName']].apply(str)
             kategorijskekolone.append(col['coumnName'])
-
+    #kategorijskekolone=data.select_dtypes(include=['object']).columns
+    print(kategorijskekolone)
     ###NULL
     null_value_options = paramsExperiment["nullValues"]
     null_values_replacers = paramsExperiment["nullValuesReplacers"]
     
     if(null_value_options=='replace'):
-        #print("replace null") #
+        #print("replace null") 
         dict=null_values_replacers
         while(len(dict)>0):
             replace=dict.pop()
