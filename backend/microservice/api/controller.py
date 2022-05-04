@@ -118,7 +118,6 @@ def returnColumnsInfo():
     '''
     preprocess = newmlservice.returnColumnsInfo(data)
     #samo 10 jedinstvenih posto ih ima previse, bilo bi dobro da promenimo ovo da to budu 10 najzastupljenijih vrednosti
-    
     for col in preprocess["columnInfo"]:
         col["uniqueValues"] = col["uniqueValues"][0:6]
         col["uniqueValuesCount"] = col["uniqueValuesCount"][0:6]
@@ -128,11 +127,9 @@ def returnColumnsInfo():
     dataset["nullRows"] = preprocess["allNullRows"]
     dataset["colCount"] = preprocess["colCount"]
     dataset["rowCount"] = preprocess["rowCount"]
+    dataset["cMatrix"]=preprocess['cMatrix']
     dataset["isPreProcess"] = True
-    #print(dataset)
-    
-    
-   
+
     return jsonify(dataset)
     
 print("App loaded.")
