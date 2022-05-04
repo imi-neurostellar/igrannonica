@@ -91,6 +91,8 @@ export class FolderComponent implements AfterViewInit {
     this.newFileSelected = true;
     this.listView = false;
     this.displayFile();
+    if(this.type == FolderType.Dataset)
+      this.formDataset.clear();
   }
 
   selectFile(file?: FolderFile) {
@@ -101,6 +103,9 @@ export class FolderComponent implements AfterViewInit {
     this.selectedFileChanged.emit(this.selectedFile);
     this.selectTab(TabType.File);
     this.displayFile();
+
+    if(this.type == FolderType.Dataset)
+      this.formDataset.loadExisting();
   }
 
   createNewFile() {
