@@ -17,6 +17,8 @@ namespace api.Models
         public string[] inputColumns { get; set; }
         public string outputColumn { get; set; }
         public string nullValues { get; set; }
+        public DateTime dateCreated { get; set; }
+        public DateTime lastUpdated { get; set; }
         public NullValues[] nullValuesReplacers { get; set; }
         public ColumnEncoding[] encodings { get; set; }
 

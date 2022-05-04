@@ -120,9 +120,8 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Embarked" };
                 experiment.outputColumn = "Survived";
-                //experiment.randomOrder = true;
-                //experiment.randomTestSet = true;
-                //experiment.randomTestSetDistribution = 0.30000001192092896f;
+                experiment.dateCreated = DateTime.Now;
+                experiment.lastUpdated = DateTime.Now;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
@@ -234,9 +233,8 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "Unnamed: 0", "carat", "cut", "color", "clarity", "depth", "table", "x", "y", "z" };
                 experiment.outputColumn = "price";
-                //experiment.randomOrder = true;
-                //experiment.randomTestSet = true;
-                //experiment.randomTestSetDistribution = 0.30000001192092896f;
+                experiment.dateCreated = DateTime.Now;
+                experiment.lastUpdated = DateTime.Now;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
@@ -343,9 +341,8 @@ namespace api.Services
                 experiment.uploaderId = "000000000000000000000000";
                 experiment.inputColumns = new string[] { "sepal_length", "sepal_width", "petal_length", "petal_width" };
                 experiment.outputColumn = "class";
-                //experiment.randomOrder = true;
-                //experiment.randomTestSet = true;
-                //experiment.randomTestSetDistribution = 0.20000000298023224f;
+                experiment.dateCreated = DateTime.Now;
+                experiment.lastUpdated = DateTime.Now;
                 experiment.nullValues = "delete_rows";
                 experiment.nullValuesReplacers = new NullValues[] { };
                 experiment.encodings = new[]
