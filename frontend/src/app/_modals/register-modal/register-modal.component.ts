@@ -162,6 +162,7 @@ export class RegisterModalComponent implements OnInit {
 
                 this.authService.authenticate(response);
                 this.closeButton.nativeElement.click();
+                location.reload();
                 //(<HTMLSelectElement>document.getElementById('linkToLoginModal')).click();
               }, (error) => console.warn(error));             
             }
