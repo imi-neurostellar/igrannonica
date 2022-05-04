@@ -5,7 +5,8 @@ namespace api.Services
 {
     public interface IDatasetService
     {
-        Dataset GetOneDataset(string userId, string name);
+        Dataset GetOneDataset(string userId, string id);
+        Dataset GetOneDatasetN(string userId, string name);
         Dataset GetOneDataset(string id);
         List<Dataset> SearchDatasets(string name);
         List<Dataset> GetMyDatasets(string userId);

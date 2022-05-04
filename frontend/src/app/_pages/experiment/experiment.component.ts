@@ -120,7 +120,7 @@ export class ExperimentComponent implements AfterViewInit {
 
   columnTableChangedEvent() {
     //sta se desi kad se nesto promeni u column-table komponenti...
-    console.log("promenio se column-table");
+    //console.log("promenio se column-table");
   }
 
   setDataset(dataset: FolderFile) {

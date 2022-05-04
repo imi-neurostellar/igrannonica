@@ -27,12 +27,25 @@ import matplotlib.pyplot as plt
 #from ann_visualizer.visualize import ann_viz;
 def returnColumnsInfo(dataset):
     dict=[]
+    
     datafront=dataset.copy()
+    dataMatrix=dataset.copy()
+    
+   
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
+
     allNullCols=0
     rowCount=datafront.shape[0]#ukupan broj redova
     colCount=len(datafront.columns)#ukupan broj kolona
+
+    for kolona in svekolone:
+        if(kolona in kategorijskekolone):
+            encoder=LabelEncoder()
+            dataMatrix[kolona]=encoder.fit_transform(dataMatrix[kolona])
+
+    #print(dataMatrix.dtypes)
+    cMatrix=dataMatrix.corr()
 
     for kolona in svekolone:
         if(kolona in kategorijskekolone):
@@ -86,7 +99,7 @@ def returnColumnsInfo(dataset):
 
             #pretvaranje u kategorijsku
             datafront = datafront.astype({kolona: str})
-            print(datafront.dtypes)
+            #print(datafront.dtypes)
             unique=datafront[kolona].value_counts()
             uniquevaluesn=[]
             uniquevaluescountn=[]
@@ -117,7 +130,7 @@ def returnColumnsInfo(dataset):
         #print(NullRows)
         #print(len(NullRows))
         allNullRows=len(NullRows)
-    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount)}
+    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount),'cMatrix':str(np.matrix(cMatrix))}
 
 @dataclass
 class TrainingResultClassification:
@@ -349,7 +362,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt, metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=float(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
      
         hist=history.history
         #plt.plot(hist['accuracy'])
@@ -403,7 +416,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=float(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
@@ -452,7 +465,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=float(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
