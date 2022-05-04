@@ -53,4 +53,9 @@ export class ModelsService {
   deleteModel(model: Model) {
     return this.http.delete(`${Configuration.settings.apiURL}/model/` + model.name, { headers: this.authService.authHeader(), responseType: "text" });
   }
+
+  getPublicModels(): Observable<Model[]> {
+    return this.http.get<Model[]>(`${Configuration.settings.apiURL}/model/publicmodels`, { headers: this.authService.authHeader() });
+  }
+
 }

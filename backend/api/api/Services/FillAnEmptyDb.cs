@@ -19,9 +19,9 @@ namespace api.Services
             var database = mongoClient.GetDatabase(settings.DatabaseName);
 
             _fileService = new FileService(settings, mongoClient);
-            _datasetService = new DatasetService(settings, mongoClient);
-            _modelService = new ModelService(settings, mongoClient);
             _experimentService = new ExperimentService(settings, mongoClient);
+            _datasetService = new DatasetService(settings, mongoClient, _experimentService);
+            _modelService = new ModelService(settings, mongoClient);
             _predictorService = new PredictorService(settings, mongoClient);
         }
 
@@ -104,6 +104,8 @@ namespace api.Services
                 model.outputLayerActivationFunction = "sigmoid";
                 model.metrics = new string[] { };
                 model.epochs = 5;
+                model.isPublic = true;
+                model.accessibleByLink = true;
 
                 _modelService.Create(model);
 
@@ -215,6 +217,8 @@ namespace api.Services
                 model.outputLayerActivationFunction = "relu";
                 model.metrics = new string[] { };
                 model.epochs = 5;
+                model.isPublic = true;
+                model.accessibleByLink = true;
 
                 _modelService.Create(model);
 
@@ -321,6 +325,8 @@ namespace api.Services
                 model.outputLayerActivationFunction = "softmax";
                 model.metrics = new string[] { };
                 model.epochs = 1;
+                model.isPublic = true;
+                model.accessibleByLink = true;
 
                 _modelService.Create(model);
 
