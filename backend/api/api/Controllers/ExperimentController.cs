@@ -92,7 +92,7 @@ namespace api.Controllers
 
         // PUT api/<ExperimentController>/{name}
         [HttpPut("{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Put(string id, [FromBody] Experiment experiment)
         {
             string uploaderId = getUserId();
@@ -114,7 +114,7 @@ namespace api.Controllers
 
         // DELETE api/<ExperimentController>/name
         [HttpDelete("{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Delete(string id)
         {
             string uploaderId = getUserId();
