@@ -135,7 +135,4 @@ export class FormModelComponent implements AfterViewInit {
   updateTestSet(event: MatSliderChange) {
     this.testSetDistribution = event.value!;
   }
-
-
-
 }

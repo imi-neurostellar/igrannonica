@@ -30,20 +30,20 @@
                 </mat-form-field>
             </div>
             <div id="search-options">
-                <div id="collapseFilters" class="collapse collapse-horizontal">
+                <!-- <div id="collapseFilters" class="collapse collapse-horizontal">
                     <mat-icon class="text-offwhite ">timeline</mat-icon>
                     Regresioni
                     <mat-icon class="text-offwhite ">looks_two</mat-icon>
                     Binarni klasifikacioni
                     <mat-icon class="text-offwhite ">auto_awesome_motion</mat-icon>
                     Multiklasifikacioni
-                </div>
+                </div> -->
                 <button class="btn-clear icon-toggle" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
                     <mat-icon>filter_alt</mat-icon>
                 </button>
-                <div id="collapseSort" class="collapse collapse-horizontal">
+                <!-- <div id="collapseSort" class="collapse collapse-horizontal">
                     [sort options here TODO]
-                </div>
+                </div> -->
                 <button class="btn-clear icon-toggle" data-bs-toggle="collapse" data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
                     <mat-icon>sort</mat-icon>
                 </button>
@@ -55,16 +55,13 @@
         <!--{{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
         <div class="folder-inside bg-blur">
             <div class="file-content" [ngClass]="{'form-hidden' : listView}">
-                <div class="file-bottom-buttons">
-                    <button class="btn-clear file-button" (click)="deleteFile()">
+                <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
+                    <button *ngIf="this.selectedFile && selectedTab == TabType.File" class="btn-clear file-button" (click)="deleteFile(this.selectedFile)">
                         <mat-icon>delete</mat-icon>
                     </button>
-                    <button class="btn-clear file-button">
-                        <mat-icon>share</mat-icon>
-                    </button>
-                    <button class="btn-clear file-button">
+                    <!-- <button class="btn-clear file-button">
                         <mat-icon>zoom_out_map</mat-icon>
-                    </button>
+                    </button> -->
                 </div>
                 <app-form-model [ngClass]="{'form-hidden': type != FolderType.Model}"></app-form-model>
                 <app-form-dataset [ngClass]="{'form-hidden': type != FolderType.Dataset}"></app-form-dataset>

@@ -137,6 +137,7 @@ export class FolderComponent implements AfterViewInit {
     });
 
     this.modelsService.getMyModels().subscribe((models) => {
+      console.log(models);
       this.folders[TabType.MyModels] = models;
     });
 
@@ -160,8 +161,26 @@ export class FolderComponent implements AfterViewInit {
   }
 
   saveNewFile() {
-    if (this.type == FolderType.Dataset)
-      this.formDataset!.uploadDataset();
+    switch (this.type) {
+      case FolderType.Dataset:
+        this.formDataset!.uploadDataset((dataset: Dataset) => {
+          Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
+          this.refreshFiles(dataset._id);
+        },
+          () => {
+            Shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
+          });
+        break;
+      case FolderType.Model:
+        this.modelsService.addModel(this.formModel.newModel).subscribe(model => {
+          this.formModel.newModel = model;
+          Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
+          this.refreshFiles(null); // todo select model
+        }, (err) => {
+          Shared.openDialog("Neuspeo pokušaj!", "Konfiguracija neuronske mreže sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeću konfiguraciju.");
+        });
+        break;
+    }
   }
 
 
@@ -207,8 +226,26 @@ export class FolderComponent implements AfterViewInit {
     this.listView = !this.listView;
   }
 
-  deleteFile() {
+  deleteFile(file: FolderFile) {
     console.log('delete');
+    switch (this.type) {
+      case FolderType.Dataset:
+        this.datasetsService.deleteDataset(<Dataset>file).subscribe((response) => {
+          console.log(response);
+        });
+        break;
+      case FolderType.Model:
+        this.modelsService.deleteModel(<Model>file).subscribe((response) => {
+          console.log(response);
+        });
+        break;
+      case FolderType.Experiment:
+        // this.experimentsService.deleteExperiment(<Model>file).subscribe((response) => {
+        //   console.log(response);
+        // });
+        //todo delete za predictor
+        break;
+    }
   }
 
   folders: { [tab: number]: FolderFile[] } = {};

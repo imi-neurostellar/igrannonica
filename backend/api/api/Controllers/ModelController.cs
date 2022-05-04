@@ -187,7 +187,10 @@ namespace api.Controllers
             /*if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
                 return BadRequest("Bad parameters!");*/
 
+            model.uploaderId = getUserId();
+
             var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
+
 
             if (existingModel != null && !overwrite)
                 return NotFound($"Model with name = {model.name} exisits");

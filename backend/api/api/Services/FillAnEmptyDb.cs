@@ -98,11 +98,9 @@ namespace api.Services
                 model.type = "binarni-klasifikacioni";
                 model.optimizer = "Adam";
                 model.lossFunction = "mean_squared_error";
-                model.hiddenLayerNeurons = 3;
                 model.hiddenLayers = 5;
                 model.batchSize = 8;
                 model.outputNeurons = 0;
-                model.hiddenLayerActivationFunctions = new string[] { "relu", "relu", "relu", "relu", "relu" };
                 model.outputLayerActivationFunction = "sigmoid";
                 model.metrics = new string[] { };
                 model.epochs = 5;
@@ -212,11 +210,9 @@ namespace api.Services
                 model.type = "regresioni";
                 model.optimizer = "Adam";
                 model.lossFunction = "mean_absolute_error";
-                model.hiddenLayerNeurons = 2;
                 model.hiddenLayers = 4;
                 model.batchSize = 5;
                 model.outputNeurons = 0;
-                model.hiddenLayerActivationFunctions = new string[] { "relu", "relu", "relu", "relu" };
                 model.outputLayerActivationFunction = "relu";
                 model.metrics = new string[] { };
                 model.epochs = 5;
@@ -321,11 +317,9 @@ namespace api.Services
                 model.type = "multi-klasifikacioni";
                 model.optimizer = "Adam";
                 model.lossFunction = "sparse_categorical_crossentropy";
-                model.hiddenLayerNeurons = 3;
                 model.hiddenLayers = 3;
                 model.batchSize = 4;
                 model.outputNeurons = 0;
-                model.hiddenLayerActivationFunctions = new string[] { "relu", "relu", "softmax" };
                 model.outputLayerActivationFunction = "softmax";
                 model.metrics = new string[] { };
                 model.epochs = 1;
