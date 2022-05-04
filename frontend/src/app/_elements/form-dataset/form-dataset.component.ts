@@ -41,6 +41,10 @@ export class FormDatasetComponent {
 
   //@ViewChild('fileImportInput', { static: false }) fileImportInput: any; cemu je ovo sluzilo?
 
+  clear(){
+    this.tableData.hasInput = false;
+  }
+
   changeListener($event: any): void {
     this.files = $event.srcElement.files;
     if (this.files.length == 0 || this.files[0] == null) {
@@ -55,7 +59,11 @@ export class FormDatasetComponent {
     this.update();
   }
 
+  firstInput = false;
+
   update() {
+
+    this.firstInput = true
 
     if (this.files.length < 1)
       return;
@@ -80,6 +88,25 @@ export class FormDatasetComponent {
     fileReader.readAsText(this.files[0]);
 
     this.dataset.name = this.filename.slice(0, this.filename.length - 4);
+  }
+
+  loadExisting(){
+    this.firstInput = false;
+
+    this.tableData.hasInput = true;
+    this.tableData.loaded = false;
+
+    this.datasetsService.getDatasetFile(this.dataset.fileId).subscribe((file: string | undefined) => {
+      if (file) {
+        this.tableData.loaded = true;
+        this.tableData.numRows = this.dataset.rowCount;
+        this.tableData.numCols = this.dataset.columnInfo.length;
+        this.tableData.data = this.csv.csvToArray(file, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter);
+
+      }
+    });
+
+    
   }
 
   /*exportAsXLSX():void {

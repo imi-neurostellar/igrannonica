@@ -96,7 +96,7 @@ namespace api.Controllers
 
         [HttpGet("csvread/{fileId}/{skipRows}/{takeRows}")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult<string> CsvRead(string fileId, int skipRows = 0, int takeRows = 10)
+        public ActionResult<string> CsvRead(string fileId, int skipRows = 1, int takeRows = 11)
         {
 
             string uploaderId = getUserId();

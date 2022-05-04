@@ -4,11 +4,6 @@
             <app-loading></app-loading>
         </div>
         <div *ngIf="tableData.loaded && tableData.data">
-            <div id="info" *ngIf="tableData.data.length > 0 && tableData.data[0].length > 0" class="d-flex flex-row justify-content-center align-items-center">
-                <div class="fs-5 mb-3">
-                    Tabela {{tableData.numCols}}x{{tableData.numRows}}
-                </div>
-            </div>
             <div style="border-radius: 5px; overflow-x: auto; overflow-y: hidden;">
                 <table *ngIf="tableData.data.length && tableData.data[0].length > 0" class="table table-responsive table-sm text-offwhite row-height">
                     <thead>
@@ -23,8 +18,19 @@
                     </tbody>
                 </table>
             </div>
-            <div class="footer-center" >
-                <div>+ {{tableData.numRows - 11}} redova...</div>
+            <div class="row" >
+                <div id="info" *ngIf="tableData.data.length > 0 && tableData.data[0].length > 0" class="d-flex flex-row justify-content-right align-items-right col-sm">
+                    <div class=" mb-3">
+                        Tabela {{tableData.numCols}} x {{tableData.numRows}}
+                    </div>
+                </div>
+                <div class="col-sm"></div>
+                <div class="col-sm"></div>
+                <div class="footer-center col-sm">Prikazano 10/{{tableData.numRows}} redova</div>
+                <div class="col-sm"></div>
+                <div class="col-sm"></div>
+                <div class="col-sm"></div>
+                
             </div>
         </div>
     </div>

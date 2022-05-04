@@ -1,12 +1,12 @@
 <div class="folderBox" *ngIf="dataset">
 
     <div class="row" style="margin-right: 0;">
-        <div class="bottomBar">
-            <div class="row">
+        <div class="topBar">
+            <div class="row toptop">
                 <div class="col-sm mb-3">
                     <div class="fileButton">
-                        <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
-                        <label>{{filename}}</label>
+                        <button type="button" mat-raised-button (click)="fileInput.click()">Dodaj izvor podataka</button>
+                        
                     </div>
                 </div>
 
@@ -35,6 +35,13 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="col-sm">
+                    
+                </div>
+            </div>
+            <div class="row" *ngIf="firstInput">
+                <label class=" mt-5">{{filename}}</label>
+
             </div>
         </div>
     </div>
