@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   register(user: any) {
-    return this.http.post(`${Configuration.settings.apiURL}/auth/register`, { ...user }, { responseType: 'text' });
+    return this.http.post(`${Configuration.settings.apiURL}/auth/register`, { ...user },{ headers: this.authHeader() , responseType: 'text' });
   }
 
   getGuestToken() {

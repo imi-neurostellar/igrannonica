@@ -28,7 +28,7 @@ namespace api.Services
             return _jwt.GenToken(u);
 
         }
-        public string Register(RegisterRequest user)
+        public string Register(RegisterRequest user,string id)
         {
             User u = new User();
             u.Username = user.username;
@@ -38,13 +38,14 @@ namespace api.Services
             u.LastName = user.lastName;
             u.photoId = "1";
             u.isPermament = true;
+            u._id = id;
             u.dateCreated= DateTime.Now.ToUniversalTime();
             if (_users.Find(user => user.Username == u.Username).FirstOrDefault() != null)
                 return "Username Already Exists";
             if (_users.Find(user => user.Email == u.Email).FirstOrDefault() != null)
                 return "Email Already Exists";
 
-            _users.InsertOne(u);
+            _users.ReplaceOne(x=>x._id==u._id,u);
             return "User added";
         }
 

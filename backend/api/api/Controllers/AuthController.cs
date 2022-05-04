@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Net.Http.Headers;
+using System.Net.Http.Headers;
+using api.Models;
 
 namespace api.Controllers
 {
@@ -12,16 +14,20 @@ namespace api.Controllers
     public class AuthController : ControllerBase
     {
         private IAuthService _auth;
-        public AuthController(IAuthService auth)
+        private IJwtToken _jwtToken;
+        public AuthController(IAuthService auth, IJwtToken Token)
         {
             _auth = auth;
+            _jwtToken = Token;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<string>> Register(RegisterRequest user)
         {
-            
-            return Ok(_auth.Register(user));
+            string id=getUserId();
+            if (id == null)
+                return BadRequest();
+            return Ok(_auth.Register(user,id));
         }
 
         [HttpPost("login")]
@@ -55,6 +61,24 @@ namespace api.Controllers
             return Ok(newToken);
 
 
+        }
+
+        public string getUserId()
+        {
+            string uploaderId;
+            var header = Request.Headers[HeaderNames.Authorization];
+            if (AuthenticationHeaderValue.TryParse(header, out var headerValue))
+            {
+                var scheme = headerValue.Scheme;
+                var parameter = headerValue.Parameter;
+                uploaderId = _jwtToken.TokenToId(parameter);
+                if (uploaderId == null)
+                    return null;
+            }
+            else
+                return null;
+
+            return uploaderId;
         }
 
 
