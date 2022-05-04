@@ -223,7 +223,7 @@ export class ColumnTableComponent implements AfterViewInit {
       this.experiment.name = selectedName;
       //napravi odvojene dugmice za save i update -> za update nece da se otvara dijalog za ime
       this.experimentService.addExperiment(this.experiment).subscribe((response) => {
-        this.experiment = response;
+        this.experiment._id = response._id;
         this.okPressed.emit();
       });
     });

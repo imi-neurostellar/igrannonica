@@ -10,6 +10,8 @@ import { ModelsService } from 'src/app/_services/models.service';
 import Model from 'src/app/_data/Model';
 import Dataset from 'src/app/_data/Dataset';
 import { ColumnTableComponent } from 'src/app/_elements/column-table/column-table.component';
+import { SignalRService } from 'src/app/_services/signal-r.service';
+import { MetricViewComponent } from 'src/app/_elements/metric-view/metric-view.component';
 
 @Component({
   selector: 'app-experiment',
@@ -26,11 +28,11 @@ export class ExperimentComponent implements AfterViewInit {
   experiment: Experiment;
   dataset?: Dataset;
   @ViewChild("folderDataset") folderDataset!: FolderComponent;
-  @ViewChild("folderModel") folderModel!: FolderComponent;
   @ViewChild(ColumnTableComponent) columnTable!: ColumnTableComponent;
+  @ViewChild("folderModel") folderModel!: FolderComponent;
+  @ViewChild("metricView") metricView!: MetricViewComponent;
 
-
-  constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService) {
+  constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private signalRService: SignalRService) {
     this.experiment = new Experiment("exp1");
   }
 
@@ -43,7 +45,11 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   trainModel() {
-    this.modelsService.trainModel((<Model>this.folderModel.selectedFile)._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") })
+    if (!this.modelToTrain) {
+      Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
+    } else {
+      this.modelsService.trainModel(this.modelToTrain._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
+    }
   }
 
   stepHeight = this.calcStepHeight();
@@ -65,7 +71,22 @@ export class ExperimentComponent implements AfterViewInit {
     this.stepsContainer.nativeElement.addEventListener('scroll', (event: Event) => {
       Shared.emitBGScrollEvent(this.stepsContainer.nativeElement.scrollTop);
     });
+
+    if (this.signalRService.hubConnection) {
+      this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
+        console.log(this.modelToTrain?._id, mId);
+        if (this.modelToTrain?._id == mId) {
+          stat = stat.replace(/'/g, '"');
+          //console.log('JSON', this.trainingResult);
+          this.history.push(JSON.parse(stat));
+          this.metricView.update(this.history);
+        }
+      });
+
+    }
   }
+
+  history: any[] = [];
 
   updatePageIfScrolled() {
     if (this.scrolling) return;
@@ -129,5 +150,12 @@ export class ExperimentComponent implements AfterViewInit {
     this.dataset = d;
 
     this.columnTable.loadDataset(this.dataset);
+  }
+
+  modelToTrain?: Model;
+
+  setModel(model: FolderFile) {
+    const m = <Model>model;
+    this.modelToTrain = m;
   }
 }

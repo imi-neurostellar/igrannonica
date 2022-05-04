@@ -53,8 +53,9 @@ export class FolderComponent implements AfterViewInit {
 
     if (this.signalRService.hubConnection) {
       this.signalRService.hubConnection.on("NotifyDataset", (dName: string, dId: string) => {
-        this.refreshFiles(dId);
-
+        if (this.type == FolderType.Dataset) {
+          this.refreshFiles(dId);
+        }
       });
     } else {
       console.warn("Dataset-Load: No connection!");

@@ -37,12 +37,12 @@
         </div>
         <div #steps id="step_3" class="step-content">
             <div class="step-content-inside">
-                <app-folder #folderModel [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.NewFile" [tabsToShow]="[TabType.MyModels]" (okPressed)="goToPage(3)"></app-folder>
+                <app-folder #folderModel [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.NewFile" [tabsToShow]="[TabType.MyModels]" (okPressed)="goToPage(3); trainModel();" (selectedFileChanged)="setModel($event)"></app-folder>
             </div>
         </div>
         <div #steps id="step_4" class="step-content">
             <div class="step-content-inside">
-                <app-metric-view></app-metric-view>
+                <app-metric-view #metricView></app-metric-view>
             </div>
         </div>
     </div>
