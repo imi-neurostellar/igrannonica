@@ -108,9 +108,8 @@ namespace api.Controllers
 
             experiment.lastUpdated = DateTime.UtcNow;
 
-            _experimentService.Update(uploaderId, id, experiment);
 
-            return Ok($"Experiment with ID = {id} updated");
+            return Ok(_experimentService.Update(uploaderId, id, experiment));
         }
 
         // DELETE api/<ExperimentController>/name

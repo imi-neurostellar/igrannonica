@@ -45,9 +45,10 @@ namespace api.Services
             return _experiment.Find(experiment => experiment.uploaderId == userId && experiment._id == id).FirstOrDefault();
         }
 
-        public void Update(string userId, string id, Experiment experiment)
+        public Experiment Update(string userId, string id, Experiment experiment)
         {
             _experiment.ReplaceOne(experiment => experiment.uploaderId == userId && experiment._id == id, experiment);
+            return _experiment.Find(experiment => experiment.uploaderId == userId && experiment._id == id).FirstOrDefault();
         }
 
         public void Delete(string userId, string id)
