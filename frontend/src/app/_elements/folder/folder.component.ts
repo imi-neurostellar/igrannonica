@@ -98,8 +98,8 @@ export class FolderComponent implements AfterViewInit {
     this.newFileSelected = false;
     this.listView = false;
     this.selectedFileChanged.emit(this.selectedFile);
-    this.displayFile();
     this.selectTab(TabType.File);
+    this.displayFile();
   }
 
   createNewFile() {
@@ -117,9 +117,13 @@ export class FolderComponent implements AfterViewInit {
   _initialized: boolean = false;
 
   refreshFiles(selectedDatasetId: string | null) {
+    this.files = []
+    this.filteredFiles.length = 0;
+    this.folders[TabType.NewFile] = [];
+    this.folders[TabType.File] = [];
     this.tabsToShow.forEach(tab => {
       this.folders[tab] = [];
-    })
+    });
 
     this.datasetsService.getMyDatasets().subscribe((datasets) => {
       this.folders[TabType.MyDatasets] = datasets;
@@ -137,7 +141,6 @@ export class FolderComponent implements AfterViewInit {
     });
 
     this.modelsService.getMyModels().subscribe((models) => {
-      console.log(models);
       this.folders[TabType.MyModels] = models;
     });
 
@@ -164,6 +167,7 @@ export class FolderComponent implements AfterViewInit {
     switch (this.type) {
       case FolderType.Dataset:
         this.formDataset!.uploadDataset((dataset: Dataset) => {
+          this.newFile = undefined;
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
           this.refreshFiles(dataset._id);
         },
@@ -173,7 +177,7 @@ export class FolderComponent implements AfterViewInit {
         break;
       case FolderType.Model:
         this.modelsService.addModel(this.formModel.newModel).subscribe(model => {
-          this.formModel.newModel = model;
+          this.newFile = undefined;
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
           this.refreshFiles(null); // todo select model
         }, (err) => {
@@ -205,8 +209,8 @@ export class FolderComponent implements AfterViewInit {
   filteredFiles: FolderFile[] = [];
 
   searchTermsChanged() {
-    if (!this.files) return;
     this.filteredFiles.length = 0;
+    if (!this.files) return;
     this.filteredFiles.push(...this.files.filter((file) => file.name.toLowerCase().includes(this.searchTerm.toLowerCase())));
     /*if (this.selectedFile) {
       if (!this.filteredFiles.includes(this.selectedFile)) {
@@ -226,17 +230,22 @@ export class FolderComponent implements AfterViewInit {
     this.listView = !this.listView;
   }
 
-  deleteFile(file: FolderFile) {
+  deleteFile(file: FolderFile, event: Event) {
+    event.stopPropagation();
     console.log('delete');
     switch (this.type) {
       case FolderType.Dataset:
         this.datasetsService.deleteDataset(<Dataset>file).subscribe((response) => {
-          console.log(response);
+          console.log(this.files, this.filteredFiles)
+          this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+          console.log(this.files, this.filteredFiles)
+          this.refreshFiles(null);
+          console.log(this.files, this.filteredFiles)
         });
         break;
       case FolderType.Model:
         this.modelsService.deleteModel(<Model>file).subscribe((response) => {
-          console.log(response);
+          this.refreshFiles(null);
         });
         break;
       case FolderType.Experiment:

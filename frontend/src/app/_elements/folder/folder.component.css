@@ -152,6 +152,14 @@
     display: none;
 }
 
+.hover-show {
+    display: none;
+}
+
+.list-item:hover>.hover-show {
+    display: initial;
+}
+
 .list-add {
     display: flex;
     flex-direction: row;

@@ -27,7 +27,8 @@ namespace api.Models
         public string lossFunction { get; set; }
         //public int inputNeurons { get; set; }
         public int hiddenLayers { get; set; }
-        public int batchSize { get; set; }
+        public string batchSize { get; set; }
+        public string learningRate { get; set; }
         // na izlazu je moguce da bude vise neurona (klasifikacioni problem sa vise od 2 klase)
         public int outputNeurons { get; set; }
         public Layer[] layers { get; set; }
