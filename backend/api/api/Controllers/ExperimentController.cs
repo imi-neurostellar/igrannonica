@@ -53,6 +53,7 @@ namespace api.Controllers
                 return BadRequest();
 
             experiment.uploaderId = uploaderId;
+
             var existingExperiment = _experimentService.Get(uploaderId, experiment.name);
             if(existingExperiment != null)
                 return NotFound($"Experiment with this name exists");
@@ -99,17 +100,43 @@ namespace api.Controllers
             if (uploaderId == null)
                 return BadRequest();
 
-            var existingDataset = _experimentService.GetOneExperiment(uploaderId, id);
+            var existingExperiment = _experimentService.GetOneExperiment(uploaderId, id);
 
             //ne mora da se proverava
-            if (existingDataset == null)
+            if (existingExperiment == null)
                 return NotFound($"Experiment with ID = {id} or user with ID = {uploaderId} not found");
 
             experiment.lastUpdated = DateTime.UtcNow;
 
-            _experimentService.Update(uploaderId, id, experiment);
 
-            return Ok($"Experiment with ID = {id} updated");
+            return Ok(_experimentService.Update(uploaderId, id, experiment));
         }
+
+        // DELETE api/<ExperimentController>/name
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "User")]
+        public ActionResult Delete(string id)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            var experiment = _experimentService.GetOneExperiment(uploaderId, id);
+
+            if (experiment == null)
+                return NotFound($"Experiment with ID = {id} or user with ID = {uploaderId} not found");
+
+            _experimentService.Delete(experiment.uploaderId, experiment._id);
+
+            return Ok($"Experiment with ID = {id} deleted");
+
+        }
+
+        public void DeleteHelper(string uploaderId, string experimentId)
+        {
+            _experimentService.Delete(uploaderId, experimentId);
+        }
+
     }
 }

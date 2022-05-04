@@ -14,11 +14,11 @@ export default class Experiment {
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
         public modelIds: string[] = [],
-
-        
-
+        public columnTypes: ColumnType[] = [],
         public encodings: ColumnEncoding[] = []//[{columnName: "", columnEncoding: Encoding.Label}]
     ) { }
+
+    _columnsSelected: boolean = false;
 }
 
 export enum NullValueOptions {
@@ -44,11 +44,11 @@ export class NullValReplacer {
 export enum Encoding {
     Label = 'label',
     OneHot = 'onehot',
-    Ordinal = 'ordinal',
+    /*Ordinal = 'ordinal',
     Hashing = 'hashing',
     Binary = 'binary',
     BaseN = 'baseN'
-    /*
+    
     BackwardDifference = 'backward difference',
     CatBoost = 'cat boost',
     Count = 'count',
@@ -66,9 +66,13 @@ export enum Encoding {
 }
 
 export class ColumnEncoding {
-    constructor (
+    constructor(
         public columnName: string,
         public encoding: Encoding
-    ) 
-    {}
+    ) { }
+}
+
+export enum ColumnType {
+    categorical = "categorical",
+    numerical = "numerical"
 }

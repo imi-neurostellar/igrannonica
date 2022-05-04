@@ -108,7 +108,9 @@
             </div>
 
             <div class="col-sm-9">
-                <app-graph [model]="newModel"></app-graph>
+                <!-- {{forExperiment._columnsSelected}} -->
+                <app-graph [model]="newModel" *ngIf="forExperiment._columnsSelected" [inputColumns]="forExperiment.inputColumns"></app-graph>
+                <app-graph [model]="newModel" *ngIf="!forExperiment._columnsSelected" [inputColumns]="['Nisu odabrane ulazne kolone']"></app-graph>
             </div>
         </div>
     </div>

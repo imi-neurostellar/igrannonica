@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
-import Dataset, { ColumnType } from 'src/app/_data/Dataset';
-import Experiment, { ColumnEncoding, Encoding, NullValReplacer, NullValueOptions } from 'src/app/_data/Experiment';
+import Dataset from 'src/app/_data/Dataset';
+import Experiment, { ColumnEncoding, Encoding, ColumnType, NullValueOptions } from 'src/app/_data/Experiment';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { EncodingDialogComponent } from 'src/app/_modals/encoding-dialog/encoding-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,8 @@ import { CsvParseService } from 'src/app/_services/csv-parse.service';
 import { ProblemType } from 'src/app/_data/Model';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { SaveExperimentDialogComponent } from 'src/app/_modals/save-experiment-dialog/save-experiment-dialog.component';
+import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.component';
+import Shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-column-table',
@@ -20,7 +22,6 @@ export class ColumnTableComponent implements AfterViewInit {
 
   @Input() dataset?: Dataset;
   @Input() experiment!: Experiment;
-  @ViewChildren("nullValMenu") nullValMenus!: ElementRef[];
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
   @Output() columnTableChanged = new EventEmitter();
 
@@ -35,7 +36,7 @@ export class ColumnTableComponent implements AfterViewInit {
   columnsChecked: boolean[] = []; //niz svih kolona
   loaded: boolean = false;
 
- 
+
   constructor(private datasetService: DatasetsService, private experimentService: ExperimentsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
@@ -44,15 +45,13 @@ export class ColumnTableComponent implements AfterViewInit {
     this.dataset = dataset;
 
     this.setColumnTypeInitial();
-      
+
     this.dataset.columnInfo.forEach(column => {
       this.columnsChecked.push(true);
     });
-    
-    for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
-      this.experiment.inputColumns.push(this.dataset.columnInfo[i].columnName);
-    }
-    this.experiment.outputColumn = this.experiment.inputColumns[0];
+
+    this.resetInputColumns();
+    this.resetOutputColumn();
     this.resetColumnEncodings(Encoding.Label);
     this.setDeleteRowsForMissingValTreatment();
 
@@ -70,15 +69,27 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-      
+
   }
 
   setColumnTypeInitial() {
     if (this.dataset != undefined) {
       for (let i = 0; i < this.dataset.columnInfo.length; i++) {
-        this.dataset.columnInfo[i].columnType = (this.dataset.columnInfo[i].isNumber) ? ColumnType.numerical : ColumnType.categorical;
+        this.experiment.columnTypes[i] = (this.dataset.columnInfo[i].isNumber) ? ColumnType.numerical : ColumnType.categorical;
       }
     }
+  }
+
+  resetInputColumns() {
+    if (this.dataset != undefined) {
+      this.experiment.inputColumns = [];
+      for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
+        this.experiment.inputColumns.push(this.dataset.columnInfo[i].columnName);
+      }
+    }
+  }
+  resetOutputColumn() {
+    this.experiment.outputColumn = this.experiment.inputColumns[0];
   }
 
   setDeleteRowsForMissingValTreatment() {
@@ -102,7 +113,7 @@ export class ColumnTableComponent implements AfterViewInit {
   columnTypeChanged(columnName: string) {
     if (this.experiment.outputColumn == columnName)
       this.changeOutputColumn(columnName);
-    else 
+    else
       this.columnTableChangeDetected();
   }
 
@@ -129,14 +140,14 @@ export class ColumnTableComponent implements AfterViewInit {
 
   changeOutputColumn(columnName: string) {
     if (this.experiment != undefined && this.dataset != undefined) {
-      let column = this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.outputColumn)[0];
-      if (column.columnType == ColumnType.numerical) {
+      let i = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment!.outputColumn);
+      if (this.experiment.columnTypes[i] == ColumnType.numerical) {
         this.experiment.type = ProblemType.Regression;
       }
       else {
-        if (column.uniqueValues!.length == 2)
+        if (this.dataset.columnInfo[i].uniqueValues!.length == 2)
           this.experiment.type = ProblemType.BinaryClassification;
-        else 
+        else
           this.experiment.type = ProblemType.MultiClassification;
       }
       this.columnTableChangeDetected();
@@ -188,7 +199,7 @@ export class ColumnTableComponent implements AfterViewInit {
             value: ""
           });
           let numOfRowsToDelete = (this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.inputColumns[i])[0]).numNulls;
-          this.nullValOption[i] = "Obriši redove (" + numOfRowsToDelete  + ")";
+          this.nullValOption[i] = "Obriši redove (" + numOfRowsToDelete + ")";
         }
       }
       this.columnTableChangeDetected();
@@ -212,13 +223,18 @@ export class ColumnTableComponent implements AfterViewInit {
       this.experiment.name = selectedName;
       //napravi odvojene dugmice za save i update -> za update nece da se otvara dijalog za ime
       this.experimentService.addExperiment(this.experiment).subscribe((response) => {
-        console.log(response);
+        this.experiment._id = response._id;
         this.okPressed.emit();
       });
     });
   }
- 
 
+  openUpdateExperimentDialog() {
+    this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
+      this.experiment = response;
+      Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
+    });
+  }
 
   MissValsDeleteClicked(event: Event, replacementType: NullValueOptions, index: number) {
     if (this.experiment != undefined && this.dataset != undefined) {
@@ -271,6 +287,9 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   saveExperiment() {
     this.openSaveExperimentDialog();
+  }
+  updateExperiment() {
+    this.openUpdateExperimentDialog();
   }
 
 

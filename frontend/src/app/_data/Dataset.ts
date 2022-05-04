@@ -18,7 +18,7 @@ export default class Dataset extends FolderFile {
         public rowCount: number = 0,
         public nullRows: number = 0,
         public nullCols: number = 0,
-        public preview: string[][] = [[]]
+        public cMatrix: number[][] = []
     ) {
         super(name, dateCreated, lastUpdated);
     }
@@ -27,7 +27,6 @@ export default class Dataset extends FolderFile {
 export class ColumnInfo {
     constructor(
         public columnName: string = '',
-        public columnType: ColumnType,
         public isNumber: boolean = false,
         public numNulls: number = 0,
         public uniqueValues?: string[],
@@ -39,16 +38,12 @@ export class ColumnInfo {
         public max?: number,
         public q1?: number,
         public q3?: number,
-    ) { 
+    ) {
         /*if (isNumber)
             this.columnType = ColumnType.numerical;
         else 
             this.columnType = ColumnType.categorical;*/
     }
-        
+
 }
 
-export enum ColumnType {
-    categorical = "Kategorijski",
-    numerical = "Numerički"
-}

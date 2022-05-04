@@ -44,6 +44,6 @@ export class PlaylistComponent implements OnInit {
       }
     });
 
-    console.log(this.tableDatas);
+    //console.log(this.tableDatas);
   }
 }

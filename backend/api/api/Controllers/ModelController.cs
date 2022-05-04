@@ -91,10 +91,12 @@ namespace api.Controllers
             return Ok();
         }
 
-
-
-
-
+        // GET: api/<ModelController>/publicmodels
+        [HttpGet("publicmodels")]
+        public ActionResult<List<Model>> GetPublicModels()
+        {
+            return _modelService.GetPublicModels();
+        }
 
         // GET: api/<ModelController>/mymodels
         [HttpGet("mymodels")]

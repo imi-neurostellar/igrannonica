@@ -28,6 +28,7 @@ namespace api.Models
         public int nullRows { get; set; }
         public bool isPreProcess { get; set; }
 
+        public float[][] cMatrix { get; set; }
     }
 }
 

@@ -1,10 +1,11 @@
 <h1 mat-dialog-title>Čuvanje eksperimenta</h1>
 <div mat-dialog-content>
-    <p>Unesite naziv eksperimenta:</p>
+    <span>Unesi naziv eksperimenta:</span>
     <mat-form-field>
         <input type="text" matInput [(ngModel)]="selectedName">
     </mat-form-field>
-    <p>Da li ste sigurni u izbor?</p>
+    <br><br>
+    <p>Sačuvaj eksperiment:</p>
 </div>
 <div mat-dialog-actions>
     <button mat-button [mat-dialog-close]="selectedName" cdkFocusInitial>Da</button>
