@@ -64,15 +64,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let colInfo of dataset.columnInfo; let i = index">
+                        <tr *ngFor="let row of dataset.cMatrix; let i = index">
                             <th [ngClass]="{'header-disabled col-disabled' : !columnsChecked[i]}">
                                 <div class="text-left">
-                                    {{colInfo.columnName}}
+                                    {{dataset.columnInfo[i].columnName}}
                                 </div>
                             </th>
-                            <td *ngFor="let colInfo of dataset.columnInfo; let j = index" [ngClass]="{'text-disabled col-disabled' : !columnsChecked[j] || !columnsChecked[i]}">
+                            <td *ngFor="let corrVal of row; let j = index" [ngClass]="{'text-disabled col-disabled' : !columnsChecked[j] || !columnsChecked[i]}">
                                 <div class="text-overflow">
-                                    0.1
+                                    {{corrVal}}
                                 </div>
                             </td>
                         </tr>

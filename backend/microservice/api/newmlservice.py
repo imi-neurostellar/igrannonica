@@ -130,7 +130,9 @@ def returnColumnsInfo(dataset):
         #print(NullRows)
         #print(len(NullRows))
         allNullRows=len(NullRows)
-    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount),'cMatrix':str(np.matrix(cMatrix))}
+        print(cMatrix.to_json(orient='index'))
+        #json.loads()['data']
+    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount),'cMatrix':json.loads(cMatrix.to_json(orient='split'))['data']}
 
 @dataclass
 class TrainingResultClassification:

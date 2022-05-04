@@ -36,7 +36,7 @@ export class ColumnTableComponent implements AfterViewInit {
   columnsChecked: boolean[] = []; //niz svih kolona
   loaded: boolean = false;
 
- 
+
   constructor(private datasetService: DatasetsService, private experimentService: ExperimentsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
@@ -45,11 +45,11 @@ export class ColumnTableComponent implements AfterViewInit {
     this.dataset = dataset;
 
     this.setColumnTypeInitial();
-      
+
     this.dataset.columnInfo.forEach(column => {
       this.columnsChecked.push(true);
     });
-    
+
     this.resetInputColumns();
     this.resetOutputColumn();
     this.resetColumnEncodings(Encoding.Label);
@@ -69,7 +69,7 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-      
+
   }
 
   setColumnTypeInitial() {
@@ -113,7 +113,7 @@ export class ColumnTableComponent implements AfterViewInit {
   columnTypeChanged(columnName: string) {
     if (this.experiment.outputColumn == columnName)
       this.changeOutputColumn(columnName);
-    else 
+    else
       this.columnTableChangeDetected();
   }
 
@@ -147,7 +147,7 @@ export class ColumnTableComponent implements AfterViewInit {
       else {
         if (column.uniqueValues!.length == 2)
           this.experiment.type = ProblemType.BinaryClassification;
-        else 
+        else
           this.experiment.type = ProblemType.MultiClassification;
       }
       this.columnTableChangeDetected();
@@ -199,7 +199,7 @@ export class ColumnTableComponent implements AfterViewInit {
             value: ""
           });
           let numOfRowsToDelete = (this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.inputColumns[i])[0]).numNulls;
-          this.nullValOption[i] = "Obriši redove (" + numOfRowsToDelete  + ")";
+          this.nullValOption[i] = "Obriši redove (" + numOfRowsToDelete + ")";
         }
       }
       this.columnTableChangeDetected();
@@ -228,7 +228,7 @@ export class ColumnTableComponent implements AfterViewInit {
       });
     });
   }
-  
+
   openUpdateExperimentDialog() {
     this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
       Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");

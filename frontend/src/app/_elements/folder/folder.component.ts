@@ -169,7 +169,7 @@ export class FolderComponent implements AfterViewInit {
         this.formDataset!.uploadDataset((dataset: Dataset) => {
           this.newFile = undefined;
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
-          this.refreshFiles(dataset._id);
+          this.refreshFiles(null);
         },
           () => {
             Shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
