@@ -75,6 +75,9 @@ export class ExperimentComponent implements AfterViewInit {
     if (this.signalRService.hubConnection) {
       this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
         console.log(this.modelToTrain?._id, mId);
+        if (currentEpoch == 0) {
+          this.history = [];
+        }
         if (this.modelToTrain?._id == mId) {
           stat = stat.replace(/'/g, '"');
           //console.log('JSON', this.trainingResult);

@@ -183,7 +183,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     columnTypes=paramsExperiment['columnTypes']
     for i in range(len(columnInfo)):
         col=columnInfo[i]
-        if(columnTypes[i]=="categorical"):
+        if(columnTypes[i]=="categorical" and col['columnName'] in paramsExperiment['inputColumns']):
             data[col['columnName']]=data[col['columnName']].apply(str)
             kategorijskekolone.append(col['columnName'])
     #kategorijskekolone=data.select_dtypes(include=['object']).columns
@@ -365,7 +365,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt, metrics =paramsModel['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt, metrics = ['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
      
@@ -419,7 +419,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         
         classifier.add(tf.keras.layers.Dense(units=1, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics =paramsModel['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
@@ -468,7 +468,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         
         classifier.add(tf.keras.layers.Dense(units=1,activation=paramsModel['outputLayerActivationFunction']))
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics =paramsModel['metrics'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
@@ -638,7 +638,7 @@ def manageH5(dataset,params,h5model):
     h5model.summary()
     #ann_viz(h5model, title="My neural network")
 
-    h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics=params['metrics'])
+    h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics = ['accuracy','mae','mse'])
 
     history=h5model.fit(x2, y2, epochs = params['epochs'],batch_size=int(params['batchSize']))
     
