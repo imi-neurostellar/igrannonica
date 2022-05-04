@@ -130,7 +130,7 @@ def returnColumnsInfo(dataset):
         #print(NullRows)
         #print(len(NullRows))
         allNullRows=len(NullRows)
-        print(cMatrix.to_json(orient='index'))
+        #print(cMatrix.to_json(orient='index'))
         #json.loads()['data']
     return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount),'cMatrix':json.loads(cMatrix.to_json(orient='split'))['data']}
 
@@ -185,7 +185,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         col=columnInfo[i]
         if(columnTypes[i]=="categorical"):
             data[col['columnName']]=data[col['columnName']].apply(str)
-            kategorijskekolone.append(col['coumnName'])
+            kategorijskekolone.append(col['columnName'])
     #kategorijskekolone=data.select_dtypes(include=['object']).columns
     print(kategorijskekolone)
     ###NULL
@@ -367,7 +367,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt, metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=float(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
      
         hist=history.history
         #plt.plot(hist['accuracy'])
@@ -421,14 +421,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics =paramsModel['metrics'])
 
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-        print(x_train)
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-        print(y_train)
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-
-
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=float(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
@@ -473,11 +466,11 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
             classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][i+1]['neurons'], activation=paramsModel['layers'][i+1]['activationFunction'],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#i-ti skriveni sloj
         
-        classifier.add(tf.keras.layers.Dense(units=1),activation=paramsModel['outputLayerActivationFunction'])
+        classifier.add(tf.keras.layers.Dense(units=1,activation=paramsModel['outputLayerActivationFunction']))
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics =paramsModel['metrics'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=float(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
@@ -647,7 +640,7 @@ def manageH5(dataset,params,h5model):
 
     h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics=params['metrics'])
 
-    history=h5model.fit(x2, y2, epochs = params['epochs'],batch_size=params['batchSize'])
+    history=h5model.fit(x2, y2, epochs = params['epochs'],batch_size=int(params['batchSize']))
     
     y_pred2=h5model.predict(x2)
      
