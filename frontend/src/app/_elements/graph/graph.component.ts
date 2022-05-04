@@ -43,7 +43,7 @@ export class GraphComponent implements AfterViewInit {
     window.addEventListener('resize', () => { this.resize() });
     this.update();
     this.resize();
-    console.log(this.layers);
+    //console.log(this.layers);
   }
 
   layers: Node[][] = [];

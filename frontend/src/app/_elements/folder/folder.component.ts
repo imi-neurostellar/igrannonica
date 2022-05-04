@@ -238,15 +238,12 @@ export class FolderComponent implements AfterViewInit {
 
   deleteFile(file: FolderFile, event: Event) {
     event.stopPropagation();
-    console.log('delete');
+    //console.log('delete');
     switch (this.type) {
       case FolderType.Dataset:
         this.datasetsService.deleteDataset(<Dataset>file).subscribe((response) => {
-          console.log(this.files, this.filteredFiles)
           this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
-          console.log(this.files, this.filteredFiles)
           this.refreshFiles(null);
-          console.log(this.files, this.filteredFiles)
         });
         break;
       case FolderType.Model:
