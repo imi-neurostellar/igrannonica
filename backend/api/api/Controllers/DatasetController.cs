@@ -18,14 +18,14 @@ namespace api.Controllers
         private readonly IFileService _fileService;
         private IJwtToken jwtToken;
 
-        public DatasetController(IDatasetService datasetService, IConfiguration configuration,IJwtToken Token,IMlConnectionService mlConnectionService, IFileService fileService)
+        public DatasetController(IDatasetService datasetService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IFileService fileService)
         {
             _datasetService = datasetService;
             _mlConnectionService = mlConnectionService;
             _fileService = fileService;
             jwtToken = Token;
         }
-       
+
         public string getUserId()
         {
             string userId;
@@ -116,7 +116,7 @@ namespace api.Controllers
             if (userId == null)
                 return BadRequest();
 
-            var dataset = _datasetService.GetOneDataset(userId, name);
+            var dataset = _datasetService.GetOneDatasetN(userId, name);
             if (dataset == null)
                 return NotFound($"Dataset with name = {name} not found or dataset is not public or not preprocessed");
 
@@ -129,11 +129,13 @@ namespace api.Controllers
         public async Task<ActionResult<Dataset>> Post([FromBody] Dataset dataset)
         {
             string uploaderId = getUserId();
-            
+
+            dataset.uploaderId = uploaderId;
+
             //da li ce preko tokena da se ubaci username ili front salje
             //dataset.username = usernameToken;
             //username = "" ako je GUEST DODAO
-            var existingDataset = _datasetService.GetOneDataset(dataset.uploaderId, dataset.name);
+            var existingDataset = _datasetService.GetOneDatasetN(dataset.uploaderId, dataset.name);
 
             if (existingDataset != null)
                 return NotFound($"Dateset with name = {dataset.name} exisits");
@@ -142,7 +144,7 @@ namespace api.Controllers
                 FileModel fileModel = _fileService.getFile(dataset.fileId);
                 dataset.isPreProcess = false;
                 _datasetService.Create(dataset);
-                _mlConnectionService.PreProcess(dataset,fileModel.path,uploaderId);
+                _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
                 return Ok();
             }
         }

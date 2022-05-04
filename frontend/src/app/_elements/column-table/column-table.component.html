@@ -186,7 +186,7 @@
                                     </mat-menu>
 
                                     <mat-menu #replaceWith="matMenu">
-                                        <input type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value]>
+                                        <input type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value] #enterAValue>
                                         <button [disabled]="getValue(colInfo.columnName) == ''" mat-menu-item value={{getValue(colInfo.columnName)}} (click)="MissValsReplaceClicked($event, colInfo.columnName, i)">Potvrdi unos</button>
                                     </mat-menu>
                                 </div>
@@ -225,15 +225,24 @@
             </div>
             <div class="break-1"></div>
             <div class="ns-col d-flex align-items-center justify-content-center">
-                <button mat-button (click)="saveExperiment()" class="bottom-button text-offwhite rounded-bottom">
-                <div class="f-row" style="justify-content: space-around;">
-                    <div>Potvrdi</div>
-                    <div class="icon-double pt-1">
-                        <mat-icon>check</mat-icon>
-                        <mat-icon>check</mat-icon>
+                <button *ngIf="experiment._id == ''" mat-button (click)="saveExperiment()" class="bottom-button text-offwhite rounded-bottom">
+                    <div class="f-row" style="justify-content: space-around; width: 100%;">
+                        <div>Sačuvaj</div>
+                        <div class="icon-double pt-1">
+                            <mat-icon>check</mat-icon>
+                            <mat-icon>check</mat-icon>
+                        </div>
                     </div>
-                </div>
-            </button>
+                </button>
+                <button *ngIf="experiment._id != ''" mat-button (click)="updateExperiment()" class="bottom-button text-offwhite rounded-bottom">
+                    <div class="f-row" style="justify-content: space-around; width: 100%;">
+                        <div>Sačuvaj izmene</div>
+                        <div class="icon-double pt-1">
+                            <mat-icon>check</mat-icon>
+                            <mat-icon>check</mat-icon>
+                        </div>
+                    </div>
+                </button>
             </div>
         </div>
     </div>

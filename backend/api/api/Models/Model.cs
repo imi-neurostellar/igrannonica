@@ -40,6 +40,8 @@ namespace api.Models
         public bool randomOrder { get; set; }
         public bool randomTestSet { get; set; }
         public float randomTestSetDistribution { get; set; }
+        public bool isPublic { get; set; }
+        public bool accessibleByLink { get; set; }
     }
 
     public class Layer
