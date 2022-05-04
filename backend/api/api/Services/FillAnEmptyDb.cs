@@ -99,7 +99,7 @@ namespace api.Services
                 model.optimizer = "Adam";
                 model.lossFunction = "mean_squared_error";
                 model.hiddenLayers = 5;
-                model.batchSize = 8;
+                model.batchSize = "8";
                 model.outputNeurons = 0;
                 model.outputLayerActivationFunction = "sigmoid";
                 model.metrics = new string[] { };
@@ -210,7 +210,7 @@ namespace api.Services
                 model.optimizer = "Adam";
                 model.lossFunction = "mean_absolute_error";
                 model.hiddenLayers = 4;
-                model.batchSize = 5;
+                model.batchSize = "8";
                 model.outputNeurons = 0;
                 model.outputLayerActivationFunction = "relu";
                 model.metrics = new string[] { };
@@ -316,7 +316,7 @@ namespace api.Services
                 model.optimizer = "Adam";
                 model.lossFunction = "sparse_categorical_crossentropy";
                 model.hiddenLayers = 3;
-                model.batchSize = 4;
+                model.batchSize = "64";
                 model.outputNeurons = 0;
                 model.outputLayerActivationFunction = "softmax";
                 model.metrics = new string[] { };

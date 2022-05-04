@@ -56,15 +56,15 @@
         <div class="folder-inside bg-blur">
             <div class="file-content" [ngClass]="{'form-hidden' : listView}">
                 <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
-                    <button *ngIf="this.selectedFile && selectedTab == TabType.File" class="btn-clear file-button" (click)="deleteFile(this.selectedFile)">
+                    <button *ngIf="this.selectedFile && selectedTab == TabType.File" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
                         <mat-icon>delete</mat-icon>
                     </button>
                     <!-- <button class="btn-clear file-button">
                         <mat-icon>zoom_out_map</mat-icon>
                     </button> -->
                 </div>
-                <app-form-model [ngClass]="{'form-hidden': type != FolderType.Model}"></app-form-model>
-                <app-form-dataset [ngClass]="{'form-hidden': type != FolderType.Dataset}"></app-form-dataset>
+                <app-form-model [ngClass]="{'form-hidden': type != FolderType.Model}" [forExperiment]="forExperiment"></app-form-model>
+                <app-form-dataset [ngClass]="{'form-hidden': type != FolderType.Dataset}" [forExperiment]="forExperiment"></app-form-dataset>
             </div>
             <div [ngClass]="{'form-hidden' : !listView}" class="list-view">
                 <div *ngFor="let file of filteredFiles; let i = index" class="list-item force-link" (click)="selectFile(file)">
@@ -74,6 +74,12 @@
                     <div class="mx-2 hover-hide">
                         {{file.lastUpdated | date}}
                     </div>
+                    <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
+                        <button class="btn-clear file-button" (click)="deleteFile(file, $event)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+
                 </div>
                 <div class="list-add" [ngSwitch]="type">
                     <button mat-raised-button *ngSwitchCase="FolderType.Dataset" (click)="selectNewFile()">Dodaj {{privacy == Privacy.Public ? 'javni ' : ' '}}izvor podataka</button>

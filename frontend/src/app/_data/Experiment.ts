@@ -16,10 +16,12 @@ export default class Experiment {
         public lastUpdated: Date = new Date(),
         public modelIds: string[] = [],
 
-        
+
 
         public encodings: ColumnEncoding[] = []//[{columnName: "", columnEncoding: Encoding.Label}]
     ) { }
+
+    _columnsSelected: boolean = false;
 }
 
 export enum NullValueOptions {
@@ -67,9 +69,8 @@ export enum Encoding {
 }
 
 export class ColumnEncoding {
-    constructor (
+    constructor(
         public columnName: string,
         public encoding: Encoding
-    ) 
-    {}
+    ) { }
 }
