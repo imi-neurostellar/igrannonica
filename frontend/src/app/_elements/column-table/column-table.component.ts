@@ -10,6 +10,8 @@ import { CsvParseService } from 'src/app/_services/csv-parse.service';
 import { ProblemType } from 'src/app/_data/Model';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { SaveExperimentDialogComponent } from 'src/app/_modals/save-experiment-dialog/save-experiment-dialog.component';
+import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.component';
+import Shared from 'src/app/Shared';
 
 @Component({
   selector: 'app-column-table',
@@ -20,7 +22,6 @@ export class ColumnTableComponent implements AfterViewInit {
 
   @Input() dataset?: Dataset;
   @Input() experiment!: Experiment;
-  @ViewChildren("nullValMenu") nullValMenus!: ElementRef[];
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
   @Output() columnTableChanged = new EventEmitter();
 
@@ -49,10 +50,8 @@ export class ColumnTableComponent implements AfterViewInit {
       this.columnsChecked.push(true);
     });
     
-    for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
-      this.experiment.inputColumns.push(this.dataset.columnInfo[i].columnName);
-    }
-    this.experiment.outputColumn = this.experiment.inputColumns[0];
+    this.resetInputColumns();
+    this.resetOutputColumn();
     this.resetColumnEncodings(Encoding.Label);
     this.setDeleteRowsForMissingValTreatment();
 
@@ -79,6 +78,18 @@ export class ColumnTableComponent implements AfterViewInit {
         this.dataset.columnInfo[i].columnType = (this.dataset.columnInfo[i].isNumber) ? ColumnType.numerical : ColumnType.categorical;
       }
     }
+  }
+
+  resetInputColumns() {
+    if (this.dataset != undefined) {
+      this.experiment.inputColumns = [];
+      for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
+        this.experiment.inputColumns.push(this.dataset.columnInfo[i].columnName);
+      }
+    }
+  }
+  resetOutputColumn() {
+    this.experiment.outputColumn = this.experiment.inputColumns[0];
   }
 
   setDeleteRowsForMissingValTreatment() {
@@ -212,13 +223,17 @@ export class ColumnTableComponent implements AfterViewInit {
       this.experiment.name = selectedName;
       //napravi odvojene dugmice za save i update -> za update nece da se otvara dijalog za ime
       this.experimentService.addExperiment(this.experiment).subscribe((response) => {
-        console.log(response);
+        this.experiment = response;
         this.okPressed.emit();
       });
     });
   }
- 
-
+  
+  openUpdateExperimentDialog() {
+    this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
+      Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
+    });
+  }
 
   MissValsDeleteClicked(event: Event, replacementType: NullValueOptions, index: number) {
     if (this.experiment != undefined && this.dataset != undefined) {
@@ -271,6 +286,9 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   saveExperiment() {
     this.openSaveExperimentDialog();
+  }
+  updateExperiment() {
+    this.openUpdateExperimentDialog();
   }
 
 
