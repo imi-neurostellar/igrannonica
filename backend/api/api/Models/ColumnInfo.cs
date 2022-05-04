@@ -4,10 +4,9 @@
     {
         public ColumnInfo() { }
 
-        public ColumnInfo(string columnName, string columnType, bool isNumber, int numNulls, float mean, float min, float max, float median, string[] uniqueValues, int[]uniqueValuesCount, float[] uniqueValuesPercent, float q1, float q3)
+        public ColumnInfo(string columnName, bool isNumber, int numNulls, float mean, float min, float max, float median, string[] uniqueValues, int[]uniqueValuesCount, float[] uniqueValuesPercent, float q1, float q3)
         {
             this.columnName = columnName;
-            this.columnType = columnType;
             this.isNumber = isNumber;
             this.numNulls = numNulls;
             this.mean = mean;
@@ -22,7 +21,6 @@
         }
 
         public string columnName { get; set; }
-        public string columnType { get; set; }
         public bool isNumber { get; set; }
         public int numNulls { get; set; }
         public float mean { get; set; }

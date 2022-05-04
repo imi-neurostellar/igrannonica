@@ -21,6 +21,6 @@ namespace api.Models
         public DateTime lastUpdated { get; set; }
         public NullValues[] nullValuesReplacers { get; set; }
         public ColumnEncoding[] encodings { get; set; }
-
+        public string[] columnTypes { get; set; }
     }
 }
