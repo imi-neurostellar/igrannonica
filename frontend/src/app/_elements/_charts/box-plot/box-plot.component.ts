@@ -27,8 +27,8 @@ export class BoxPlotComponent implements AfterViewInit {
     labels: ['January'/*, 'February', 'March', 'April', 'May', 'June', 'July'*/],
       datasets: [{
       label: 'Dataset 1',
-      backgroundColor: 'rgba(0, 65, 101, 1.0)',
-      borderColor: '#0063AB',
+      backgroundColor: '#0063AB',
+      borderColor: '#dfd7d7',
       borderWidth: 1,
       outlierColor: '#999999',
       scaleFontColor: '#0063AB',
@@ -78,7 +78,7 @@ export class BoxPlotComponent implements AfterViewInit {
              scales : {
                x: {
                 ticks: {
-                  color: 'rgba(0, 65, 101, 1.0)'
+                  color: '#dfd7d7'
                 },
                 grid: {
                   color: "rgba(0, 99, 171, 0.5)"
@@ -88,7 +88,7 @@ export class BoxPlotComponent implements AfterViewInit {
                   min: -50,
                   max: 200,
                   ticks: {
-                    color: 'rgba(0, 65, 101, 1.0)'
+                    color: '#dfd7d7'
                   },
                   grid: {
                     color: "rgba(0, 99, 171, 0.5)"

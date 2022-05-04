@@ -5,7 +5,7 @@ import { ModelsService } from 'src/app/_services/models.service';
 import shared from 'src/app/Shared';
 import { DatatableComponent, TableData } from '../datatable/datatable.component';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
-import {FormControl, Validators} from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-form-dataset',
@@ -18,7 +18,7 @@ export class FormDatasetComponent {
 
   nameFormControl = new FormControl('', [Validators.required, Validators.email]);
 
-  delimiterOptions: Array<string> = [",", ";",  "|", "razmak", "novi red"]; //podrazumevano ","
+  delimiterOptions: Array<string> = [",", ";", "|", "razmak", "novi red"]; //podrazumevano ","
 
   csvRecords: any[] = [];
   files: File[] = [];
@@ -29,7 +29,7 @@ export class FormDatasetComponent {
 
   tableData: TableData = new TableData();
 
-  @ViewChild('fileInput') fileInput! : ElementRef
+  @ViewChild('fileInput') fileInput!: ElementRef
 
   filename: String;
 
@@ -65,16 +65,13 @@ export class FormDatasetComponent {
       if (typeof fileReader.result === 'string') {
         const result = this.csv.csvToArray(fileReader.result, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter)
 
-        if (this.dataset.hasHeader)
-          this.csvRecords = result.splice(0, 11);
-        else
-          this.csvRecords = result.splice(0, 10);
+
+        this.csvRecords = result.splice(0, 11);
 
         this.colsNumber = result[0].length;
         this.rowsNumber = result.length;
 
-        this.tableData.data = this.csvRecords
-        this.tableData.hasHeader = this.dataset.hasHeader;
+        this.tableData.data = this.csvRecords;
         this.tableData.loaded = true;
         this.tableData.numCols = this.colsNumber;
         this.tableData.numRows = this.rowsNumber;
@@ -85,32 +82,37 @@ export class FormDatasetComponent {
     this.dataset.name = this.filename.slice(0, this.filename.length - 4);
   }
 
+  /*exportAsXLSX():void {
+    this.excelService.exportAsExcelFile(this.data, 'sample');
+  }*/
+
   checkAccessible() {
     if (this.dataset.isPublic)
       this.dataset.accessibleByLink = true;
   }
 
-  uploadDataset() {
+  uploadDataset(onSuccess: Function = (dataset: Dataset) => { }, onError: Function = () => { }) {
     if (this.files[0] == undefined) {
       shared.openDialog("Greška", "Niste izabrali fajl za učitavanje.");
       return;
     }
 
-    this.modelsService.uploadData(this.files[0]).subscribe((file) => {
+    return this.modelsService.uploadData(this.files[0]).subscribe((file) => {
       //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
+      this.dataset._id = "";
       this.dataset.fileId = file._id;
       this.dataset.uploaderId = shared.userId;
 
       this.datasetsService.addDataset(this.dataset).subscribe((dataset) => {
-        shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
+        onSuccess();
       }, (error) => {
-        shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
+        onError();
       }); //kraj addDataset subscribe
     }, (error) => {
-
+      onError();
     }); //kraj uploadData subscribe
   }
 
-  
+
 
 }

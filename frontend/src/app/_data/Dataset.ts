@@ -5,7 +5,6 @@ export default class Dataset extends FolderFile {
     constructor(
         name: string = 'Novi izvor podataka',
         public description: string = '',
-        public header: string[] = [],
         public fileId?: number,
         public extension: string = '.csv',
         public isPublic: boolean = false,
@@ -14,7 +13,6 @@ export default class Dataset extends FolderFile {
         lastUpdated: Date = new Date(),
         public uploaderId: string = '',
         public delimiter: string = ',',
-        public hasHeader: boolean = true,
 
         public columnInfo: ColumnInfo[] = [],
         public rowCount: number = 0,
@@ -29,12 +27,28 @@ export default class Dataset extends FolderFile {
 export class ColumnInfo {
     constructor(
         public columnName: string = '',
+        public columnType: ColumnType,
         public isNumber: boolean = false,
         public numNulls: number = 0,
         public uniqueValues?: string[],
+        public uniqueValuesCount?: number[],
+        public uniqueValuesPercent?: number[],
         public median?: number,
         public mean?: number,
         public min?: number,
-        public max?: number
-    ) { }
+        public max?: number,
+        public q1?: number,
+        public q3?: number,
+    ) { 
+        /*if (isNumber)
+            this.columnType = ColumnType.numerical;
+        else 
+            this.columnType = ColumnType.categorical;*/
+    }
+        
+}
+
+export enum ColumnType {
+    categorical = "Kategorijski",
+    numerical = "Numerički"
 }

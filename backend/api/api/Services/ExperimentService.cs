@@ -36,5 +36,15 @@ namespace api.Services
             return _experiment.Find(e=>e.uploaderId==id).ToList();
 
         }
+
+        public Experiment GetOneExperiment(string userId, string name)
+        {
+            return _experiment.Find(experiment => experiment.uploaderId == userId && experiment.name == name).FirstOrDefault();
+        }
+
+        public void Update(string userId, string id, Experiment experiment)
+        {
+            _experiment.ReplaceOne(experiment => experiment.uploaderId == userId && experiment._id == id, experiment);
+        }
     }
 }

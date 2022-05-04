@@ -85,3 +85,20 @@ hr {
 .m-2 {
     max-height: 20 rem;
 }
+
+mat-slider {
+    width: 50%;
+}
+
+.slider {
+    background-color: transparent;
+}
+
+.center-center {
+    text-align: center;
+    margin-right: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+    font-size: 20px !important;
+    font-weight: 600;
+}

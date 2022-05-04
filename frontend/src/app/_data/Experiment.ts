@@ -5,6 +5,7 @@ export default class Experiment {
     constructor(
         public name: string = 'Novi eksperiment',
         public description: string = '',
+        public type: ProblemType = ProblemType.Regression,
         public datasetId: string = '',
         public inputColumns: string[] = [],
         public outputColumn: string = '',
@@ -14,10 +15,7 @@ export default class Experiment {
         public lastUpdated: Date = new Date(),
         public modelIds: string[] = [],
 
-        // Test set settings
-        public randomOrder: boolean = true,
-        public randomTestSet: boolean = true,
-        public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
+        
 
         public encodings: ColumnEncoding[] = []//[{columnName: "", columnEncoding: Encoding.Label}]
     ) { }

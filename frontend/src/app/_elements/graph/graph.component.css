@@ -1,6 +1,5 @@
 .node-text {
     position: absolute;
-    color: transparent;
     width: 100px;
     height: 40px;
     text-align: center;
@@ -12,6 +11,10 @@
     transform: translate(-50%, -50%);
 }
 
-.node-text:hover {
+.node-text:not(.inputs) {
+    color: transparent;
+}
+
+.node-text:not(.inputs):hover {
     color: var(--offwhite);
 }

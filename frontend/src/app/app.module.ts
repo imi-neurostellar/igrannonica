@@ -21,6 +21,7 @@ import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.compon
 import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.component';
 import { EncodingDialogComponent } from './_modals/encoding-dialog/encoding-dialog.component';
 import { MissingvaluesDialogComponent } from './_modals/missingvalues-dialog/missingvalues-dialog.component';
+import { SaveExperimentDialogComponent } from './_modals/save-experiment-dialog/save-experiment-dialog.component';
 // Pages
 import { HomeComponent } from './_pages/home/home.component';
 import { ProfileComponent } from './_pages/profile/profile.component';
@@ -32,6 +33,7 @@ import { ScatterchartComponent } from './_elements/_charts/scatterchart/scatterc
 import { BarchartComponent } from './_elements/_charts/barchart/barchart.component';
 import { PieChartComponent } from './_elements/_charts/pie-chart/pie-chart.component';
 import { BoxPlotComponent } from './_elements/_charts/box-plot/box-plot.component';
+import {LineChartComponent} from './_elements/_charts/line-chart/line-chart.component';
 // Elements
 import { NavbarComponent } from './_elements/navbar/navbar.component';
 import { NotificationsComponent } from './_elements/notifications/notifications.component';
@@ -49,6 +51,7 @@ import { TestComponent } from './_pages/test/test.component';
 import { DoughnutChartComponent } from './_elements/_charts/doughnut-chart/doughnut-chart.component';
 import { HeatmapComponent } from './_elements/_charts/heatmap/heatmap.component';
 import { HeatMapAllModule } from '@syncfusion/ej2-angular-heatmap';
+import { MetricViewComponent } from './_elements/metric-view/metric-view.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -85,7 +88,10 @@ export function initializeApp(appConfig: Configuration) {
     MissingvaluesDialogComponent,
     TestComponent,
     DoughnutChartComponent,
-    HeatmapComponent
+    HeatmapComponent,
+    MetricViewComponent,
+    LineChartComponent,
+    SaveExperimentDialogComponent
   ],
   imports: [
     BrowserModule,

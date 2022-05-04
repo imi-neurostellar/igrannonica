@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -9,12 +9,12 @@ import { Chart } from 'chart.js';
 
 export class LineChartComponent implements AfterViewInit {
 
-  dataAcc: number[] = [];
-  dataMAE: number[] = [];
-  dataMSE: number[] = [];
-  dataLOSS: number[] = [];
+  dataAcc: number[] = [2,3,5,5,6,7,8,8,4,6,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+  dataMAE: number[] = [2,3,5,5,6,7,8,8,4,6,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+  dataMSE: number[] = [2,3,5,5,6,7,8,8,4,6,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+  dataLOSS: number[] =[2,3,5,5,6,7,8,8,4,6,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
 
-  dataEpoch: number[] = [];
+  dataEpoch: number[] = [2,3,5,5,6,7,8,8,4,6,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
 
   constructor() {
     /*let i = 0;
@@ -77,11 +77,28 @@ export class LineChartComponent implements AfterViewInit {
         },
         options: {
           scales: {
-            y: {
-              beginAtZero: true
-            }
+              x:{
+                ticks: {
+                  color: 'white'
+                },
+                grid: {
+                  color: "rgba(0, 99, 171, 0.5)"
+                }
+              },
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                    color: 'white'
+                  },
+                  grid: {
+                    color: "rgba(0, 99, 171, 0.5)"
+                  }
+              }
+              
           }
-        }
+          
+          
+      }
       }
     );
   }

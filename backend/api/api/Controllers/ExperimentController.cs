@@ -88,5 +88,28 @@ namespace api.Controllers
             var experiments=_experimentService.GetMyExperiments(uploaderId);
             return Ok(experiments);
         }
+
+        // PUT api/<ExperimentController>/{name}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "User")]
+        public ActionResult Put(string id, [FromBody] Experiment experiment)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            var existingDataset = _experimentService.GetOneExperiment(uploaderId, id);
+
+            //ne mora da se proverava
+            if (existingDataset == null)
+                return NotFound($"Experiment with ID = {id} or user with ID = {uploaderId} not found");
+
+            experiment.lastUpdated = DateTime.UtcNow;
+
+            _experimentService.Update(uploaderId, id, experiment);
+
+            return Ok($"Experiment with ID = {id} updated");
+        }
     }
 }

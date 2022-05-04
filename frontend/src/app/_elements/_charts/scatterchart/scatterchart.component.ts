@@ -24,15 +24,32 @@ export class ScatterchartComponent implements OnInit {
                 {x: 15, y: 5},
                 {x: 16, y: 3},
                 {x: 17, y: 2}],
-              backgroundColor: 'rgb(255, 99, 132)'
+                borderColor: 'white',
             }]
       },
       options: {
           scales: {
+              x:{
+                ticks: {
+                  color: 'white'
+                },
+                grid: {
+                  color: "rgba(0, 99, 171, 0.5)"
+                }
+              },
               y: {
-                  beginAtZero: true
+                  beginAtZero: true,
+                  ticks: {
+                    color: 'white'
+                  },
+                  grid: {
+                    color: "rgba(0, 99, 171, 0.5)"
+                  }
               }
+              
           }
+          
+          
       }
   });
   }

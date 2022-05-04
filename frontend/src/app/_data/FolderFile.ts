@@ -9,5 +9,6 @@ export class FolderFile {
 
 export enum FolderType {
     Dataset,
-    Model
+    Model,
+    Experiment
 }

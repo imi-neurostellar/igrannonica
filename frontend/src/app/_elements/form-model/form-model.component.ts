@@ -4,7 +4,7 @@ import Shared from 'src/app/Shared';
 import Experiment from 'src/app/_data/Experiment';
 import Model, { Layer, ActivationFunction, LossFunction, LearningRate, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType, Regularisation, RegularisationRate, BatchSize } from 'src/app/_data/Model';
 import { GraphComponent } from '../graph/graph.component';
-
+import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-form-model',
@@ -13,13 +13,12 @@ import { GraphComponent } from '../graph/graph.component';
 })
 export class FormModelComponent implements AfterViewInit {
   @ViewChild(GraphComponent) graph!: GraphComponent;
-  @Input() forExperiment?: Experiment;
+  @Input() forExperiment!: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
-
+  testSetDistribution: number = 70;
   constructor() { }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void { }
 
   selectFormControl = new FormControl('', Validators.required);
   nameFormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -34,8 +33,7 @@ export class FormModelComponent implements AfterViewInit {
   selectRegularisationFormControl = new FormControl('', Validators.required);
   selectRRateFormControl = new FormControl('', Validators.required);
 
-  newModel: Model = new Model();
-  myModels?: Model[];
+  newModel!: Model;
 
   selectedModel?: Model;
 
@@ -57,7 +55,9 @@ export class FormModelComponent implements AfterViewInit {
   selectedMetrics = [];
   lossFunction: any = LossFunction;
 
-  showMyModels: boolean = true;
+  loadModel(model: Model) {
+    this.newModel = model;
+  }
 
   updateGraph() {
     //console.log(this.newModel.layers);
@@ -121,7 +121,6 @@ export class FormModelComponent implements AfterViewInit {
     }
   }
   changeAllRegularisationRate() {
-
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].regularisationRate = this.selectedRegularisationRate;
     }
@@ -133,6 +132,7 @@ export class FormModelComponent implements AfterViewInit {
     }
   }
 
-
-
+  updateTestSet(event: MatSliderChange) {
+    this.testSetDistribution = event.value!;
+  }
 }
