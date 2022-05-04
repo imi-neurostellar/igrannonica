@@ -231,6 +231,7 @@ export class ColumnTableComponent implements AfterViewInit {
   
   openUpdateExperimentDialog() {
     this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
+      this.experiment = response;
       Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
     });
   }

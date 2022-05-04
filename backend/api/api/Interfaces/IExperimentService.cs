@@ -9,7 +9,7 @@ namespace api.Services
         public List<Experiment> GetMyExperiments(string id);
         public Experiment Get(string uploaderId, string name);
         Experiment GetOneExperiment(string userId, string id);
-        void Update(string userId, string id, Experiment experiment);
+        Experiment Update(string userId, string id, Experiment experiment);
         void Delete(string userId, string id);
 
     }
