@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
-import Dataset, { ColumnType } from 'src/app/_data/Dataset';
-import Experiment, { ColumnEncoding, Encoding, NullValReplacer, NullValueOptions } from 'src/app/_data/Experiment';
+import Dataset from 'src/app/_data/Dataset';
+import Experiment, { ColumnEncoding, Encoding, ColumnType, NullValueOptions } from 'src/app/_data/Experiment';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { EncodingDialogComponent } from 'src/app/_modals/encoding-dialog/encoding-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -75,7 +75,7 @@ export class ColumnTableComponent implements AfterViewInit {
   setColumnTypeInitial() {
     if (this.dataset != undefined) {
       for (let i = 0; i < this.dataset.columnInfo.length; i++) {
-        this.dataset.columnInfo[i].columnType = (this.dataset.columnInfo[i].isNumber) ? ColumnType.numerical : ColumnType.categorical;
+        this.experiment.columnTypes[i] = (this.dataset.columnInfo[i].isNumber) ? ColumnType.numerical : ColumnType.categorical;
       }
     }
   }
@@ -140,12 +140,12 @@ export class ColumnTableComponent implements AfterViewInit {
 
   changeOutputColumn(columnName: string) {
     if (this.experiment != undefined && this.dataset != undefined) {
-      let column = this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.outputColumn)[0];
-      if (column.columnType == ColumnType.numerical) {
+      let i = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment!.outputColumn);
+      if (this.experiment.columnTypes[i] == ColumnType.numerical) {
         this.experiment.type = ProblemType.Regression;
       }
       else {
-        if (column.uniqueValues!.length == 2)
+        if (this.dataset.columnInfo[i].uniqueValues!.length == 2)
           this.experiment.type = ProblemType.BinaryClassification;
         else
           this.experiment.type = ProblemType.MultiClassification;

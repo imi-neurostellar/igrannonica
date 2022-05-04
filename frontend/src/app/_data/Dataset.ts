@@ -27,7 +27,6 @@ export default class Dataset extends FolderFile {
 export class ColumnInfo {
     constructor(
         public columnName: string = '',
-        public columnType: ColumnType,
         public isNumber: boolean = false,
         public numNulls: number = 0,
         public uniqueValues?: string[],
@@ -48,7 +47,3 @@ export class ColumnInfo {
 
 }
 
-export enum ColumnType {
-    categorical = "Kategorijski",
-    numerical = "Numerički"
-}

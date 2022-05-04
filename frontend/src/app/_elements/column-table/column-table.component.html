@@ -103,7 +103,7 @@
                             <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix" [ngClass]="{'text-disabled' : !columnsChecked[i]}">
                                 <p class="verticalAlign text-left" style="font-size:13px;" *ngIf="!colInfo.isNumber">Kategorijski</p>
                                 <mat-form-field *ngIf="colInfo.isNumber">
-                                    <mat-select matNativeControl [(value)]="colInfo.columnType" [disabled]="!columnsChecked[i]" (selectionChange)="columnTypeChanged(colInfo.columnName);">
+                                    <mat-select matNativeControl [(value)]="this.experiment.columnTypes[i]" [disabled]="!columnsChecked[i]" (selectionChange)="columnTypeChanged(colInfo.columnName);">
                                         <mat-option [value]="ColumnType.categorical">Kategorijski</mat-option>
                                         <mat-option [value]="ColumnType.numerical">Numerički</mat-option>
                                     </mat-select>
@@ -113,14 +113,14 @@
                         <tr class="graphics-row">
                             <th class="no-pad">Grafik</th>
                             <td class="no-pad" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'graphic-class' : !columnsChecked[i]}">
-                                <app-box-plot *ngIf="colInfo.columnType == ColumnType.numerical" [width]="150" [height]="150"></app-box-plot>
-                                <app-pie-chart *ngIf="colInfo.columnType == ColumnType.categorical" [width]="150" [height]="150"></app-pie-chart>
+                                <app-box-plot *ngIf="this.experiment.columnTypes[i] == ColumnType.numerical" [width]="150" [height]="150"></app-box-plot>
+                                <app-pie-chart *ngIf="this.experiment.columnTypes[i] == ColumnType.categorical" [width]="150" [height]="150"></app-pie-chart>
                             </td>
                         </tr>
                         <tr>
                             <th class="border-bottom">Statistika</th>
                             <td *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'text-disabled' : !columnsChecked[i]}" class="text-left">
-                                <span *ngIf="colInfo.columnType == ColumnType.numerical">
+                                <span *ngIf="this.experiment.columnTypes[i] == ColumnType.numerical">
                                 Mean: {{colInfo.mean}}<br>
                                 Median: {{colInfo.median}}<br>
                                 Min: {{colInfo.min}}<br>
@@ -128,7 +128,7 @@
                                 Q1: {{colInfo.q1}}<br>
                                 Q3: {{colInfo.q3}}<br>
                             </span>
-                                <div class="text-overflow" *ngIf="colInfo.columnType == ColumnType.categorical && colInfo.uniqueValuesPercent">
+                                <div class="text-overflow" *ngIf="this.experiment.columnTypes[i] == ColumnType.categorical && colInfo.uniqueValuesPercent">
                                     <span *ngFor="let uniqueValue of colInfo.uniqueValues | slice:0:6; let i = index">
                                     ({{(colInfo.uniqueValuesPercent[i] * 100).toFixed(2)}}%) {{uniqueValue}}<br>
                                 </span>
