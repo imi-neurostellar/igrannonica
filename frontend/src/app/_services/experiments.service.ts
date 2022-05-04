@@ -20,7 +20,7 @@ export class ExperimentsService {
     return this.http.get<Experiment[]>(`${Configuration.settings.apiURL}/experiment/getmyexperiments`, { headers: this.authService.authHeader() });
   }
 
-  /*updateExperiment(){
-
-  }*/
+  updateExperiment(experiment: Experiment): Observable<Experiment> {
+    return this.http.put<Experiment>(`${Configuration.settings.apiURL}/experiment/` + experiment._id, experiment, { headers: this.authService.authHeader() });
+  }
 }
