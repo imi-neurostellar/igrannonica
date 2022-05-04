@@ -67,7 +67,7 @@ namespace api.Controllers
         //desc - opadajuce 0
         //ako se posalje 0 kao latest onda ce da izlista sve u nekom poretku
         [HttpGet("datesort/{ascdsc}/{latest}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Dataset>> SortDatasets(bool ascdsc, int latest)
         {
             string userId = getUserId();
@@ -98,7 +98,7 @@ namespace api.Controllers
         //SEARCH za datasets (public ili private sa ovim imenom )
         // GET api/<DatasetController>/search/{name}
         [HttpGet("search/{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Dataset>> Search(string name)
         {
             return _datasetService.SearchDatasets(name);
@@ -108,7 +108,7 @@ namespace api.Controllers
         // GET api/<DatasetController>/{name}
         //get odredjeni dataset
         [HttpGet("{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<Dataset> Get(string name)
         {
             string userId = getUserId();
@@ -138,7 +138,7 @@ namespace api.Controllers
             var existingDataset = _datasetService.GetOneDatasetN(dataset.uploaderId, dataset.name);
 
             if (existingDataset != null)
-                return NotFound($"Dateset with name = {dataset.name} exisits");
+                return NotFound($"Dataset with this name already exists");
             else
             {
                 FileModel fileModel = _fileService.getFile(dataset.fileId);
@@ -152,7 +152,7 @@ namespace api.Controllers
 
         // PUT api/<DatasetController>/{name}
         [HttpPut("{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Put(string id, [FromBody] Dataset dataset)
         {
             string uploaderId = getUserId();
@@ -175,7 +175,7 @@ namespace api.Controllers
 
         // DELETE api/<DatasetController>/name
         [HttpDelete("{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Delete(string id)
         {
             string uploaderId = getUserId();

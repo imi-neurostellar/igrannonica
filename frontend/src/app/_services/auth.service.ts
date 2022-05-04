@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   register(user: any) {
-    return this.http.post(`${Configuration.settings.apiURL}/auth/register`, { ...user }, { responseType: 'text' });
+    return this.http.post(`${Configuration.settings.apiURL}/auth/register`, { ...user },{ headers: this.authHeader() , responseType: 'text' });
   }
 
   getGuestToken() {
@@ -52,26 +52,19 @@ export class AuthService {
     }
     var property = jwtHelper.decodeToken(this.cookie.get('token'));
     var username = property['name'];
-    if (username != "") {
 
       this.refresher = setTimeout(() => {
         this.http.post(`${Configuration.settings.apiURL}/auth/renewJwt`, {}, { headers: this.authHeader(), responseType: 'text' }).subscribe((response) => {
           this.authenticate(response);
         });
       }, exp.getTime() - new Date().getTime() - 60000);
-    }
-    else {
-      this.refresher = setTimeout(() => {
-        this.getGuestToken().subscribe((response) => {
-          this.authenticate(response);
-        });
-      }, exp.getTime() - new Date().getTime() - 60000);
-    }
+  
   }
 
   addGuestToken() {
     this.getGuestToken().subscribe((token) => {
       this.authenticate(token);
+      location.reload();
     });
   }
 
@@ -106,4 +99,15 @@ export class AuthService {
   authHeader() {
     return new HttpHeaders().set("Authorization", "Bearer " + this.cookie.get('token'));
   }
+  alreadyGuest(){
+    if(this.cookie.check('token')){
+      const token = this.cookie.get('token');
+      const decodedToken = jwtHelper.decodeToken(token);
+      if(decodedToken.role=="Guest")
+        return true;
+    }
+    return false;
+  }
+
+
 }

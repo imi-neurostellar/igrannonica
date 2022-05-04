@@ -50,7 +50,9 @@ export class LoginModalComponent implements OnInit {
           this.userInfoService.getUserInfo().subscribe((response) => {
             shared.photoId = response.photoId;
           });
+          location.reload();
         }
+        
       });
     }
     else {

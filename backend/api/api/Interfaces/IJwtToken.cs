@@ -4,8 +4,8 @@ namespace api.Models
 {
     public interface IJwtToken
     {
-        string GenGuestToken();
-        string GenToken(AuthRequest user);
+        string GenGuestToken(string id);
+        string GenToken(User user);
         string RenewToken(string existingToken);
         string TokenToUsername(string token);
         public string TokenToId(string token);

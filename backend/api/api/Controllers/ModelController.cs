@@ -100,7 +100,7 @@ namespace api.Controllers
 
         // GET: api/<ModelController>/mymodels
         [HttpGet("mymodels")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Model>> Get()
         {
             string uploaderId = getUserId();
@@ -113,7 +113,7 @@ namespace api.Controllers
 
         // GET: api/<ModelController>/mymodels
         [HttpGet("mymodelsbytype/{problemtype}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Model>> GetMyModelsByType(string problemType)
         {
             string uploaderId = getUserId();
@@ -132,7 +132,7 @@ namespace api.Controllers
         // vraca svoj model prema nekom imenu
         // GET api/<ModelController>/{name}
         [HttpGet("{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<Model> Get(string name)
         {
             string userId = getUserId();
@@ -156,7 +156,7 @@ namespace api.Controllers
         //odraditi to i u Datasetove i Predictore
         // GET: api/<ModelController>/getlatestmodels/{number}
         [HttpGet("getlatestmodels/{latest}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Model>> GetLatestModels(int latest)
         {
             string userId = getUserId();
@@ -213,7 +213,7 @@ namespace api.Controllers
 
         // PUT api/<ModelController>/{name}
         [HttpPut("{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Put(string name, [FromBody] Model model)
         {
             string userId = getUserId();
@@ -233,7 +233,7 @@ namespace api.Controllers
 
         // DELETE api/<ModelController>/name
         [HttpDelete("{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Delete(string name)
         {
             string userId = getUserId();
