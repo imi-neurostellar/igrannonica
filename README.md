@@ -81,15 +81,6 @@ ng serve --port=80
 * Backend
 api.sln - start without debugging
 
-## Portovi
-
-10091 - Frontend aplikacija (node express server)
-
-10092 - Backend API (.NET)
-
-10093 - ML Mikroservis (python flask server)
-
-10094 - MongoDB
 
 ## Autori
 

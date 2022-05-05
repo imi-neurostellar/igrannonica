@@ -1,25 +1,27 @@
-export default class Dataset {
+import { FolderFile } from "./FolderFile";
+
+export default class Dataset extends FolderFile {
     _id: string = '';
     constructor(
-        public name: string = 'Novi izvor podataka',
+        name: string = 'Novi izvor podataka',
         public description: string = '',
-        public header: string[] = [],
         public fileId?: number,
         public extension: string = '.csv',
         public isPublic: boolean = false,
         public accessibleByLink: boolean = false,
-        public dateCreated: Date = new Date(),
-        public lastUpdated: Date = new Date(),
+        dateCreated: Date = new Date(),
+        lastUpdated: Date = new Date(),
         public uploaderId: string = '',
-        public delimiter: string = '',
-        public hasHeader: boolean = true,
+        public delimiter: string = ',',
 
         public columnInfo: ColumnInfo[] = [],
         public rowCount: number = 0,
         public nullRows: number = 0,
         public nullCols: number = 0,
-        public preview: string[][] = [[]]
-    ) { }
+        public cMatrix: number[][] = []
+    ) {
+        super(name, dateCreated, lastUpdated);
+    }
 }
 
 export class ColumnInfo {
@@ -28,9 +30,20 @@ export class ColumnInfo {
         public isNumber: boolean = false,
         public numNulls: number = 0,
         public uniqueValues?: string[],
+        public uniqueValuesCount?: number[],
+        public uniqueValuesPercent?: number[],
         public median?: number,
         public mean?: number,
         public min?: number,
-        public max?: number
-    ) { }
+        public max?: number,
+        public q1?: number,
+        public q3?: number,
+    ) {
+        /*if (isNumber)
+            this.columnType = ColumnType.numerical;
+        else 
+            this.columnType = ColumnType.categorical;*/
+    }
+
 }
+

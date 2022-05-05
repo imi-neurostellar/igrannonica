@@ -1,4 +1,4 @@
-import { ElementRef } from "@angular/core";
+import { ElementRef, EventEmitter } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AlertDialogComponent } from './_modals/alert-dialog/alert-dialog.component';
@@ -27,17 +27,23 @@ class Shared {
             });
         }
     }
-    openYesNoDialog(title: string, message: string,yesFunction:Function): void {
+    openYesNoDialog(title: string, message: string, yesFunction: Function): void {
 
         if (this.dialog) {
             const dialogRef = this.dialog.open(YesNoDialogComponent, {
                 width: '350px',
-                data: { title: title, message: message,yesFunction}
+                data: { title: title, message: message, yesFunction }
             });
             dialogRef.afterClosed().subscribe(res => {
                 //nesto
             });
         }
+    }
+
+    bgScroll: EventEmitter<number> = new EventEmitter();
+
+    emitBGScrollEvent(value: number) {
+        this.bgScroll.emit(value);
     }
 }
 

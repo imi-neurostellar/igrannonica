@@ -25,6 +25,7 @@ export class NotificationsComponent implements OnInit {
         const existingNotification = this.notifications.find(x => x.id === mId)
         const progress = ((currentEpoch + 1) / totalEpochs);
         //console.log("Ukupno epoha", totalEpochs, "Trenutna epoha:", currentEpoch);
+        //console.log("stat:", stat);
         if (!existingNotification)
           this.notifications.push(new Notification(`Treniranje modela: ${mName}`, mId, progress, true));
         else {

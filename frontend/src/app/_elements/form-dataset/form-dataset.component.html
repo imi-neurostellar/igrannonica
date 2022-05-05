@@ -1,0 +1,65 @@
+<div class="folderBox" *ngIf="dataset">
+
+    <div class="row" style="margin-right: 0;">
+        <div class="topBar">
+            <div class="row toptop">
+                <div class="col-sm mb-3">
+                    <div class="fileButton">
+                        <button type="button" mat-raised-button (click)="fileInput.click()">Dodaj izvor podataka</button>
+                        
+                    </div>
+                </div>
+
+                <div class="col-sm">
+                    <div role="group">
+                        <div class="row">
+                            <mat-form-field class="example-full-width" appearance="fill">
+                                <mat-label>Naziv</mat-label>
+                                <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name">
+
+
+                                <mat-error *ngIf="nameFormControl.hasError('required')">
+                                    Naziv je <strong>obavezan</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Delimiter</mat-label>
+                        <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (change)="update()" value=",">
+                            <mat-option *ngFor="let option of delimiterOptions" [value]="option">
+                                {{ option }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm">
+                    
+                </div>
+            </div>
+            <div class="row" *ngIf="firstInput">
+                <label class=" mt-5">{{filename}}</label>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-right: 0;">
+        <div class="file-container" [ngClass]="{'dottedClass': !tableData.hasInput}">
+
+            <i class="material-icons-outlined icon-display" [ngClass]="{'hidden': tableData.hasInput}">file_upload</i>
+
+            <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file" accept=".csv">
+
+            <div class="mt-5 datatable">
+                <app-datatable [tableData]="tableData"></app-datatable>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>

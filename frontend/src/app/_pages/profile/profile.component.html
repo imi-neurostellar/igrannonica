@@ -27,17 +27,21 @@
                             <div class="row gx-3 mb-3">
                                 <!-- Form Group (password)-->
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="inputPassword">Važeća lozinka</label>
-                                    <input class="form-control" id="inputPassword" name="inputPassword" type="password" [(ngModel)]="this.oldPass" placeholder="Trenutna lozinka">
-                                    <small *ngIf="wrongPassBool" class="form-text text-danger">Neispravna lozinka.</small>
-                                    <small *ngIf="wrongOldPassBool" class="form-text text-danger">Pogrešan format.</small>
+                                    <small *ngIf="wrongPassBool" class="form-text danger-Text">Neispravna lozinka.</small>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Važeća lozinka</mat-label>
+                                        <input matInput id="inputPassword" name="inputPassword" type="password" placeholder="" [(ngModel)]="this.oldPass">
+                                      </mat-form-field>
+                                    <small *ngIf="wrongOldPassBool" class="form-text danger-Text">Pogrešan format.</small>
                                 </div>
                                 <!-- Form Group (new password)-->
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="inputNewPassword">Nova lozinka</label>
-                                    <input class="form-control" id="inputNewPassword" name="inputNewPassword" type="password" [(ngModel)]="this.newPass1" placeholder="Ukucaj novu lozinku">
-                                    <small *ngIf="wrongNewPassBool" class="form-text text-danger">Lozinke se ne podudaraju.</small>
-                                    <small *ngIf="wrongNewPass1Bool" class="form-text text-danger">Pogrešan format.</small>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Nova lozinka</mat-label>
+                                        <input matInput id="inputNewPassword" name="inputNewPassword" type="password" placeholder="" [(ngModel)]="this.newPass1">
+                                      </mat-form-field>
+                                    <small *ngIf="wrongNewPassBool" class="form-text danger-Text">Lozinke se ne podudaraju.</small>
+                                    <small *ngIf="wrongNewPass1Bool" class="form-text danger-Text">Pogrešan format.</small>
                                 </div>
                             </div>
     
@@ -46,15 +50,17 @@
                                 <div class="col-md-6">
                                     <div class="col text-center">
                                         <!-- Save changes button-->
-                                        <button class="btn btn-primary text-center mt-4" type="button" (click)="savePasswordChanges()">Promeni lozinku</button>
+                                        <button mat-raised-button color="primary" (click)="savePasswordChanges()">Promeni lozinku</button>
                                     </div>
                                 </div>
                                 <!-- Form Group (new password again)-->
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="inputNewPasswordAgain">Ponovo nova lozinka</label>
-                                    <input class="form-control" id="inputNewPasswordAgain" name="inputNewPasswordAgain" type="password" [(ngModel)]="this.newPass2" placeholder="Ukucaj novu lozinku">
-                                    <small *ngIf="wrongNewPassBool" class="form-text text-danger">Lozinke se ne podudaraju.</small>
-                                    <small *ngIf="wrongNewPass2Bool" class="form-text text-danger">Pogrešan format.</small>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Ponovo nova lozinka</mat-label>
+                                        <input matInput id="inputNewPasswordAgain" name="inputNewPasswordAgain" placeholder="" type="password" [(ngModel)]="this.newPass2">
+                                    </mat-form-field>
+                                    <small *ngIf="wrongNewPassBool" class="form-text danger-Text">Lozinke se ne podudaraju.</small>
+                                    <small *ngIf="wrongNewPass2Bool" class="form-text danger-Text">Pogrešan format.</small>
                                 </div>
                             </div>
                         </div>
@@ -74,15 +80,19 @@
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (username)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputUsername">Korisničko ime (kako će ostali korisnici videti tvoje ime)</label>
-                                <input class="form-control" id="inputUsername" name="inputUsername" type="text" [(ngModel)]="this.username">
-                                <small *ngIf="wrongUsernameBool" class="form-text text-danger">Pogrešan format.</small>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Korisničko ime (kako će ostali korisnici videti tvoje ime)</mat-label>
+                                    <input matInput id="inputUsername" name="inputUsername" type="text" [(ngModel)]="this.username">
+                                </mat-form-field>
+                                <small *ngIf="wrongUsernameBool" class="form-text danger-Text">Pogrešan format.</small>
                             </div>
                             <!-- Form Group (email address)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputEmailAddress">Email adresa</label>
-                                <input class="form-control" id="inputEmailAddress" name="inputEmailAddress" type="email" [(ngModel)]="this.email">
-                                <small *ngIf="wrongEmailBool" class="form-text text-danger">Pogrešan format.</small>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Email adresa</mat-label>
+                                    <input matInput id="inputEmailAddress" name="inputEmailAddress" type="email" [(ngModel)]="this.email">
+                                </mat-form-field>
+                                <small *ngIf="wrongEmailBool" class="form-text danger-Text">Pogrešan format.</small>
                             </div>
                         </div>
 
@@ -90,15 +100,19 @@
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputFirstName">Ime</label>
-                                <input class="form-control" id="inputFirstName" name="inputFirstName" type="text" [(ngModel)]="this.firstName">
-                                <small *ngIf="wrongFirstNameBool" class="form-text text-danger">Pogrešan format.</small>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Ime</mat-label>
+                                    <input matInput id="inputFirstName" name="inputFirstName" type="text" [(ngModel)]="this.firstName">
+                                </mat-form-field>
+                                <small *ngIf="wrongFirstNameBool" class="form-text danger-Text">Pogrešan format.</small>
                             </div>
                             <!-- Form Group (last name)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputLastName">Prezime</label>
-                                <input class="form-control" id="inputLastName" name="inputLastName" type="text" [(ngModel)]="this.lastName">
-                                <small *ngIf="wrongLastNameBool" class="form-text text-danger">Pogrešan format.</small>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Prezime</mat-label>
+                                    <input matInput id="inputLastName" name="inputLastName" type="text" [(ngModel)]="this.lastName">
+                                </mat-form-field>
+                                <small *ngIf="wrongLastNameBool" class="form-text danger-Text">Pogrešan format.</small>
                             </div>
                         </div>
 
@@ -121,7 +135,7 @@
                         <div class="row mt-5">
                             <div class="col text-center">
                                 <!-- Save changes button-->
-                                <button class="btn btn-primary text-center" type="button" (click)="saveInfoChanges()">Sačuvaj izmene</button>
+                                <button mat-raised-button color="primary" (click)="saveInfoChanges()" >Sačuvaj izmene</button>
                             </div>
                         </div>
                     </form>

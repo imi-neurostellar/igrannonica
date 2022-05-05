@@ -53,6 +53,7 @@ namespace api.Controllers
                 return BadRequest();
 
             experiment.uploaderId = uploaderId;
+
             var existingExperiment = _experimentService.Get(uploaderId, experiment.name);
             if(existingExperiment != null)
                 return NotFound($"Experiment with this name exists");
@@ -88,5 +89,54 @@ namespace api.Controllers
             var experiments=_experimentService.GetMyExperiments(uploaderId);
             return Ok(experiments);
         }
+
+        // PUT api/<ExperimentController>/{name}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult Put(string id, [FromBody] Experiment experiment)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            var existingExperiment = _experimentService.GetOneExperiment(uploaderId, id);
+
+            //ne mora da se proverava
+            if (existingExperiment == null)
+                return NotFound($"Experiment with ID = {id} or user with ID = {uploaderId} not found");
+
+            experiment.lastUpdated = DateTime.UtcNow;
+
+
+            return Ok(_experimentService.Update(uploaderId, id, experiment));
+        }
+
+        // DELETE api/<ExperimentController>/name
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult Delete(string id)
+        {
+            string uploaderId = getUserId();
+
+            if (uploaderId == null)
+                return BadRequest();
+
+            var experiment = _experimentService.GetOneExperiment(uploaderId, id);
+
+            if (experiment == null)
+                return NotFound($"Experiment with ID = {id} or user with ID = {uploaderId} not found");
+
+            _experimentService.Delete(experiment.uploaderId, experiment._id);
+
+            return Ok($"Experiment with ID = {id} deleted");
+
+        }
+
+        public void DeleteHelper(string uploaderId, string experimentId)
+        {
+            _experimentService.Delete(uploaderId, experimentId);
+        }
+
     }
 }

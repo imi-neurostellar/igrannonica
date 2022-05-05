@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Configuration } from '../configuration.service';
+import { Configuration } from './configuration.service';
 import Dataset from '../_data/Dataset';
 import { AuthService } from './auth.service';
 
@@ -25,7 +25,10 @@ export class DatasetsService {
   }
 
   getDatasetFile(fileId: any): any {
-    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/true/${fileId}`, { headers: this.authService.authHeader(), responseType: 'text' });
+    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/-1/11`, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+  getDatasetFilePartial(fileId: any, startRow: number, rowNum: number): Observable<any> {
+    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/${startRow}/${rowNum}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
 
   editDataset(dataset: Dataset): Observable<Dataset> {

@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Configuration } from '../configuration.service';
+import { Configuration } from './configuration.service';
 import Predictor from '../_data/Predictor';
-import { Column } from '../_pages/predict/predict.component';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -29,5 +28,12 @@ export class PredictorsService {
 
   getMyPredictors(): Observable<Predictor[]> {
     return this.http.get<Predictor[]>(`${Configuration.settings.apiURL}/predictor/mypredictors`, { headers: this.authService.authHeader() });
+  }
+}
+
+export class Column {
+  constructor(
+    public name: string,
+    public value: (number | string)) {
   }
 }

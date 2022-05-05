@@ -45,7 +45,7 @@ namespace api.Services
         public bool CheckDb()
         {
             FileModel? file = null;
-            file = _file.Find(file => file.uploaderId == "Igrannonica").FirstOrDefault();
+            file = _file.Find(file => file.uploaderId == "000000000000000000000000").FirstOrDefault();
 
             if (file != null)
                 return false;

@@ -5,6 +5,7 @@ export default class Experiment {
     constructor(
         public name: string = 'Novi eksperiment',
         public description: string = '',
+        public type: ProblemType = ProblemType.Regression,
         public datasetId: string = '',
         public inputColumns: string[] = [],
         public outputColumn: string = '',
@@ -13,15 +14,11 @@ export default class Experiment {
         public dateCreated: Date = new Date(),
         public lastUpdated: Date = new Date(),
         public modelIds: string[] = [],
-
-        // Test set settings
-        public randomOrder: boolean = true,
-        public randomTestSet: boolean = true,
-        public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
-
-        public encodings: ColumnEncoding[] = [],
-        public type: ProblemType = ProblemType.Regression
+        public columnTypes: ColumnType[] = [],
+        public encodings: ColumnEncoding[] = []//[{columnName: "", columnEncoding: Encoding.Label}]
     ) { }
+
+    _columnsSelected: boolean = false;
 }
 
 export enum NullValueOptions {
@@ -47,11 +44,11 @@ export class NullValReplacer {
 export enum Encoding {
     Label = 'label',
     OneHot = 'onehot',
-    Ordinal = 'ordinal',
+    /*Ordinal = 'ordinal',
     Hashing = 'hashing',
     Binary = 'binary',
     BaseN = 'baseN'
-    /*
+    
     BackwardDifference = 'backward difference',
     CatBoost = 'cat boost',
     Count = 'count',
@@ -69,9 +66,13 @@ export enum Encoding {
 }
 
 export class ColumnEncoding {
-    constructor (
+    constructor(
         public columnName: string,
         public encoding: Encoding
-    ) 
-    {}
+    ) { }
+}
+
+export enum ColumnType {
+    categorical = "categorical",
+    numerical = "numerical"
 }

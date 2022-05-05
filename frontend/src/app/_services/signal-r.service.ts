@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
 import { CookieService } from 'ngx-cookie-service';
-import { Configuration } from '../configuration.service';
+import { Configuration } from './configuration.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,18 +16,13 @@ export class SignalRService {
       }).build();
 
     this.hubConnection.on("Notify", (message: string) => {
-      //console.log(" " + message);
+      console.log(" " + message);
     });
 
     this.hubConnection
       .start()
-      .then(() => {})
-      .catch(err => {})
+      .then(() => console.log("con Started"))
+      .catch(err => console.log("Error" + err))
   }
-
-  public stopConnection = () => {
-    this.hubConnection?.stop();
-  }
-
   constructor(private cookie: CookieService) { }
 }

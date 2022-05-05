@@ -53,7 +53,7 @@ class train_callback(tf.keras.callbacks.Callback):
 
 @app.route('/train', methods = ['POST'])
 def train():
-    #print("******************************TRAIN*************************************************")
+    print("******************************TRAIN*************************************************")
     
     f = request.files.get("file")
     data = pd.read_csv(f)
@@ -88,11 +88,10 @@ def train():
         "h5FileId" : fileId,
         "metrics" : m
     }
-    #print(predictor)
-    #print('\n')
+    print(predictor)
     url = config.api_url + "/Predictor/add"
     r = requests.post(url, json=predictor).text
-    #print(r)
+    print(r)
     return r
 
 @app.route('/predict', methods = ['POST'])
@@ -101,34 +100,37 @@ def predict():
     model = tf.keras.models.load_model(h5)
     paramsExperiment = json.loads(request.form["experiment"])
     paramsPredictor = json.loads(request.form["predictor"])
-    #print("********************************model loaded*******************************")
+    print("********************************model loaded*******************************")
     result = newmlservice.predict(paramsExperiment, paramsPredictor, model)
     return result
 
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
-    #print("********************************PREPROCESS*******************************")
+    print("********************************PREPROCESS*******************************")
+   
     dataset = json.loads(request.form["dataset"])
     file = request.files.get("file")
     data=pd.read_csv(file)
-    
-    #dataset={}
+    '''
     #f = request.json['filepath']
     #data=pd.read_csv(f)
-
+    dataset={}
+    '''
     preprocess = newmlservice.returnColumnsInfo(data)
     #samo 10 jedinstvenih posto ih ima previse, bilo bi dobro da promenimo ovo da to budu 10 najzastupljenijih vrednosti
     for col in preprocess["columnInfo"]:
-        col["uniqueValues"] = col["uniqueValues"][0:10]
-        col["uniqueValuesCount"] = col["uniqueValuesCount"][0:10]
+        col["uniqueValues"] = col["uniqueValues"][0:6]
+        col["uniqueValuesCount"] = col["uniqueValuesCount"][0:6]
+        col['uniqueValuesPercent']=col['uniqueValuesPercent'][0:6]
     dataset["columnInfo"] = preprocess["columnInfo"]
     dataset["nullCols"] = preprocess["allNullColl"]
     dataset["nullRows"] = preprocess["allNullRows"]
     dataset["colCount"] = preprocess["colCount"]
     dataset["rowCount"] = preprocess["rowCount"]
+    dataset["cMatrix"]=preprocess['cMatrix']
     dataset["isPreProcess"] = True
-    #print(dataset)
+
     return jsonify(dataset)
     
-#print("App loaded.")
+print("App loaded.")
 app.run()

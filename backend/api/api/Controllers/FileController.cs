@@ -94,9 +94,9 @@ namespace api.Controllers
             return Ok(fileModel._id);
         }
 
-        [HttpGet("csvread/{hasHeader}/{fileId}")]
+        [HttpGet("csvread/{fileId}/{skipRows}/{takeRows}")]
         [Authorize(Roles = "User,Guest")]
-        public ActionResult<string> CsvRead(bool hasHeader, string fileId)
+        public ActionResult<string> CsvRead(string fileId, int skipRows = 1, int takeRows = 11)
         {
 
             string uploaderId = getUserId();
@@ -109,12 +109,8 @@ namespace api.Controllers
 
 
 
-            if (hasHeader)
-                return String.Join("\n", System.IO.File.ReadLines(filePath).Take(11)); 
-            else 
-                return String.Join("\n", System.IO.File.ReadLines(filePath).Take(10));
+            return String.Join("\n", System.IO.File.ReadLines(filePath).Skip(skipRows+1).Take(takeRows));
         }
-
 
 
         [HttpPost("Csv")]

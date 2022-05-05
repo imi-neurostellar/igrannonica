@@ -1,5 +1,8 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
-body {
-    /*background-image: url('/assets/images/add_model_background.jpg');*/
-    background-color: #003459;
-}
+@import './styles/theme.css';
+@import './styles/layout.css';
+@import './styles/helper.css';
+@import './styles/scrollbar.css';
+@import './styles/fx.css';
+@import './styles/font.css';
+@import 'material-icons/iconfont/material-icons.css';

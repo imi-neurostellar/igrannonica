@@ -2,9 +2,7 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angu
 import Shared from 'src/app/Shared';
 import Experiment from 'src/app/_data/Experiment';
 import Model, { ActivationFunction, LossFunction, LossFunctionBinaryClassification, LossFunctionMultiClassification, LossFunctionRegression, Metrics, MetricsBinaryClassification, MetricsMultiClassification, MetricsRegression, NullValueOptions, Optimizer, ProblemType } from 'src/app/_data/Model';
-import { AuthService } from 'src/app/_services/auth.service';
 import { ModelsService } from 'src/app/_services/models.service';
-import { SignalRService } from 'src/app/_services/signal-r.service';
 import { GraphComponent } from '../graph/graph.component';
 
 
@@ -16,7 +14,7 @@ import { GraphComponent } from '../graph/graph.component';
 export class ModelLoadComponent implements OnInit {
 
   @ViewChild(GraphComponent) graph!: GraphComponent;
-  @Input() forExperiment?: Experiment;
+  @Input() forExperiment?:Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
 
   newModel: Model = new Model();
@@ -33,42 +31,24 @@ export class ModelLoadComponent implements OnInit {
   shared = Shared;
 
   term: string = "";
+  selectedProblemType: string = '';
   selectedMetrics = [];
   lossFunction: any = LossFunction;
 
   showMyModels: boolean = true;
 
-  batchSizePower: number = 2;
-
-  constructor(private modelsService: ModelsService, private authService: AuthService) {
-    //console.log("forExperiment = ", this.forExperiment);
-    this.fetchModels();
-
-    this.authService.loggedInEvent.subscribe(_ => {
-      this.fetchModels();
-    })
-  }
-
-  fetchModels(andSelectWithId: string | null = '') {
-    //if (this.forExperiment == undefined) {
+  constructor(private modelsService: ModelsService) {
     this.modelsService.getMyModels().subscribe((models) => {
-      this.myModels = models.reverse();
-      this.selectThisModel(this.myModels.filter(x => x._id == andSelectWithId)[0]);
+      this.myModels = models;
     });
-    /*}
-    else {
-      this.modelsService.getMyModelsByType(ProblemType.Regression).subscribe((models) => {
-        this.myModels = models;
-        //console.log("modeli po tipu: ", this.myModels);
-      });
-    }*/
   }
 
   ngOnInit(): void {
   }
-
-  updateBatchSize() {
-    this.newModel.batchSize = 2 ** this.batchSizePower;
+  batchSizePower:number=1;
+  updateBatchSize()
+  {
+    this.newModel.batchSize=2**this.batchSizePower;
   }
 
   updateGraph() {
@@ -92,14 +72,9 @@ export class ModelLoadComponent implements OnInit {
     this.newModel.uploaderId = Shared.userId;
 
     this.modelsService.addModel(this.newModel).subscribe((response) => {
-      console.log(this.newModel);
-      //Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');
-
-      Shared.openYesNoDialog("Model dodat", "Model je uspešno dodat u bazu. Da li želite da nastavite treniranje sa dodatim modelom?", () => {
-        this.fetchModels(response._id);
-        this.showMyModels = true;
-      });
-      this.fetchModels();
+      Shared.openDialog('Model dodat', 'Model je uspešno dodat u bazu.');
+      // treba da se selektuje nov model u listi modela
+      //this.selectedModel = 
     }, (error) => {
       Shared.openDialog('Greška', 'Model sa unetim nazivom već postoji u Vašoj kolekciji. Promenite naziv modela i nastavite sa kreiranim datasetom.');
     });

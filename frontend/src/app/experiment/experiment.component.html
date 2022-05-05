@@ -4,15 +4,15 @@
 <div id="wrapper">
     <div id="container" class="container p-5" style="background-color: white; min-height: 100%;">
 
-        <div class="d-flex flex-row justify-content-center align-items-center my-3 links">
-            <a id="firstStep" href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" (click)="updateCarouselIndex(0);" [ngClass]="{'boldClass' : carouselIndex == 0}" style="text-decoration: none">Izvor podataka</a>
+        <div class="d-flex flex-row justify-content-center align-items-center my-3">
+            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="0">Izvor podataka</a>
             <mat-icon>arrow_forward</mat-icon>
-            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="1" (click)="updateCarouselIndex(1)" [ngClass]="{'boldClass' : carouselIndex == 1}" style="text-decoration: none">Preprocesiranje</a>
+            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="1">Preprocesiranje</a>
             <mat-icon>arrow_forward</mat-icon>
-            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="2" (click)="updateCarouselIndex(2)" [ngClass]="{'boldClass' : carouselIndex == 2}" style="text-decoration: none">Dodaj eksperiment</a>
+            <a href="#" data-bs-target="#carouselExampleControls" data-bs-slide-to="2">Dodaj eksperiment</a>
         </div>
 
-        <div id="carouselExampleControls" class="carousel px-5 mt-5" data-bs-wrap="false" data-bs-ride="carousel" data-bs-interval="false">
+        <div id="carouselExampleControls" class="carousel slide px-5 mt-5" data-bs-wrap="false" data-bs-ride="carousel" data-bs-interval="false">
             <div class="carousel-inner">
                 <div class="carousel-item active mt-2">
                     <h2 class="mb-5">1. Izvor podataka</h2>
@@ -63,10 +63,8 @@
                             <h3 class="mt-5">Popunjavanje nedostajućih vrednosti:</h3>
                             <div class="form-check" *ngIf="selectedDataset">
                                 <input type="radio" [(ngModel)]="experiment.nullValues " [value]="NullValueOptions.DeleteRows " class="form-check-input" value="deleteRows" name="fillMissing " id="delRows" checked data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
-                                <label *ngIf="selectedColumnsInfoArray.length == selectedDataset.columnInfo.length" for="delRows" class="form-check-label ">Obriši sve
-                            redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} od {{selectedDataset.rowCount}})</label>
-                                <label *ngIf="selectedColumnsInfoArray.length != selectedDataset.columnInfo.length" for="delRows" class="form-check-label ">Obriši sve
-                            redove sa nedostajućim vrednostima</label><br>
+                                <label for="delRows" class="form-check-label ">Obriši sve
+                            redove sa nedostajućim vrednostima ({{selectedDataset.nullRows}} od {{selectedDataset.rowCount}})</label><br>
                                 <input type="radio" [(ngModel)]="experiment.nullValues " [value]="NullValueOptions.DeleteColumns " class="form-check-input" value="deleteCols" name="fillMissing " id="delCols" data-bs-toggle="collapse" data-bs-target="#fillMissingCustom.show">
                                 <label for="delCols" class="form-check-label ">Obriši sve
                             kolone sa nedostajućim vrednostima ({{countSelectedNullCols()}} od {{selectedDataset.columnInfo.length}})</label><br>
@@ -123,17 +121,13 @@
                                                         </div>
 
                                                         <div class="flex-shrink-1 mx-3">
-                                                            <div class="input-group" *ngIf="column.columnName != this.experiment.outputColumn">
+                                                            <div class="input-group">
                                                                 <label class="form-control" [for]="'delCol_'+column.columnName">Izbriši
-                                                                kolonu
-                                                                <input type="radio" [id]="'delCol_'+column.columnName"
+                                                            kolonu
+                                                            <input type="radio" [id]="'delCol_'+column.columnName"
                                                                 [name]="'delOp_'+column.columnName"
-                                                                (change)="emptyFillTextInput(column.columnName)">
-                                                                </label>
+                                                                (change)="emptyFillTextInput(column.columnName)"></label>
                                                             </div>
-                                                            <label class="form-control text-secondary" role="alert" *ngIf="column.columnName == this.experiment.outputColumn">
-                                                                (Izlazna kolona)
-                                                            </label>
                                                         </div>
 
                                                         <div class="flex-shrink-1 mx-3">
@@ -213,7 +207,7 @@
                 </div>
 
                 <div class="carousel-item mt-2">
-                    <h2 class="mb-4">3. Dodaj eksperiment</h2>
+                    <h2 class="mb-4">3. Dodaj eskperiment</h2>
 
                     <div class="row">
                         <div class="col"></div>
@@ -248,11 +242,11 @@
 
             </div>
 
-            <div class="m-3 d-flex flex-row align-items-center" style=" margin-left: auto;">
-                <button class="me-auto" *ngIf="carouselIndex != 0" mat-fab color="primary" data-bs-target="#carouselExampleControls" data-bs-slide="prev" (click)="updateCarouselIndex(carouselIndex - 1)">
+            <div class="m-3 d-flex flex-row justify-content-between align-items-center" style=" margin-left: auto;">
+                <button mat-fab color="primary" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                                 <mat-icon>arrow_backward</mat-icon>
                             </button>
-                <button class="ms-auto" *ngIf="carouselIndex != 2" mat-fab color="primary" data-bs-target="#carouselExampleControls" data-bs-slide="next" (click)="updateCarouselIndex(carouselIndex + 1)">
+                <button mat-fab color="primary" data-bs-target="#carouselExampleControls" data-bs-slide="next">
                                 <mat-icon>arrow_forward</mat-icon>
                             </button>
             </div>

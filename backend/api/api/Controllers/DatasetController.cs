@@ -18,14 +18,14 @@ namespace api.Controllers
         private readonly IFileService _fileService;
         private IJwtToken jwtToken;
 
-        public DatasetController(IDatasetService datasetService, IConfiguration configuration,IJwtToken Token,IMlConnectionService mlConnectionService, IFileService fileService)
+        public DatasetController(IDatasetService datasetService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IFileService fileService)
         {
             _datasetService = datasetService;
             _mlConnectionService = mlConnectionService;
             _fileService = fileService;
             jwtToken = Token;
         }
-       
+
         public string getUserId()
         {
             string userId;
@@ -67,7 +67,7 @@ namespace api.Controllers
         //desc - opadajuce 0
         //ako se posalje 0 kao latest onda ce da izlista sve u nekom poretku
         [HttpGet("datesort/{ascdsc}/{latest}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Dataset>> SortDatasets(bool ascdsc, int latest)
         {
             string userId = getUserId();
@@ -98,7 +98,7 @@ namespace api.Controllers
         //SEARCH za datasets (public ili private sa ovim imenom )
         // GET api/<DatasetController>/search/{name}
         [HttpGet("search/{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Dataset>> Search(string name)
         {
             return _datasetService.SearchDatasets(name);
@@ -108,7 +108,7 @@ namespace api.Controllers
         // GET api/<DatasetController>/{name}
         //get odredjeni dataset
         [HttpGet("{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<Dataset> Get(string name)
         {
             string userId = getUserId();
@@ -116,7 +116,7 @@ namespace api.Controllers
             if (userId == null)
                 return BadRequest();
 
-            var dataset = _datasetService.GetOneDataset(userId, name);
+            var dataset = _datasetService.GetOneDatasetN(userId, name);
             if (dataset == null)
                 return NotFound($"Dataset with name = {name} not found or dataset is not public or not preprocessed");
 
@@ -129,11 +129,13 @@ namespace api.Controllers
         public async Task<ActionResult<Dataset>> Post([FromBody] Dataset dataset)
         {
             string uploaderId = getUserId();
-            
+
+            dataset.uploaderId = uploaderId;
+
             //da li ce preko tokena da se ubaci username ili front salje
             //dataset.username = usernameToken;
             //username = "" ako je GUEST DODAO
-            var existingDataset = _datasetService.GetOneDataset(dataset.uploaderId, dataset.name);
+            var existingDataset = _datasetService.GetOneDatasetN(dataset.uploaderId, dataset.name);
 
             if (existingDataset != null)
                 return NotFound($"Dataset with this name already exists");
@@ -142,53 +144,53 @@ namespace api.Controllers
                 FileModel fileModel = _fileService.getFile(dataset.fileId);
                 dataset.isPreProcess = false;
                 _datasetService.Create(dataset);
-                _mlConnectionService.PreProcess(dataset,fileModel.path,uploaderId);
+                _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
                 return Ok();
             }
         }
 
 
         // PUT api/<DatasetController>/{name}
-        [HttpPut("{name}")]
-        [Authorize(Roles = "User")]
-        public ActionResult Put(string name, [FromBody] Dataset dataset)
+        [HttpPut("{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult Put(string id, [FromBody] Dataset dataset)
         {
             string uploaderId = getUserId();
 
             if (uploaderId == null)
                 return BadRequest();
 
-            var existingDataset = _datasetService.GetOneDataset(uploaderId, name);
+            var existingDataset = _datasetService.GetOneDataset(uploaderId, id);
 
             //ne mora da se proverava
             if (existingDataset == null)
-                return NotFound($"Dataset with name = {name} or user with ID = {uploaderId} not found");
+                return NotFound($"Dataset with ID = {id} or user with ID = {uploaderId} not found");
 
             dataset.lastUpdated = DateTime.UtcNow;
 
-            _datasetService.Update(uploaderId, name, dataset);
+            _datasetService.Update(uploaderId, id, dataset);
 
-            return Ok($"Dataset with name = {name} updated");
+            return Ok($"Dataset with ID = {id} updated");
         }
 
         // DELETE api/<DatasetController>/name
-        [HttpDelete("{name}")]
-        [Authorize(Roles = "User")]
-        public ActionResult Delete(string name)
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult Delete(string id)
         {
             string uploaderId = getUserId();
 
             if (uploaderId == null)
                 return BadRequest();
 
-            var dataset = _datasetService.GetOneDataset(uploaderId, name);
+            var dataset = _datasetService.GetOneDataset(uploaderId, id);
 
             if (dataset == null)
-                return NotFound($"Dataset with name = {name} or user with ID = {uploaderId} not found");
+                return NotFound($"Dataset with ID = {id} or user with ID = {uploaderId} not found");
 
-            _datasetService.Delete(dataset.uploaderId, dataset.name);
+            _datasetService.Delete(dataset.uploaderId, dataset._id);
 
-            return Ok($"Dataset with name = {name} deleted");
+            return Ok($"Dataset with ID = {id} deleted");
 
         }
     }

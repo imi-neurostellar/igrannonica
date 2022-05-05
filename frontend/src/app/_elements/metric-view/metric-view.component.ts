@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { SignalRService } from 'src/app/_services/signal-r.service';
-import { LineChartComponent } from '../line-chart/line-chart.component';
+import { LineChartComponent } from '../_charts/line-chart/line-chart.component';
+
 @Component({
   selector: 'app-metric-view',
   templateUrl: './metric-view.component.html',
@@ -9,12 +9,12 @@ import { LineChartComponent } from '../line-chart/line-chart.component';
 export class MetricViewComponent implements OnInit {
   @ViewChild(LineChartComponent) linechartComponent!: LineChartComponent;
 
-  @Input() history!: any[];
-
-  constructor(private signalRService: SignalRService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
+
+  history: any[] = [];
 
   update(history: any[]) {
     const myAcc: number[] = [];
@@ -28,7 +28,7 @@ export class MetricViewComponent implements OnInit {
       myEpochs.push(epoch + 1);
       for (let key in metrics) {
         let value = metrics[key];
-        console.log(key, ':::', value, epoch);
+        //console.log(key, ':::', value, epoch);
         if (key === 'accuracy') {
           myAcc.push(parseFloat(value));
         }

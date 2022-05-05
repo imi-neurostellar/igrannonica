@@ -1,6 +1,7 @@
 from enum import unique
 from itertools import count
 import os
+from sys import breakpointhook
 import pandas as pd
 from sklearn import datasets, multiclass
 import tensorflow as tf
@@ -26,39 +27,63 @@ import matplotlib.pyplot as plt
 #from ann_visualizer.visualize import ann_viz;
 def returnColumnsInfo(dataset):
     dict=[]
+    
     datafront=dataset.copy()
+    dataMatrix=dataset.copy()
+    
+   
     svekolone=datafront.columns
     kategorijskekolone=datafront.select_dtypes(include=['object']).columns
+
     allNullCols=0
     rowCount=datafront.shape[0]#ukupan broj redova
     colCount=len(datafront.columns)#ukupan broj kolona
 
     for kolona in svekolone:
         if(kolona in kategorijskekolone):
+            encoder=LabelEncoder()
+            dataMatrix[kolona]=encoder.fit_transform(dataMatrix[kolona])
+
+    #print(dataMatrix.dtypes)
+    cMatrix=dataMatrix.corr()
+
+    for kolona in svekolone:
+        if(kolona in kategorijskekolone):
             unique=datafront[kolona].value_counts()
             uniquevalues=[]
             uniquevaluescount=[]
+            uniquevaluespercent=[]
             for val, count in unique.iteritems():
-                uniquevalues.append(val)
-                uniquevaluescount.append(count)
+                if(val):
+                    uniquevalues.append(val)
+                    uniquevaluescount.append(count)
+                    percent=count/rowCount
+                    uniquevaluespercent.append(percent)
             #print(uniquevalues)
             #print(uniquevaluescount)
             mean=0
             median=0
             minimum=0
             maximum=0
+            q1=0
+            q3=0
             nullCount=datafront[kolona].isnull().sum()
             if(nullCount>0):
                 allNullCols=allNullCols+1
-            frontreturn={'columnName':kolona,
+            frontreturn={
+                        'columnName':kolona,
                         'isNumber':False,
                         'uniqueValues':uniquevalues,
                         'uniqueValuesCount':uniquevaluescount,
-                        'median':float(mean),
-                        'mean':float(median),
+                        'uniqueValuesPercent':uniquevaluespercent,
+                        'mean':float(mean),
+                        'median':float(median),
                         'numNulls':int(nullCount),
                         'min':float(minimum),
                         'max':float(maximum),
+                        'q1':float(q1),
+                        'q3':float(q3),
+
             }
             dict.append(frontreturn)
         else:
@@ -66,25 +91,48 @@ def returnColumnsInfo(dataset):
             maximum=max(datafront[kolona])
             mean=datafront[kolona].mean()
             median=s.median(datafront[kolona].copy().dropna())
+            q1= np.percentile(datafront[kolona].copy().dropna(), 25)
+            q3= np.percentile(datafront[kolona].copy().dropna(), 75)
             nullCount=datafront[kolona].isnull().sum()
             if(nullCount>0):
                 allNullCols=allNullCols+1
-            frontreturn={'columnName':kolona,
+
+            #pretvaranje u kategorijsku
+            datafront = datafront.astype({kolona: str})
+            #print(datafront.dtypes)
+            unique=datafront[kolona].value_counts()
+            uniquevaluesn=[]
+            uniquevaluescountn=[]
+            uniquevaluespercentn=[]
+            for val, count in unique.iteritems():
+                if(val):
+                    uniquevaluesn.append(val)
+                    uniquevaluescountn.append(count)
+                    percent=count/rowCount
+                    uniquevaluespercentn.append(percent)
+            frontreturn={
+                        'columnName':kolona,
                         'isNumber':1,
-                        'uniqueValues':[],
-                        'uniqueValuesCount':[],
+                        'uniqueValues':uniquevaluesn,
+                        'uniqueValuesCount':uniquevaluescountn,
+                        'uniqueValuesPercent':uniquevaluespercentn,
                         'mean':float(mean),
                         'median':float(median),
                         'numNulls':int(nullCount),
                         'min':float(minimum),
                         'max':float(maximum),
+                        'q1':float(q1),
+                        'q3':float(q3),
+
             }
             dict.append(frontreturn)
         NullRows = datafront[datafront.isnull().any(axis=1)]
         #print(NullRows)
         #print(len(NullRows))
         allNullRows=len(NullRows)
-    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount)}
+        #print(cMatrix.to_json(orient='index'))
+        #json.loads()['data']
+    return {'columnInfo':dict,'allNullColl':int(allNullCols),'allNullRows':int(allNullRows),'rowCount':int(rowCount),'colCount':int(colCount),'cMatrix':json.loads(cMatrix.to_json(orient='split'))['data']}
 
 @dataclass
 class TrainingResultClassification:
@@ -115,127 +163,114 @@ class TrainingResult:
 '''
 
 def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
+    ###UCITAVANJE SETA
     problem_type = paramsModel["type"]
     #print(problem_type)
     data = pd.DataFrame()
     #print(data)
     for col in paramsExperiment["inputColumns"]:
         #print(col)
-        data[col]=dataset[col]
+        if(col!=paramsExperiment["outputColumn"]):
+            data[col]=dataset[col]
     output_column = paramsExperiment["outputColumn"]
     data[output_column] = dataset[output_column]
     #print(data)
 
+    ###KATEGORIJSKE KOLONE
+    kategorijskekolone=[]
+    ###PRETVARANJE NUMERICKIH U KATREGORIJSKE AKO JE KORISNIK TAKO OZNACIO
+    columnInfo=paramsDataset['columnInfo']
+    columnTypes=paramsExperiment['columnTypes']
+    for i in range(len(columnInfo)):
+        col=columnInfo[i]
+        if(columnTypes[i]=="categorical" and col['columnName'] in paramsExperiment['inputColumns']):
+            data[col['columnName']]=data[col['columnName']].apply(str)
+            kategorijskekolone.append(col['columnName'])
+    #kategorijskekolone=data.select_dtypes(include=['object']).columns
+    print(kategorijskekolone)
     ###NULL
     null_value_options = paramsExperiment["nullValues"]
     null_values_replacers = paramsExperiment["nullValuesReplacers"]
-    kategorijskekolone=data.select_dtypes(include=['object']).columns.copy()
-    #print(kategorijskekolone)
+    
     if(null_value_options=='replace'):
-        #print("replace null") #
+        #print("replace null") 
         dict=null_values_replacers
         while(len(dict)>0):
             replace=dict.pop()
             col=replace['column']
             opt=replace['option']
             if(opt=='replace'):
-                val = replace['value']
-                if(data[col].dtype == 'int64'):
-                    val = np.int64(val)
-                elif(data[col].dtype == 'float64'):
-                    val = np.float64(val)
-                data[col]=data[col].fillna(val)
+                replacevalue=replace['value']
+                data[col]=data[col].fillna(replacevalue)
     elif(null_value_options=='delete_rows'):
         data=data.dropna()
     elif(null_value_options=='delete_columns'):
-        if(data[output_column].isnull().sum()>0):
-            if(output_column in kategorijskekolone):
-                replace=data[output_column].value_counts().index[0]
-                #print(replace)
-            else:
-                replace=data[output_column].mean()
-            data[output_column]=data[output_column].fillna(replace)
-            #print(data[output_column].isnull().sum())
         data=data.dropna(axis=1)
     #print(data.shape)
     
     #
     # Brisanje kolona koje ne uticu na rezultat
     #
+    '''
     num_rows=data.shape[0]
     for col in data.columns:
         if((data[col].nunique()==(num_rows)) and (data[col].dtype==np.object_)):
             data.pop(col)
     #
+    '''
     ### Enkodiranje
-    '''
     encodings=paramsExperiment["encodings"]
-
-    from sklearn.preprocessing import LabelEncoder
-    kategorijskekolone=data.select_dtypes(include=['object']).columns
-    encoder=LabelEncoder()
-    for kolona in data.columns:
-        if(kolona in kategorijskekolone):
-            data[kolona]=encoder.fit_transform(data[kolona])
-    '''
-    
-    
-    encodings=paramsExperiment["encodings"]
-    datafront=dataset.copy()
-    svekolone=datafront.columns
-
-    
+    #datafront=dataset.copy()
+    #svekolone=datafront.columns
+    #kategorijskekolone=datafront.select_dtypes(include=['object']).columns
     for kolonaEncoding in encodings:
         
         kolona = kolonaEncoding["columnName"]
-        if kolona in data.columns:
-            encoding = kolonaEncoding["encoding"]
-        
-            if(kolona in kategorijskekolone):
-                if(encoding=='label'):
-                    encoder=LabelEncoder()
-                    for col in data.columns:
-                        if(data[col].dtype==np.object_):
-                            data[col]=encoder.fit_transform(data[col])
-        
-        
-                elif(encoding=='onehot'):
-                    category_columns=[]
-                    for col in data.columns:
-                        if(data[col].dtype==np.object_):
-                            category_columns.append(col)
-                    data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
-
-                elif(encoding=='ordinal'):
-                    encoder = OrdinalEncoder()
-                    for col in data.columns:
-                        if(data[col].dtype==np.object_):
-                            data[col]=encoder.fit_transform(data[col])
-            
-                elif(encoding=='hashing'):
-                    category_columns=[]
-                    for col in data.columns:
-                        if(data[col].dtype==np.object_):
-                            category_columns.append(col)
-                    encoder=ce.HashingEncoder(cols=category_columns, n_components=len(category_columns))
-                    encoder.fit_transform(data)
-                elif(encoding=='binary'):
-                    category_columns=[]
-                    for col in data.columns:
-                        if(data[col].dtype==np.object_):
-                            category_columns.append(col)
-                    encoder=ce.BinaryEncoder(cols=category_columns, return_df=True)
-                    encoder.fit_transform(data)
-                
-                elif(encoding=='baseN'):
-                    category_columns=[]
-                    for col in data.columns:
-                        if(data[col].dtype==np.object_):
-                            category_columns.append(col)
-                    encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
-                    encoder.fit_transform(data)
-
+        encoding = kolonaEncoding["encoding"]
     
+        if(kolona in kategorijskekolone):
+            if(encoding=='label'):
+                encoder=LabelEncoder()
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        data[col]=encoder.fit_transform(data[col])
+    
+    
+            elif(encoding=='onehot'):
+                category_columns=[]
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        category_columns.append(col)
+                data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
+
+            elif(encoding=='ordinal'):
+                encoder = OrdinalEncoder()
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        data[col]=encoder.fit_transform(data[col])
+        
+            elif(encoding=='hashing'):
+                category_columns=[]
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        category_columns.append(col)
+                encoder=ce.HashingEncoder(cols=category_columns, n_components=len(category_columns))
+                encoder.fit_transform(data)
+            elif(encoding=='binary'):
+                category_columns=[]
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        category_columns.append(col)
+                encoder=ce.BinaryEncoder(cols=category_columns, return_df=True)
+                encoder.fit_transform(data)
+            
+            elif(encoding=='baseN'):
+                category_columns=[]
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        category_columns.append(col)
+                encoder=ce.BaseNEncoder(cols=category_columns, return_df=True, base=5)
+                encoder.fit_transform(data)
     #
     # Input - output
     #
@@ -250,8 +285,8 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #
     # Podela na test i trening skupove
     #
-    test=paramsExperiment["randomTestSetDistribution"]
-    randomOrder = paramsExperiment["randomOrder"]
+    test=paramsModel["randomTestSetDistribution"]
+    randomOrder = paramsModel["randomOrder"]
     if(randomOrder):
         random=123
     else:
@@ -264,75 +299,75 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #
     #
     ###OPTIMIZATORI
-    """
-    if(params['optimizer']=='adam'):
-        opt=tf.keras.optimizers.Adam(learning_rate=params['learningRate'])
+   
+    if(paramsModel['optimizer']=='Adam'):
+        opt=tf.keras.optimizers.Adam(learning_rate=float(paramsModel['learningRate']))
 
-    elif(params['optimizer']=='adadelta'):
-        opt=tf.keras.optimizers.Adadelta(learning_rate=params['learningRate'])
+    elif(paramsModel['optimizer']=='Adadelta'):
+        opt=tf.keras.optimizers.Adadelta(learning_rate=float(paramsModel['learningRate']))
 
-    elif(params['optimizer']=='adagrad'): 
-        opt=tf.keras.optimizers.Adagrad(learning_rate=params['learningRate'])
+    elif(paramsModel['optimizer']=='Adagrad'): 
+        opt=tf.keras.optimizers.Adagrad(learning_rate=float(paramsModel['learningRate']))
 
-    elif(params['optimizer']=='adamax'):
-        opt=tf.keras.optimizers.Adamax(learning_rate=params['learningRate'])
+    elif(paramsModel['optimizer']=='Adamax'):
+        opt=tf.keras.optimizers.Adamax(learning_rate=float(paramsModel['learningRate']))
 
-    elif(params['optimizer']=='nadam'):
-        opt=tf.keras.optimizers.Nadam(learning_rate=params['learningRate'])
+    elif(paramsModel['optimizer']=='Nadam'):
+        opt=tf.keras.optimizers.Nadam(learning_rate=float(paramsModel['learningRate']))
 
-    elif(params['optimizer']=='sgd'):
-        opt=tf.keras.optimizers.SGD(learning_rate=params['learningRate'])
+    elif(paramsModel['optimizer']=='Sgd'):
+        opt=tf.keras.optimizers.SGD(learning_rate=float(paramsModel['learningRate']))
 
-    elif(params['optimizer']=='ftrl'):
-        opt=tf.keras.optimizers.Ftrl(learning_rate=params['learningRate'])
+    elif(paramsModel['optimizer']=='Ftrl'):
+        opt=tf.keras.optimizers.Ftrl(learning_rate=float(paramsModel['learningRate']))
     
-    elif(params['optimizer']=='rmsprop'):
-        opt=tf.keras.optimizers.RMSprop(learning_rate=params['learningRate'])
+    elif(paramsModel['optimizer']=='Rmsprop'):
+        opt=tf.keras.optimizers.RMSprop(learning_rate=float(paramsModel['learningRate']))
 
     ###REGULARIZACIJA
     #regularisation={'kernelType':'l1 ili l2 ili l1_l2','kernelRate':default=0.01 ili jedna od vrednosti(0.0001,0.001,0.1,1,2,3) ili neka koju je korisnik zadao,'biasType':'','biasRate':'','activityType','activityRate'}
-    reg=params['regularisation']
+   
 
-    ###Kernel
-    if(reg['kernelType']=='l1'):
-        kernelreg=tf.keras.regularizers.l1(reg['kernelRate'])
-    elif(reg['kernelType']=='l2'):
-        kernelreg=tf.keras.regularizers.l2(reg['kernelRate'])
-    elif(reg['kernelType']=='l1l2'):
-        kernelreg=tf.keras.regularizers.l1_l2(l1=reg['kernelRate'][0],l2=reg['kernelRate'][1])
-
-    ###Bias
-    if(reg['biasType']=='l1'):
-        biasreg=tf.keras.regularizers.l1(reg['biasRate'])
-    elif(reg['biasType']=='l2'):
-        biasreg=tf.keras.regularizers.l2(reg['biasRate'])
-    elif(reg['biasType']=='l1l2'):
-        biasreg=tf.keras.regularizers.l1_l2(l1=reg['biasRate'][0],l2=reg['biasRate'][1])
-
-    ###Activity
-    if(reg['kernelType']=='l1'):
-        activityreg=tf.keras.regularizers.l1(reg['activityRate'])
-    elif(reg['kernelType']=='l2'):
-        activityreg=tf.keras.regularizers.l2(reg['activityRate'])
-    elif(reg['kernelType']=='l1l2'):
-        activityreg=tf.keras.regularizers.l1_l2(l1=reg['activityRate'][0],l2=reg['activityRate'][1])
-    """  
     filepath=os.path.join("temp/",paramsExperiment['_id']+"_"+paramsModel['_id']+".h5")
     if(problem_type=='multi-klasifikacioni'):
         #print('multi')
+        
+        reg=paramsModel['layers'][0]['regularisation']
+        regRate=float(paramsModel['layers'][0]['regularisationRate'])
+        if(reg=='l1'):
+            kernelreg=tf.keras.regularizers.l1(regRate)
+            biasreg=tf.keras.regularizers.l1(regRate)
+            activityreg=tf.keras.regularizers.l1(regRate)
+        elif(reg=='l2'):
+            kernelreg=tf.keras.regularizers.l2(regRate)
+            biasreg=tf.keras.regularizers.l2(regRate)
+            activityreg=tf.keras.regularizers.l2(regRate)
+
         classifier=tf.keras.Sequential()
-    
-        classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][0]['neurons'], activation=paramsModel['layers'][0]['activationFunction'],input_dim=x_train.shape[1], kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#prvi skriveni + definisanje prethodnog-ulaznog
+       
         for i in range(paramsModel['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
-            #print(i)
-            classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+            ###Kernel
+            reg=paramsModel['layers'][i+1]['regularisation']
+            regRate=float(paramsModel['layers'][i+1]['regularisationRate'])
+            if(reg=='l1'):
+                kernelreg=tf.keras.regularizers.l1(regRate)
+                biasreg=tf.keras.regularizers.l1(regRate)
+                activityreg=tf.keras.regularizers.l1(regRate)
+            elif(reg=='l2'):
+                kernelreg=tf.keras.regularizers.l2(regRate)
+                biasreg=tf.keras.regularizers.l2(regRate)
+                activityreg=tf.keras.regularizers.l2(regRate)
+
+            classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][i+1]['neurons'], activation=paramsModel['layers'][i+1]['activationFunction'],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#i-ti skriveni sloj
+        
         classifier.add(tf.keras.layers.Dense(units=5, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
         
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt, metrics = ['accuracy','mae','mse'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
      
         hist=history.history
         #plt.plot(hist['accuracy'])
@@ -354,17 +389,39 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
     elif(problem_type=='binarni-klasifikacioni'):
         #print('*************************************************************************binarni')
+        reg=paramsModel['layers'][0]['regularisation']
+        regRate=float(paramsModel['layers'][0]['regularisationRate'])
+        if(reg=='l1'):
+            kernelreg=tf.keras.regularizers.l1(regRate)
+            biasreg=tf.keras.regularizers.l1(regRate)
+            activityreg=tf.keras.regularizers.l1(regRate)
+        elif(reg=='l2'):
+            kernelreg=tf.keras.regularizers.l2(regRate)
+            biasreg=tf.keras.regularizers.l2(regRate)
+            activityreg=tf.keras.regularizers.l2(regRate)
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][0]['neurons'], activation=paramsModel['layers'][0]['activationFunction'],input_dim=x_train.shape[1],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#prvi skriveni + definisanje prethodnog-ulaznog
+        
         for i in range(paramsModel['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
+            reg=paramsModel['layers'][i+1]['regularisation']
+            regRate=float(paramsModel['layers'][0]['regularisationRate'])
+            if(reg=='l1'):
+                kernelreg=tf.keras.regularizers.l1(regRate)
+                biasreg=tf.keras.regularizers.l1(regRate)
+                activityreg=tf.keras.regularizers.l1(regRate)
+            elif(reg=='l2'):
+                kernelreg=tf.keras.regularizers.l2(regRate)
+                biasreg=tf.keras.regularizers.l2(regRate)
+                activityreg=tf.keras.regularizers.l2(regRate)
+            classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][i+1]['neurons'], activation=paramsModel['layers'][i+1]['activationFunction'],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#i-ti skriveni sloj
+        
         classifier.add(tf.keras.layers.Dense(units=1, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['accuracy','mae','mse'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
@@ -380,17 +437,40 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         return filepath,hist
 
     elif(problem_type=='regresioni'):
+        reg=paramsModel['layers'][0]['regularisation']
+        regRate=float(paramsModel['layers'][0]['regularisationRate'])
+        if(reg=='l1'):
+            kernelreg=tf.keras.regularizers.l1(regRate)
+            biasreg=tf.keras.regularizers.l1(regRate)
+            activityreg=tf.keras.regularizers.l1(regRate)
+        elif(reg=='l2'):
+            kernelreg=tf.keras.regularizers.l2(regRate)
+            biasreg=tf.keras.regularizers.l2(regRate)
+            activityreg=tf.keras.regularizers.l2(regRate)
         classifier=tf.keras.Sequential()
     
-        classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][0],input_dim=x_train.shape[1]))#prvi skriveni + definisanje prethodnog-ulaznog
+        classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][0]['neurons'], activation=paramsModel['layers'][0]['activationFunction'],input_dim=x_train.shape[1],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#prvi skriveni + definisanje prethodnog-ulaznog
+        
         for i in range(paramsModel['hiddenLayers']-1):#ako postoji vise od jednog skrivenog sloja
             #print(i)
-            classifier.add(tf.keras.layers.Dense(units=paramsModel['hiddenLayerNeurons'], activation=paramsModel['hiddenLayerActivationFunctions'][i+1]))#i-ti skriveni sloj
-        classifier.add(tf.keras.layers.Dense(units=1))
+            reg=paramsModel['layers'][i+1]['regularisation']
+            regRate=float(paramsModel['layers'][i+1]['regularisationRate'])
+            if(reg=='l1'):
+                kernelreg=tf.keras.regularizers.l1(regRate)
+                biasreg=tf.keras.regularizers.l1(regRate)
+                activityreg=tf.keras.regularizers.l1(regRate)
+            elif(reg=='l2'):
+                kernelreg=tf.keras.regularizers.l2(regRate)
+                biasreg=tf.keras.regularizers.l2(regRate)
+                activityreg=tf.keras.regularizers.l2(regRate)
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = paramsModel['optimizer'] , metrics =['accuracy','mae','mse'])
+            classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][i+1]['neurons'], activation=paramsModel['layers'][i+1]['activationFunction'],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#i-ti skriveni sloj
+        
+        classifier.add(tf.keras.layers.Dense(units=1,activation=paramsModel['outputLayerActivationFunction']))
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=paramsModel['batchSize'],callbacks=callback(x_test, y_test,paramsModel['_id']))
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['accuracy','mae','mse'])
+
+        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
@@ -558,9 +638,9 @@ def manageH5(dataset,params,h5model):
     h5model.summary()
     #ann_viz(h5model, title="My neural network")
 
-    h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics=params['accuracy',''])
+    h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics = ['accuracy','mae','mse'])
 
-    history=h5model.fit(x2, y2, epochs = params['epochs'],batch_size=params['batchSize'])
+    history=h5model.fit(x2, y2, epochs = params['epochs'],batch_size=int(params['batchSize']))
     
     y_pred2=h5model.predict(x2)
      

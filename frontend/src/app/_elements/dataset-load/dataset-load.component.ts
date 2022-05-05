@@ -8,7 +8,6 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
 import { Output, EventEmitter } from '@angular/core';
 import { SignalRService } from 'src/app/_services/signal-r.service';
-import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-dataset-load',
@@ -34,15 +33,7 @@ export class DatasetLoadComponent implements OnInit {
 
   term: string = "";
 
-  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService, private signalRService: SignalRService, private authService: AuthService) {
-    this.fetchDatasets();
-
-    authService.loggedInEvent.subscribe(_ => {
-      this.fetchDatasets();
-    })
-  }
-
-  fetchDatasets() {
+  constructor(private models: ModelsService, private datasets: DatasetsService, private csv: CsvParseService, private signalRService: SignalRService) {
     this.datasets.getMyDatasets().subscribe((datasets) => {
       this.myDatasets = datasets;
     });
@@ -59,6 +50,13 @@ export class DatasetLoadComponent implements OnInit {
     if (this.selectedDataset != undefined)
       this.resetSelectedDataset();
     //this.resetCbsAndRbs();        //TREBA DA SE DESI
+  }
+
+  refreshMyDatasets() {
+    this.datasets.getMyDatasets().subscribe((datasets) => {
+      this.myDatasets = datasets;
+      this.showMyDatasets = true;
+    });
   }
 
   selectThisDataset(dataset: Dataset) {
@@ -90,19 +88,10 @@ export class DatasetLoadComponent implements OnInit {
     return true;
   }
 
-  refreshMyDatasets(selectedDatasetId: string | null) {
-    this.datasets.getMyDatasets().subscribe((datasets) => {
-      this.myDatasets = datasets.reverse();
-      this.showMyDatasets = true; 
-      this.selectedDataset = this.myDatasets.filter(x => x._id == selectedDatasetId)[0];
-      this.resetSelectedDataset();
-    });
-  }
-
   ngOnInit(): void {
     if (this.signalRService.hubConnection) {
-      this.signalRService.hubConnection.on("NotifyDataset", (dName: string, dId: string) => {
-        this.refreshMyDatasets(dId);
+      this.signalRService.hubConnection.on("NotifyDataset", _ => {
+        this.refreshMyDatasets();
       });
     } else {
       console.warn("Dataset-Load: No connection!");

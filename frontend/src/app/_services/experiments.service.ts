@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Configuration } from '../configuration.service';
+import { Configuration } from './configuration.service';
 import Experiment from '../_data/Experiment';
 import { AuthService } from './auth.service';
 
@@ -18,5 +18,9 @@ export class ExperimentsService {
 
   getMyExperiments(): Observable<Experiment[]> {
     return this.http.get<Experiment[]>(`${Configuration.settings.apiURL}/experiment/getmyexperiments`, { headers: this.authService.authHeader() });
+  }
+
+  updateExperiment(experiment: Experiment): Observable<Experiment> {
+    return this.http.put<Experiment>(`${Configuration.settings.apiURL}/experiment/` + experiment._id, experiment, { headers: this.authService.authHeader() });
   }
 }

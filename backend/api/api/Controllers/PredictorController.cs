@@ -52,7 +52,7 @@ namespace api.Controllers
 
         // GET: api/<PredictorController>/mypredictors
         [HttpGet("mypredictors")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Predictor>> Get()
         {
             string userId = getUserId();
@@ -105,7 +105,7 @@ namespace api.Controllers
 
         // GET api/<PredictorController>/{name}
         [HttpGet("{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<Predictor> Get(string id)
         {
             string userId = getUserId();
@@ -128,7 +128,7 @@ namespace api.Controllers
         //desc - opadajuce 0
         //ako se posalje 0 kao latest onda ce da izlista sve u nekom poretku
         [HttpGet("datesort/{ascdsc}/{latest}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult<List<Predictor>> SortPredictors(bool ascdsc, int latest)
         {
             string userId = getUserId();
@@ -193,7 +193,7 @@ namespace api.Controllers
 
         // PUT api/<PredictorController>/{name}
         [HttpPut("{name}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Put(string id, [FromBody] Predictor predictor)
         {
             string userId = getUserId();
@@ -214,7 +214,7 @@ namespace api.Controllers
 
         // DELETE api/<PredictorController>/name
         [HttpDelete("{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Guest")]
         public ActionResult Delete(string id)
         {
             string userId = getUserId();
