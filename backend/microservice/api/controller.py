@@ -54,12 +54,20 @@ class train_callback(tf.keras.callbacks.Callback):
 @app.route('/train', methods = ['POST'])
 def train():
     print("******************************TRAIN*************************************************")
-    
-    f = request.files.get("file")
-    data = pd.read_csv(f)
     paramsModel = json.loads(request.form["model"])
     paramsExperiment = json.loads(request.form["experiment"])
     paramsDataset = json.loads(request.form["dataset"])
+    f = request.files.get("file")
+    if(paramsDataset['delimiter']=='novi red'):
+        separation='\n'
+
+    elif(paramsDataset['delimiter']=='razmak'):
+        separation=' '
+    else:
+        separation=paramsDataset['delimiter']
+    data = pd.read_csv(f,sep=separation)
+    
+
     #dataset, paramsModel, paramsExperiment, callback)
     filepath,result = newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
     """
@@ -110,7 +118,14 @@ def returnColumnsInfo():
    
     dataset = json.loads(request.form["dataset"])
     file = request.files.get("file")
-    data=pd.read_csv(file)
+    if(dataset['delimiter']=='novi red'):
+        separation='\n'
+
+    elif(dataset['delimiter']=='razmak'):
+        separation=' '
+    else:
+        separation=dataset['delimiter']
+    data=pd.read_csv(file,sep=separation)
     '''
     #f = request.json['filepath']
     #data=pd.read_csv(f)

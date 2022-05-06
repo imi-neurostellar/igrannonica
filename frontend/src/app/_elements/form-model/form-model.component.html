@@ -121,14 +121,15 @@
 
         <div class="ns-col" id="layers-control">
             <div>Broj Skrivenih Slojeva</div>
-            <button class="btn-clear btn-icon bubble" (click)="addLayer()">
-            <mat-icon>add</mat-icon>
-        </button>
-            <div>{{newModel.hiddenLayers}}</div>
             <button class="btn-clear btn-icon bubble" (click)="removeLayer()">
-            <mat-icon>remove</mat-icon>
-        </button>
-
+                <mat-icon>remove</mat-icon>
+            </button>
+            
+            <div>{{newModel.hiddenLayers}}</div>
+            
+            <button class="btn-clear btn-icon bubble" (click)="addLayer()">
+                <mat-icon>add</mat-icon>
+            </button>
         </div>
         <div class="break-1"></div>
         <div class="ns-col">
@@ -196,13 +197,13 @@
 
                 <div class="d-flex flex-row align-items-center justify-content-center tm">
                     <div class="col-6" style="font-size: 13px;">Broj čvorova</div>
-                    <button class="btn-clear btn-icon bubble" (click)="addNeuron(i)">
-                <mat-icon>add</mat-icon>
-            </button>
-                    <div class="col-2 text-center">{{newModel.layers[i].neurons}}</div>
                     <button class="btn-clear btn-icon bubble" (click)="removeNeuron(i)">
-                <mat-icon>remove</mat-icon>
-            </button>
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <div class="col-2 text-center">{{newModel.layers[i].neurons}}</div>
+                    <button class="btn-clear btn-icon bubble" (click)="addNeuron(i)">
+                        <mat-icon>add</mat-icon>
+                    </button>
                 </div>
 
                 <mat-form-field appearance="fill" class="mat-fix">
