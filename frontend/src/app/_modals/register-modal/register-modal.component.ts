@@ -150,7 +150,9 @@ export class RegisterModalComponent implements OnInit {
         username: this.username,
         password: this.pass1,
         email: this.email,
-        photoId: "1"
+        photoId: "1",
+        isPermament:true,
+        dateCreated:new Date()
       }
 
       this.authService.register(user)

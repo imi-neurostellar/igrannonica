@@ -28,6 +28,8 @@ export class ProfileComponent implements OnInit {
   newPass2: string = '';
   photoId: string = '';
   photoPath: string = '';
+  isPermament:boolean=false;
+  dateCreated:Date=new Date();
 
   wrongPassBool: boolean = false;
   wrongNewPassBool: boolean = false;
@@ -60,6 +62,9 @@ export class ProfileComponent implements OnInit {
       this.firstName = this.user.firstName;
       this.lastName = this.user.lastName;
       this.photoId = this.user.photoId;
+      this.dateCreated=this.user.dateCreated;
+      this.isPermament=this.user.isPermament;
+
 
       for (let i = 0; i < this.pictures.length; i++) {
         if (this.pictures[i].photoId.toString() === this.photoId) {
@@ -81,7 +86,9 @@ export class ProfileComponent implements OnInit {
       password: this.user.password,
       firstName: this.firstName,
       lastName: this.lastName,
-      photoId: this.photoId
+      photoId: this.photoId,
+      isPermament:this.isPermament,
+      dateCreated:this.dateCreated
     }
 
     this.userInfoService.changeUserInfo(editedUser).subscribe((response: any) =>{

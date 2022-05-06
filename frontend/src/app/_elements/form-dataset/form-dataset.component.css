@@ -5,25 +5,27 @@
 }
 
 .topBar {
+    display: table;
     width: 100%;
-    margin: 1rem;
-    align-items: flex-start;
+    height: 100px;
+    margin-left: 1.5%; 
+    margin-top: 1.5% ;
 }
-
+.kolona{
+    float: left;
+    margin-left: 20px;
+}
 .topBar label{
     font-size: 30px;
 }
 .topBar mat-form-field{
     width: 250px;
+    margin: 0;
 }
 
-.toptop{
-    margin-left: 1.5%; 
-    width: 50%;
-}
-
-.fileButton{
-    margin-top: 10px;
+.fileButton button{
+    height: 51px;
+    width: 250px;
 }
 
 .file-container {
