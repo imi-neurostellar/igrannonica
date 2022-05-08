@@ -24,7 +24,7 @@ from dataclasses import dataclass
 import statistics as s
 from sklearn.metrics import roc_auc_score
 import matplotlib.pyplot as plt
-#from ann_visualizer.visualize import ann_viz;
+from ann_visualizer.visualize import ann_viz;
 def returnColumnsInfo(dataset):
     dict=[]
     
@@ -301,7 +301,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     ###OPTIMIZATORI
    
     if(paramsModel['optimizer']=='Adam'):
-        opt=tf.keras.optimizers.Adam(learning_rate=float(paramsModel['learningRate']))
+        opt=tf.keras.optimizers.Adam(learning_rate=3)
 
     elif(paramsModel['optimizer']=='Adadelta'):
         opt=tf.keras.optimizers.Adadelta(learning_rate=float(paramsModel['learningRate']))
@@ -331,7 +331,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     filepath=os.path.join("temp/",paramsExperiment['_id']+"_"+paramsModel['_id']+".h5")
     if(problem_type=='multi-klasifikacioni'):
         #print('multi')
-        
+        print(paramsModel)
         reg=paramsModel['layers'][0]['regularisation']
         regRate=float(paramsModel['layers'][0]['regularisationRate'])
         if(reg=='l1'):
@@ -365,10 +365,10 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt, metrics = ['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
-     
+
         hist=history.history
         #plt.plot(hist['accuracy'])
         #plt.show()
@@ -415,11 +415,11 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
                 kernelreg=tf.keras.regularizers.l2(regRate)
                 biasreg=tf.keras.regularizers.l2(regRate)
                 activityreg=tf.keras.regularizers.l2(regRate)
-            classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][i+1]['neurons'], activation=paramsModel['layers'][i+1]['activationFunction'],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#i-ti skriveni sloj
+            classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][i+1]['neurons'], activation=paramsModel['layers'][i+1]['activationFunction']))#i-ti skriveni sloj
         
         classifier.add(tf.keras.layers.Dense(units=1, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt , metrics = ['accuracy','mae','mse'])
 
         history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
         hist=history.history
@@ -431,7 +431,22 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         
         scores = classifier.evaluate(x_test, y_test)
         #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
-        #ann_viz(classifier, title="My neural network")
+        #
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # ann_viz(classifier, title="My neural network")
         
         classifier.save(filepath, save_format='h5')
         return filepath,hist
@@ -556,32 +571,36 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         macro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'macro')
         micro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'micro')
         roc_auc_dict=roc_auc_score_multiclass(y_test, y_pred)
-    '''
+'''   
 def predict(experiment, predictor, model):
     #model.predict()
     # ovo je pre bilo manageH5 
     return "TODO"
 
 
-def manageH5(dataset,params,h5model):
-    problem_type = params["type"]
-    #print(problem_type)
+def manageH5(dataset,paramsModel,paramsExperiment,paramsDataset,h5model,callback):
+    problem_type = paramsModel["type"]
     data = pd.DataFrame()
-    #print(data)
-    for col in params["inputColumns"]:
-        #print(col)
-        data[col]=dataset[col]
-    output_column = params["columnToPredict"]
+    for col in paramsExperiment["inputColumns"]:
+        if(col!=paramsExperiment["outputColumn"]):
+            data[col]=dataset[col]
+    output_column = paramsExperiment["outputColumn"]
     data[output_column] = dataset[output_column]
-    #print(data)
 
-    ###NULL
-    null_value_options = params["nullValues"]
-    null_values_replacers = params["nullValuesReplacers"]
+    kategorijskekolone=[]
+    columnInfo=paramsDataset['columnInfo']
+    columnTypes=paramsExperiment['columnTypes']
+    for i in range(len(columnInfo)):
+        col=columnInfo[i]
+        if(columnTypes[i]=="categorical" and col['columnName'] in paramsExperiment['inputColumns']):
+            data[col['columnName']]=data[col['columnName']].apply(str)
+            kategorijskekolone.append(col['columnName'])
+
+    null_value_options = paramsExperiment["nullValues"]
+    null_values_replacers = paramsExperiment["nullValuesReplacers"]
     
     if(null_value_options=='replace'):
-        #print("replace null") # TODO
-        dict=params['null_values_replacers']
+        dict=null_values_replacers
         while(len(dict)>0):
             replace=dict.pop()
             col=replace['column']
@@ -592,58 +611,38 @@ def manageH5(dataset,params,h5model):
     elif(null_value_options=='delete_rows'):
         data=data.dropna()
     elif(null_value_options=='delete_columns'):
-        data=data.dropna()
-    
-    #print(data.shape)
-    
-    #
-    # Brisanje kolona koje ne uticu na rezultat
-    #
-    num_rows=data.shape[0]
-    for col in data.columns:
-        if((data[col].nunique()==(num_rows)) and (data[col].dtype==np.object_)):
-            data.pop(col)
-    #
-    ### Enkodiranje
-    encoding=params["encoding"]
-    if(encoding=='label'):
-        encoder=LabelEncoder()
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
-                data[col]=encoder.fit_transform(data[col])
-    
-    
-    elif(encoding=='onehot'):
-        category_columns=[]
-        for col in data.columns:
-            if(data[col].dtype==np.object_):
-                category_columns.append(col)
-        data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
-    #print(data)
+        data=data.dropna(axis=1)
 
-    #
-    # Input - output
-    #
+    encodings=paramsExperiment["encodings"]
+    for kolonaEncoding in encodings:
+        kolona = kolonaEncoding["columnName"]
+        encoding = kolonaEncoding["encoding"]
+        if(kolona in kategorijskekolone):
+            if(encoding=='label'):
+                encoder=LabelEncoder()
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        data[col]=encoder.fit_transform(data[col])
+            elif(encoding=='onehot'):
+                category_columns=[]
+                for col in data.columns:
+                    if(data[col].dtype==np.object_):
+                        category_columns.append(col)
+                data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
+
     x_columns = []
     for col in data.columns:
         if(col!=output_column):
             x_columns.append(col)
-    #print(x_columns)
     x2 = data[x_columns]
-    #print(x2)
-    #print(x2.values)
     x2 = data[x_columns].values
-    #print(x2)
     y2 = data[output_column].values
-    h5model.summary()
+    #h5model.summary()
     #ann_viz(h5model, title="My neural network")
 
-    h5model.compile(loss=params['lossFunction'], optimizer=params['optimizer'], metrics = ['accuracy','mae','mse'])
 
-    history=h5model.fit(x2, y2, epochs = params['epochs'],batch_size=int(params['batchSize']))
-    
+    history=h5model.fit(x2, y2, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x2, y2,paramsModel['_id']))  
     y_pred2=h5model.predict(x2)
-     
     y_pred2=np.argmax(y_pred2,axis=1)
     #y_pred=h5model.predict_classes(x)
     score = h5model.evaluate(x2,y_pred2, verbose=0)

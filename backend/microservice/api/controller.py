@@ -96,7 +96,7 @@ def train():
         "h5FileId" : fileId,
         "metrics" : m
     }
-    print(predictor)
+    #print(predictor)
     url = config.api_url + "/Predictor/add"
     r = requests.post(url, json=predictor).text
     print(r)
@@ -109,8 +109,31 @@ def predict():
     paramsExperiment = json.loads(request.form["experiment"])
     paramsPredictor = json.loads(request.form["predictor"])
     print("********************************model loaded*******************************")
-    result = newmlservice.predict(paramsExperiment, paramsPredictor, model)
+    result = newmlservice.predict(paramsExperiment, paramsPredictor, model,train_callback)
     return result
+
+@app.route('/manageH5', methods = ['POST'])
+def manageH5():
+    h5 = request.files.get("h5file")
+    model = tf.keras.models.load_model(h5)
+
+    paramsExperiment = json.loads(request.form["experiment"])
+    paramsModel = json.loads(request.form["model"])
+    paramsDataset = json.loads(request.form["dataset"])
+    
+    f = request.files.get("file")
+    if(paramsDataset['delimiter']=='novi red'):
+        separation='\n'
+    elif(paramsDataset['delimiter']=='razmak'):
+        separation=' '
+    else:
+        separation=paramsDataset['delimiter']
+    
+    data = pd.read_csv(f,sep=separation)
+    
+    result = newmlservice.manageH5(data,paramsModel,paramsExperiment,paramsDataset,model,train_callback)
+    return result
+
 
 @app.route('/preprocess',methods=['POST'])
 def returnColumnsInfo():
