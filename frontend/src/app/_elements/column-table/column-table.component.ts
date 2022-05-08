@@ -89,7 +89,10 @@ export class ColumnTableComponent implements AfterViewInit {
     }
   }
   resetOutputColumn() {
-    this.experiment.outputColumn = this.experiment.inputColumns[0];
+    if (this.experiment.inputColumns.length > 0)
+      this.experiment.outputColumn = this.experiment.inputColumns[0];
+    else 
+      this.experiment.outputColumn = '-';
   }
 
   setDeleteRowsForMissingValTreatment() {
@@ -112,7 +115,7 @@ export class ColumnTableComponent implements AfterViewInit {
 
   columnTypeChanged(columnName: string) {
     if (this.experiment.outputColumn == columnName)
-      this.changeOutputColumn(columnName);
+      this.changeProblemType();
     else
       this.columnTableChangeDetected();
   }
@@ -124,6 +127,8 @@ export class ColumnTableComponent implements AfterViewInit {
         if (this.experiment.inputColumns.filter(x => x == columnName)[0] == undefined) {
           this.experiment.inputColumns.push(columnName);
         }
+        if (this.experiment.inputColumns.length == 1)
+          this.experiment.outputColumn = this.experiment.inputColumns[0];
       }
       else {
         this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != columnName);
@@ -131,17 +136,21 @@ export class ColumnTableComponent implements AfterViewInit {
         //TODO: da se zatamni kolona koja je unchecked
         //this.experiment.encodings = this.experiment.encodings.filter(x => x.columnName != columnName); samo na kraju iz enkodinga skloni necekirane
         this.experiment.nullValuesReplacers = this.experiment.nullValuesReplacers.filter(x => x.column != columnName);
-        if (columnName == this.experiment.outputColumn)
-          this.experiment.outputColumn = this.experiment.inputColumns[0];
+        if (columnName == this.experiment.outputColumn) {
+          if (this.experiment.inputColumns.length > 0)
+            this.experiment.outputColumn = this.experiment.inputColumns[0];
+          else 
+            this.experiment.outputColumn = '-';
+        }
       }
       this.columnTableChangeDetected();
     }
   }
 
-  changeOutputColumn(columnName: string) {
+  changeProblemType() {
     if (this.experiment != undefined && this.dataset != undefined) {
       let i = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment!.outputColumn);
-      if (this.experiment.columnTypes[i] == ColumnType.numerical) {
+      if (i == -1 || this.experiment.columnTypes[i] == ColumnType.numerical) {
         this.experiment.type = ProblemType.Regression;
       }
       else {
@@ -286,10 +295,20 @@ export class ColumnTableComponent implements AfterViewInit {
     return '0';
   }
   saveExperiment() {
-    this.openSaveExperimentDialog();
+    if (this.experiment.inputColumns.length == 0)
+      Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti.");
+    else if (this.experiment.inputColumns.length == 1)
+      Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti (mora postojati bar jedna ulazna i jedna izlazna kolona).");
+    else 
+      this.openSaveExperimentDialog();
   }
   updateExperiment() {
-    this.openUpdateExperimentDialog();
+    if (this.experiment.inputColumns.length == 0)
+      Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti.");
+    else if (this.experiment.inputColumns.length == 1)
+      Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti (mora postojati bar jedna ulazna i jedna izlazna kolona).");
+    else 
+      this.openUpdateExperimentDialog();
   }
 
 

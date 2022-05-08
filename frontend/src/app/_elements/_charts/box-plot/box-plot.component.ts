@@ -18,7 +18,13 @@ export class BoxPlotComponent implements AfterViewInit {
 
   @Input()width?: number;
   @Input()height?: number;
-  
+  @Input()mean?: number;
+  @Input()median?: number;
+  @Input()min?: number;
+  @Input()max?: number;
+  @Input()q1?: number;
+  @Input()q3?: number;
+
   @ViewChild('boxplot') chartRef!: ElementRef;
   constructor() { }
 
