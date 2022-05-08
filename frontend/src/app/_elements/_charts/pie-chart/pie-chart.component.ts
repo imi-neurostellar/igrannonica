@@ -10,6 +10,8 @@ export class PieChartComponent implements AfterViewInit {
 
   @Input()width?: number;
   @Input()height?: number;
+  @Input()uniqueValues?: string[] = [];
+  @Input()uniqueValuesPercent?: number[] = [];
   
   @ViewChild('piechart') chartRef!: ElementRef;
   constructor() { }

@@ -1,21 +1,25 @@
-.card{
+.card {
     background-color: transparent;
-    color:var(--offwhite)
+    color: var(--offwhite)
 }
 
-.card-header{
+.card-header {
     background-color: var(--ns-primary-50);
-    color:var(--offwhite)
+    color: var(--offwhite)
 }
-.card-body{
+
+.card-body {
     background-color: var(--ns-bg-dark-50);
 }
 
-mat-form-field{
+mat-form-field {
     width: 100%;
 }
 
-.danger-Text{
-    color:var(--ns-warn)
+.danger-Text {
+    color: var(--ns-warn)
 }
 
+.selectedPicture {
+    background-color: var(--ns-accent);
+}

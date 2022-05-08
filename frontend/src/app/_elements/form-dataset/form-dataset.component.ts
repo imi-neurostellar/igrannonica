@@ -101,7 +101,7 @@ export class FormDatasetComponent {
         this.tableData.loaded = true;
         this.tableData.numRows = this.dataset.rowCount;
         this.tableData.numCols = this.dataset.columnInfo.length;
-        this.tableData.data = this.csv.csvToArray(file, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "") ? "," : this.dataset.delimiter);
+        this.tableData.data = this.csv.csvToArray(file, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter);
 
       }
     });
