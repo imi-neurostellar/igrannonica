@@ -226,15 +226,13 @@ export class ColumnTableComponent implements AfterViewInit {
 
   openSaveExperimentDialog() {
     const dialogRef = this.dialog.open(SaveExperimentDialogComponent, {
-      width: '400px'
+      width: '400px',
+      data: { experiment: this.experiment } 
     });
-    dialogRef.afterClosed().subscribe(selectedName => {
-      this.experiment.name = selectedName;
-      //napravi odvojene dugmice za save i update -> za update nece da se otvara dijalog za ime
-      this.experimentService.addExperiment(this.experiment).subscribe((response) => {
-        this.experiment._id = response._id;
-        this.okPressed.emit();
-      });
+    dialogRef.afterClosed().subscribe(experiment => {
+      if (experiment) {
+        this.experiment = experiment;
+      }
     });
   }
 
