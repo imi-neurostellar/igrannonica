@@ -54,9 +54,11 @@ export class LineChartComponent implements AfterViewInit {
         data: {
           labels: this.dataEpoch,
           datasets: [{
+
             label: 'Accuracy',
             data: this.dataAcc,
-            borderWidth: 1
+            borderWidth: 1,
+            
           },
           {
             label: 'Loss',
@@ -76,6 +78,20 @@ export class LineChartComponent implements AfterViewInit {
           ]
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: true,
+
+          plugins: {
+            legend: {
+                labels: {
+                    // This more specific font property overrides the global property
+                    color:'white',
+                    font: {
+                      size: 11
+                  }
+                }
+            }
+          },
           scales: {
             x: {
               ticks: {
@@ -83,12 +99,13 @@ export class LineChartComponent implements AfterViewInit {
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
-              }
+              },
             },
             y: {
               beginAtZero: true,
               ticks: {
                 color: 'white'
+              
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"

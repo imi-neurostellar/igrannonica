@@ -69,13 +69,14 @@ def train():
     
 
     #dataset, paramsModel, paramsExperiment, callback)
-    filepath,result = newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
+    filepath,result,finalMetrics= newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
     """
     f = request.json['filepath']
     dataset = pd.read_csv(f)
     filepath,result=newmlservice.train(dataset,request.json['model'],train_callback)
     print(result)
     """
+
 
     url = config.api_url + "/file/h5"
     files = {'file': open(filepath, 'rb')}
@@ -94,7 +95,9 @@ def train():
         "experimentId" : paramsExperiment["_id"],
         "modelId" : paramsModel["_id"],
         "h5FileId" : fileId,
-        "metrics" : m
+        "metrics" : m,
+        "finalMetrics":finalMetrics
+        
     }
     #print(predictor)
     url = config.api_url + "/Predictor/add"

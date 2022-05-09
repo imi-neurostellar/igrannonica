@@ -385,7 +385,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         #from ann_visualizer.visualize import ann_viz;
         #ann_viz(classifier, title="My neural network")
         
-        return filepath,hist
+        return filepath,hist,y_pred,y_test
 
     elif(problem_type=='binarni-klasifikacioni'):
         #print('*************************************************************************binarni')
@@ -425,31 +425,37 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
-
-        #print(y_pred.flatten())
-        #print(y_test)
         
         scores = classifier.evaluate(x_test, y_test)
         #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
-        #
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
         # ann_viz(classifier, title="My neural network")
         
         classifier.save(filepath, save_format='h5')
-        return filepath,hist
+
+        accuracy = float(sm.accuracy_score(y_test,y_pred))
+        precision = float(sm.precision_score(y_test,y_pred))
+        recall = float(sm.recall_score(y_test,y_pred))
+        tn, fp, fn, tp = sm.confusion_matrix(y_test,y_pred).ravel()
+        specificity = float(tn / (tn+fp))
+        f1 = float(sm.f1_score(y_test,y_pred))
+        fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
+        logloss = float(sm.log_loss(y_test, y_pred))
+        metrics= {
+            "accuracy" : accuracy,
+            "precision" : precision,
+            "recall" : recall,
+            "specificity" : specificity,
+            "f1" : f1,
+            "tn" : float(tn),
+            "fp" : float(fp),
+            "fn" : float(fn),
+            "tp" : float(tp),
+            "fpr" : fpr.tolist(),
+            "tpr" : tpr.tolist(),
+            "logloss" : logloss
+            }
+
+        return filepath,hist,metrics
 
     elif(problem_type=='regresioni'):
         reg=paramsModel['layers'][0]['regularisation']
@@ -489,8 +495,32 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
+ 
         classifier.save(filepath, save_format='h5')
-        return filepath,hist
+        
+
+        mse = float(sm.mean_squared_error(y_test,y_pred))
+        mae = float(sm.mean_absolute_error(y_test,y_pred))
+        mape = float(sm.mean_absolute_percentage_error(y_test,y_pred))
+        rmse = float(np.sqrt(sm.mean_squared_error(y_test,y_pred)))
+        rmsle = float(np.sqrt(sm.mean_squared_error(y_test, y_pred)))
+        r2 = float(sm.r2_score(y_test, y_pred))
+        # n - num of observations
+        # k - num of independent variables
+        n = 40
+        k = 2
+        adj_r2 = float(1 - ((1-r2)*(n-1)/(n-k-1)))
+        metrics= {"mse" : mse,
+            "mae" : mae,
+            "mape" : mape,
+            "rmse" : rmse,
+            "rmsle" : rmsle,
+            "r2" : r2,
+            "adj_r2" : adj_r2
+            }
+        
+        return filepath,hist,metrics
+
     def roc_auc_score_multiclass(actual_class, pred_class, average = "macro"):
     
         #creating a set of all the unique classes using the actual class list
@@ -514,29 +544,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     # Metrike
     #
     
-    if(problem_type=="binarni-klasifikacioni"):
-        accuracy = float(sm.accuracy_score(y_test,y_pred))
-        precision = float(sm.precision_score(y_test,y_pred))
-        recall = float(sm.recall_score(y_test,y_pred))
-        tn, fp, fn, tp = sm.confusion_matrix(y_test,y_pred).ravel()
-        specificity = float(tn / (tn+fp))
-        f1 = float(sm.f1_score(y_test,y_pred))
-        fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
-        logloss = float(sm.log_loss(y_test, y_pred))
-        metrics= {"accuracy" : accuracy,
-            "precision" : precision,
-            "recall" : recall,
-            "specificity" : specificity,
-            "f1" : f1,
-            "tn" : float(tn),
-            "fp" : float(fp),
-            "fn" : float(fn),
-            "tp" : float(tp),
-            "fpr" : fpr.tolist(),
-            "tpr" : tpr.tolist(),
-            "logloss" : logloss
-            }
-    elif(problem_type=="regresioni"):
+    if(problem_type=="regresioni"):
         # https://www.analyticsvidhya.com/blog/2021/05/know-the-best-evaluation-metrics-for-your-regression-model/
         mse = float(sm.mean_squared_error(y_test,y_pred))
         mae = float(sm.mean_absolute_error(y_test,y_pred))
