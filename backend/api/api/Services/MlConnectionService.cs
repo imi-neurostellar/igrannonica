@@ -59,8 +59,9 @@ namespace api.Services
             Dataset newDataset = JsonConvert.DeserializeObject<Dataset>(result.Content);
             newDataset.isPreProcess = true;
             _datasetService.Update(newDataset);
-            if(ChatHub.CheckUser(id))
-                await _ichat.Clients.Client(ChatHub.Users[id]).SendAsync("NotifyDataset",newDataset.name,newDataset._id);
+            if (ChatHub.CheckUser(id))
+                foreach (var connection in ChatHub.getAllConnectionsOfUser(id))
+                    await _ichat.Clients.Client(connection).SendAsync("NotifyDataset",newDataset.name,newDataset._id);
             return;
 
         }
