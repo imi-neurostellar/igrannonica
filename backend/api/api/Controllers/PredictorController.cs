@@ -162,7 +162,8 @@ namespace api.Controllers
                 return BadRequest("Model not found or user doesnt exist");
             _predictorService.Create(predictor);       
             if (ChatHub.CheckUser(user._id))
-                await _ichat.Clients.Client(ChatHub.Users[user._id]).SendAsync("NotifyPredictor", predictor._id,model.name);
+                foreach(var connection in ChatHub.getAllConnectionsOfUser(user._id))
+                    await _ichat.Clients.Client(connection).SendAsync("NotifyPredictor", predictor._id,model.name);
             return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
             
         }

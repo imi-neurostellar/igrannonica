@@ -24,7 +24,7 @@ from dataclasses import dataclass
 import statistics as s
 from sklearn.metrics import roc_auc_score
 import matplotlib.pyplot as plt
-from ann_visualizer.visualize import ann_viz;
+#from ann_visualizer.visualize import ann_viz;
 def returnColumnsInfo(dataset):
     dict=[]
     

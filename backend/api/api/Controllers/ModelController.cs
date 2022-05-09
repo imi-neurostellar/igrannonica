@@ -86,7 +86,8 @@ namespace api.Controllers
             var user = _userService.GetUserById(model.uploaderId);
 
             if (ChatHub.CheckUser(user._id))
-                await _ichat.Clients.Client(ChatHub.Users[user._id]).SendAsync("NotifyEpoch",model.name,info.ModelId,info.Stat,model.epochs,info.EpochNum);
+                foreach (var connection in ChatHub.getAllConnectionsOfUser(user._id))
+                    await _ichat.Clients.Client(connection).SendAsync("NotifyEpoch",model.name,info.ModelId,info.Stat,model.epochs,info.EpochNum);
 
             return Ok();
         }

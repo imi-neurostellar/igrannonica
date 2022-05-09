@@ -23,10 +23,7 @@ namespace api.Services
             if (token == null)
                 return;
             string id=_tokenService.TokenToId(token);
-            if (!Users.ContainsKey(id))
-                Users.Add(id, Context.ConnectionId);
-            else
-                Users[id] = Context.ConnectionId;
+            Users.Add(Context.ConnectionId,id);
             //await SendDirect(id, "poruka");
             //await Send(Context.ConnectionId);
             await base.OnConnectedAsync();
@@ -34,27 +31,27 @@ namespace api.Services
         }
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var user = Users.Values.Contains(Context.ConnectionId);
-            if (user==false)
-                return;
-            Users.Remove(Users.FirstOrDefault(u => u.Value == Context.ConnectionId).Key);
-        }
-        public async Task SendDirect(string id,string message)
-        {
-            if (Users[id]==null)
-                return;
-
-            await Clients.Client(Users[id]).SendAsync("Notify",message);
-        }
-        public async Task Send(string message)
-        {
-            await Clients.All.SendAsync("Notify",message);
+            Users.Remove(Context.ConnectionId);
         }
         public static bool CheckUser(string id)
         {
-            if (Users[id] == null)
-                return false;
-            return true;
+            var users=Users.Values;
+            foreach (var user in users)
+            {
+                if(user==id)
+                    return true;
+            }
+            return false;
+        }
+        public static List<string> getAllConnectionsOfUser(string id)
+        {
+            List<string> keys=new List<string>();
+            foreach (var user in Users)
+            {
+                if(user.Value==id)
+                    keys.Add(user.Key);
+            }
+            return keys;
         }
     }
     
