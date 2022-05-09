@@ -135,7 +135,7 @@ namespace api.Services
 
                 /*
                 Predictor predictor = new Predictor();
-
+                
                 predictor._id = "";
                 predictor.uploaderId = "000000000000000000000000";
                 predictor.inputs = new string[] { "Embarked" };
@@ -147,7 +147,7 @@ namespace api.Services
                 predictor.modelId = _modelService.getModelId("000000000000000000000000");
                 predictor.h5FileId = ;
                 predictor.metrics = new Metric[] { };
-
+                predictor.finalMetrics = new Metric[] { };
 
                 _predictorService.Create(predictor);*/
 
@@ -266,7 +266,11 @@ namespace api.Services
                 predictor.experimentId = experiment._id;//izmeni experiment id
                 predictor.modelId = _modelService.getModelId("000000000000000000000000");
                 predictor.h5FileId = ;
-                predictor.metrics = new Metric[] { };*/
+                predictor.metrics = new Metric[] { }
+                predictor.finalMetrics = new Metric[] { };
+                
+                 _predictorService.Create(predictor);
+                 */
 
                 //--------------------------------------------------------------------
 
@@ -370,7 +374,11 @@ namespace api.Services
                 predictor.experimentId = experiment._id;//izmeni experiment id
                 predictor.modelId = _modelService.getModelId("000000000000000000000000");
                 predictor.h5FileId = ;
-                predictor.metrics = new Metric[] { };*/
+                predictor.metrics = new Metric[] { };
+                predictor.finalMetrics = new Metric[] { };
+                
+                 _predictorService.Create(predictor);
+                 */
 
             }
 

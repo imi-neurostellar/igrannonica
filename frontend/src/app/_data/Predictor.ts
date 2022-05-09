@@ -8,6 +8,15 @@ export default class Predictor {
         public isPublic: boolean = false,
         public accessibleByLink: boolean = false,
         public dateCreated: Date = new Date(),
-        public uploaderId: string = ''
+        public uploaderId: string = '',
+        public finalMetrics: Metric[] = []
     ) { }
+}
+
+export class Metric {
+    constructor(
+        public name: string = '',
+        public jsonValue: string = ''
+    ) {}
+
 }

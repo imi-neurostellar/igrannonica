@@ -21,6 +21,7 @@ namespace api.Models
 		public string modelId { get; set; }
 		public string h5FileId { get; set; }
 		public Metric[] metrics { get; set; }
+		public Metric[] finalMetrics { get; set; }
 	}
 
 	public class Metric
@@ -29,6 +30,7 @@ namespace api.Models
 		string JsonValue { get; set; }
 
     }
+
 }
 
 /** 
