@@ -135,4 +135,8 @@ export class FormModelComponent implements AfterViewInit {
   updateTestSet(event: MatSliderChange) {
     this.testSetDistribution = event.value!;
   }
+
+  getInputColumns() {
+    return this.forExperiment.inputColumns.filter(x => x != this.forExperiment.outputColumn);
+  }
 }

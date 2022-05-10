@@ -24,6 +24,7 @@ export class ColumnTableComponent implements AfterViewInit {
   @Input() experiment!: Experiment;
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
   @Output() columnTableChanged = new EventEmitter();
+  @Output() experimentChanged = new EventEmitter();
 
   Object = Object;
   Encoding = Encoding;
@@ -231,9 +232,9 @@ export class ColumnTableComponent implements AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(experiment => {
       if (experiment) {
-        this.experiment = experiment;
-        /*this.experiment._id = experiment._id; //MORA OVAKO
-        this.experiment.name = experiment.name;*/
+        Object.assign(this.experiment, experiment);
+        this.experiment._columnsSelected = true;
+        this.experimentChanged.emit();
         console.log(this.experiment);
       }
     });
@@ -241,7 +242,9 @@ export class ColumnTableComponent implements AfterViewInit {
 
   openUpdateExperimentDialog() {
     this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
-      this.experiment = response;
+      Object.assign(this.experiment, response);
+      this.experiment._columnsSelected = true;
+      this.experimentChanged.emit();
       Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
     });
   }
