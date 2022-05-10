@@ -175,7 +175,7 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   openEncodingDialog() {
     const dialogRef = this.dialog.open(EncodingDialogComponent, {
-      width: '300px'
+      width: '400px'
     });
     dialogRef.afterClosed().subscribe(selectedEncoding => {
       if (selectedEncoding != undefined)
@@ -232,6 +232,9 @@ export class ColumnTableComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe(experiment => {
       if (experiment) {
         this.experiment = experiment;
+        /*this.experiment._id = experiment._id; //MORA OVAKO
+        this.experiment.name = experiment.name;*/
+        console.log(this.experiment);
       }
     });
   }

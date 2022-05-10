@@ -5,15 +5,17 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { UserInfoService } from 'src/app/_services/user-info.service';
 import shared from '../../Shared';
 import {AfterViewInit, ElementRef} from '@angular/core';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-login-modal',
   templateUrl: './login-modal.component.html',
   styleUrls: ['./login-modal.component.css']
 })
-export class LoginModalComponent implements OnInit {
+export class LoginModalComponent implements AfterViewInit {
 
   @ViewChild('closeButton') closeButton?: ElementRef;
+  @ViewChild('usernameInput') usernameInput!: ElementRef;
   @ViewChild('pass') passwordInput!: ElementRef;
 
   username: string = '';
@@ -30,7 +32,14 @@ export class LoginModalComponent implements OnInit {
     private userInfoService: UserInfoService
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    //console.log(this.usernameInput);
+    this.usernameInput.nativeElement.focus();
+  }
+
+  doLoginWithEnterKey(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.code == "Enter" || keyboardEvent.code == "NumpadEnter") 
+      this.doLogin();
   }
 
   doLogin() {

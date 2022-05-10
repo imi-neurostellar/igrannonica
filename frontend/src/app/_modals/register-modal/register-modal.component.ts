@@ -49,6 +49,11 @@ export class RegisterModalComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  doRegisterWithEnterKey(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.code == "Enter" || keyboardEvent.code == "NumpadEnter") 
+      this.doRegister();
+  }
+
   doRegister() {
     this.validation();
   }

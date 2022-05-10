@@ -31,6 +31,10 @@ export class SaveExperimentDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  saveWithEnterKey(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.code == "Enter" || keyboardEvent.code == "NumpadEnter") 
+      this.onYesClick();
+  }
   onYesClick() {
     if (this.selectedName == "") {
       this.wrongEmptyName = true;
