@@ -25,8 +25,31 @@ export class BoxPlotComponent implements AfterViewInit {
   @Input()q1?: number;
   @Input()q3?: number;
 
+  updateChart(min: number, max: number, q1: number, q3: number, median: number){
+    console.log(this.min, this.max);
+    const newBoxPlotData = {
+      labels: [""],
+        datasets: [{
+        label: 'Dataset 1',
+        backgroundColor: '#0063AB',
+        borderColor: '#dfd7d7',
+        borderWidth: 1,
+        outlierColor: '#999999',
+        scaleFontColor: '#0063AB',
+        padding: 10,
+        itemRadius: 0,
+        data: [
+          {min, q1, median, q3, max}/*,
+          [0, 25, 51, 75, 99]*/
+      ]}]
+    };
+    Object.assign(this.boxplotData, newBoxPlotData);
+  };
+
   @ViewChild('boxplot') chartRef!: ElementRef;
-  constructor() { }
+  constructor() {
+    //this.updateChart();
+  }
 
   boxplotData = {
     // define label tree

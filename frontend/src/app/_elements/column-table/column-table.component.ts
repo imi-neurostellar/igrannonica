@@ -12,6 +12,8 @@ import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { SaveExperimentDialogComponent } from 'src/app/_modals/save-experiment-dialog/save-experiment-dialog.component';
 import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.component';
 import Shared from 'src/app/Shared';
+import { PieChartComponent } from '../_charts/pie-chart/pie-chart.component';
+import { BoxPlotComponent } from '../_charts/box-plot/box-plot.component';
 
 @Component({
   selector: 'app-column-table',
@@ -20,6 +22,8 @@ import Shared from 'src/app/Shared';
 })
 export class ColumnTableComponent implements AfterViewInit {
 
+  @ViewChildren(BoxPlotComponent) boxplotComp!: BoxPlotComponent[];
+  @ViewChildren(PieChartComponent) piechartComp!: PieChartComponent[];
   @Input() dataset?: Dataset;
   @Input() experiment!: Experiment;
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
@@ -42,9 +46,13 @@ export class ColumnTableComponent implements AfterViewInit {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
 
+  updateCharts(){
+    //this.boxplotComp.forEach(bp => bp.updateChart());
+  }
+
   loadDataset(dataset: Dataset) {
     this.dataset = dataset;
-
+    this.updateCharts();
     this.setColumnTypeInitial();
 
     this.dataset.columnInfo.forEach(column => {
@@ -70,7 +78,8 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
+    console.log(this.dataset?.columnInfo);
+    
   }
 
   setColumnTypeInitial() {
@@ -367,3 +376,7 @@ export class Tab {
     public value: Table
   ) { }
 }
+function BoxplotComponent(BoxplotComponent: any) {
+  throw new Error('Function not implemented.');
+}
+
