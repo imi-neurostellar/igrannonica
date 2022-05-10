@@ -9,7 +9,7 @@ export default class Predictor {
         public accessibleByLink: boolean = false,
         public dateCreated: Date = new Date(),
         public uploaderId: string = '',
-        public finalMetrics: Metric[] = []
+        //public finalMetrics: Metric[] = []
     ) { }
 }
 

@@ -135,4 +135,19 @@ export class FormModelComponent implements AfterViewInit {
   updateTestSet(event: MatSliderChange) {
     this.testSetDistribution = event.value!;
   }
+
+  filterLossFunction() {
+  if(this.newModel.type==ProblemType.Regression){
+    this.lossFunction = LossFunctionRegression;
+    this.newModel.lossFunction=LossFunction.MeanSquaredError;
+    }
+  else if(this.newModel.type==ProblemType.BinaryClassification){
+    this.lossFunction= LossFunctionBinaryClassification;
+    this.newModel.lossFunction=LossFunction.BinaryCrossEntropy;
+    }
+  else if(this.newModel.type==ProblemType.MultiClassification){
+    this.lossFunction = LossFunctionMultiClassification;
+    this.newModel.lossFunction=LossFunction.SparseCategoricalCrossEntropy;
+    }
+  }
 }

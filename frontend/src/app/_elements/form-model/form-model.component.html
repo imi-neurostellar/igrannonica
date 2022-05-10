@@ -11,7 +11,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Tip problema</mat-label>
-                    <mat-select [(ngModel)]="newModel.type">
+                    <mat-select [(ngModel)]="newModel.type"  (selectionChange)="filterLossFunction()" disabled="true">
                         <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -36,7 +36,7 @@
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Funkcija troška</mat-label>
                     <mat-select [(ngModel)]="newModel.lossFunction">
-                        <mat-option *ngFor="let option of Object.keys(LossFunction); let optionName of Object.values(LossFunction)" [value]="option">
+                        <mat-option *ngFor="let option of Object.keys(lossFunction); let optionName of Object.values(lossFunction)" [value]="option">
                             {{ optionName }}
                         </mat-option>
                     </mat-select>

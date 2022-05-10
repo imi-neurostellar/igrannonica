@@ -13,7 +13,7 @@ export default class Model extends FolderFile {
         // Neural net training settings
         public type: ProblemType = ProblemType.Regression,
         public optimizer: Optimizer = Optimizer.Adam,
-        public lossFunction: LossFunction = LossFunction.MeanSquaredError,
+        public lossFunction: LossFunction = LossFunctionRegression[0],
         public inputNeurons: number = 1,
         public hiddenLayers: number = 1,
         public batchSize: BatchSize = BatchSize.O3,
@@ -132,21 +132,10 @@ export enum LossFunction {
     MeanSquaredLogarithmicError = 'mean_squared_logarithmic_error',
     HuberLoss = 'Huber'
 }
-export enum LossFunctionRegression {
-    MeanAbsoluteError = 'mean_absolute_error',
-    MeanSquaredError = 'mean_squared_error',
-    MeanSquaredLogarithmicError = 'mean_squared_logarithmic_error',
-}
-export enum LossFunctionBinaryClassification {
-    BinaryCrossEntropy = 'binary_crossentropy',
-    SquaredHingeLoss = 'squared_hinge_loss',
-    HingeLoss = 'hinge_loss',
-}
-export enum LossFunctionMultiClassification {
-    CategoricalCrossEntropy = 'categorical_crossentropy',
-    SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
-    KLDivergence = 'kullback_leibler_divergence',
-}
+export const LossFunctionRegression =[LossFunction.MeanAbsoluteError,LossFunction.MeanSquaredError,LossFunction.MeanSquaredLogarithmicError]
+export const LossFunctionBinaryClassification=[LossFunction.BinaryCrossEntropy,LossFunction.SquaredHingeLoss,LossFunction.HingeLoss]
+
+export const LossFunctionMultiClassification=[LossFunction.CategoricalCrossEntropy,LossFunction.SparseCategoricalCrossEntropy,LossFunction.KLDivergence]
 
 export enum Optimizer {
     Adam = 'Adam',
