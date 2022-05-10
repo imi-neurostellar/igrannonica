@@ -136,7 +136,22 @@ export class FormModelComponent implements AfterViewInit {
     this.testSetDistribution = event.value!;
   }
 
-  getInputColumns() {
+  filterLossFunction() {
+  if(this.newModel.type==ProblemType.Regression){
+    this.lossFunction = LossFunctionRegression;
+    this.newModel.lossFunction=LossFunction.MeanSquaredError;
+    }
+  else if(this.newModel.type==ProblemType.BinaryClassification){
+    this.lossFunction= LossFunctionBinaryClassification;
+    this.newModel.lossFunction=LossFunction.BinaryCrossEntropy;
+    }
+  else if(this.newModel.type==ProblemType.MultiClassification){
+    this.lossFunction = LossFunctionMultiClassification;
+    this.newModel.lossFunction=LossFunction.SparseCategoricalCrossEntropy;
+    }
+  
+}
+getInputColumns() {
     return this.forExperiment.inputColumns.filter(x => x != this.forExperiment.outputColumn);
-  }
+}
 }

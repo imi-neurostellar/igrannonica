@@ -87,7 +87,7 @@ export class LineChartComponent implements AfterViewInit {
                     // This more specific font property overrides the global property
                     color:'white',
                     font: {
-                      size: 11
+                      size: 10
                   }
                 }
             }
