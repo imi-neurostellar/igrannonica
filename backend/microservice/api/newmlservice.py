@@ -291,15 +291,16 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         random=123
     else:
         random=0
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
+    #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
     #print(x_train,x_test)
-
+    x, x_test, y, y_test = train_test_split(x, y, test_size=0.15, shuffle=True)
+    x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.15, shuffle=True)
     #
     # Treniranje modela
     #
     #
     ###OPTIMIZATORI
-   
+    print(paramsModel['optimizer'])
     if(paramsModel['optimizer']=='Adam'):
         opt=tf.keras.optimizers.Adam(learning_rate=3)
 
@@ -315,13 +316,16 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     elif(paramsModel['optimizer']=='Nadam'):
         opt=tf.keras.optimizers.Nadam(learning_rate=float(paramsModel['learningRate']))
 
-    elif(paramsModel['optimizer']=='Sgd'):
+    elif(paramsModel['optimizer']=='SGD'):
+        opt=tf.keras.optimizers.SGD(learning_rate=float(paramsModel['learningRate']))
+
+    if(paramsModel['optimizer']=='SGDMomentum'):
         opt=tf.keras.optimizers.SGD(learning_rate=float(paramsModel['learningRate']))
 
     elif(paramsModel['optimizer']=='Ftrl'):
         opt=tf.keras.optimizers.Ftrl(learning_rate=float(paramsModel['learningRate']))
     
-    elif(paramsModel['optimizer']=='Rmsprop'):
+    elif(paramsModel['optimizer']=='RMSprop'):
         opt=tf.keras.optimizers.RMSprop(learning_rate=float(paramsModel['learningRate']))
 
     ###REGULARIZACIJA
@@ -331,7 +335,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     filepath=os.path.join("temp/",paramsExperiment['_id']+"_"+paramsModel['_id']+".h5")
     if(problem_type=='multi-klasifikacioni'):
         #print('multi')
-        print(paramsModel)
+        #print(paramsModel)
         reg=paramsModel['layers'][0]['regularisation']
         regRate=float(paramsModel['layers'][0]['regularisationRate'])
         if(reg=='l1'):
@@ -367,7 +371,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['accuracy','mae','mse'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
 
         hist=history.history
         #plt.plot(hist['accuracy'])
@@ -380,12 +384,30 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         
         
         classifier.save(filepath, save_format='h5')
-        
+
+        accuracy=metrics.accuracy_score(y_test, y_pred)
+        macro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'macro')
+        micro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'micro')
+        macro_averaged_recall=metrics.recall_score(y_test, y_pred, average = 'macro')
+        micro_averaged_recall=metrics.recall_score(y_test, y_pred, average = 'micro')
+        macro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'macro')
+        micro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'micro')
+
+        metrics= {
+                "accuracy" : float(accuracy),
+                "macro_averaged_precision" :float(macro_averaged_precision),
+                "micro_averaged_precision" : float(micro_averaged_precision),
+                "macro_averaged_recall" : float(macro_averaged_recall),
+                "micro_averaged_recall" : float(micro_averaged_recall),
+                "macro_averaged_f1" : float(macro_averaged_f1),
+                "micro_averaged_f1" : float(micro_averaged_f1)
+                }
+
         #vizuelizacija u python-u
         #from ann_visualizer.visualize import ann_viz;
         #ann_viz(classifier, title="My neural network")
         
-        return filepath,hist,y_pred,y_test
+        return filepath,hist,metrics
 
     elif(problem_type=='binarni-klasifikacioni'):
         #print('*************************************************************************binarni')
@@ -421,7 +443,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt , metrics = ['accuracy','mae','mse'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
@@ -491,7 +513,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['accuracy','mae','mse'])
 
-        history=classifier.fit(x_train, y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']))
+        history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
@@ -543,7 +565,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #
     # Metrike
     #
-    
+    '''
     if(problem_type=="regresioni"):
         # https://www.analyticsvidhya.com/blog/2021/05/know-the-best-evaluation-metrics-for-your-regression-model/
         mse = float(sm.mean_squared_error(y_test,y_pred))
@@ -565,7 +587,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             "r2" : r2,
             "adj_r2" : adj_r2
             }
-    '''
+  
     elif(problem_type=="multi-klasifikacioni"):
         
         cr=sm.classification_report(y_test, y_pred)
