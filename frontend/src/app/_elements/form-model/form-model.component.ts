@@ -149,5 +149,9 @@ export class FormModelComponent implements AfterViewInit {
     this.lossFunction = LossFunctionMultiClassification;
     this.newModel.lossFunction=LossFunction.SparseCategoricalCrossEntropy;
     }
-  }
+  
+}
+getInputColumns() {
+    return this.forExperiment.inputColumns.filter(x => x != this.forExperiment.outputColumn);
+}
 }

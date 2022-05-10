@@ -147,6 +147,10 @@ export class ExperimentComponent implements AfterViewInit {
     //console.log("promenio se column-table");
   }
 
+  experimentChangedEvent() {
+    this.folderModel.updateExperiment();
+  }
+
   setDataset(dataset: FolderFile) {
     const d = <Dataset>dataset;
     this.experiment.datasetId = d._id;

@@ -24,6 +24,7 @@ export class ColumnTableComponent implements AfterViewInit {
   @Input() experiment!: Experiment;
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
   @Output() columnTableChanged = new EventEmitter();
+  @Output() experimentChanged = new EventEmitter();
 
   Object = Object;
   Encoding = Encoding;
@@ -175,7 +176,7 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   openEncodingDialog() {
     const dialogRef = this.dialog.open(EncodingDialogComponent, {
-      width: '300px'
+      width: '400px'
     });
     dialogRef.afterClosed().subscribe(selectedEncoding => {
       if (selectedEncoding != undefined)
@@ -231,14 +232,19 @@ export class ColumnTableComponent implements AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(experiment => {
       if (experiment) {
-        this.experiment = experiment;
+        Object.assign(this.experiment, experiment);
+        this.experiment._columnsSelected = true;
+        this.experimentChanged.emit();
+        console.log(this.experiment);
       }
     });
   }
 
   openUpdateExperimentDialog() {
     this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
-      this.experiment = response;
+      Object.assign(this.experiment, response);
+      this.experiment._columnsSelected = true;
+      this.experimentChanged.emit();
       Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
     });
   }

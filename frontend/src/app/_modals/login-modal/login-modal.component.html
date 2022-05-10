@@ -6,12 +6,12 @@
               <mat-icon>close</mat-icon>
             </button>
             <h1 class="login-heading mt-5 mb-5">Prijava</h1>
-            <form>
+            <form (keydown)="doLoginWithEnterKey($event)">
                 <!-- Korisnicko ime -->
                 <div class="mb-3">
                     <mat-form-field appearance="fill">
                         <mat-label>Korisničko ime</mat-label>
-                        <input type="text" matInput [(ngModel)]="username" name="username" id="username">
+                        <input type="text" matInput [(ngModel)]="username" name="username" id="username" #usernameInput autofocus="true">
                         <mat-icon matSuffix></mat-icon>
                     </mat-form-field>
                 </div>

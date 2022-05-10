@@ -25,4 +25,13 @@ export class EncodingDialogComponent implements OnInit {
   onNoClick() {
     this.dialogRef.close();
   }
-}
+
+  withEnterKey(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.code == "Enter" || keyboardEvent.code == "NumpadEnter") 
+      this.onYesClick();
+  }
+
+  onYesClick() {
+    this.dialogRef.close(this.selectedEncodingType);
+  }
+} 

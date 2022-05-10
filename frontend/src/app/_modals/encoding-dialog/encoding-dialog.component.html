@@ -1,16 +1,17 @@
-<h1 mat-dialog-title>Enkodiranje svih kolona</h1>
-<div mat-dialog-content>
-    <p>Odaberite tip enkodinga za sve kolone zajedno:</p>
-    <mat-form-field>
-        <mat-select matNativeControl [(value)]="selectedEncodingType">
-            <mat-option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)" [value]="option">
-                {{ optionName }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <p>Da li ste sigurni u izbor?</p>
+<h2 mat-dialog-title class="text-center">Enkodiranje svih kolona</h2>
+<div mat-dialog-content class="mt-5 mb-4">
+    <p>Sve izabrane kolone biće enkodirane metodom:</p>
+    <form (keydown)="withEnterKey($event)">
+        <mat-form-field>
+            <mat-select matNativeControl [(value)]="selectedEncodingType" cdkFocusInitial>
+                <mat-option *ngFor="let option of Object.keys(Encoding); let optionName of Object.values(Encoding)" [value]="option">
+                    {{ optionName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
 </div>
-<div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="selectedEncodingType" cdkFocusInitial>Da</button>
-    <button mat-button (click)="onNoClick()">Odustani</button>
+<div mat-dialog-actions class="justify-content-center">
+    <button id="btnYes" mat-stroked-button color="basic" (click)="onYesClick()">Potvrdi</button>
+    <button id="btnNo" mat-stroked-button (click)="onNoClick()">Odustani</button>
 </div>

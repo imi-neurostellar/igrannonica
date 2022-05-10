@@ -360,6 +360,12 @@ export class FolderComponent implements AfterViewInit {
     }
     this.searchTermsChanged();
   }
+
+  updateExperiment() {
+    if (this.formModel) {
+      this.formModel.updateGraph();
+    }
+  }
 }
 
 export enum Privacy {

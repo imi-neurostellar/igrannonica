@@ -25,4 +25,12 @@ export class MissingvaluesDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  withEnterKey(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.code == "Enter" || keyboardEvent.code == "NumpadEnter") 
+      this.onYesClick();
+  }
+  onYesClick() {
+    this.dialogRef.close(this.selectedMissingValuesOption);
+  }
+
 }
