@@ -12,21 +12,34 @@ export class PieChartComponent implements AfterViewInit {
   @Input()height?: number;
   @Input()uniqueValues?: string[] = [];
   @Input()uniqueValuesPercent?: number[] = [];
-  
-  @ViewChild('piechart') chartRef!: ElementRef;
-  constructor() { }
 
-  ngAfterViewInit(): void {
-  const myChart = new Chart(this.chartRef.nativeElement, {
-    type: 'pie',
-    data: {
-      labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+  updatePieChart(uniqueValues: string[], uniqueValuesPercent: number[]){
+    console.log(this.uniqueValues, this.uniqueValuesPercent);
+    const newPieChartData = {
       datasets: [{
         label: "Population (millions)",
         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
         data: [2478,5267,734,784,433],
       }]
-    },
+        
+    }
+  };
+  
+  @ViewChild('piechart') chartRef!: ElementRef;
+  constructor() { }
+
+  pieChartData = {
+    datasets: [{
+      label: "Population (millions)",
+      backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+      data: [2478,5267,734,784,433]
+    }]
+}
+
+  ngAfterViewInit(): void {
+  const myChart = new Chart(this.chartRef.nativeElement, {
+    type: 'pie',
+    data: this.pieChartData,
     options: {
       /*title: {
         display: true,
@@ -38,11 +51,9 @@ export class PieChartComponent implements AfterViewInit {
                 },
              },
              layout: {
-              padding: 15}
+              padding: 15
+            }
     }
-});
-
-  }
-
+  });}
 
 }

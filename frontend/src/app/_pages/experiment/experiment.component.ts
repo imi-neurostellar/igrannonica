@@ -157,6 +157,7 @@ export class ExperimentComponent implements AfterViewInit {
     this.dataset = d;
 
     this.columnTable.loadDataset(this.dataset);
+    
   }
 
   modelToTrain?: Model;
