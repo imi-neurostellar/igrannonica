@@ -11,7 +11,12 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Tip problema</mat-label>
-                    <mat-select [(ngModel)]="newModel.type"  (selectionChange)="filterLossFunction()" disabled="true">
+                    <mat-select [(ngModel)]="newModel.type"  (selectionChange)="filterLossFunction()" *ngIf="this.hideProblemType" disabled="true">
+                        <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
+                            {{ optionName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-select [(ngModel)]="newModel.type"  (selectionChange)="filterLossFunction()" *ngIf="!this.hideProblemType" disabled="false">
                         <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
                             {{ optionName }}
                         </mat-option>

@@ -15,8 +15,13 @@ export class FormModelComponent implements AfterViewInit {
   @ViewChild(GraphComponent) graph!: GraphComponent;
   @Input() forExperiment!: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
+  @Input() hideProblemType:boolean;
+  @Input() forProblemType:ProblemType;
   testSetDistribution: number = 70;
-  constructor() { }
+  constructor() { 
+    this.hideProblemType=false;
+    this.forProblemType=ProblemType.BinaryClassification;
+  }
 
   ngAfterViewInit(): void { }
 
@@ -80,13 +85,6 @@ export class FormModelComponent implements AfterViewInit {
     }
 
   }
-  /*
-  setNeurons()
-  {
-    for(let i=0;i<this.newModel.hiddenLayers;i++){
-      this.newModel.hiddenLayerNeurons[i]=1;
-    }
-  }*/
   numSequence(n: number): Array<number> {
     return Array(n);
   }
@@ -111,9 +109,7 @@ export class FormModelComponent implements AfterViewInit {
   changeAllActivation() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].activationFunction = this.selectedActivation;
-
     }
-
   }
   changeAllRegularisation() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
@@ -131,11 +127,9 @@ export class FormModelComponent implements AfterViewInit {
       this.updateGraph();
     }
   }
-
   updateTestSet(event: MatSliderChange) {
     this.testSetDistribution = event.value!;
   }
-
   filterLossFunction() {
   if(this.newModel.type==ProblemType.Regression){
     this.lossFunction = LossFunctionRegression;
