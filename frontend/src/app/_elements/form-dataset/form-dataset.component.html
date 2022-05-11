@@ -25,7 +25,7 @@
                 <div class="kolona">
                     <mat-form-field appearance="fill">
                         <mat-label>Delimiter</mat-label>
-                        <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (change)="update()" value=",">
+                        <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (selectionChange)="update()" value=",">
                             <mat-option *ngFor="let option of delimiterOptions" [value]="option">
                                 {{ option }}
                             </mat-option>

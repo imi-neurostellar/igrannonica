@@ -1,21 +1,32 @@
 <div class="container-fluid p-0 text-offwhite holder" style="height: calc(100vh - 64px); text-align: center;">
     <div class="d-flex flex-colum align-items-center sidenav">
+        <div>
+        <div class="ekspName">Eskperiment:{{experiment.name}}</div>
         <mat-stepper orientation="vertical" (selectionChange)="changePage($event)">
             <mat-step>
                 <!--editable="false"-->
-                <ng-template matStepLabel><span class="label">Izvor podataka</span></ng-template>
+                <ng-template matStepLabel>
+                    <span class="label" *ngIf="dataset==undefined">Izvor podataka</span>
+                    <span class="label" *ngIf="dataset!=undefined">Izvor podataka:{{dataset.name}}</span>
+                </ng-template>
                 <ng-template matStepContent>
                     <p>Izaberite vas izvor podataka</p>
                 </ng-template>
             </mat-step>
             <mat-step>
-                <ng-template matStepLabel> <span class="label">Odabir kolona</span></ng-template>
+                <ng-template matStepLabel> 
+                    <span class="label" *ngIf="experiment.name!='exp1'">Predvideti:{{experiment.outputColumn}}</span>
+                    <span class="label" *ngIf="experiment.name=='exp1'">Odabir kolona</span>
+                </ng-template>
                 <ng-template matStepContent>
                     <p>Pripremite podatke i izaberite izlazne kolone</p>
                 </ng-template>
             </mat-step>
             <mat-step>
-                <ng-template matStepLabel><span class="label">Treniranje</span></ng-template>
+                <ng-template matStepLabel>
+                    <span class="label" *ngIf="modelToTrain!=undefined">Model:{{modelToTrain.name}}</span>
+                    <span class="label" *ngIf="modelToTrain==undefined">Treniranje</span>
+                </ng-template>
                 <p>Odaberite parametre i trenirajte model</p>
             </mat-step>
             <mat-step>
@@ -23,6 +34,7 @@
                 <p>Pregledajte tok treniranja i grafički prikaz rezultata</p>
             </mat-step>
         </mat-stepper>
+        </div>
     </div>
     <div #stepsContainer class="steps-container">
         <div #steps id="step_1" class="step-content">
