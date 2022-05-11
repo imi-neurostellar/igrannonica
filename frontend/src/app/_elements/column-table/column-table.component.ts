@@ -176,20 +176,30 @@ export class ColumnTableComponent implements AfterViewInit {
   resetColumnEncodings(encodingType: Encoding) {
     if (this.experiment != undefined && this.dataset != undefined) {
       this.experiment.encodings = [];
-      for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
+      for (let i = 0; i < this.dataset.columnInfo.length; i++) {
         this.experiment.encodings.push(new ColumnEncoding(this.dataset?.columnInfo[i].columnName, encodingType));
         //console.log(this.experiment.encodings);
       }
       this.columnTableChangeDetected();
     }
   }
+  resetColumnEncodingsGlobalSetting(encodingType: Encoding) {
+    if (this.experiment != undefined && this.dataset != undefined) {
+      for (let i = 0; i < this.dataset.columnInfo.length; i++) {
+        if (this.experiment.columnTypes[i] == ColumnType.categorical && this.dataset.columnInfo[i].columnName != this.experiment.outputColumn) //promeni
+          this.experiment.encodings[i].encoding = encodingType; 
+      }
+      this.columnTableChangeDetected();
+    }
+  }
   openEncodingDialog() {
     const dialogRef = this.dialog.open(EncodingDialogComponent, {
-      width: '400px'
+      width: '400px',
+      data: { experiment: this.experiment, dataset: this.dataset }
     });
     dialogRef.afterClosed().subscribe(selectedEncoding => {
       if (selectedEncoding != undefined)
-        this.resetColumnEncodings(selectedEncoding);
+        this.resetColumnEncodingsGlobalSetting(selectedEncoding);
     });
   }
 
