@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { LineChartComponent } from '../_charts/line-chart/line-chart.component';
-
 @Component({
   selector: 'app-metric-view',
   templateUrl: './metric-view.component.html',
@@ -8,6 +7,7 @@ import { LineChartComponent } from '../_charts/line-chart/line-chart.component';
 })
 export class MetricViewComponent implements OnInit {
   @ViewChild(LineChartComponent) linechartComponent!: LineChartComponent;
+
 
   constructor() { }
 
@@ -21,6 +21,10 @@ export class MetricViewComponent implements OnInit {
     const myMae: number[] = [];
     const myMse: number[] = [];
     const myLoss: number[] = [];
+    const myValLoss: number[] = [];
+    const myValAcc: number[] = [];
+    const myValMAE: number[] = [];
+    const myValMSE: number[] = [];
 
     const myEpochs: number[] = [];
     this.history = history;
@@ -41,9 +45,21 @@ export class MetricViewComponent implements OnInit {
         else if (key === 'mse') {
           myMse.push(parseFloat(value));
         }
+        else if (key === 'val_acc') {
+          myValAcc.push(parseFloat(value));
+        }
+        else if (key === 'val_loss') {
+          myValLoss.push(parseFloat(value));
+        }
+        else if (key === 'val_mae') {
+          myValMAE.push(parseFloat(value));
+        }
+        else if (key === 'val_mse') {
+          myValMSE.push(parseFloat(value));
+        }
       }
     });
 
-    this.linechartComponent.update(myEpochs, myAcc, myLoss, myMae, myMse);
+    this.linechartComponent.update(myEpochs, myAcc, myLoss, myMae, myMse, myValAcc,myValLoss,myValMAE,myValMSE);
   }
 }

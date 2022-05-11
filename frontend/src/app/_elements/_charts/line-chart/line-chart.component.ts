@@ -13,22 +13,18 @@ export class LineChartComponent implements AfterViewInit {
   dataMAE: number[] = [];
   dataMSE: number[] = [];
   dataLOSS: number[] = [];
-
+  dataValAcc:number[]=[];
+  dataValMAE:number[]=[];
+  dataValMSE:number[]=[];
+  dataValLoss:number[]=[];
   dataEpoch: number[] = [];
 
   constructor() {
-    /*let i = 0;
-    setInterval(() => {
-      this.dataAcc.push(0.5);
-      this.dataEpoch.push(i);
-      i++;
-      this.update();
-    }, 200);*/
   }
 
   myChart!: Chart;
 
-  update(myEpochs: number[], myAcc: number[], myLoss: number[], myMae: number[], myMse: number[]) {
+  update(myEpochs: number[], myAcc: number[], myLoss: number[], myMae: number[], myMse: number[], myValAcc:number[],myValLoss:number[],myValMae:number[],myValMse:number[]) {
     this.dataAcc.length = 0;
     this.dataAcc.push(...myAcc);
 
@@ -40,6 +36,18 @@ export class LineChartComponent implements AfterViewInit {
 
     this.dataLOSS.length = 0;
     this.dataLOSS.push(...myLoss);
+
+    this.dataMSE.length = 0;
+    this.dataMSE.push(...myValAcc);
+
+    this.dataMSE.length = 0;
+    this.dataMSE.push(...myValLoss);
+
+    this.dataMSE.length = 0;
+    this.dataMSE.push(...myValMae);
+
+    this.dataMSE.length = 0;
+    this.dataMSE.push(...myValMse);
 
     this.dataMSE.length = 0;
     this.dataMSE.push(...myMse);
@@ -61,8 +69,18 @@ export class LineChartComponent implements AfterViewInit {
             
           },
           {
+            label: 'VAl_Accuracy',
+            data: this.dataMSE,
+            borderWidth: 1
+          },
+          {
             label: 'Loss',
             data: this.dataLOSS,
+            borderWidth: 1
+          },
+          {
+            label: 'Val_Loss',
+            data: this.dataMSE,
             borderWidth: 1
           },
           {
@@ -71,7 +89,17 @@ export class LineChartComponent implements AfterViewInit {
             borderWidth: 1
           },
           {
+            label: 'Val_MAE',
+            data: this.dataMSE,
+            borderWidth: 1
+          },
+          {
             label: 'MSE',
+            data: this.dataMSE,
+            borderWidth: 1
+          },
+          {
+            label: 'Val_MSE',
             data: this.dataMSE,
             borderWidth: 1
           }
