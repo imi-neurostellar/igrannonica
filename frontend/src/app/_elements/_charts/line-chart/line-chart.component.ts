@@ -140,8 +140,10 @@ export class LineChartComponent implements AfterViewInit {
               }
             }
 
+          },
+          animation: {
+            duration: 0
           }
-
 
         }
       }
