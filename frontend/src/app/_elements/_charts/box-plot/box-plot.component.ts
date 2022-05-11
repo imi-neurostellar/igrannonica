@@ -25,6 +25,7 @@ export class BoxPlotComponent implements AfterViewInit {
   @Input()q1?: number;
   @Input()q3?: number;
 
+
   updateChart(min: number, max: number, q1: number, q3: number, median: number){
     console.log(this.min, this.max);
     const newBoxPlotData = {
@@ -41,10 +42,70 @@ export class BoxPlotComponent implements AfterViewInit {
         data: [
           {min, q1, median, q3, max}/*,
           [0, 25, 51, 75, 99]*/
+        
       ]}]
     };
+
+    const newOptionsTmp = {
+     
+        plugins:{   
+          legend: {
+            display: false
+                  },
+               },
+               scales : {
+                 x: {
+                  ticks: {
+                    color: '#dfd7d7'
+                  },
+                  grid: {
+                    color: "rgba(0, 99, 171, 0.5)"
+                  }
+                 },
+                y : {
+                    min: this.min,
+                    max: this.max,
+                    ticks: {
+                      color: '#dfd7d7'
+                    },
+                    grid: {
+                      color: "rgba(0, 99, 171, 0.5)"
+                    }
+                }
+            
+      }
+    };
     Object.assign(this.boxplotData, newBoxPlotData);
+    Object.assign(this.options, newOptionsTmp);
   };
+
+  options = {
+    plugins:{   
+      legend: {
+        display: false
+              },
+           },
+           scales : {
+             x: {
+              ticks: {
+                color: '#dfd7d7'
+              },
+              grid: {
+                color: "rgba(0, 99, 171, 0.5)"
+              }
+             },
+            y : {
+                min: this.min,
+                max: this.max,
+                ticks: {
+                  color: '#dfd7d7'
+                },
+                grid: {
+                  color: "rgba(0, 99, 171, 0.5)"
+                }
+            }
+        }
+  }
 
   @ViewChild('boxplot') chartRef!: ElementRef;
   constructor() {
@@ -53,7 +114,7 @@ export class BoxPlotComponent implements AfterViewInit {
 
   boxplotData = {
     // define label tree
-    labels: ['January'/*, 'February', 'March', 'April', 'May', 'June', 'July'*/],
+    //labels: ['January'/*, 'February', 'March', 'April', 'May', 'June', 'July'*/],
       datasets: [{
       label: 'Dataset 1',
       backgroundColor: '#0063AB',
@@ -94,37 +155,7 @@ export class BoxPlotComponent implements AfterViewInit {
   const myChart = new Chart(this.chartRef.nativeElement, {
     type: "boxplot",
     data: this.boxplotData,
-    options: {
-      /*title: {
-        display: true,
-        text: 'Predicted world population (millions) in 2050'
-      }*/
-      plugins:{   
-        legend: {
-          display: false
-                },
-             },
-             scales : {
-               x: {
-                ticks: {
-                  color: '#dfd7d7'
-                },
-                grid: {
-                  color: "rgba(0, 99, 171, 0.5)"
-                }
-               },
-              y : {
-                  min: -50,
-                  max: 200,
-                  ticks: {
-                    color: '#dfd7d7'
-                  },
-                  grid: {
-                    color: "rgba(0, 99, 171, 0.5)"
-                  }
-              }
-          }
-    }
+    options: this.options
   });
 }
 

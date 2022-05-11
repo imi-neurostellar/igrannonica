@@ -47,7 +47,15 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
   updateCharts(){
-    //this.boxplotComp.forEach(bp => bp.updateChart());
+    //min: number, max: number, q1: number, q3: number, median: number
+    let i=0;
+    this.dataset?.columnInfo.forEach(colInfo =>
+                                  { if (this.experiment.columnTypes[i] == ColumnType.numerical)
+                                    {
+                                      this.boxplotComp[i].updateChart(colInfo!.min, colInfo.max, colInfo.q1, colInfo.q3, colInfo.median);
+                                      i++;
+                                    } 
+                                  });
   }
 
   loadDataset(dataset: Dataset) {
