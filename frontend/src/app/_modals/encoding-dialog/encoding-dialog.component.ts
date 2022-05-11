@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Encoding } from 'src/app/_data/Experiment';
-
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ColumnType, Encoding } from 'src/app/_data/Experiment';
+import Experiment from 'src/app/_data/Experiment';
+import { ExperimentsService } from 'src/app/_services/experiments.service';
+import { Inject} from '@angular/core';
+import Dataset from 'src/app/_data/Dataset';
 
 @Component({
   selector: 'app-encoding-dialog',
@@ -13,6 +16,7 @@ export class EncodingDialogComponent implements OnInit {
   selectedEncodingType?: Encoding;
   Encoding = Encoding;
   Object = Object;
+  categoricalColumnExists: boolean = true;
 
   constructor(public dialogRef: MatDialogRef<EncodingDialogComponent>) 
   { 
@@ -20,6 +24,7 @@ export class EncodingDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   onNoClick() {

@@ -53,3 +53,15 @@ mat-stepper {
     height: 98%;
     overflow-y: auto;
 }
+.ekspName{
+    font-weight: bold;
+    font-size: large;
+}
+
+
+.addedElement{
+    color:var(--ns-accent);
+}
+.text-overflow {
+    overflow-wrap: break-word;
+}
