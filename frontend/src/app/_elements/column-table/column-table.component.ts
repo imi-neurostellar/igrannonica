@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import Experiment, { ColumnEncoding, Encoding, ColumnType, NullValueOptions } from 'src/app/_data/Experiment';
 import { DatasetsService } from 'src/app/_services/datasets.service';
@@ -22,8 +22,8 @@ import { BoxPlotComponent } from '../_charts/box-plot/box-plot.component';
 })
 export class ColumnTableComponent implements AfterViewInit {
 
-  @ViewChildren(BoxPlotComponent) boxplotComp!: BoxPlotComponent[];
-  @ViewChildren(PieChartComponent) piechartComp!: PieChartComponent[];
+  @ViewChildren(BoxPlotComponent) boxplotComp!: QueryList<BoxPlotComponent>;
+  @ViewChildren(PieChartComponent) piechartComp!: QueryList<PieChartComponent>;
   @Input() dataset?: Dataset;
   @Input() experiment!: Experiment;
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
@@ -46,34 +46,36 @@ export class ColumnTableComponent implements AfterViewInit {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
 
-  updateCharts(){
+  updateCharts() {
     //min: number, max: number, q1: number, q3: number, median: number
-    let i=0;
-    this.dataset?.columnInfo.forEach(colInfo =>
-                                  { if (this.experiment.columnTypes[i] == ColumnType.numerical)
-                                    {
-                                      this.boxplotComp[i].updateChart(colInfo!.min, colInfo.max, colInfo.q1, colInfo.q3, colInfo.median);
-                                      i++;
-                                    } 
-                                  });
+    let i = 0;
+    this.boxplotComp.changes.subscribe(() => {
+      const bps = this.boxplotComp.toArray();
+      this.dataset?.columnInfo.forEach(colInfo => {
+        if (this.experiment.columnTypes[i] == ColumnType.numerical) {
+          bps[i].updateChart(colInfo!.min, colInfo.max, colInfo.q1, colInfo.q3, colInfo.median);
+          i++;
+        }
+      });
+    });
   }
 
   updatePieChart(){
     //min: number, max: number, q1: number, q3: number, median: number
     let i=0;
+    const pieChart = this.piechartComp.toArray();
     this.dataset?.columnInfo.forEach(colInfo =>
                                   { if (this.experiment.columnTypes[i] == ColumnType.categorical)
                                     {
-                                      this.piechartComp[i].updatePieChart(colInfo!.uniqueValues, colInfo.uniqueValuesPercent);
+                                      pieChart[i].updatePieChart(colInfo!.uniqueValues, colInfo.uniqueValuesPercent);
                                       i++;
                                     } 
                                   });
   }
 
   loadDataset(dataset: Dataset) {
+    console.log("LOADED DATASET");
     this.dataset = dataset;
-    this.updateCharts();
-    this.updatePieChart();
     this.setColumnTypeInitial();
 
     this.dataset.columnInfo.forEach(column => {
@@ -96,11 +98,14 @@ export class ColumnTableComponent implements AfterViewInit {
       }
     });
     this.loaded = true;
+
+    this.updateCharts();
+    this.updatePieChart();
   }
 
   ngAfterViewInit(): void {
     console.log(this.dataset?.columnInfo);
-    
+
   }
 
   setColumnTypeInitial() {
@@ -122,7 +127,7 @@ export class ColumnTableComponent implements AfterViewInit {
   resetOutputColumn() {
     if (this.experiment.inputColumns.length > 0)
       this.experiment.outputColumn = this.experiment.inputColumns[0];
-    else 
+    else
       this.experiment.outputColumn = '-';
   }
 
@@ -170,7 +175,7 @@ export class ColumnTableComponent implements AfterViewInit {
         if (columnName == this.experiment.outputColumn) {
           if (this.experiment.inputColumns.length > 0)
             this.experiment.outputColumn = this.experiment.inputColumns[0];
-          else 
+          else
             this.experiment.outputColumn = '-';
         }
       }
@@ -258,7 +263,7 @@ export class ColumnTableComponent implements AfterViewInit {
   openSaveExperimentDialog() {
     const dialogRef = this.dialog.open(SaveExperimentDialogComponent, {
       width: '400px',
-      data: { experiment: this.experiment } 
+      data: { experiment: this.experiment }
     });
     dialogRef.afterClosed().subscribe(experiment => {
       if (experiment) {
@@ -333,7 +338,7 @@ export class ColumnTableComponent implements AfterViewInit {
       Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti.");
     else if (this.experiment.inputColumns.length == 1)
       Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti (mora postojati bar jedna ulazna i jedna izlazna kolona).");
-    else 
+    else
       this.openSaveExperimentDialog();
   }
   updateExperiment() {
@@ -341,7 +346,7 @@ export class ColumnTableComponent implements AfterViewInit {
       Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti.");
     else if (this.experiment.inputColumns.length == 1)
       Shared.openDialog("Upozorenje", "Kako bi eksperiment bio uspešno izveden, neophodno je da izaberete barem dve kolone koje ćete koristiti (mora postojati bar jedna ulazna i jedna izlazna kolona).");
-    else 
+    else
       this.openUpdateExperimentDialog();
   }
 
