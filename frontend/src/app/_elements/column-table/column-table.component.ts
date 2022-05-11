@@ -58,9 +58,22 @@ export class ColumnTableComponent implements AfterViewInit {
                                   });
   }
 
+  updatePieChart(){
+    //min: number, max: number, q1: number, q3: number, median: number
+    let i=0;
+    this.dataset?.columnInfo.forEach(colInfo =>
+                                  { if (this.experiment.columnTypes[i] == ColumnType.categorical)
+                                    {
+                                      this.piechartComp[i].updatePieChart(colInfo!.uniqueValues, colInfo.uniqueValuesPercent);
+                                      i++;
+                                    } 
+                                  });
+  }
+
   loadDataset(dataset: Dataset) {
     this.dataset = dataset;
     this.updateCharts();
+    this.updatePieChart();
     this.setColumnTypeInitial();
 
     this.dataset.columnInfo.forEach(column => {
@@ -384,7 +397,5 @@ export class Tab {
     public value: Table
   ) { }
 }
-function BoxplotComponent(BoxplotComponent: any) {
-  throw new Error('Function not implemented.');
-}
+
 
