@@ -384,17 +384,15 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         
         
         classifier.save(filepath, save_format='h5')
-
-        accuracy=metrics.accuracy_score(y_test, y_pred)
-        macro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'macro')
-        micro_averaged_precision=metrics.precision_score(y_test, y_pred, average = 'micro')
-        macro_averaged_recall=metrics.recall_score(y_test, y_pred, average = 'macro')
-        micro_averaged_recall=metrics.recall_score(y_test, y_pred, average = 'micro')
-        macro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'macro')
-        micro_averaged_f1=metrics.f1_score(y_test, y_pred, average = 'micro')
+        metrics={}
+        macro_averaged_precision=sm.precision_score(y_test, y_pred, average = 'macro')
+        micro_averaged_precision=sm.precision_score(y_test, y_pred, average = 'micro')
+        macro_averaged_recall=sm.recall_score(y_test, y_pred, average = 'macro')
+        micro_averaged_recall=sm.recall_score(y_test, y_pred, average = 'micro')
+        macro_averaged_f1=sm.f1_score(y_test, y_pred, average = 'macro')
+        micro_averaged_f1=sm.f1_score(y_test, y_pred, average = 'micro')
 
         metrics= {
-                "accuracy" : float(accuracy),
                 "macro_averaged_precision" :float(macro_averaged_precision),
                 "micro_averaged_precision" : float(micro_averaged_precision),
                 "macro_averaged_recall" : float(macro_averaged_recall),
