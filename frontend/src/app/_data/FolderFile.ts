@@ -1,4 +1,5 @@
 export class FolderFile {
+    public _id: string = "";
     constructor(
         public name: string,
         public dateCreated: Date,

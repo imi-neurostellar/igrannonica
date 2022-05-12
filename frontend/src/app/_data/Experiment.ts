@@ -1,9 +1,9 @@
+import { FolderFile } from "./FolderFile";
 import { ProblemType } from "./Model";
-export default class Experiment {
-    _id: string = '';
+export default class Experiment extends FolderFile {
     uploaderId: string = '';
     constructor(
-        public name: string = 'Novi eksperiment',
+        name: string = 'Novi eksperiment',
         public description: string = '',
         public type: ProblemType = ProblemType.Regression,
         public datasetId: string = '',
@@ -11,12 +11,14 @@ export default class Experiment {
         public outputColumn: string = '',
         public nullValues: NullValueOptions = NullValueOptions.DeleteRows,
         public nullValuesReplacers: NullValReplacer[] = [],
-        public dateCreated: Date = new Date(),
-        public lastUpdated: Date = new Date(),
+        dateCreated: Date = new Date(),
+        lastUpdated: Date = new Date(),
         public modelIds: string[] = [],
         public columnTypes: ColumnType[] = [],
         public encodings: ColumnEncoding[] = []//[{columnName: "", columnEncoding: Encoding.Label}]
-    ) { }
+    ) {
+        super(name, dateCreated, lastUpdated)
+    }
 
     _columnsSelected: boolean = false;
 }
