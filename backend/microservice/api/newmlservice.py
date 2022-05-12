@@ -293,7 +293,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         random=0
     #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
     #print(x_train,x_test)
-    x, x_test, y, y_test = train_test_split(x, y, test_size=0.15, shuffle=True)
+    x, x_test, y, y_test = train_test_split(x, y, test_size=test, random_state=random, shuffle=True)
     x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.15, shuffle=True)
     #
     # Treniranje modela
