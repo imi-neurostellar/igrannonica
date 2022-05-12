@@ -211,3 +211,12 @@
 .form-hidden {
     display: none;
 }
+
+.predictor {
+    text-decoration: underline;
+}
+
+.highlight-exp {
+    /*font-size: 16px;*/
+    font-weight: 700;
+}

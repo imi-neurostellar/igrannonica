@@ -67,17 +67,38 @@
                 <app-form-dataset [ngClass]="{'form-hidden': type != FolderType.Dataset}" [forExperiment]="forExperiment"></app-form-dataset>
             </div>
             <div [ngClass]="{'form-hidden' : !listView}" class="list-view">
-                <div *ngFor="let file of filteredFiles; let i = index" class="list-item force-link" (click)="selectFile(file)">
-                    <div class="mx-2">
-                        {{file.name}}
+                <div *ngFor="let file of filteredFiles; let i = index">
+                    <div class="list-item force-link" (click)="selectFile(file)">
+                        <div class="mx-2" [ngClass]="{'highlight-exp' : selectedTab == TabType.MyExperiments}">
+                            {{file.name}}
+                        </div>
+                        <div class="mx-2 hover-hide">
+                            {{file.lastUpdated | date}}
+                        </div>
+                        <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
+                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
                     </div>
-                    <div class="mx-2 hover-hide">
-                        {{file.lastUpdated | date}}
-                    </div>
-                    <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
-                        <button class="btn-clear file-button" (click)="deleteFile(file, $event)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
+                    <div *ngIf="type == FolderType.Experiment" class="list-view">
+                        <div *ngFor="let predictor of predictorsForExp[file._id];" class="list-item">
+
+                            <div class="mx-3">
+                                <div class="f-row">
+                                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                                    <div class="mx-1">{{predictor.name}}</div>
+                                </div>
+                            </div>
+                            <div class="mx-2 hover-hide">
+                                {{predictor.lastUpdated | date}}
+                            </div>
+                            <div class="mx-2 hover-show">
+                                <button class="btn-clear file-button" (click)="deleteFile(predictor, $event)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

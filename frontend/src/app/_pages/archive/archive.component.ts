@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
+import { TabType } from 'src/app/_elements/folder/folder.component';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { DatasetsService } from 'src/app/_services/datasets.service';
 export class ArchiveComponent implements OnInit {
 
   publicDatasets: Dataset[] = [];
+  TabType = TabType;
 
   constructor(private datasetsService: DatasetsService) { }
 

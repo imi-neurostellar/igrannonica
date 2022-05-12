@@ -32,7 +32,7 @@ export class FolderComponent implements AfterViewInit {
   @Input() type: FolderType = FolderType.Dataset;
   @Input() forExperiment!: Experiment;
   @Input() startingTab!: TabType;
-
+  @Input() archive: boolean = false;
   newFileSelected: boolean = true;
 
   selectedFileIndex: number = -1;
@@ -136,44 +136,28 @@ export class FolderComponent implements AfterViewInit {
       this.folders[tab] = [];
     });
 
-    switch (this.type) {
-      case FolderType.Dataset:
-        this.datasetsService.getMyDatasets().subscribe((datasets) => {
-          this.folders[TabType.MyDatasets] = datasets;
-          if (selectedDatasetId) {
-            this.selectFile(datasets.filter(x => x._id == selectedDatasetId)[0]);
-          }
-        });
-        this.datasetsService.getPublicDatasets().subscribe((datasets) => {
-          this.folders[TabType.PublicDatasets] = datasets;
-        });
-        break;
+    if (this.archive) {
+      this.refreshDatasets(selectedDatasetId);
+      this.refreshModels(selectedModelId);
+      this.refreshExperiments();
+    } else {
+      switch (this.type) {
+        case FolderType.Dataset:
+          this.refreshDatasets(selectedDatasetId);
+          break;
 
-      case FolderType.Model:
-        this.modelsService.getMyModels().subscribe((models) => {
-          this.folders[TabType.MyModels] = models;
-          if (selectedModelId) {
-            this.selectFile(models.filter(x => x._id == selectedModelId)[0]);
-          }
-        });
-        /*this.modelsService.getMyModels().subscribe((models) => {
-          this.folders[TabType.PublicModels] = models;
-        });*/
-        this.folders[TabType.PublicModels] = [];
-        break;
+        case FolderType.Model:
+          this.refreshModels(selectedModelId);
+          break;
 
-      case FolderType.Experiment:
-        this.experimentsService.getMyExperiments().subscribe((experiments) => {
-          this.folders[TabType.MyExperiments] = experiments;
-        });
-        this.predictorsService.getMyPredictors().subscribe((predictors) => {
-          this.predictors = predictors;
-          console.log(predictors);
-        });
-        break;
-      default:
-        console.error("Bad folder type.");
-        break;
+        case FolderType.Experiment:
+          this.refreshExperiments();
+          break;
+
+        default:
+          console.error("Bad folder type.");
+          break;
+      }
     }
 
     if (!this._initialized) {
@@ -182,11 +166,56 @@ export class FolderComponent implements AfterViewInit {
       this.selectTab(this.startingTab);
       this._initialized = true;
     }
-
-    this.searchTermsChanged();
   }
 
-  predictors: Predictor[] = [];
+  refreshModels(selectedModelId: string | null) {
+    this.modelsService.getMyModels().subscribe((models) => {
+      this.folders[TabType.MyModels] = models;
+      if (selectedModelId) {
+        this.selectFile(models.filter(x => x._id == selectedModelId)[0]);
+      }
+      this.searchTermsChanged();
+    });
+    /*this.modelsService.getMyModels().subscribe((models) => {
+      this.folders[TabType.PublicModels] = models;
+      this.searchTermsChanged();
+    });*/
+    this.folders[TabType.PublicModels] = [];
+  }
+
+  refreshDatasets(selectedDatasetId: string | null) {
+    this.datasetsService.getMyDatasets().subscribe((datasets) => {
+      this.folders[TabType.MyDatasets] = datasets;
+      if (selectedDatasetId) {
+        this.selectFile(datasets.filter(x => x._id == selectedDatasetId)[0]);
+      }
+      this.searchTermsChanged();
+    });
+    this.datasetsService.getPublicDatasets().subscribe((datasets) => {
+      this.folders[TabType.PublicDatasets] = datasets;
+      this.searchTermsChanged();
+    });
+  }
+
+  refreshExperiments() {
+    this.experimentsService.getMyExperiments().subscribe((experiments) => {
+      this.folders[TabType.MyExperiments] = experiments;
+      this.predictorsService.getMyPredictors().subscribe((predictors) => {
+        this.predictorsForExp = {};
+        experiments.forEach(exp => {
+          this.predictorsForExp[exp._id] = predictors.filter(pred => pred.experimentId == exp._id);
+          /* TODO IZMENI OVO DA SE SETUJE NA BACKU AUTOMATSKI */
+          this.predictorsForExp[exp._id].forEach(pred => {
+            const model = this.folders[TabType.MyModels].find(model => model._id == pred.modelId);
+            pred.name = model?.name!;
+            pred.lastUpdated = model?.lastUpdated!;
+          })
+          /* ------------------------------------------------ */
+          this.searchTermsChanged();
+        })
+      });
+    });
+  }
 
   saveNewFile() {
     switch (this.type) {
@@ -211,6 +240,8 @@ export class FolderComponent implements AfterViewInit {
         break;
     }
   }
+
+  predictorsForExp: { [expId: string]: Predictor[] } = {}
 
   clearSearchTerm() {
     this.searchTerm = '';
