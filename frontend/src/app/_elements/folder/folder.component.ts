@@ -11,6 +11,8 @@ import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
 import { SignalRService } from 'src/app/_services/signal-r.service';
 import { FormModelComponent } from '../form-model/form-model.component';
+import { Router } from '@angular/router';
+import Predictor from 'src/app/_data/Predictor';
 
 @Component({
   selector: 'app-folder',
@@ -30,7 +32,7 @@ export class FolderComponent implements AfterViewInit {
   @Input() type: FolderType = FolderType.Dataset;
   @Input() forExperiment!: Experiment;
   @Input() startingTab!: TabType;
-
+  @Input() archive: boolean = false;
   newFileSelected: boolean = true;
 
   selectedFileIndex: number = -1;
@@ -44,7 +46,7 @@ export class FolderComponent implements AfterViewInit {
 
   searchTerm: string = '';
 
-  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService, private signalRService: SignalRService) {
+  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private router: Router) {
     this.tabsToShow.forEach(tab => this.folders[tab] = []);
   }
 
@@ -91,20 +93,23 @@ export class FolderComponent implements AfterViewInit {
     this.newFileSelected = true;
     this.listView = false;
     this.displayFile();
-    if(this.type == FolderType.Dataset)
+    if (this.type == FolderType.Dataset)
       this.formDataset.clear();
   }
 
   selectFile(file?: FolderFile) {
     this.selectedFile = file;
     this.fileToDisplay = file;
+    if (this.type == FolderType.Experiment && file) {
+      this.router.navigate(['/experiment'/*, file._id*/])
+    }
     this.newFileSelected = false;
     this.listView = false;
     this.selectedFileChanged.emit(this.selectedFile);
     this.selectTab(TabType.File);
     this.displayFile();
 
-    if(this.type == FolderType.Dataset)
+    if (this.type == FolderType.Dataset)
       this.formDataset.loadExisting();
   }
 
@@ -122,7 +127,7 @@ export class FolderComponent implements AfterViewInit {
 
   _initialized: boolean = false;
 
-  refreshFiles(selectedDatasetId: string | null) {
+  refreshFiles(selectedDatasetId: string | null = null, selectedModelId: string | null = null) {
     this.files = []
     this.filteredFiles.length = 0;
     this.folders[TabType.NewFile] = [];
@@ -131,33 +136,29 @@ export class FolderComponent implements AfterViewInit {
       this.folders[tab] = [];
     });
 
-    this.datasetsService.getMyDatasets().subscribe((datasets) => {
-      this.folders[TabType.MyDatasets] = datasets;
-      if (selectedDatasetId) {
-        this.selectFile(datasets.filter(x => x._id == selectedDatasetId)[0]);
+    if (this.archive) {
+      this.refreshDatasets(selectedDatasetId);
+      this.refreshModels(selectedModelId);
+      this.refreshExperiments();
+    } else {
+      switch (this.type) {
+        case FolderType.Dataset:
+          this.refreshDatasets(selectedDatasetId);
+          break;
+
+        case FolderType.Model:
+          this.refreshModels(selectedModelId);
+          break;
+
+        case FolderType.Experiment:
+          this.refreshExperiments();
+          break;
+
+        default:
+          console.error("Bad folder type.");
+          break;
       }
-    });
-
-    this.experimentsService.getMyExperiments().subscribe((experiments) => {
-      this.folders[TabType.MyExperiments] = experiments;
-    });
-
-    this.datasetsService.getPublicDatasets().subscribe((datasets) => {
-      this.folders[TabType.PublicDatasets] = datasets;
-    });
-
-    this.modelsService.getMyModels().subscribe((models) => {
-      this.folders[TabType.MyModels] = models;
-    });
-
-    /*this.modelsService.getMyModels().subscribe((models) => {
-      this.folders[TabType.PublicModels] = models;
-    });*/
-    this.folders[TabType.PublicModels] = [];
-
-    this.experimentsService.getMyExperiments().subscribe((experiments) => {
-      this.folders[TabType.MyExperiments] = experiments;
-    });
+    }
 
     if (!this._initialized) {
       this.files = this.folders[this.startingTab];
@@ -165,8 +166,55 @@ export class FolderComponent implements AfterViewInit {
       this.selectTab(this.startingTab);
       this._initialized = true;
     }
+  }
 
-    this.searchTermsChanged();
+  refreshModels(selectedModelId: string | null) {
+    this.modelsService.getMyModels().subscribe((models) => {
+      this.folders[TabType.MyModels] = models;
+      if (selectedModelId) {
+        this.selectFile(models.filter(x => x._id == selectedModelId)[0]);
+      }
+      this.searchTermsChanged();
+    });
+    /*this.modelsService.getMyModels().subscribe((models) => {
+      this.folders[TabType.PublicModels] = models;
+      this.searchTermsChanged();
+    });*/
+    this.folders[TabType.PublicModels] = [];
+  }
+
+  refreshDatasets(selectedDatasetId: string | null) {
+    this.datasetsService.getMyDatasets().subscribe((datasets) => {
+      this.folders[TabType.MyDatasets] = datasets;
+      if (selectedDatasetId) {
+        this.selectFile(datasets.filter(x => x._id == selectedDatasetId)[0]);
+      }
+      this.searchTermsChanged();
+    });
+    this.datasetsService.getPublicDatasets().subscribe((datasets) => {
+      this.folders[TabType.PublicDatasets] = datasets;
+      this.searchTermsChanged();
+    });
+  }
+
+  refreshExperiments() {
+    this.experimentsService.getMyExperiments().subscribe((experiments) => {
+      this.folders[TabType.MyExperiments] = experiments;
+      this.predictorsService.getMyPredictors().subscribe((predictors) => {
+        this.predictorsForExp = {};
+        experiments.forEach(exp => {
+          this.predictorsForExp[exp._id] = predictors.filter(pred => pred.experimentId == exp._id);
+          /* TODO IZMENI OVO DA SE SETUJE NA BACKU AUTOMATSKI */
+          this.predictorsForExp[exp._id].forEach(pred => {
+            const model = this.folders[TabType.MyModels].find(model => model._id == pred.modelId);
+            pred.name = model?.name!;
+            pred.lastUpdated = model?.lastUpdated!;
+          })
+          /* ------------------------------------------------ */
+          this.searchTermsChanged();
+        })
+      });
+    });
   }
 
   saveNewFile() {
@@ -175,7 +223,7 @@ export class FolderComponent implements AfterViewInit {
         this.formDataset!.uploadDataset((dataset: Dataset) => {
           this.newFile = undefined;
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se procesira.");
-          this.refreshFiles(null);
+          this.refreshFiles();
         },
           () => {
             Shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
@@ -185,7 +233,7 @@ export class FolderComponent implements AfterViewInit {
         this.modelsService.addModel(this.formModel.newModel).subscribe(model => {
           this.newFile = undefined;
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
-          this.refreshFiles(null); // todo select model
+          this.refreshFiles(null, model._id); // todo select model
         }, (err) => {
           Shared.openDialog("Neuspeo pokušaj!", "Konfiguracija neuronske mreže sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeću konfiguraciju.");
         });
@@ -193,19 +241,7 @@ export class FolderComponent implements AfterViewInit {
     }
   }
 
-
-  /*calcZIndex(i: number) {
-    let zIndex = (this.files.length - i - 1)
-    if (this.selectedFileIndex == i)
-      zIndex = this.files.length + 2;
-    if (this.hoveringOverFileIndex == i)
-      zIndex = this.files.length + 3;
-    return zIndex;
-  }
-  
-  newFileZIndex() {
-    return (this.files.length + 1);
-  }*/
+  predictorsForExp: { [expId: string]: Predictor[] } = {}
 
   clearSearchTerm() {
     this.searchTerm = '';
@@ -231,10 +267,6 @@ export class FolderComponent implements AfterViewInit {
   }
 
   listView: boolean = true;
-
-  toggleListView() {
-    this.listView = !this.listView;
-  }
 
   deleteFile(file: FolderFile, event: Event) {
     event.stopPropagation();
@@ -349,16 +381,16 @@ export class FolderComponent implements AfterViewInit {
   }
 
   hoverOverTab(tab: TabType) {
-    this.listView = this.getListView(tab);
-    this.privacy = this.getPrivacy(tab);
+    // this.listView = this.getListView(tab);
+    // this.privacy = this.getPrivacy(tab);
     this.hoverTab = tab;
-    if (tab == TabType.None) {
-      this.listView = this.getListView(this.selectedTab);
-      this.files = this.folders[this.selectedTab];
-    } else {
-      this.files = this.folders[tab];
-    }
-    this.searchTermsChanged();
+    // if (tab == TabType.None) {
+    //   this.listView = this.getListView(this.selectedTab);
+    //   this.files = this.folders[this.selectedTab];
+    // } else {
+    //   this.files = this.folders[tab];
+    // }
+    // this.searchTermsChanged();
   }
 
   updateExperiment() {

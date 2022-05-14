@@ -43,6 +43,7 @@ namespace api.Models
         public float randomTestSetDistribution { get; set; }
         public bool isPublic { get; set; }
         public bool accessibleByLink { get; set; }
+        public float validationSize { get; set; }//0-1 ne ukljucuje 0.1-0.9 ogranici
     }
 
     public class Layer

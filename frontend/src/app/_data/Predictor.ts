@@ -1,22 +1,28 @@
-export default class Predictor {
-    _id: string = '';
+import { FolderFile } from "./FolderFile";
+
+export default class Predictor extends FolderFile {
     constructor(
-        public name: string = 'Novi prediktor',
+        name: string = 'Novi prediktor',
         public description: string = '',
         public inputs: string[] = [],
         public output: string = '',
         public isPublic: boolean = false,
         public accessibleByLink: boolean = false,
-        public dateCreated: Date = new Date(),
+        dateCreated: Date = new Date(),
+        lastUpdated: Date = new Date(),
         public uploaderId: string = '',
         //public finalMetrics: Metric[] = []
-    ) { }
+        public experimentId: string = "",
+        public modelId: string = "",
+    ) {
+        super(name, dateCreated, lastUpdated);
+    }
 }
 
 export class Metric {
     constructor(
         public name: string = '',
         public jsonValue: string = ''
-    ) {}
+    ) { }
 
 }

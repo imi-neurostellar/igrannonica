@@ -1,7 +1,6 @@
 import { FolderFile } from "./FolderFile";
 
 export default class Dataset extends FolderFile {
-    _id: string = '';
     constructor(
         name: string = 'Novi izvor podataka',
         public description: string = '',

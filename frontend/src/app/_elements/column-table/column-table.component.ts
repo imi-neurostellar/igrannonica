@@ -60,17 +60,16 @@ export class ColumnTableComponent implements AfterViewInit {
     });
   }
 
-  updatePieChart(){
+  updatePieChart() {
     //min: number, max: number, q1: number, q3: number, median: number
-    let i=0;
+    let i = 0;
     const pieChart = this.piechartComp.toArray();
-    this.dataset?.columnInfo.forEach(colInfo =>
-                                  { if (this.experiment.columnTypes[i] == ColumnType.categorical)
-                                    {
-                                      pieChart[i].updatePieChart(colInfo!.uniqueValues, colInfo.uniqueValuesPercent);
-                                      i++;
-                                    } 
-                                  });
+    this.dataset?.columnInfo.forEach(colInfo => {
+      if (this.experiment.columnTypes[i] == ColumnType.categorical) {
+        pieChart[i].updatePieChart(colInfo!.uniqueValues, colInfo.uniqueValuesPercent);
+        i++;
+      }
+    });
   }
 
   loadDataset(dataset: Dataset) {
@@ -213,7 +212,7 @@ export class ColumnTableComponent implements AfterViewInit {
     if (this.experiment != undefined && this.dataset != undefined) {
       for (let i = 0; i < this.dataset.columnInfo.length; i++) {
         if (this.experiment.columnTypes[i] == ColumnType.categorical && this.dataset.columnInfo[i].columnName != this.experiment.outputColumn) //promeni
-          this.experiment.encodings[i].encoding = encodingType; 
+          this.experiment.encodings[i].encoding = encodingType;
       }
       this.columnTableChangeDetected();
     }
@@ -380,10 +379,8 @@ export class ColumnTableComponent implements AfterViewInit {
   hoverOverTab(index: number) {
     if (index < 0) {
       this.hoveringOverTab = null;
-      this.tabToDisplay = this.selectedTab.value;
     } else {
       this.hoveringOverTab = this.tabs[index];
-      this.tabToDisplay = this.tabs[index].value;
     }
   }
 

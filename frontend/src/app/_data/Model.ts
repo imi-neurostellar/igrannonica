@@ -2,7 +2,6 @@ import { NgIf } from "@angular/common";
 import { FolderFile } from "./FolderFile";
 
 export default class Model extends FolderFile {
-    _id: string = '';
     constructor(
         name: string = 'Novi model',
         public description: string = '',
@@ -132,10 +131,10 @@ export enum LossFunction {
     MeanSquaredLogarithmicError = 'mean_squared_logarithmic_error',
     HuberLoss = 'Huber'
 }
-export const LossFunctionRegression =[LossFunction.MeanAbsoluteError,LossFunction.MeanSquaredError,LossFunction.MeanSquaredLogarithmicError]
-export const LossFunctionBinaryClassification=[LossFunction.BinaryCrossEntropy,LossFunction.SquaredHingeLoss,LossFunction.HingeLoss]
+export const LossFunctionRegression = [LossFunction.MeanAbsoluteError, LossFunction.MeanSquaredError, LossFunction.MeanSquaredLogarithmicError]
+export const LossFunctionBinaryClassification = [LossFunction.BinaryCrossEntropy, LossFunction.SquaredHingeLoss, LossFunction.HingeLoss]
 
-export const LossFunctionMultiClassification=[LossFunction.CategoricalCrossEntropy,LossFunction.SparseCategoricalCrossEntropy,LossFunction.KLDivergence]
+export const LossFunctionMultiClassification = [LossFunction.CategoricalCrossEntropy, LossFunction.SparseCategoricalCrossEntropy, LossFunction.KLDivergence]
 
 export enum Optimizer {
     Adam = 'Adam',

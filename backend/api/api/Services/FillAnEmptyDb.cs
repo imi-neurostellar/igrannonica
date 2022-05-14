@@ -106,6 +106,7 @@ namespace api.Services
                 model.epochs = 5;
                 model.isPublic = true;
                 model.accessibleByLink = true;
+                model.validationSize = 0.1f;//proveri
 
                 _modelService.Create(model);
 
@@ -220,6 +221,7 @@ namespace api.Services
                 model.epochs = 5;
                 model.isPublic = true;
                 model.accessibleByLink = true;
+                model.validationSize = 0.1f;//proveri
 
                 _modelService.Create(model);
 
@@ -333,6 +335,7 @@ namespace api.Services
                 model.epochs = 1;
                 model.isPublic = true;
                 model.accessibleByLink = true;
+                model.validationSize = 0.1f;//proveri
 
                 _modelService.Create(model);
 
