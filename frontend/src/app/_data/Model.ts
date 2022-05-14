@@ -29,7 +29,7 @@ export default class Model extends FolderFile {
         public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
-
+        public validationSize:number=0.1,
         public isPublic: boolean = false,
         public accessibleByLink: boolean = false
     ) {

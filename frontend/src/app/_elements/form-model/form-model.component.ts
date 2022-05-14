@@ -18,6 +18,7 @@ export class FormModelComponent implements AfterViewInit {
   @Input() hideProblemType:boolean;
   @Input() forProblemType:ProblemType;
   testSetDistribution: number = 70;
+  validationSize:number=15;
   constructor() { 
     this.hideProblemType=false;
     this.forProblemType=ProblemType.BinaryClassification;
@@ -148,4 +149,6 @@ export class FormModelComponent implements AfterViewInit {
 getInputColumns() {
     return this.forExperiment.inputColumns.filter(x => x != this.forExperiment.outputColumn);
 }
-}
+updateValidation(event: MatSliderChange) {
+  this.validationSize = event.value!;
+}}

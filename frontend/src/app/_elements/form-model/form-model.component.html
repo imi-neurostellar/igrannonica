@@ -97,16 +97,20 @@
     <div class="m-2">
         <div class="row">
             <div class="col-sm-3 rounded" style="border:1px solid var(--ns-primary);margin-top: 10px;">
-                <div class="row slider rounded mb-3" style="margin-left: 10px;">
-
+                <div class="row slider rounded" style="margin-left: 10px;margin-bottom: 0;">
                     <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
-                    <div class="text-center pt-0 mt-0">Trening
-                        <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
+                    <div class="text-center pt-0 mt-0 p-0">Trening
+                        <mat-slider min="10" max="90" step="5" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
                         Test</div>
-
+                </div>             
+                <div class="row p-0" style="margin-left: 10px;margin-bottom: 0; padding: 0;">
+                    <mat-checkbox color="accent">Nasumični redosled podataka</mat-checkbox>
                 </div>
-                <div class="row slider rounded text-offwhite justify-content-center align-items-center" style="margin-left: 10px;">
-                    <mat-checkbox class="pt-4 mb-3" color="accent">Nasumični redosled podataka</mat-checkbox>
+                <hr style="color:accent;">
+                <div class="row ">
+                    <label>Veličina skupa za validaciju: </label><b>{{validationSize}} %</b>
+                    <mat-slider class="text-center justify-content-center " style="margin-left:80px;" min="10" max="90" step="5" [(ngModel)]="validationSize" (input)="updateValidation($event)"></mat-slider>
+
                 </div>
 
 
