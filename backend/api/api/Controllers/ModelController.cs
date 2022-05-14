@@ -195,8 +195,8 @@ namespace api.Controllers
             var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
 
 
-            if (existingModel != null && !overwrite)
-                return NotFound($"Model with name = {model.name} exisits");
+            if (existingModel != null && !overwrite && model.validationSize < 1 && model.validationSize > 0)
+                return NotFound($"Model with name = {model.name} exisits or validation size is not between 0-1");
             else
             { 
                 //_modelService.Create(model);
@@ -225,8 +225,8 @@ namespace api.Controllers
 
             var existingModel = _modelService.GetOneModel(userId, name);
 
-            if (existingModel == null)
-                return NotFound($"Model with name = {name} or user with ID = {userId} not found");
+            if (existingModel == null && model.validationSize < 1 && model.validationSize > 0)
+                return NotFound($"Model with name = {name} or validation size is not between 0-1");
 
             _modelService.Update(userId, name, model);
             return NoContent();
