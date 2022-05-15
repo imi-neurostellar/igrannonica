@@ -27,6 +27,12 @@ export class DatasetsService {
   getDatasetFile(fileId: any): any {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/-1/11`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
+  getDatasetFilePaging(fileId:any,begin:any,end:any){
+    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/${begin}/${end}`, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+  getDatasetHeader(fileId:any){
+    return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/-1/1`, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
   getDatasetFilePartial(fileId: any, startRow: number, rowNum: number): Observable<any> {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/${startRow}/${rowNum}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
