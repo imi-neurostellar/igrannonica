@@ -26,6 +26,7 @@ export class FormDatasetComponent {
   colsNumber: number = 0;
   begin:number=-1;
   end:number=11;
+  existingFlag:boolean=false;
 
   @Input() dataset: Dataset; //dodaj ! potencijalno
 
@@ -69,6 +70,7 @@ export class FormDatasetComponent {
 
     this.filename = this.files[0].name;
     this.tableData.loaded = false;
+    this.existingFlag=false;
     this.update();
   }
 
@@ -77,7 +79,6 @@ export class FormDatasetComponent {
   update() {
 
     this.firstInput = true
-
     if (this.files.length < 1)
       return;
 
@@ -104,6 +105,7 @@ export class FormDatasetComponent {
   }
 
   loadExisting(){
+    this.existingFlag=true;
     this.firstInput = false;
 
     this.tableData.hasInput = true;
