@@ -292,6 +292,32 @@ export class FolderComponent implements AfterViewInit {
     }
   }
 
+  addFile(file: FolderFile, event: Event) {
+    event.stopPropagation();
+    switch (this.type) {
+      case FolderType.Dataset:
+        (<Dataset>file)._id="";
+        
+        (<Dataset>file).isPublic=false;
+        this.datasetsService.addDataset(<Dataset>file).subscribe((response) => {
+          this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+          this.refreshFiles(null);
+        });
+        break;
+      case FolderType.Model:
+        this.modelsService.addModel(<Model>file).subscribe((response) => {
+          this.refreshFiles(null);
+        });
+        break;
+      case FolderType.Experiment:
+        // this.experimentsService.addExperiment(<Model>file).subscribe((response) => {
+        //   console.log(response);
+        // });
+        //todo delete za predictor
+        break;
+    }
+  }
+
   folders: { [tab: number]: FolderFile[] } = {};
 
   tabTitles: { [tab: number]: string } = {

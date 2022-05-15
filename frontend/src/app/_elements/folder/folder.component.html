@@ -78,7 +78,12 @@
                         <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
                             <button class="btn-clear file-button" (click)="deleteFile(file, $event)">
                                 <mat-icon>delete</mat-icon>
-                            </button>
+                            </button>   
+                        </div>
+                        <div class="mx-2 hover-show" *ngIf="selectedTab == TabType.PublicDatasets || selectedTab == TabType.PublicModels">
+                            <button  class="btn-clear file-button" (click)="addFile(file, $event)">
+                                <mat-icon>note_add</mat-icon>
+                            </button>   
                         </div>
                     </div>
                     <div *ngIf="type == FolderType.Experiment" class="list-view">
