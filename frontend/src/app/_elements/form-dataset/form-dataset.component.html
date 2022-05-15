@@ -49,6 +49,7 @@
             <div class="mt-5 datatable">
                 <div class="">
                     <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="goBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+                    {{((this.begin+1)/10)+1}}
                     <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="goForward()"><mat-icon>keyboard_arrow_right</mat-icon></button>
                 </div>
                 <app-datatable [tableData]="tableData"></app-datatable>
