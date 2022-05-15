@@ -42,8 +42,17 @@ export class FormDatasetComponent {
   }
 
   //@ViewChild('fileImportInput', { static: false }) fileImportInput: any; cemu je ovo sluzilo?
-  test(){
-    console.log("radi");
+  goBack(){
+    if(this.begin-10<=0)
+      this.begin=-1;
+    else
+      this.begin-=10;
+    this.loadExisting();
+
+  }
+  goForward(){
+    this.begin+=10;
+    this.loadExisting();
   }
   clear(){
     this.tableData.hasInput = false;
@@ -100,7 +109,7 @@ export class FormDatasetComponent {
     this.tableData.hasInput = true;
     this.tableData.loaded = false;
 
-    this.datasetsService.getDatasetFile(this.dataset.fileId).subscribe((file: string | undefined) => {
+    this.datasetsService.getDatasetFilePaging(this.dataset.fileId,this.begin,this.end).subscribe((file: string | undefined) => {
       if (file) {
         this.tableData.loaded = true;
         this.tableData.numRows = this.dataset.rowCount;

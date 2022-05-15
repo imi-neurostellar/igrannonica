@@ -47,9 +47,10 @@
             <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file" accept=".csv">
 
             <div class="mt-5 datatable">
-                <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="test()"><mat-icon>keyboard_arrow_left</mat-icon></button>
-                <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="test()"><mat-icon>keyboard_arrow_right</mat-icon></button>
-                
+                <div class="">
+                    <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="goBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+                    <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="goForward()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+                </div>
                 <app-datatable [tableData]="tableData"></app-datatable>
             </div>
 
