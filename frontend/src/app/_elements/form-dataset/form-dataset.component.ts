@@ -43,6 +43,9 @@ export class FormDatasetComponent {
   }
 
   //@ViewChild('fileImportInput', { static: false }) fileImportInput: any; cemu je ovo sluzilo?
+  resetPagging(){
+    this.begin=-1;
+  }
   goBack(){
     if(this.begin-10<=0)
       this.begin=-1;

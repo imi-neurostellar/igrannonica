@@ -95,11 +95,13 @@ export class FolderComponent implements AfterViewInit {
     this.newFileSelected = true;
     this.listView = false;
     this.displayFile();
-    if (this.type == FolderType.Dataset)
+    if (this.type == FolderType.Dataset){
       this.formDataset.clear();
+    }
   }
 
   selectFile(file?: FolderFile) {
+    this.formDataset.resetPagging();
     this.selectedFile = file;
     this.fileToDisplay = file;
     if (this.type == FolderType.Experiment && file) {
