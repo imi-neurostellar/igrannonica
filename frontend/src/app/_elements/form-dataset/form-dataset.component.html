@@ -1,6 +1,5 @@
 <div class="folderBox" *ngIf="dataset">
-
-    
+ 
         <div class="topBar">
                 <div class="kolona mb-3">
                     <div class="fileButton">
@@ -43,10 +42,14 @@
         <div class="file-container" [ngClass]="{'dottedClass': !tableData.hasInput}">
 
             <i class="material-icons-outlined icon-display" [ngClass]="{'hidden': tableData.hasInput}">file_upload</i>
+            
 
             <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file" accept=".csv">
 
             <div class="mt-5 datatable">
+                <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="test()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+                <button mat-button [ngClass]="{'hidden': !tableData.hasInput}" (click)="test()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+                
                 <app-datatable [tableData]="tableData"></app-datatable>
             </div>
 

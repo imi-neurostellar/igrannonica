@@ -24,6 +24,8 @@ export class FormDatasetComponent {
   files: File[] = [];
   rowsNumber: number = 0;
   colsNumber: number = 0;
+  begin:number=-1;
+  end:number=11;
 
   @Input() dataset: Dataset; //dodaj ! potencijalno
 
@@ -40,7 +42,9 @@ export class FormDatasetComponent {
   }
 
   //@ViewChild('fileImportInput', { static: false }) fileImportInput: any; cemu je ovo sluzilo?
-
+  test(){
+    console.log("radi");
+  }
   clear(){
     this.tableData.hasInput = false;
   }
