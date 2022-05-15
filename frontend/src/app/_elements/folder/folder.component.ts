@@ -65,8 +65,10 @@ export class FolderComponent implements AfterViewInit {
   }
 
   displayFile() {
-    if (this.type == FolderType.Dataset)
+    if (this.type == FolderType.Dataset){
       this.formDataset.dataset = <Dataset>this.fileToDisplay;
+      this.formDataset.existingFlag=false;
+    }
     else if (this.type == FolderType.Model)
       this.formModel.newModel = <Model>this.fileToDisplay;
   }
@@ -93,11 +95,13 @@ export class FolderComponent implements AfterViewInit {
     this.newFileSelected = true;
     this.listView = false;
     this.displayFile();
-    if (this.type == FolderType.Dataset)
+    if (this.type == FolderType.Dataset){
       this.formDataset.clear();
+    }
   }
 
   selectFile(file?: FolderFile) {
+    this.formDataset.resetPagging();
     this.selectedFile = file;
     this.fileToDisplay = file;
     if (this.type == FolderType.Experiment && file) {
@@ -285,6 +289,32 @@ export class FolderComponent implements AfterViewInit {
         break;
       case FolderType.Experiment:
         // this.experimentsService.deleteExperiment(<Model>file).subscribe((response) => {
+        //   console.log(response);
+        // });
+        //todo delete za predictor
+        break;
+    }
+  }
+
+  addFile(file: FolderFile, event: Event) {
+    event.stopPropagation();
+    switch (this.type) {
+      case FolderType.Dataset:
+        (<Dataset>file)._id="";
+        
+        (<Dataset>file).isPublic=false;
+        this.datasetsService.addDataset(<Dataset>file).subscribe((response) => {
+          this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+          this.refreshFiles(null);
+        });
+        break;
+      case FolderType.Model:
+        this.modelsService.addModel(<Model>file).subscribe((response) => {
+          this.refreshFiles(null);
+        });
+        break;
+      case FolderType.Experiment:
+        // this.experimentsService.addExperiment(<Model>file).subscribe((response) => {
         //   console.log(response);
         // });
         //todo delete za predictor

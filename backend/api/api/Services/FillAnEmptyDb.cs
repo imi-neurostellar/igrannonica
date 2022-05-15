@@ -83,6 +83,8 @@ namespace api.Services
                 dataset.nullCols = 3;
                 dataset.nullRows = 708;
                 dataset.isPreProcess = true;
+                dataset.cMatrix = new float[11][];
+                dataset.cMatrix[0] = new float[] {1f,-0.005006660707294941f, -0.03514399379491806f,-0.03855886310338974f,0.04293888062238693f,0.03684719651937485f};
 
                 _datasetService.Create(dataset);
 
