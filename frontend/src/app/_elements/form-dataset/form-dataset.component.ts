@@ -123,6 +123,10 @@ export class FormDatasetComponent {
         this.tableData.data = this.csv.csvToArray(header+'\n'+file, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter);
 
       }
+      else{
+        this.begin-=10;
+        this.loadExisting();
+      }
     });
   });
 
