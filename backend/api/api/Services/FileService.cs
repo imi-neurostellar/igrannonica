@@ -59,5 +59,11 @@ namespace api.Services
 
             return file._id;
         }
+
+        public bool CopyFile(string sourceFile, string destinacionFile)
+        {
+            File.Copy(sourceFile, destinacionFile, true);
+            return true;
+        }
     }
 }

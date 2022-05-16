@@ -9,5 +9,7 @@ namespace api.Services
         public FileModel getFile(string id);
         bool CheckDb();
         string GetFileId(string fullPath);
+        bool CopyFile(string sourceFile, string destinacionFile);
+
     }
 }

@@ -53,7 +53,7 @@ namespace api.Services
 
                 dataset._id = "";
                 dataset.uploaderId = "000000000000000000000000";
-                dataset.name = "Titanik dataset";
+                dataset.name = "Titanik dataset(public)";
                 dataset.description = "Titanik dataset";
                 dataset.fileId = _fileService.GetFileId(fullPath);
                 dataset.extension = ".csv";
@@ -61,7 +61,7 @@ namespace api.Services
                 dataset.accessibleByLink = true;
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
-                dataset.delimiter = "";
+                dataset.delimiter = ",";
                 dataset.columnInfo = new ColumnInfo[] { };
                 dataset.columnInfo = new[]
                 {
@@ -84,7 +84,7 @@ namespace api.Services
                 dataset.nullRows = 708;
                 dataset.isPreProcess = true;
                 dataset.cMatrix = new float[11][];
-                dataset.cMatrix[0] = new float[] {1f,-0.005006660707294941f, -0.03514399379491806f,-0.03855886310338974f,0.04293888062238693f,0.03684719651937485f};
+                dataset.cMatrix[0] = new float[] { 1f, -0.005006660707294941f, -0.03514399379491806f, -0.03855886310338974f, 0.04293888062238693f, 0.03684719651937485f };
 
                 _datasetService.Create(dataset);
 
@@ -173,14 +173,14 @@ namespace api.Services
                 dataset._id = "";
                 dataset.uploaderId = "000000000000000000000000";
                 dataset.name = "Diamonds dataset";
-                dataset.description = "Diamonds dataset";
+                dataset.description = "Diamonds dataset(public)";
                 dataset.fileId = _fileService.GetFileId(fullPath);
                 dataset.extension = ".csv";
                 dataset.isPublic = true;
                 dataset.accessibleByLink = true;
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
-                dataset.delimiter = "";
+                dataset.delimiter = ",";
                 dataset.columnInfo = new[]
                  {
                     new ColumnInfo( "Unnamed: 0", true, 0, 26969.5f, 0, 53939, 26969.5f, new string[]{ }, new int[] {}, new float[] {}, 0.01f,0.1f ),
@@ -199,6 +199,9 @@ namespace api.Services
                 dataset.nullCols = 0;
                 dataset.nullRows = 0;
                 dataset.isPreProcess = true;
+                dataset.cMatrix = new float[11][];
+                dataset.cMatrix[0] = new float[] { 1f, -0.005006660707294941f, -0.03514399379491806f, -0.03855886310338974f, 0.04293888062238693f, 0.03684719651937485f };
+
 
                 _datasetService.Create(dataset);
 
@@ -295,14 +298,14 @@ namespace api.Services
                 dataset._id = "";
                 dataset.uploaderId = "000000000000000000000000";
                 dataset.name = "Iris dataset";
-                dataset.description = "Iris dataset";
+                dataset.description = "Iris dataset(public) ";
                 dataset.fileId = _fileService.GetFileId(fullPath);
                 dataset.extension = ".csv";
                 dataset.isPublic = true;
                 dataset.accessibleByLink = true;
                 dataset.dateCreated = DateTime.Now;
                 dataset.lastUpdated = DateTime.Now;
-                dataset.delimiter = "";
+                dataset.delimiter = ",";
                 dataset.columnInfo = new[]
                   {
                     new ColumnInfo( "sepal_length", true, 0, 5.8433332443237305f, 4.300000190734863f, 7.900000095367432f, 5.800000190734863f, new string[]{ }, new int[] {}, new float[] {}, 0.01f, 0.1f ),
@@ -314,6 +317,9 @@ namespace api.Services
                 dataset.nullCols = 150;
                 dataset.nullRows = 0;
                 dataset.isPreProcess = true;
+                dataset.cMatrix = new float[11][];
+                dataset.cMatrix[0] = new float[] { 1f, -0.005006660707294941f, -0.03514399379491806f, -0.03855886310338974f, 0.04293888062238693f, 0.03684719651937485f };
+
 
                 _datasetService.Create(dataset);
 

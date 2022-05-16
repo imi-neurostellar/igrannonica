@@ -148,7 +148,75 @@ namespace api.Controllers
                 return Ok();
             }
         }
+        // POST api/<DatasetController>/stealDs
+        [HttpPost("stealDs")]
+        [Authorize(Roles = "User,Guest")]
+        public async Task<ActionResult<Dataset>> StealDs([FromBody] Dataset dataset)
+        {
+            string uploaderId = getUserId();
 
+            dataset.uploaderId = uploaderId;
+
+            //da li ce preko tokena da se ubaci username ili front salje
+            //dataset.username = usernameToken;
+            //username = "" ako je GUEST DODAO
+            var existingDataset = _datasetService.GetOneDatasetN(dataset.uploaderId, dataset.name);
+
+            if (existingDataset != null)
+                return NotFound($"Dataset with this name already exists");
+            else
+            {
+                dataset.dateCreated = DateTime.Now;
+                dataset.lastUpdated = DateTime.Now;
+                dataset.isPublic = false;
+                
+                FileModel fileModel = _fileService.getFile(dataset.fileId);
+
+                string folderName = "UploadedFiles";
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, uploaderId);
+                
+                string ext = ".csv";
+
+                //nesto
+
+                //Check Directory
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                //Index file if same filename
+                var fullPath = Path.Combine(folderPath, dataset.name + ext);
+                int i = 0;
+
+                while (System.IO.File.Exists(fullPath))
+                {
+                    i++;
+                    fullPath = Path.Combine(folderPath, dataset.name + i.ToString() + ext);
+                }
+
+                dataset.fileId = "";
+
+                _fileService.CopyFile(fileModel.path, fullPath);
+
+                
+                FileModel fileModel1 = new FileModel();
+                fileModel1.type = ext;
+                fileModel1.path = fullPath;
+                fileModel1.uploaderId = uploaderId;
+                fileModel1.date = DateTime.Now.ToUniversalTime();
+                fileModel1 = _fileService.Create(fileModel1);
+
+                dataset.fileId = fileModel1._id;
+
+                //nesto
+
+
+                dataset.isPreProcess = false;
+                _datasetService.Create(dataset);
+                _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
+                return Ok();
+            }
+        }
 
         // PUT api/<DatasetController>/{name}
         [HttpPut("{id}")]

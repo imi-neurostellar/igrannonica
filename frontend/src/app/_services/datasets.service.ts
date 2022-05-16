@@ -24,6 +24,10 @@ export class DatasetsService {
     return this.http.post(`${Configuration.settings.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
   }
 
+  stealDataset(dataset: Dataset): Observable<any> {
+    return this.http.post(`${Configuration.settings.apiURL}/dataset/stealDs`, dataset, { headers: this.authService.authHeader() });
+  }
+
   getDatasetFile(fileId: any): any {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/-1/11`, { headers: this.authService.authHeader(), responseType: 'text' });
   }

@@ -301,9 +301,9 @@ export class FolderComponent implements AfterViewInit {
     switch (this.type) {
       case FolderType.Dataset:
         (<Dataset>file)._id="";
-        
+        (<Dataset>file).isPreProcess = true;
         (<Dataset>file).isPublic=false;
-        this.datasetsService.addDataset(<Dataset>file).subscribe((response) => {
+        this.datasetsService.stealDataset(<Dataset>file).subscribe((response) => {
           this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
           this.refreshFiles(null);
         });

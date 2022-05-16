@@ -17,6 +17,7 @@ export default class Dataset extends FolderFile {
         public rowCount: number = 0,
         public nullRows: number = 0,
         public nullCols: number = 0,
+        public isPreProcess : Boolean = false,
         public cMatrix: number[][] = []
     ) {
         super(name, dateCreated, lastUpdated);
