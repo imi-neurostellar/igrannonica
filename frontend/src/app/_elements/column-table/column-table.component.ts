@@ -42,9 +42,30 @@ export class ColumnTableComponent implements AfterViewInit {
   loaded: boolean = false;
 
 
+  begin:number=0;
+  end:number=10;
+
+
+
   constructor(private datasetService: DatasetsService, private experimentService: ExperimentsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
     //ovo mi nece trebati jer primam dataset iz druge komponente
   }
+  resetPagging(){
+    this.begin=0;
+  }
+  goBack(){
+    if(this.begin-10<=0)
+      this.begin=0;
+    else
+      this.begin-=10;
+    this.loadData();
+
+  }
+  goForward(){
+    this.begin+=10;
+    this.loadData();
+  }
+
 
   updateCharts() {
     //min: number, max: number, q1: number, q3: number, median: number
@@ -90,16 +111,21 @@ export class ColumnTableComponent implements AfterViewInit {
     this.dataset.columnInfo.forEach(colInfo => {
       this.nullValOption.push(`Obriši redove (${colInfo.numNulls})`);
     });
-
-    this.datasetService.getDatasetFilePartial(this.dataset.fileId, 0, 10).subscribe((response: string | undefined) => {
-      if (response && this.dataset != undefined) {
-        this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter);
-      }
-    });
+    this.resetPagging();
+    this.loadData();
     this.loaded = true;
 
     this.updateCharts();
     this.updatePieChart();
+  }
+
+  loadData(){
+    if(this.dataset!=undefined)
+    this.datasetService.getDatasetFilePartial(this.dataset.fileId, this.begin, this.end).subscribe((response: string | undefined) => {
+      if (response && this.dataset != undefined) {
+        this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
