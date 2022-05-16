@@ -25,9 +25,11 @@ export class RegisterModalComponent implements OnInit {
   wrongEmailBool: boolean = false;
   wrongPass1Bool: boolean = false;
   wrongPass2Bool: boolean = false;
+  usernameAlreadyExistsBool: boolean = false;
+  emailAlreadyExistsBool: boolean = false;
 
   pattName: RegExp = /^[a-zA-ZšŠđĐčČćĆžŽ]+([ \-][a-zA-ZšŠđĐčČćĆžŽ]+)*$/;
-  pattUsername: RegExp = /^[a-zA-Z0-9]{6,18}$/;
+  pattUsername: RegExp = /^[a-zA-Z0-9]{4,18}$/;
   pattTwoSpaces: RegExp = /  /;
   pattEmail: RegExp = /^[a-zA-Z0-9]+([\.\-\+][a-zA-Z0-9]+)*\@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/;
   pattPassword: RegExp = /.{6,30}$/;
@@ -59,7 +61,7 @@ export class RegisterModalComponent implements OnInit {
   }
   resetData() {
     this.firstName = this.lastName = this.username = this.email = this.pass1 = this.pass2 = '';
-    this.wrongFirstNameBool = this.wrongLastNameBool = this.wrongUsernameBool = this.wrongEmailBool = this.wrongPass1Bool = this.wrongPass2Bool = false;
+    this.wrongFirstNameBool = this.wrongLastNameBool = this.wrongUsernameBool = this.wrongEmailBool = this.wrongPass1Bool = this.wrongPass2Bool = this.usernameAlreadyExistsBool = this.emailAlreadyExistsBool = false;
     this.password1Shown = false;
     this.password2Shown = false;
   }
@@ -160,10 +162,13 @@ export class RegisterModalComponent implements OnInit {
         dateCreated:new Date()
       }
 
+
       this.authService.register(user)
         .subscribe(
           (response) => {
             if (response == 'User added') {
+              this.usernameAlreadyExistsBool = false;
+              this.emailAlreadyExistsBool = false;
               //nakon sto je registrovan, nek bude ulogovan
               this.authService.login(this.username, this.pass1).subscribe((response) => {
 
@@ -174,12 +179,16 @@ export class RegisterModalComponent implements OnInit {
               }, (error) => console.warn(error));             
             }
             else if (response == 'Email Already Exists') {
-              shared.openDialog("Greška!", "Nalog sa unetim email-om već postoji!");
-              (<HTMLSelectElement>document.getElementById('email')).focus();
+              /*shared.openDialog("Greška!", "Nalog sa unetim email-om već postoji!");
+              (<HTMLSelectElement>document.getElementById('email')).focus();*/
+              this.usernameAlreadyExistsBool = false;
+              this.emailAlreadyExistsBool = true;
             }
             else if (response == 'Username Already Exists') {
-              shared.openDialog("Greška!", "Nalog sa unetim korisničkim imenom već postoji!");
-              (<HTMLSelectElement>document.getElementById('username-register')).focus();
+              /*shared.openDialog("Greška!", "Nalog sa unetim korisničkim imenom već postoji!");
+              (<HTMLSelectElement>document.getElementById('username-register')).focus();*/
+              this.emailAlreadyExistsBool = false;
+              this.usernameAlreadyExistsBool = true;
             }
           }
         );

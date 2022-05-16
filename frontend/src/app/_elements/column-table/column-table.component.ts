@@ -235,13 +235,21 @@ export class ColumnTableComponent implements AfterViewInit {
         this.experiment.nullValues = NullValueOptions.DeleteColumns;
         this.experiment.nullValuesReplacers = [];
         for (let i = 0; i < this.experiment.inputColumns.length; i++) {
-          this.experiment.nullValuesReplacers.push({
+          this.experiment.nullValuesReplacers.push({ //ovo zakomentarisano
             column: this.experiment.inputColumns[i],
             option: NullValueOptions.DeleteColumns,
             value: ""
           });
           this.nullValOption[i] = "Obriši kolonu";
         }
+        //obrisi kolone koje sadrze nedostajuce vrednosti iz input kolona 
+        /*for (let i = 0; i < this.dataset.columnInfo.length; i++) {
+          if (this.dataset.columnInfo[i].numNulls > 0) {
+            this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != this.dataset!.columnInfo[i].columnName);
+            this.columnsChecked[i] = false;
+            console.log(this.dataset!.columnInfo[i].columnName);
+          }
+        }*/
       }
       else if (selectedMissingValuesOption == NullValueOptions.DeleteRows) {
         this.experiment.nullValues = NullValueOptions.DeleteRows;
@@ -261,7 +269,7 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   openMissingValuesDialog() {
     const dialogRef = this.dialog.open(MissingvaluesDialogComponent, {
-      width: '400px'
+      width: '500px'
     });
     dialogRef.afterClosed().subscribe(selectedMissingValuesOption => {
       if (selectedMissingValuesOption != undefined)
