@@ -21,7 +21,7 @@ export default class Model extends FolderFile {
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5, // TODO add to add-model form
         public inputColNum: number = 5,
-        public learningRate: LearningRate = LearningRate.LR1,
+        public learningRate: LearningRate = LearningRate.LR3,
         public layers: Layer[] = [new Layer()],
 
         // Test set settings
