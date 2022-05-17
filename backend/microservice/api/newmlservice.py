@@ -291,11 +291,12 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         random=123
     else:
         random=0
+    
+    
     #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
     #print(x_train,x_test)
     x, x_test, y, y_test = train_test_split(x, y, test_size=test, random_state=random, shuffle=True)
     x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.15, shuffle=True)
-    #
     # Treniranje modela
     #
     #
@@ -507,9 +508,9 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
             classifier.add(tf.keras.layers.Dense(units=paramsModel['layers'][i+1]['neurons'], activation=paramsModel['layers'][i+1]['activationFunction'],kernel_regularizer=kernelreg, bias_regularizer=biasreg, activity_regularizer=activityreg))#i-ti skriveni sloj
         
-        classifier.add(tf.keras.layers.Dense(units=1,activation=paramsModel['outputLayerActivationFunction']))
+        classifier.add(tf.keras.layers.Dense(units=1))
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer = opt , metrics = ['mae','mse','rmse'])
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
