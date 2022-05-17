@@ -43,7 +43,7 @@ export class ColumnTableComponent implements AfterViewInit {
 
 
   begin:number=0;
-  end:number=10;
+  step:number=10;
 
 
 
@@ -121,7 +121,7 @@ export class ColumnTableComponent implements AfterViewInit {
 
   loadData(){
     if(this.dataset!=undefined)
-    this.datasetService.getDatasetFilePartial(this.dataset.fileId, this.begin, this.end).subscribe((response: string | undefined) => {
+    this.datasetService.getDatasetFilePartial(this.dataset.fileId, this.begin, this.step).subscribe((response: string | undefined) => {
       if (response && this.dataset != undefined) {
         this.tableData = this.csvParseService.csvToArray(response, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter);
       }

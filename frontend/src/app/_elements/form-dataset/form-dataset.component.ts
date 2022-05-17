@@ -25,7 +25,7 @@ export class FormDatasetComponent {
   rowsNumber: number = 0;
   colsNumber: number = 0;
   begin:number=0;
-  end:number=10;
+  step:number=10;
   existingFlag:boolean=false;
 
   @Input() dataset: Dataset; //dodaj ! potencijalno
@@ -115,7 +115,7 @@ export class FormDatasetComponent {
     this.tableData.loaded = false;
     this.datasetsService.getDatasetHeader(this.dataset.fileId).subscribe((header: string | undefined)=>{
     
-    this.datasetsService.getDatasetFilePaging(this.dataset.fileId,this.begin,this.end).subscribe((file: string | undefined) => {
+    this.datasetsService.getDatasetFilePaging(this.dataset.fileId,this.begin,this.step).subscribe((file: string | undefined) => {
       if (file) {
         this.tableData.loaded = true;
         this.tableData.numRows = this.dataset.rowCount;
