@@ -47,19 +47,27 @@ export class FormDatasetComponent {
     this.begin=0;
   }
   goBack(){
-    if(this.begin-10<=0)
+    if(this.begin-10<0)
       this.begin=0;
     else
+    {
       this.begin-=10;
-    this.loadExisting();
+      this.loadExisting();
+    }
 
   }
   goForward(){
     this.begin+=10;
-    this.loadExisting();
+    if(this.dataset.rowCount<this.begin)
+      this.begin-=10;
+    else
+      this.loadExisting();
   }
   clear(){
     this.tableData.hasInput = false;
+  }
+  getPage(){
+    return Math.ceil(this.dataset.rowCount/10)
   }
 
   changeListener($event: any): void {
