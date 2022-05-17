@@ -370,7 +370,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['mae','mse'])
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
 
