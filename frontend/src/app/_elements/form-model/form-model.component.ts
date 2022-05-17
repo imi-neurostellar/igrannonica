@@ -328,4 +328,54 @@ export class FormModelComponent implements AfterViewInit {
     this.searchTerm = '';
     this.searchTermsChanged();
   }
+
+  filteredFiles: FolderFile[] = [];
+
+  searchTermsChanged() {
+    this.filteredFiles.length = 0;
+    this.filteredFiles.push(...this.files.filter((file) => file.name.toLowerCase().includes(this.searchTerm.toLowerCase())));
+    if (this.selectedFile) {
+      if (!this.filteredFiles.includes(this.selectedFile)) {
+        this.selectFile(-1);
+      } else {
+        this.selectedFileIndex = this.filteredFiles.indexOf(this.selectedFile);
+      }
+    }
+  }
+
+  listView: boolean = false;
+
+  toggleListView() {
+    this.listView = !this.listView;
+  }
+
+  deleteFile() {
+    console.log('delete');
+  }
+
+  folders: { [tab: number]: FolderFile[] } = {};
+
+  tabTitles: { [tab: number]: string } = {
+    [TabType.File]: 'Fajl',
+    [TabType.NewFile]: 'Novi fajl',
+    [TabType.MyDatasets]: 'Moji izvori podataka',
+    [TabType.PublicDatasets]: 'Javni izvori podataka',
+    [TabType.MyModels]: 'Moje konfiguracije neuronske mreže',
+    [TabType.PublicModels]: 'Javne konfiguracije neuronske mreže',
+    [TabType.MyExperiments]: 'Eksperimenti',
+  };
+
+  FolderType = FolderType;
+
+  TabType = TabType;
+
+  @Input() tabsToShow: TabType[] = [
+    TabType.MyDatasets,
+    TabType.PublicDatasets,
+    TabType.MyModels,
+    TabType.PublicModels,
+    TabType.MyExperiments,
+    TabType.File
+  ]
+
 }
