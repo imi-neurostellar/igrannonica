@@ -378,4 +378,60 @@ export class FormModelComponent implements AfterViewInit {
     TabType.File
   ]
 
+  @Input() selectedTab: TabType = TabType.NewFile;
+  hoverTab: TabType = TabType.None;
+
+  selectTab(tab: TabType) {
+    this.checkListView(tab);
+    this.selectedTab = tab;
+    this.files = this.folders[tab];
+
+    this.searchTermsChanged();
+  }
+
+
+  checkListView(tab: TabType) {
+    switch (tab) {
+      case TabType.File:
+      case TabType.NewFile:
+      case TabType.None:
+        this.listView = false;
+        break;
+      case TabType.MyExperiments:
+      case TabType.MyDatasets:
+      case TabType.MyModels:
+      case TabType.PublicDatasets:
+      case TabType.PublicModels:
+        this.listView = true;
+        break;
+    }
+  }
+
+  hoverOverTab(tab: TabType) {
+    this.checkListView(tab);
+    this.hoverTab = tab;
+    if (tab == TabType.None) {
+      this.checkListView(this.selectedTab);
+      this.files = this.folders[this.selectedTab];
+    } else {
+      this.files = this.folders[tab];
+    }
+    this.searchTermsChanged();
+  }
+}
+
+export enum Privacy {
+  Private,
+  Public
+}
+
+export enum TabType {
+  NewFile,
+  File,
+  MyDatasets,
+  PublicDatasets,
+  MyModels,
+  PublicModels,
+  MyExperiments,
+  None
 }
