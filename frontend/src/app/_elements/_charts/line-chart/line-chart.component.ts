@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -19,11 +19,27 @@ export class LineChartComponent implements AfterViewInit {
   dataValLoss:number[]=[];
   dataEpoch: number[] = [];
 
+  @ViewChild('wrapper')
+  wrapper!: ElementRef;
+  @ViewChild('canvas')
+  canvas!: ElementRef;
+
   constructor() {
+    
   }
-
+  width = 700;
+  height = 400;
+  
   myChart!: Chart;
+  resize() {
+    this.width = this.wrapper.nativeElement.offsetWidth;
+    this.height = this.wrapper.nativeElement.offsetHeight;
 
+    if (this.canvas) {
+      this.canvas.nativeElement.width = this.width;
+      this.canvas.nativeElement.height = this.height;
+    }
+  }
   update(myEpochs: number[], myAcc: number[], myLoss: number[], myMae: number[], myMse: number[], myValAcc:number[],myValLoss:number[],myValMae:number[],myValMse:number[]) {
     this.dataAcc.length = 0;
     this.dataAcc.push(...myAcc);
@@ -56,6 +72,9 @@ export class LineChartComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    
+    window.addEventListener('resize', () => { this.resize() });
+    this.resize();
     this.myChart = new Chart("myChart",
       {
         type: 'line',
@@ -69,7 +88,7 @@ export class LineChartComponent implements AfterViewInit {
             
           },
           {
-            label: 'VAl_Accuracy',
+            label: 'Val_Accuracy',
             data: this.dataMSE,
             borderWidth: 1
           },
@@ -150,3 +169,4 @@ export class LineChartComponent implements AfterViewInit {
     );
   }
 }
+
