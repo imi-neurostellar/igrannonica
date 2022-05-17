@@ -10,35 +10,40 @@
                 </div>
 
             </div>
-            <mat-stepper orientation="vertical" (selectionChange)="changePage($event)">
-                <mat-step>
+            <mat-stepper orientation="vertical" (selectionChange)="changePage($event)" [linear]="true">
+                <mat-step [completed]="this.step1">
                     <!--editable="false"-->
                     <ng-template matStepLabel>
-                        <span class="label" *ngIf="dataset==undefined">Izvor podataka</span>
+                        <span class="label" *ngIf="dataset==undefined">Izvor podataka </span>
                         <span class="label addedElement" *ngIf="dataset!=undefined">{{dataset.name}}</span>
                     </ng-template>
                     <ng-template matStepContent>
                         <p class="text-left">Izaberite izvor podataka</p>
                     </ng-template>
                 </mat-step>
-                <mat-step>
+                <mat-step [completed]="experiment._id!=''">
                     <ng-template matStepLabel>
-                        <span class="label addedElement" *ngIf="experiment.name!='exp1'">Predvideti:{{experiment.outputColumn}}</span>
-                        <span class="label" *ngIf="experiment.name=='exp1'">Odabir kolona</span>
+                        <span class="label addedElement" *ngIf="experiment._id!=''">Predvideti:{{experiment.outputColumn}}</span>
+                        <span *ngIf="!this.step1"><mat-icon>lock</mat-icon></span>
+                        <span class="label" *ngIf="experiment._id==''">Odabir kolona </span>
                     </ng-template>
                     <ng-template matStepContent>
                         <p class="text-left">Pripremite podatke i izaberite izlazne kolone</p>
                     </ng-template>
                 </mat-step>
-                <mat-step>
+                <mat-step [completed]="this.step3">
                     <ng-template matStepLabel>
+                        <span *ngIf="experiment._id==''" ><mat-icon>lock</mat-icon></span>
                         <span class="label addedElement" *ngIf="modelToTrain!=undefined">{{modelToTrain.name}}</span>
                         <span class="label" *ngIf="modelToTrain==undefined">Treniranje</span>
                     </ng-template>
                     <p class="text-left">Odaberite parametre i trenirajte model</p>
                 </mat-step>
-                <mat-step>
-                    <ng-template matStepLabel><span class="label">Pregled rezultata<br> treniranja</span></ng-template>
+                <mat-step [completed]="this.step4">
+                    <ng-template matStepLabel>
+                        <span *ngIf="!this.step3"><mat-icon>lock</mat-icon></span>
+                        <span class="label">Pregled rezultata<br> treniranja</span>
+                    </ng-template>
                     <p class="text-left">Pregledajte tok treniranja i<br> grafički prikaz rezultata</p>
                 </mat-step>
             </mat-stepper>
