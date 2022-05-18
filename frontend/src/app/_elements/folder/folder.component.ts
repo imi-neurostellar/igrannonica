@@ -191,7 +191,12 @@ export class FolderComponent implements AfterViewInit {
       this.folders[TabType.PublicModels] = models;
       this.searchTermsChanged();
     });*/
-    this.folders[TabType.PublicModels] = [];
+
+    this.modelsService.getPublicModels().subscribe((models) => {
+      this.folders[TabType.PublicModels] = models;
+      this.searchTermsChanged();
+    });
+    //this.folders[TabType.PublicModels] = [];
   }
 
   refreshDatasets(selectedDatasetId: string | null) {
