@@ -123,6 +123,22 @@ namespace api.Controllers
             return dataset;
         }
 
+        [HttpGet("get/{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Dataset> GetDatasetById(string id)
+        {
+            string userId = getUserId();
+
+            if (userId == null)
+                return BadRequest();
+
+            var dataset = _datasetService.GetOneDataset(userId, id);
+            if (dataset == null)
+                return NotFound($"Dataset with id = {id} not found or dataset is not public or not preprocessed");
+
+            return Ok(dataset);
+        }
+
         // POST api/<DatasetController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User,Guest")]
