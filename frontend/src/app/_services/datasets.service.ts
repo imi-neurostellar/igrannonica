@@ -51,4 +51,8 @@ export class DatasetsService {
   deleteDataset(dataset: Dataset) {
     return this.http.delete(`${Configuration.settings.apiURL}/dataset/` + dataset._id, { headers: this.authService.authHeader(), responseType: "text" });
   }
+
+  downloadFile(id:string):Observable<Blob>{
+    return this.http.get(`${Configuration.settings.apiURL}/file/Download?id=`+id, { headers: this.authService.authHeader(), responseType: 'blob' });
+  }
 }

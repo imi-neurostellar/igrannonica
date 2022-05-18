@@ -196,7 +196,7 @@ namespace api.Controllers
                 
                 string ext = ".csv";
 
-                //nesto
+                
 
                 //Check Directory
                 if (!Directory.Exists(folderPath))
@@ -226,8 +226,6 @@ namespace api.Controllers
                 fileModel1 = _fileService.Create(fileModel1);
 
                 dataset.fileId = fileModel1._id;
-
-                //nesto
 
 
                 dataset.isPreProcess = true;
@@ -282,18 +280,3 @@ namespace api.Controllers
         }
     }
 }
-
-/*
-{
-    "_id": "",
-    "name": "name",
-    "description": "description",
-    "header" : ["ag","rt"],
-    "fileId" : "652",
-    "extension": "csb",
-    "isPublic" : true,
-    "accessibleByLink": true,
-    "dateCreated": "dateCreated",
-    "lastUpdated" : "proba12"
-}
-*/

@@ -149,6 +149,26 @@ namespace api.Controllers
             return model;
         }
 
+
+        // GET api/<ModelController>/byid/{id}
+        [HttpGet("byid/{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Model> GetModelById(string id)
+        {
+            string userId = getUserId();
+
+            if (userId == null)
+                return BadRequest();
+
+            var model = _modelService.GetOneModelById(userId, id);
+
+            if (model == null)
+                return NotFound($"Model with id = {id} not found");
+
+            return model;
+        }
+
+
         //odraditi da vraca modele prema nekom imenu
 
 
@@ -191,6 +211,8 @@ namespace api.Controllers
                 return BadRequest("Bad parameters!");*/
 
             model.uploaderId = getUserId();
+            model.dateCreated = DateTime.Now;
+            model.lastUpdated = DateTime.Now;
 
             var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
 
@@ -199,6 +221,44 @@ namespace api.Controllers
                 return NotFound($"Model with name = {model.name} exisits or validation size is not between 0-1");
             else
             { 
+                //_modelService.Create(model);
+                //return Ok();
+                if (existingModel == null)
+                    _modelService.Create(model);
+                else
+                {
+                    _modelService.Replace(model);
+                }
+
+                return CreatedAtAction(nameof(Get), new { id = model._id }, model);
+            }
+        }
+
+        // POST api/<ModelController>/stealModel
+        [HttpPost("stealModel")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Model> StealModel([FromBody] Model model)//, bool overwrite)
+        {
+            bool overwrite = false;
+            //username="" ako je GUEST
+            //Experiment e = _experimentService.Get(model.experimentId); umesto 1 ide e.inputColumns.Length   TODO!!!!!!!!!!!!!!!!!
+            //model.inputNeurons = e.inputColumns.Length;
+            /*if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
+                return BadRequest("Bad parameters!");*/
+
+            model.uploaderId = getUserId();
+            model._id = "";
+            model.dateCreated = DateTime.Now;
+            model.lastUpdated = DateTime.Now;
+            model.isPublic = false;
+
+            var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
+
+
+            if (existingModel != null && !overwrite && model.validationSize < 1 && model.validationSize > 0)
+                return NotFound($"Model already exisits or validation size is not between 0-1");
+            else
+            {
                 //_modelService.Create(model);
                 //return Ok();
                 if (existingModel == null)
