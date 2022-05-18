@@ -13,6 +13,7 @@ import { SignalRService } from 'src/app/_services/signal-r.service';
 import { FormModelComponent } from '../form-model/form-model.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import Predictor from 'src/app/_data/Predictor';
+import FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-folder',
@@ -106,7 +107,7 @@ export class FolderComponent implements AfterViewInit {
     this.selectedFile = file;
     this.fileToDisplay = file;
     if (this.type == FolderType.Experiment && file) {
-      this.router.navigate(['/experiment/', file._id]);
+      this.router.navigate(['/experiment/' + file._id]);
     }
     this.newFileSelected = false;
     this.listView = false;
@@ -117,12 +118,10 @@ export class FolderComponent implements AfterViewInit {
     if (this.type == FolderType.Dataset)
       this.formDataset.loadExisting();
   }
-  /*
-  goToExperimentPage(file: FolderFile) {
-    console.log(<Experiment>file);
-    //this.router.navigate(['/experiment/', this.experiment._id]);
+  
+  goToExperimentPageWithPredictor(file: FolderFile, predictor: Predictor) {
+    this.router.navigate(['/experiment/' + file._id + "/" + predictor._id]);
   }
-  */
 
   createNewFile() {
     if (this.type == FolderType.Dataset) {
@@ -307,6 +306,20 @@ export class FolderComponent implements AfterViewInit {
         // });
         //todo delete za predictor
         break;
+    }
+  }
+  downloadFile(file: FolderFile, event: Event) {
+    event.stopPropagation();
+    if (this.type==FolderType.Dataset) {
+        const fileId=(<Dataset>file).fileId;
+        const name=(<Dataset>file).name;
+        const ext=(<Dataset>file).extension;
+        if(fileId!=undefined)
+        this.datasetsService.downloadFile(fileId).subscribe((response)=>{
+          FileSaver.saveAs(response,name+ext);
+
+        });
+
     }
   }
 

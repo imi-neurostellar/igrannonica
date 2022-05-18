@@ -14,6 +14,7 @@ import { SignalRService } from 'src/app/_services/signal-r.service';
 import { MetricViewComponent } from 'src/app/_elements/metric-view/metric-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatasetsService } from 'src/app/_services/datasets.service';
+import { PredictorsService } from 'src/app/_services/predictors.service';
 
 @Component({
   selector: 'app-experiment',
@@ -39,24 +40,47 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
   step3: boolean = false;
   step4: boolean = false;
 
-  constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private datasetsService: DatasetsService, private signalRService: SignalRService, private route: ActivatedRoute) {
+  constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private datasetsService: DatasetsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private route: ActivatedRoute) {
     this.experiment = new Experiment("exp1");
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      let experimentId = this.route.snapshot.paramMap.get("id");
-      if (experimentId == null)
-        return;
-      this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
-        this.experiment = response;
-        this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
-          this.dataset = response;
 
-          this.folderDataset.forExperiment = this.experiment;
-          this.folderDataset.selectFile(this.dataset);
+      let experimentId = this.route.snapshot.paramMap.get("id");
+      let predictorId = this.route.snapshot.paramMap.get("predictorId");
+
+      if (predictorId != null && experimentId != null) {
+        this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
+          this.experiment = response;
+          this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
+            this.dataset = response;
+            this.folderDataset.forExperiment = this.experiment;
+            this.folderDataset.selectFile(this.dataset); //sad 3. i 4. korak da se ucitaju
+
+            //this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
+              let predictor = response;
+              //this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
+                this.modelsService.getModelById("62853d70696d62ceeb8db7cd").subscribe((response) => {
+                //imamo model
+                this.folderModel.formModel.newModel = response;
+                //this.metricView.update(predictor.metrics);
+              });
+            //});
+          });
         });
-      });
+      }
+      else if (predictorId == null && experimentId != null) {
+        this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
+          this.experiment = response;
+          this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
+            this.dataset = response;
+            this.folderDataset.forExperiment = this.experiment;
+            this.folderDataset.selectFile(this.dataset);
+          });
+        });
+      }
+
     });
   }
 

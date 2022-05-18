@@ -62,4 +62,8 @@ export class ModelsService {
     return this.http.get<Model[]>(`${Configuration.settings.apiURL}/model/publicmodels`, { headers: this.authService.authHeader() });
   }
 
+  getModelById(modelId: string): Observable<Model> {
+    return this.http.get<Model>(`${Configuration.settings.apiURL}/model/byid/${modelId}`, { headers: this.authService.authHeader() });
+  }
+
 }
