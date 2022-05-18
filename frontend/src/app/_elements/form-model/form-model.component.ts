@@ -84,7 +84,7 @@ export class FormModelComponent implements AfterViewInit {
   }
 
   addLayer() {
-    if (this.newModel.hiddenLayers < 128) {
+    if (this.newModel.hiddenLayers < 150) {
       this.newModel.layers.push(new Layer(this.newModel.layers.length, this.selectedActivation, this.selectedNumberOfNeurons, this.selectedRegularisation, this.selectedRegularisationRate));
 
       this.newModel.hiddenLayers += 1;

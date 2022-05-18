@@ -393,14 +393,14 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         macro_averaged_f1=sm.f1_score(y_test, y_pred, average = 'macro')
         micro_averaged_f1=sm.f1_score(y_test, y_pred, average = 'micro')
 
-        metrics= {
-                "macro_averaged_precision" :float(macro_averaged_precision),
-                "micro_averaged_precision" : float(micro_averaged_precision),
-                "macro_averaged_recall" : float(macro_averaged_recall),
-                "micro_averaged_recall" : float(micro_averaged_recall),
-                "macro_averaged_f1" : float(macro_averaged_f1),
-                "micro_averaged_f1" : float(micro_averaged_f1)
-                }
+        metrics= [
+                {"Name":"macro_averaged_precision", "JsonValue":str(macro_averaged_precision)},
+                {"Name":"micro_averaged_precision" ,"JsonValue":str(micro_averaged_precision)},
+                {"Name":"macro_averaged_recall", "JsonValue":str(macro_averaged_recall)},
+                {"Name":"micro_averaged_recall" ,"JsonValue":str(micro_averaged_recall)},
+                {"Name":"macro_averaged_f1","JsonValue": str(macro_averaged_f1)},
+                {"Name":"micro_averaged_f1", "JsonValue": str(micro_averaged_f1)}
+        ]
 
         #vizuelizacija u python-u
         #from ann_visualizer.visualize import ann_viz;
@@ -461,20 +461,20 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         f1 = float(sm.f1_score(y_test,y_pred))
         fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
         logloss = float(sm.log_loss(y_test, y_pred))
-        metrics= {
-            "accuracy" : accuracy,
-            "precision" : precision,
-            "recall" : recall,
-            "specificity" : specificity,
-            "f1" : f1,
-            "tn" : float(tn),
-            "fp" : float(fp),
-            "fn" : float(fn),
-            "tp" : float(tp),
-            "fpr" : fpr.tolist(),
-            "tpr" : tpr.tolist(),
-            "logloss" : logloss
-            }
+        metrics= [
+            {"Name":"accuracy" ,"JsonValue": str(accuracy)},
+            {"Name":"precision","JsonValue": str(precision)},
+            {"Name":"recall" , "JsonValue":str(recall)},
+            {"Name":"specificity" ,"JsonValue":str(specificity)},
+            {"Name":"f1" ,"JsonValue": str(f1)},
+            {"Name":"tn" , "JsonValue":str(tn)},
+            {"Name":"fp" , "JsonValue":str(fp)},
+            {"Name":"fn" , "JsonValue":str(fn)},
+            {"Name":"tp" , "JsonValue":str(tp)},
+            {"Name":"fpr" ,"JsonValue": str(fpr.tolist())},
+            {"Name":"tpr" , "JsonValue":str(tpr.tolist())},
+            {"Name":"logloss" , "JsonValue":str(logloss)}
+        ]
 
         return filepath,hist,metrics
 
@@ -514,13 +514,15 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
+        print()
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
  
         classifier.save(filepath, save_format='h5')
-        
+        metrics={}
 
         mse = float(sm.mean_squared_error(y_test,y_pred))
+        metrics.append
         mae = float(sm.mean_absolute_error(y_test,y_pred))
         mape = float(sm.mean_absolute_percentage_error(y_test,y_pred))
         rmse = float(np.sqrt(sm.mean_squared_error(y_test,y_pred)))
@@ -531,14 +533,16 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         n = 40
         k = 2
         adj_r2 = float(1 - ((1-r2)*(n-1)/(n-k-1)))
-        metrics= {"mse" : mse,
-            "mae" : mae,
-            "mape" : mape,
-            "rmse" : rmse,
-            "rmsle" : rmsle,
-            "r2" : r2,
-            "adj_r2" : adj_r2
-            }
+        metrics= [
+            {"Name":"mse","JsonValue":str(mse)},
+
+            {"Name":"mae","JsonValue":str(mae)},
+            {"Name":"mape","JsonValue":str( mape)},
+            {"Name":"rmse","JsonValue":str(rmse)},
+            {"Name":"rmsle","JsonValue":str(rmsle)},
+            {"Name":"r2","JsonValue":str( r2)},
+            {"Name":"adj_r2","JsonValue":str(adj_r2)}
+            ]
         
         return filepath,hist,metrics
 
