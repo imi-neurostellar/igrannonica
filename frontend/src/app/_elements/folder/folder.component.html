@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div *ngIf="type == FolderType.Experiment" class="list-view">
-                        <div *ngFor="let predictor of predictorsForExp[file._id];" class="list-item">
+                        <div *ngFor="let predictor of predictorsForExp[file._id];" class="list-item" (click)="goToExperimentPageWithPredictor(file, predictor)">
 
                             <div class="mx-3">
                                 <div class="f-row">

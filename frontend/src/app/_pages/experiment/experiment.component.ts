@@ -58,13 +58,15 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
             this.folderDataset.forExperiment = this.experiment;
             this.folderDataset.selectFile(this.dataset); //sad 3. i 4. korak da se ucitaju
 
-            this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
+            //this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
               let predictor = response;
-              this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
+              //this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
+                this.modelsService.getModelById("62853d70696d62ceeb8db7cd").subscribe((response) => {
                 //imamo model
                 this.folderModel.formModel.newModel = response;
+                //this.metricView.update(predictor.metrics);
               });
-            });
+            //});
           });
         });
       }
