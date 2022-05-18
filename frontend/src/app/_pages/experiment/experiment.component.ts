@@ -34,15 +34,15 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
   @ViewChild("folderModel") folderModel!: FolderComponent;
   @ViewChild("metricView") metricView!: MetricViewComponent;
 
-  step1:boolean=false;
-  //step2:boolean=false;
-  step3:boolean=false;
-  step4:boolean=false;
+  step1: boolean = false;
+  step2: boolean = false;
+  step3: boolean = false;
+  step4: boolean = false;
 
   constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private datasetsService: DatasetsService, private signalRService: SignalRService, private route: ActivatedRoute) {
     this.experiment = new Experiment("exp1");
   }
-  
+
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       let experimentId = this.route.snapshot.paramMap.get("id");
@@ -73,7 +73,7 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
       Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
     } else {
       this.modelsService.trainModel(this.modelToTrain._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
-      this.step4=true;
+      this.step4 = true;
     }
   }
 
@@ -173,7 +173,10 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
   }
 
   experimentChangedEvent() {
-    this.folderModel.updateExperiment();
+    this.step2 = true;
+    setTimeout(() => {
+      this.folderModel.updateExperiment();
+    });
   }
 
   setDataset(dataset: FolderFile | null) {
@@ -187,8 +190,10 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
     this.experiment.datasetId = d._id;
     this.dataset = d;
 
-    this.columnTable.loadDataset(this.dataset);
-    this.step1=true;
+    this.step1 = true;
+    setTimeout(() => {
+      this.columnTable.loadDataset(d);
+    });
   }
 
   modelToTrain?: Model;
@@ -196,6 +201,6 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
   setModel(model: FolderFile) {
     const m = <Model>model;
     this.modelToTrain = m;
-    this.step3=true;
+    this.step3 = true;
   }
 }

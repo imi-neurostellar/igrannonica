@@ -434,7 +434,9 @@ export class FolderComponent implements AfterViewInit {
 
   updateExperiment() {
     if (this.formModel) {
-      this.formModel.updateGraph();
+      setTimeout(() => {
+        this.formModel.updateGraph();
+      });
     }
   }
 

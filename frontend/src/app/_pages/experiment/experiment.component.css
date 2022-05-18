@@ -36,12 +36,14 @@ mat-stepper {
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
     overflow-y: auto;
 }
 
 .step-content {
     position: relative;
-    width: 100%;
+    width: 98%;
+    min-height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -51,17 +53,17 @@ mat-stepper {
 .step-content-inside {
     width: 98%;
     height: 98%;
-    overflow-y: auto;
 }
-.ekspName{
+
+.ekspName {
     font-weight: bold;
     font-size: large;
 }
 
-
-.addedElement{
-    color:var(--ns-accent);
+.addedElement {
+    color: var(--ns-accent);
 }
+
 .text-overflow {
     overflow-wrap: break-word;
 }
