@@ -3,8 +3,7 @@
         <div class="topBar">
                 <div class="kolona mb-3">
                     <div class="fileButton">
-                        <button type="button" mat-raised-button (click)="fileInput.click()">Dodaj izvor podataka</button>
-                        
+                        <button type="button" mat-raised-button (click)="fileInput.click()"><span *ngIf="!firstInput">Dodaj izvor podataka</span><span *ngIf="firstInput">{{filename}}</span></button>
                     </div>
                 </div>
 
@@ -32,11 +31,7 @@
                     </mat-form-field>
                 </div>
         </div>
-        
-    <div class="row" *ngIf="firstInput">
-        <label class="naslov mt-2">{{filename}}</label>
-
-    </div>
+     
 
     <div class="row" style="margin-right: 0;">
         <div class="file-container" [ngClass]="{'dottedClass': !tableData.hasInput}">

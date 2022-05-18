@@ -62,6 +62,20 @@ namespace api.Services
             if (ChatHub.CheckUser(id))
                 foreach (var connection in ChatHub.getAllConnectionsOfUser(id))
                     await _ichat.Clients.Client(connection).SendAsync("NotifyDataset",newDataset.name,newDataset._id);
+
+
+            string proba = "";
+
+            for (int i = 0; i < newDataset.cMatrix.Length; i++)
+            {
+                proba = i +"      ";
+                for (int j = 0; j < newDataset.cMatrix[i].Length; j++)
+                    proba += newDataset.cMatrix[i][j] + "f, ";
+
+                Console.WriteLine(proba);
+                proba = "";
+            }
+
             return;
 
         }
