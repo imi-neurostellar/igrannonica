@@ -227,8 +227,6 @@ namespace api.Controllers
 
                 dataset.fileId = fileModel1._id;
 
-                //nesto
-
 
                 dataset.isPreProcess = true;
                 _datasetService.Create(dataset);

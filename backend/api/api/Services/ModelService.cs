@@ -65,6 +65,11 @@ namespace api.Services
             return _model.Find(model => model.uploaderId == userId && model.name == name).FirstOrDefault();
         }
 
+        public Model GetOneModelById(string userId, string id)
+        {
+            return _model.Find(model => model.uploaderId == userId && model._id == id).FirstOrDefault();
+        }
+
         public Model GetOneModel(string id)
         {
             return _model.Find(model => model._id == id).FirstOrDefault();

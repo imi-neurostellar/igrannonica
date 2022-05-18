@@ -149,6 +149,26 @@ namespace api.Controllers
             return model;
         }
 
+
+        // GET api/<ModelController>/byid/{id}
+        [HttpGet("byid/{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Model> GetModelById(string id)
+        {
+            string userId = getUserId();
+
+            if (userId == null)
+                return BadRequest();
+
+            var model = _modelService.GetOneModelById(userId, id);
+
+            if (model == null)
+                return NotFound($"Model with id = {id} not found");
+
+            return model;
+        }
+
+
         //odraditi da vraca modele prema nekom imenu
 
 
