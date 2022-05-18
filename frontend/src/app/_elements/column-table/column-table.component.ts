@@ -52,16 +52,28 @@ export class ColumnTableComponent implements AfterViewInit {
     this.begin=0;
   }
   goBack(){
-    if(this.begin-10<=0)
+    if(this.begin-10<0)
       this.begin=0;
     else
+    {
       this.begin-=10;
-    this.loadData();
+      this.loadData();
+    }
 
   }
   goForward(){
+    if(this.dataset!=undefined){
     this.begin+=10;
-    this.loadData();
+    if(this.dataset.rowCount<this.begin)
+      this.begin-=10;
+    else
+      this.loadData();
+    }
+  }
+  getPage(){
+    if(this.dataset!=undefined)
+      return Math.ceil(this.dataset.rowCount/this.step);
+    return 0;
   }
 
 

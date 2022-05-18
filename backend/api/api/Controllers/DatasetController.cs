@@ -123,11 +123,28 @@ namespace api.Controllers
             return dataset;
         }
 
+        [HttpGet("get/{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Dataset> GetDatasetById(string id)
+        {
+            string userId = getUserId();
+
+            if (userId == null)
+                return BadRequest();
+
+            var dataset = _datasetService.GetOneDataset(userId, id);
+            if (dataset == null)
+                return NotFound($"Dataset with id = {id} not found or dataset is not public or not preprocessed");
+
+            return Ok(dataset);
+        }
+
         // POST api/<DatasetController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<Dataset>> Post([FromBody] Dataset dataset)
         {
+            Console.WriteLine("PROBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             string uploaderId = getUserId();
 
             dataset.uploaderId = uploaderId;
@@ -145,6 +162,8 @@ namespace api.Controllers
                 dataset.isPreProcess = false;
                 _datasetService.Create(dataset);
                 _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
+
+
                 return Ok();
             }
         }
@@ -211,9 +230,9 @@ namespace api.Controllers
                 //nesto
 
 
-                dataset.isPreProcess = false;
+                dataset.isPreProcess = true;
                 _datasetService.Create(dataset);
-                _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
+                //_mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
                 return Ok();
             }
         }

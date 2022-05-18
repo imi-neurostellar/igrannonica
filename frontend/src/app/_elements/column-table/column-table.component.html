@@ -46,7 +46,7 @@
                 </table>
                 <div class="mb-3">
                     <button mat-button (click)="goBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
-                    <div style="display: inline;">{{(this.begin/10)+1}}</div>
+                    <div style="display: inline;">{{(this.begin/10)+1}}...{{getPage()}}</div>
                     <button mat-button (click)="goForward()"><mat-icon>keyboard_arrow_right</mat-icon></button>
 
                 </div>

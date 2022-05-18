@@ -48,6 +48,17 @@ namespace api.Models
 
     public class Layer
     {
+        
+
+        public Layer(int layerNumber, string activationFunction, int neurons, string regularisation, float regularisationRate) 
+        {
+            this.layerNumber = layerNumber;
+            this.activationFunction = activationFunction;
+            this.neurons = neurons;
+            this.regularisation = regularisation;
+            this.regularisationRate = regularisationRate;
+        }
+
         public int layerNumber { get; set; }
         public string activationFunction { get; set; }
         public int neurons { get; set; }
