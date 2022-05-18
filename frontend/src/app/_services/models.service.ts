@@ -31,6 +31,10 @@ export class ModelsService {
   addModel(model: Model): Observable<any> {
     return this.http.post(`${Configuration.settings.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }
+
+  stealModel(model: Model): Observable<any> {
+    return this.http.post(`${Configuration.settings.apiURL}/model/stealModel`, model, { headers: this.authService.authHeader() });
+  }
   addDataset(dataset: Dataset): Observable<any> {
     return this.http.post(`${Configuration.settings.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
   }
