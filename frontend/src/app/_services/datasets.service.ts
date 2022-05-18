@@ -40,6 +40,9 @@ export class DatasetsService {
   getDatasetFilePartial(fileId: any, startRow: number, rowNum: number): Observable<any> {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/${startRow}/${rowNum}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
+  getDatasetById(datasetId: string): Observable<Dataset> {
+    return this.http.get<Dataset>(`${Configuration.settings.apiURL}/dataset/${datasetId}`, { headers: this.authService.authHeader() });
+  }
 
   editDataset(dataset: Dataset): Observable<Dataset> {
     return this.http.put<Dataset>(`${Configuration.settings.apiURL}/dataset/` + dataset._id, dataset, { headers: this.authService.authHeader() });

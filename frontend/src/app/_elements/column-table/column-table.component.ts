@@ -41,14 +41,12 @@ export class ColumnTableComponent implements AfterViewInit {
   columnsChecked: boolean[] = []; //niz svih kolona
   loaded: boolean = false;
 
-
   begin:number=0;
   step:number=10;
 
 
 
   constructor(private datasetService: DatasetsService, private experimentService: ExperimentsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
-    //ovo mi nece trebati jer primam dataset iz druge komponente
   }
   resetPagging(){
     this.begin=0;
@@ -98,6 +96,7 @@ export class ColumnTableComponent implements AfterViewInit {
     this.dataset = dataset;
     this.setColumnTypeInitial();
 
+    this.columnsChecked = [];
     this.dataset.columnInfo.forEach(column => {
       this.columnsChecked.push(true);
     });

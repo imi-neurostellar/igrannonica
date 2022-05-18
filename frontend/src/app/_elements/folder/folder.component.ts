@@ -105,7 +105,7 @@ export class FolderComponent implements AfterViewInit {
     this.selectedFile = file;
     this.fileToDisplay = file;
     if (this.type == FolderType.Experiment && file) {
-      this.router.navigate(['/experiment'/*, file._id*/])
+      this.router.navigate(['/experiment/', file._id]);
     }
     this.newFileSelected = false;
     this.listView = false;
@@ -116,6 +116,12 @@ export class FolderComponent implements AfterViewInit {
     if (this.type == FolderType.Dataset)
       this.formDataset.loadExisting();
   }
+  /*
+  goToExperimentPage(file: FolderFile) {
+    console.log(<Experiment>file);
+    //this.router.navigate(['/experiment/', this.experiment._id]);
+  }
+  */
 
   createNewFile() {
     if (this.type == FolderType.Dataset) {

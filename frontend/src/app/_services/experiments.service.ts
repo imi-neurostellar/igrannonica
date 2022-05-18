@@ -20,6 +20,10 @@ export class ExperimentsService {
     return this.http.get<Experiment[]>(`${Configuration.settings.apiURL}/experiment/getmyexperiments`, { headers: this.authService.authHeader() });
   }
 
+  getExperimentById(id: string): Observable<Experiment> {
+    return this.http.get<Experiment>(`${Configuration.settings.apiURL}/experiment/get/${id}`, { headers: this.authService.authHeader() });
+  }
+
   updateExperiment(experiment: Experiment): Observable<Experiment> {
     return this.http.put<Experiment>(`${Configuration.settings.apiURL}/experiment/` + experiment._id, experiment, { headers: this.authService.authHeader() });
   }

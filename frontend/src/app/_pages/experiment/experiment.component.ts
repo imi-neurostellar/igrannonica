@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewChildren, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewChildren, Input, OnInit } from '@angular/core';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import Shared from 'src/app/Shared';
@@ -12,13 +12,15 @@ import Dataset from 'src/app/_data/Dataset';
 import { ColumnTableComponent } from 'src/app/_elements/column-table/column-table.component';
 import { SignalRService } from 'src/app/_services/signal-r.service';
 import { MetricViewComponent } from 'src/app/_elements/metric-view/metric-view.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DatasetsService } from 'src/app/_services/datasets.service';
 
 @Component({
   selector: 'app-experiment',
   templateUrl: './experiment.component.html',
   styleUrls: ['./experiment.component.css']
 })
-export class ExperimentComponent implements AfterViewInit {
+export class ExperimentComponent implements AfterViewInit, OnInit {
 
   @ViewChild(MatStepper) stepper!: MatStepper;
   @ViewChild('stepsContainer') stepsContainer!: ElementRef;
@@ -32,8 +34,35 @@ export class ExperimentComponent implements AfterViewInit {
   @ViewChild("folderModel") folderModel!: FolderComponent;
   @ViewChild("metricView") metricView!: MetricViewComponent;
 
-  constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private signalRService: SignalRService) {
+  constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private datasetsService: DatasetsService, private signalRService: SignalRService, private route: ActivatedRoute) {
     this.experiment = new Experiment("exp1");
+  }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      let experimentId = this.route.snapshot.paramMap.get("id");
+      console.log("EXPID u exp.comp:", experimentId);
+      if (experimentId == null)
+        return;
+
+      this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
+        this.experiment = response;
+        console.log(this.experiment); //OTKUD MI NAME
+        this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
+          this.dataset = response;
+          console.log("EXP u exp.comp:", this.experiment);
+          console.log("DATASET u exp.comp:", this.dataset);
+          this.folderDataset.forExperiment = this.experiment;
+          this.folderDataset.fileToDisplay = <FolderFile>this.experiment;
+          this.folderDataset.selectFile();
+          this.columnTable.experiment = this.experiment;
+          this.columnTable.dataset = this.dataset;
+          //this.columnTable.loadDataset(this.dataset);
+          
+          //this.setDataset();
+          //this.experimentChangedEvent();
+        });
+      });
+    });
   }
 
   /*updateExperiment(){
@@ -151,13 +180,18 @@ export class ExperimentComponent implements AfterViewInit {
     this.folderModel.updateExperiment();
   }
 
-  setDataset(dataset: FolderFile) {
+  setDataset(dataset: FolderFile | null) {
+    if (dataset == null) {
+      this.columnTable.loaded = false;
+      this.dataset = undefined;
+      this.experiment.datasetId = '';
+      return;
+    }
     const d = <Dataset>dataset;
     this.experiment.datasetId = d._id;
     this.dataset = d;
 
     this.columnTable.loadDataset(this.dataset);
-    
   }
 
   modelToTrain?: Model;
