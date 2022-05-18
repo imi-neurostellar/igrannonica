@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import Dataset from 'src/app/_data/Dataset';
 import { FolderFile, FolderType } from 'src/app/_data/FolderFile';
-import Model from 'src/app/_data/Model';
+import Model, { ProblemType } from 'src/app/_data/Model';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import Shared from 'src/app/Shared';
 import { ModelsService } from 'src/app/_services/models.service';
@@ -65,9 +65,9 @@ export class FolderComponent implements AfterViewInit {
   }
 
   displayFile() {
-    if (this.type == FolderType.Dataset){
+    if (this.type == FolderType.Dataset) {
       this.formDataset.dataset = <Dataset>this.fileToDisplay;
-      this.formDataset.existingFlag=false;
+      this.formDataset.existingFlag = false;
     }
     else if (this.type == FolderType.Model)
       this.formModel.newModel = <Model>this.fileToDisplay;
@@ -95,7 +95,7 @@ export class FolderComponent implements AfterViewInit {
     this.newFileSelected = true;
     this.listView = false;
     this.displayFile();
-    if (this.type == FolderType.Dataset){
+    if (this.type == FolderType.Dataset) {
       this.formDataset.clear();
     }
   }
@@ -234,6 +234,7 @@ export class FolderComponent implements AfterViewInit {
           });
         break;
       case FolderType.Model:
+        this.formModel.newModel.type = this.formModel.forProblemType;
         this.modelsService.addModel(this.formModel.newModel).subscribe(model => {
           this.newFile = undefined;
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
@@ -300,9 +301,9 @@ export class FolderComponent implements AfterViewInit {
     event.stopPropagation();
     switch (this.type) {
       case FolderType.Dataset:
-        (<Dataset>file)._id="";
+        (<Dataset>file)._id = "";
         (<Dataset>file).isPreProcess = true;
-        (<Dataset>file).isPublic=false;
+        (<Dataset>file).isPublic = false;
         this.datasetsService.stealDataset(<Dataset>file).subscribe((response) => {
           this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
           this.refreshFiles(null);
@@ -335,6 +336,7 @@ export class FolderComponent implements AfterViewInit {
   };
 
   FolderType = FolderType;
+  ProblemType = ProblemType;
   Privacy = Privacy;
   TabType = TabType;
 
@@ -428,6 +430,11 @@ export class FolderComponent implements AfterViewInit {
       this.formModel.updateGraph();
     }
   }
+
+  newTabTitles: { [tab: number]: string } = {
+    [FolderType.Dataset]: 'Novi izvor podataka',
+    [FolderType.Model]: 'Nova konfiguracija neuronske mreže',
+  };
 }
 
 export enum Privacy {
