@@ -76,7 +76,10 @@
                             {{file.lastUpdated | date}}
                         </div>
                         <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
-                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)">
+                            <button class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;">
+                                <mat-icon>download</mat-icon>
+                            </button>
+                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)" style="display: inline-block;">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </div>
