@@ -144,7 +144,6 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<Dataset>> Post([FromBody] Dataset dataset)
         {
-            Console.WriteLine("PROBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             string uploaderId = getUserId();
 
             dataset.uploaderId = uploaderId;
