@@ -46,26 +46,15 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       let experimentId = this.route.snapshot.paramMap.get("id");
-      console.log("EXPID u exp.comp:", experimentId);
       if (experimentId == null)
         return;
-
       this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
         this.experiment = response;
-        console.log(this.experiment); //OTKUD MI NAME
         this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
           this.dataset = response;
-          console.log("EXP u exp.comp:", this.experiment);
-          console.log("DATASET u exp.comp:", this.dataset);
+
           this.folderDataset.forExperiment = this.experiment;
-          this.folderDataset.fileToDisplay = <FolderFile>this.experiment;
-          this.folderDataset.selectFile();
-          this.columnTable.experiment = this.experiment;
-          this.columnTable.dataset = this.dataset;
-          //this.columnTable.loadDataset(this.dataset);
-          
-          //this.setDataset();
-          //this.experimentChangedEvent();
+          this.folderDataset.selectFile(this.dataset);
         });
       });
     });
@@ -200,7 +189,6 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
 
     this.columnTable.loadDataset(this.dataset);
     this.step1=true;
-    
   }
 
   modelToTrain?: Model;

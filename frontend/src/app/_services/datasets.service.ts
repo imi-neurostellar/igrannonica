@@ -41,7 +41,7 @@ export class DatasetsService {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/${startRow}/${rowNum}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
   getDatasetById(datasetId: string): Observable<Dataset> {
-    return this.http.get<Dataset>(`${Configuration.settings.apiURL}/dataset/${datasetId}`, { headers: this.authService.authHeader() });
+    return this.http.get<Dataset>(`${Configuration.settings.apiURL}/dataset/get/${datasetId}`, { headers: this.authService.authHeader() });
   }
 
   editDataset(dataset: Dataset): Observable<Dataset> {

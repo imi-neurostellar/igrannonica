@@ -14,6 +14,7 @@ import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.
 import Shared from 'src/app/Shared';
 import { PieChartComponent } from '../_charts/pie-chart/pie-chart.component';
 import { BoxPlotComponent } from '../_charts/box-plot/box-plot.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-column-table',
@@ -46,7 +47,7 @@ export class ColumnTableComponent implements AfterViewInit {
 
 
 
-  constructor(private datasetService: DatasetsService, private experimentService: ExperimentsService, public csvParseService: CsvParseService, public dialog: MatDialog) {
+  constructor(private datasetService: DatasetsService, private experimentService: ExperimentsService, public csvParseService: CsvParseService, public dialog: MatDialog, private route: ActivatedRoute) {
   }
   resetPagging(){
     this.begin=0;
@@ -105,23 +106,51 @@ export class ColumnTableComponent implements AfterViewInit {
 
   loadDataset(dataset: Dataset) {
     console.log("LOADED DATASET");
-    this.dataset = dataset;
-    this.setColumnTypeInitial();
 
-    this.columnsChecked = [];
-    this.dataset.columnInfo.forEach(column => {
-      this.columnsChecked.push(true);
-    });
-
-    this.resetInputColumns();
-    this.resetOutputColumn();
-    this.resetColumnEncodings(Encoding.Label);
-    this.setDeleteRowsForMissingValTreatment();
-
-    this.nullValOption = [];
-    this.dataset.columnInfo.forEach(colInfo => {
-      this.nullValOption.push(`Obriši redove (${colInfo.numNulls})`);
-    });
+    if (this.route.snapshot.paramMap.get("id") == null) {
+      this.dataset = dataset;
+      this.setColumnTypeInitial();
+  
+      this.columnsChecked = [];
+      this.dataset.columnInfo.forEach(column => {
+        this.columnsChecked.push(true);
+      });
+  
+      this.resetInputColumns();
+      this.resetOutputColumn();
+      this.resetColumnEncodings(Encoding.Label);
+      this.setDeleteRowsForMissingValTreatment();
+  
+      this.nullValOption = [];
+      this.dataset.columnInfo.forEach(colInfo => {
+        this.nullValOption.push(`Obriši redove (${colInfo.numNulls})`);
+      });
+    }
+    else {
+      this.dataset = dataset;
+      this.columnsChecked = [];
+      this.dataset.columnInfo.forEach(column => {
+        if (this.experiment.inputColumns.find(x => x == column.columnName) != undefined)
+          this.columnsChecked.push(true);
+        else
+          this.columnsChecked.push(false);
+      });
+      this.nullValOption = [];
+      for (let i = 0; i < this.dataset!.columnInfo.length; i++) {
+        let nullValRep = this.experiment.nullValuesReplacers.find(x => x.column == this.dataset!.columnInfo[i].columnName);
+        if (nullValRep != undefined) {
+          if (nullValRep.option == NullValueOptions.DeleteRows)
+            this.nullValOption.push(`Obriši redove (${this.dataset.columnInfo[i].numNulls})`);
+          else if (nullValRep.option == NullValueOptions.DeleteColumns)
+          this.nullValOption.push(`Obriši kolonu`);
+          else {
+            this.nullValOption.push(`Popuni sa ${nullValRep.value}`);
+          }
+        }
+        else 
+          this.nullValOption.push(`Obriši redove (${this.dataset.columnInfo[i].numNulls})`);
+      }
+    }
     this.resetPagging();
     this.loadData();
     this.loaded = true;
@@ -140,8 +169,6 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.dataset?.columnInfo);
-
   }
 
   setColumnTypeInitial() {

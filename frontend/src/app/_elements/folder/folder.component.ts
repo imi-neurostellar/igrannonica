@@ -11,7 +11,7 @@ import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
 import { SignalRService } from 'src/app/_services/signal-r.service';
 import { FormModelComponent } from '../form-model/form-model.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Predictor from 'src/app/_data/Predictor';
 
 @Component({
@@ -42,11 +42,12 @@ export class FolderComponent implements AfterViewInit {
   fileToDisplay?: FolderFile;
 
   @Output() selectedFileChanged: EventEmitter<FolderFile> = new EventEmitter();
+  @Output() fileFromRoute: EventEmitter<FolderFile> = new EventEmitter();
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
 
   searchTerm: string = '';
 
-  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private router: Router) {
+  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private router: Router, private route: ActivatedRoute) {
     this.tabsToShow.forEach(tab => this.folders[tab] = []);
   }
 
