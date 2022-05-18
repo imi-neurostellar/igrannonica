@@ -13,6 +13,7 @@ import { SignalRService } from 'src/app/_services/signal-r.service';
 import { FormModelComponent } from '../form-model/form-model.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import Predictor from 'src/app/_data/Predictor';
+import FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-folder',
@@ -304,6 +305,20 @@ export class FolderComponent implements AfterViewInit {
         // });
         //todo delete za predictor
         break;
+    }
+  }
+  downloadFile(file: FolderFile, event: Event) {
+    event.stopPropagation();
+    if (this.type==FolderType.Dataset) {
+        const fileId=(<Dataset>file).fileId;
+        const name=(<Dataset>file).name;
+        const ext=(<Dataset>file).extension;
+        if(fileId!=undefined)
+        this.datasetsService.downloadFile(fileId).subscribe((response)=>{
+          FileSaver.saveAs(response,name+ext);
+
+        });
+
     }
   }
 

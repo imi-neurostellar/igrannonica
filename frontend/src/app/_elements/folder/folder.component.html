@@ -59,6 +59,11 @@
                     <button *ngIf="this.selectedFile && selectedTab == TabType.File" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
                         <mat-icon>delete</mat-icon>
                     </button>
+                    <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
+                        <mat-icon>download</mat-icon>
+                    </button>
+
+                    
                     <!-- <button class="btn-clear file-button">
                         <mat-icon>zoom_out_map</mat-icon>
                     </button> -->
@@ -76,7 +81,10 @@
                             {{file.lastUpdated | date}}
                         </div>
                         <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
-                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)">
+                            <button *ngIf="selectedTab==TabType.MyDatasets" class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;">
+                                <mat-icon>download</mat-icon>
+                            </button>
+                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)" style="display: inline-block;">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </div>
