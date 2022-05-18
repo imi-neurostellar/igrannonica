@@ -11,12 +11,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Tip problema</mat-label>
-                    <mat-select [(ngModel)]="newModel.type" (selectionChange)="filterLossFunction()" *ngIf="this.hideProblemType" disabled="true">
-                        <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
-                            {{ optionName }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-select [(ngModel)]="newModel.type" (selectionChange)="filterLossFunction()" *ngIf="!this.hideProblemType" disabled="false">
+                    <mat-select [(ngModel)]="forProblemType" [disabled]="this.hideProblemType">
                         <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -41,7 +36,7 @@
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Funkcija troška</mat-label>
                     <mat-select [(ngModel)]="newModel.lossFunction">
-                        <mat-option *ngFor="let option of Object.keys(lossFunction); let optionName of Object.values(lossFunction)" [value]="option">
+                        <mat-option *ngFor="let option of Object.keys(lossFunctions[forProblemType]); let optionName of Object.values(lossFunctions[forProblemType])" [value]="option">
                             {{ optionName }}
                         </mat-option>
                     </mat-select>
@@ -118,8 +113,7 @@
 
             <div class="col-sm-9">
                 <!-- {{forExperiment._columnsSelected}} -->
-                <app-graph [model]="newModel" *ngIf="forExperiment._columnsSelected" [inputColumns]="getInputColumns()"></app-graph>
-                <app-graph [model]="newModel" *ngIf="!forExperiment._columnsSelected" [inputColumns]="['Nisu odabrane ulazne kolone']"></app-graph>
+                <app-graph [model]="newModel" [inputColumns]="getInputColumns()"></app-graph>
             </div>
         </div>
     </div>
