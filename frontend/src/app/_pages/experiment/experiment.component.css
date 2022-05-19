@@ -66,4 +66,10 @@ mat-stepper {
 
 .text-overflow {
     overflow-wrap: break-word;
+    width: 170px;
+    display: inline-block;
+    text-align: left;
+}
+.text-overflow-experiment-name{
+    overflow-wrap: break-word;
 }
