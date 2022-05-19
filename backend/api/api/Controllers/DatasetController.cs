@@ -144,7 +144,6 @@ namespace api.Controllers
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<Dataset>> Post([FromBody] Dataset dataset)
         {
-            Console.WriteLine("PROBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             string uploaderId = getUserId();
 
             dataset.uploaderId = uploaderId;
@@ -196,7 +195,7 @@ namespace api.Controllers
                 
                 string ext = ".csv";
 
-                //nesto
+                
 
                 //Check Directory
                 if (!Directory.Exists(folderPath))
@@ -280,18 +279,3 @@ namespace api.Controllers
         }
     }
 }
-
-/*
-{
-    "_id": "",
-    "name": "name",
-    "description": "description",
-    "header" : ["ag","rt"],
-    "fileId" : "652",
-    "extension": "csb",
-    "isPublic" : true,
-    "accessibleByLink": true,
-    "dateCreated": "dateCreated",
-    "lastUpdated" : "proba12"
-}
-*/

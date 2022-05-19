@@ -303,7 +303,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     ###OPTIMIZATORI
     print(paramsModel['optimizer'])
     if(paramsModel['optimizer']=='Adam'):
-        opt=tf.keras.optimizers.Adam(learning_rate=3)
+        opt=tf.keras.optimizers.Adam(learning_rate=float(paramsModel['learningRate']))
 
     elif(paramsModel['optimizer']=='Adadelta'):
         opt=tf.keras.optimizers.Adadelta(learning_rate=float(paramsModel['learningRate']))
@@ -370,7 +370,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['accuracy','mae','mse'])
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
 
@@ -383,9 +383,9 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         scores = classifier.evaluate(x_test, y_test)
         #print("\n%s: %.2f%%" % (classifier.metrics_names[1], scores[1]*100))
         
-        
+        '''
         classifier.save(filepath, save_format='h5')
-        metrics={}
+       
         macro_averaged_precision=sm.precision_score(y_test, y_pred, average = 'macro')
         micro_averaged_precision=sm.precision_score(y_test, y_pred, average = 'micro')
         macro_averaged_recall=sm.recall_score(y_test, y_pred, average = 'macro')
@@ -393,20 +393,20 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         macro_averaged_f1=sm.f1_score(y_test, y_pred, average = 'macro')
         micro_averaged_f1=sm.f1_score(y_test, y_pred, average = 'micro')
 
-        metrics= {
-                "macro_averaged_precision" :float(macro_averaged_precision),
-                "micro_averaged_precision" : float(micro_averaged_precision),
-                "macro_averaged_recall" : float(macro_averaged_recall),
-                "micro_averaged_recall" : float(micro_averaged_recall),
-                "macro_averaged_f1" : float(macro_averaged_f1),
-                "micro_averaged_f1" : float(micro_averaged_f1)
-                }
-
+        metrics= [
+                {"Name":"macro_averaged_precision", "JsonValue":str(macro_averaged_precision)},
+                {"Name":"micro_averaged_precision" ,"JsonValue":str(micro_averaged_precision)},
+                {"Name":"macro_averaged_recall", "JsonValue":str(macro_averaged_recall)},
+                {"Name":"micro_averaged_recall" ,"JsonValue":str(micro_averaged_recall)},
+                {"Name":"macro_averaged_f1","JsonValue": str(macro_averaged_f1)},
+                {"Name":"micro_averaged_f1", "JsonValue": str(micro_averaged_f1)}
+        ]
+        '''
         #vizuelizacija u python-u
         #from ann_visualizer.visualize import ann_viz;
         #ann_viz(classifier, title="My neural network")
         
-        return filepath,hist,metrics
+        return filepath,[hist['loss'],hist['val_loss'],hist['accuracy'],hist['val_accuracy'],hist['mae'],hist['val_mae'],hist['mse'],hist['val_mse']]
 
     elif(problem_type=='binarni-klasifikacioni'):
         #print('*************************************************************************binarni')
@@ -444,6 +444,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
+        
         y_pred=classifier.predict(x_test)
         y_pred=(y_pred>=0.5).astype('int')
         
@@ -452,7 +453,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         # ann_viz(classifier, title="My neural network")
         
         classifier.save(filepath, save_format='h5')
-
+        """
         accuracy = float(sm.accuracy_score(y_test,y_pred))
         precision = float(sm.precision_score(y_test,y_pred))
         recall = float(sm.recall_score(y_test,y_pred))
@@ -461,22 +462,9 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         f1 = float(sm.f1_score(y_test,y_pred))
         fpr, tpr, _ = sm.roc_curve(y_test,y_pred)
         logloss = float(sm.log_loss(y_test, y_pred))
-        metrics= {
-            "accuracy" : accuracy,
-            "precision" : precision,
-            "recall" : recall,
-            "specificity" : specificity,
-            "f1" : f1,
-            "tn" : float(tn),
-            "fp" : float(fp),
-            "fn" : float(fn),
-            "tp" : float(tp),
-            "fpr" : fpr.tolist(),
-            "tpr" : tpr.tolist(),
-            "logloss" : logloss
-            }
+        """
 
-        return filepath,hist,metrics
+        return filepath,[hist['loss'],hist['val_loss'],hist['accuracy'],hist['val_accuracy'],hist['mae'],hist['val_mae'],hist['mse'],hist['val_mse']]
 
     elif(problem_type=='regresioni'):
         reg=paramsModel['layers'][0]['regularisation']
@@ -514,13 +502,15 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
+        
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
  
         classifier.save(filepath, save_format='h5')
-        
+        '''
 
         mse = float(sm.mean_squared_error(y_test,y_pred))
+        
         mae = float(sm.mean_absolute_error(y_test,y_pred))
         mape = float(sm.mean_absolute_percentage_error(y_test,y_pred))
         rmse = float(np.sqrt(sm.mean_squared_error(y_test,y_pred)))
@@ -531,16 +521,19 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         n = 40
         k = 2
         adj_r2 = float(1 - ((1-r2)*(n-1)/(n-k-1)))
-        metrics= {"mse" : mse,
-            "mae" : mae,
-            "mape" : mape,
-            "rmse" : rmse,
-            "rmsle" : rmsle,
-            "r2" : r2,
-            "adj_r2" : adj_r2
-            }
-        
-        return filepath,hist,metrics
+       
+        metrics= [
+            {"Name":"mse","JsonValue":str(mse)},
+
+            {"Name":"mae","JsonValue":str(mae)},
+            {"Name":"mape","JsonValue":str( mape)},
+            {"Name":"rmse","JsonValue":str(rmse)},
+            {"Name":"rmsle","JsonValue":str(rmsle)},
+            {"Name":"r2","JsonValue":str( r2)},
+            {"Name":"adj_r2","JsonValue":str(adj_r2)}
+            ]
+        '''
+        return filepath,[hist['loss'],hist['val_loss'],[],[],hist['mae'],hist['val_mae'],hist['mse'],hist['val_mse']]
 
     def roc_auc_score_multiclass(actual_class, pred_class, average = "macro"):
     

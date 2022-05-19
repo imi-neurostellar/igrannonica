@@ -131,6 +131,7 @@ export class ColumnTableComponent implements AfterViewInit {
     }
     else {
       this.dataset = dataset;
+      this.experimentChanged.emit();
       this.columnsChecked = [];
       this.dataset.columnInfo.forEach(column => {
         if (this.experiment.inputColumns.find(x => x == column.columnName) != undefined)
@@ -157,9 +158,6 @@ export class ColumnTableComponent implements AfterViewInit {
     this.resetPagging();
     this.loadData();
     this.loaded = true;
-
-    this.updateCharts();
-    this.updatePieChart();
   }
 
   loadData(){
@@ -249,6 +247,19 @@ export class ColumnTableComponent implements AfterViewInit {
     }
   }
 
+  outputColumnChanged() {
+    let outputColReplacer = this.experiment.nullValuesReplacers.find(x => x.column == this.experiment.outputColumn);
+    let index = this.experiment.nullValuesReplacers.findIndex(x => x.column == this.experiment.outputColumn);
+    if (outputColReplacer != undefined) {
+      outputColReplacer.option = NullValueOptions.DeleteRows;
+      
+      let numOfRowsToDelete = (this.dataset!.columnInfo.filter(x => x.columnName == this.experiment.outputColumn)[0]).numNulls;
+      this.nullValOption[index] = "Obriši redove (" + numOfRowsToDelete + ")";
+    }
+
+    this.changeProblemType();
+  }
+
   changeProblemType() {
     if (this.experiment != undefined && this.dataset != undefined) {
       let i = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment!.outputColumn);
@@ -300,14 +311,26 @@ export class ColumnTableComponent implements AfterViewInit {
 
       if (selectedMissingValuesOption == NullValueOptions.DeleteColumns) {
         this.experiment.nullValues = NullValueOptions.DeleteColumns;
+
+        let outputColReplacer = this.experiment.nullValuesReplacers.find(x => x.column == this.experiment.outputColumn);
+
         this.experiment.nullValuesReplacers = [];
         for (let i = 0; i < this.experiment.inputColumns.length; i++) {
-          this.experiment.nullValuesReplacers.push({ //ovo zakomentarisano
-            column: this.experiment.inputColumns[i],
-            option: NullValueOptions.DeleteColumns,
-            value: ""
-          });
-          this.nullValOption[i] = "Obriši kolonu";
+          if (this.experiment.inputColumns[i] != this.experiment.outputColumn) {
+            this.experiment.nullValuesReplacers.push({ //ovo zakomentarisano
+              column: this.experiment.inputColumns[i],
+              option: NullValueOptions.DeleteColumns,
+              value: ""
+            });
+            this.nullValOption[i] = "Obriši kolonu";
+          }
+          else {
+            if (outputColReplacer != undefined) {
+              this.experiment.nullValuesReplacers.push(outputColReplacer);
+              let numOfRowsToDelete = (this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.inputColumns[i])[0]).numNulls;
+              this.nullValOption[i] = (outputColReplacer.option == NullValueOptions.DeleteRows) ? "Obriši redove (" + numOfRowsToDelete + ")" : "Popuni sa " + outputColReplacer.value + "";
+            }
+          }
         }
         //obrisi kolone koje sadrze nedostajuce vrednosti iz input kolona 
         /*for (let i = 0; i < this.dataset.columnInfo.length; i++) {
@@ -336,7 +359,8 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   openMissingValuesDialog() {
     const dialogRef = this.dialog.open(MissingvaluesDialogComponent, {
-      width: '500px'
+      width: '500px',
+      panelClass: 'custom-modalbox'
     });
     dialogRef.afterClosed().subscribe(selectedMissingValuesOption => {
       if (selectedMissingValuesOption != undefined)

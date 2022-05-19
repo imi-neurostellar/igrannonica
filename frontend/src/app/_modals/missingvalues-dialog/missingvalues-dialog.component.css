@@ -6,3 +6,7 @@
 #btnNo {
     color: gray;
 }
+
+::ng-deep.mat-dialog-content {
+    overflow: visible;
+}

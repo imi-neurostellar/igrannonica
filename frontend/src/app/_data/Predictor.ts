@@ -13,8 +13,16 @@ export default class Predictor extends FolderFile {
         public experimentId: string = "",
         public modelId: string = "",
         public h5FileId: string = "",
-        public metrics: Metric[] = [],
-        public finalMetrics: Metric[] = []
+        public metricsLoss:number[]=[],
+		public metricsValLoss:number []=[], 
+		public metricsAcc:number[]=[],
+		public metricsValAcc: number[]=[],
+        public metricsMae :number []=[],
+		public metricsValMae :number []=[],
+		public metricsMse : number[]=[],
+		public metricsValMse : number[]=[],
+        //public metrics: Metric[] = [],
+        //public finalMetrics: Metric[] = []
     ) {
         super(name, dateCreated, dateCreated);
     }

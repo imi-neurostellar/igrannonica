@@ -182,8 +182,8 @@
 
 .file-bottom-buttons {
     position: absolute;
-    bottom: 15px;
-    right: 15px;
+    bottom: 5px;
+    right: 4%;
     display: flex;
     flex-direction: row-reverse;
 }

@@ -12,12 +12,14 @@ import { TestComponent } from './_pages/test/test.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Početna strana' } },
+  { path: 'experiment/:id/:predictorId', component: ExperimentComponent, data: { title: 'Eksperiment' } },
   { path: 'experiment/:id', component: ExperimentComponent, data: { title: 'Eksperiment' } },
   { path: 'experiment', component: ExperimentComponent, data: { title: 'Eksperiment' } },
   { path: 'archive', component: ArchiveComponent, data: { title: 'Arhiva' } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService], data: { title: 'Profil' } },
   { path: 'playground', component: PlaygroundComponent, data: { title: 'Zabava' } },
-  { path: 'test', component: TestComponent, data: { title: 'Test' } }
+  { path: 'test', component: TestComponent, data: { title: 'Test' } },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

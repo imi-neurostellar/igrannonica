@@ -104,16 +104,6 @@ namespace api.Services
 
             return dataset._id;
         }
-        /*
-public bool CheckDb()
-{
-   Dataset? dataset = null;
-   dataset = _dataset.Find(dataset => dataset.username == "igrannonica").FirstOrDefault();
-
-   if (dataset != null)
-       return false;
-   else
-       return true;
-}*/
+        
     }
 }
