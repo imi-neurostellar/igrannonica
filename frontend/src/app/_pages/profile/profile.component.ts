@@ -7,7 +7,8 @@ import { PICTURES } from 'src/app/_data/ProfilePictures';
 import { Picture } from 'src/app/_data/ProfilePictures';
 import shared from '../../Shared';
 import { share } from 'rxjs';
-
+import { MatDialog } from '@angular/material/dialog';
+import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -49,7 +50,7 @@ export class ProfileComponent implements OnInit {
   pattPassword: RegExp = /.{6,30}$/;
 
 
-  constructor(private userInfoService: UserInfoService, private authService: AuthService, private router: Router) { }
+  constructor(private userInfoService: UserInfoService, private authService: AuthService, private router: Router, public dialog?: MatDialog) { }
 
   ngOnInit(): void {
     this.userInfoService.getUserInfo().subscribe((response) => {
@@ -105,10 +106,13 @@ export class ProfileComponent implements OnInit {
       this.resetInfo();
     }, (error: any) =>{
       if (error.error == "Username already exists!") {
-        shared.openDialog("Obaveštenje", "Ukucano korisničko ime je već zauzeto! Izaberite neko drugo.");
-        //(<HTMLSelectElement>document.getElementById("inputUsername")).focus();
-        //poruka obavestenja ispod inputa
-        this.resetInfo();
+        const dialogRef = this.dialog?.open(AlertDialogComponent, {
+          width: '350px',
+          data: { title: "Obaveštenje", message: "Ukucano korisničko ime je već zauzeto! Izaberite neko drugo." }
+        });
+        dialogRef?.afterClosed().subscribe(res => {
+          this.resetInfo();
+        });
       }
     });
   }
