@@ -14,6 +14,7 @@ import { FormModelComponent } from '../form-model/form-model.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import Predictor from 'src/app/_data/Predictor';
 import FileSaver from 'file-saver';
+import isEqual from 'lodash.isequal';
 
 @Component({
   selector: 'app-folder',
@@ -105,6 +106,7 @@ export class FolderComponent implements AfterViewInit {
   selectFile(file?: FolderFile) {
     this.formDataset.resetPagging();
     this.selectedFile = file;
+    Object.assign(this.lastFileData, this.selectedFile);
     this.fileToDisplay = file;
     if (this.type == FolderType.Experiment && file) {
       this.router.navigate(['/experiment/' + file._id]);
@@ -118,7 +120,7 @@ export class FolderComponent implements AfterViewInit {
     if (this.type == FolderType.Dataset)
       this.formDataset.loadExisting();
   }
-  
+
   goToExperimentPageWithPredictor(file: FolderFile, predictor: Predictor) {
     this.router.navigate(['/experiment/p/' + predictor._id]);
   }
@@ -138,7 +140,7 @@ export class FolderComponent implements AfterViewInit {
   _initialized: boolean = false;
 
   refreshFiles(selectedDatasetId: string | null = null, selectedModelId: string | null = null) {
-    
+
     this.tabsToShow.forEach(tab => {
       this.folders[tab] = [];
     });
@@ -221,7 +223,7 @@ export class FolderComponent implements AfterViewInit {
           this.predictorsForExp[exp._id].forEach(pred => {
             const model = this.folders[TabType.MyModels].find(model => model._id == pred.modelId);
             pred.name = model?.name!;
-            pred.lastUpdated = model?.lastUpdated!;
+            //pred.lastUpdated = model?.lastUpdated!;
           })
           /* ------------------------------------------------ */
           this.searchTermsChanged();
@@ -267,7 +269,12 @@ export class FolderComponent implements AfterViewInit {
   searchTermsChanged() {
     this.filteredFiles.length = 0;
     if (!this.files) return;
-    this.filteredFiles.push(...this.files.filter((file) => file.name.toLowerCase().includes(this.searchTerm.toLowerCase())));
+    this.filteredFiles.push(...this.files.filter((file) => {
+      return (file.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+        && (!this.forExperiment
+          || this.type != FolderType.Model
+          || (this.type == FolderType.Model && (<Model>file).type == this.forExperiment.type)))
+    }));
     /*if (this.selectedFile) {
       if (!this.filteredFiles.includes(this.selectedFile)) {
         if (this.hoverTab === TabType.None && this.getFolderType(this.selectedTab) === this.type) {
@@ -282,41 +289,102 @@ export class FolderComponent implements AfterViewInit {
 
   listView: boolean = true;
 
-  deleteFile(file: FolderFile, event: Event) {
-    event.stopPropagation();
-    this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
-    this.files.splice(this.files.indexOf(file), 1);
+  loadingAction = false;
+  selectedFileHasChanges = false;
+  lastFileData = {};
+
+  onFileChange() {
+    console.log(this.selectedFile, this.lastFileData)
+    setTimeout(() => {
+      this.selectedFileHasChanges = !((this.selectedTab == TabType.NewFile) || isEqual(this.selectedFile, this.lastFileData));
+    });
+  }
+
+  updateFile() {
+    const file = this.selectedFile;
+    this.loadingAction = true;
     switch (this.type) {
       case FolderType.Dataset:
-        this.datasetsService.deleteDataset(<Dataset>file).subscribe((response) => {
-          Shared.openDialog("Obaveštenje", "Uspešno ste obrisali odabrani izvor podataka.");
-          //this.filteredFiles.splice(this.files.indexOf(file), 1);
-          //this.refreshFiles();
+        this.datasetsService.editDataset(<Dataset>file).subscribe((response) => {
+          this.fileUpdatedSuccess();
         });
         break;
       case FolderType.Model:
-        this.modelsService.deleteModel(<Model>file).subscribe((response) => {
-          Shared.openDialog("Obaveštenje", "Uspešno ste obrisali odabranu konfiguraciju neuronske mreže.");
-          //this.refreshFiles();
+        this.modelsService.editModel(<Model>file).subscribe((response) => {
+          this.fileUpdatedSuccess();
         });
         break;
+    }
+  }
+
+  fileUpdatedSuccess() {
+    this.loadingAction = false;
+    this.selectedFileHasChanges = false;
+    Object.assign(this.lastFileData, this.selectedFile);
+    this.refreshFiles();
+  }
+
+  deleteFile(file: FolderFile, event: Event, deletePredictor: boolean = false) {
+    event.stopPropagation();
+
+    switch (this.type) {
+      case FolderType.Dataset:
+        const dataset = <Dataset>file;
+        Shared.openYesNoDialog("Obriši izvor podataka", "Eksperimenti i trenirani modeli nad ovim izvorom podataka će takođe biti obrisani, da li ste sigurni da želite da obrišete izvor: " + dataset.name + "?", () => {
+          this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+          this.files.splice(this.files.indexOf(file), 1);
+          this.loadingAction = true;
+          this.datasetsService.deleteDataset(dataset).subscribe((response) => {
+            this.loadingAction = false;
+          });
+        })
+        break;
+      case FolderType.Model:
+        const model = <Model>file;
+        Shared.openYesNoDialog("Obriši konfiguraciju neuronske mreže", "Trenirani modeli za ovu konfiguraciju će takođe biti obrisani, da li ste sigurni da želite da obrišete konfiguraciju: " + model.name + "?", () => {
+          this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+          this.files.splice(this.files.indexOf(file), 1);
+          this.loadingAction = true;
+          this.modelsService.deleteModel(<Model>file).subscribe((response) => {
+            this.loadingAction = false;
+          });
+        })
+
+        break;
       case FolderType.Experiment:
-        // this.experimentsService.deleteExperiment(<Model>file).subscribe((response) => {
-        //   console.log(response);
-        // });
-        //todo delete za predictor
+        if (deletePredictor) {
+          const predictor = <Predictor>file;
+          Shared.openYesNoDialog("Obriši trenirani model", "Da li ste sigurni da želite da obrišete trenirani model: " + predictor.name + "?", () => {
+            this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+            this.files.splice(this.files.indexOf(file), 1);
+            this.loadingAction = true;
+            this.predictorsService.deletePredictor(predictor).subscribe((response) => {
+              this.loadingAction = false;
+            });
+          });
+        } else {
+          const experiment = <Experiment>file;
+          Shared.openYesNoDialog("Obriši eksperiment", "Trenirani modeli za ovaj eksperiment će takođe biti obrisani, da li ste sigurni da želite da obrišete eksperiment: " + experiment.name + "?", () => {
+            this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+            this.files.splice(this.files.indexOf(file), 1);
+            this.loadingAction = true;
+            this.experimentsService.deleteExperiment(experiment).subscribe((response) => {
+              this.loadingAction = false;
+            });
+          });
+        }
         break;
     }
   }
   downloadFile(file: FolderFile, event: Event) {
     event.stopPropagation();
-    if (this.type==FolderType.Dataset) {
-        const fileId=(<Dataset>file).fileId;
-        const name=(<Dataset>file).name;
-        const ext=(<Dataset>file).extension;
-        if(fileId!=undefined)
-        this.datasetsService.downloadFile(fileId).subscribe((response)=>{
-          FileSaver.saveAs(response,name+ext);
+    if (this.type == FolderType.Dataset) {
+      const fileId = (<Dataset>file).fileId;
+      const name = (<Dataset>file).name;
+      const ext = (<Dataset>file).extension;
+      if (fileId != undefined)
+        this.datasetsService.downloadFile(fileId).subscribe((response) => {
+          FileSaver.saveAs(response, name + ext);
 
         });
 
@@ -333,7 +401,7 @@ export class FolderComponent implements AfterViewInit {
         this.datasetsService.stealDataset(<Dataset>file).subscribe((response) => {
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali javni izvor podataka u vašu kolekciju.");
           this.refreshFiles(null);
-        }, (error:any) => {
+        }, (error: any) => {
           if (error.error == "Dataset with this name already exists") {
             Shared.openDialog("Obaveštenje", "Izvor podataka sa ovim imenom postoji u vašoj kolekciji.");
           }
@@ -343,7 +411,7 @@ export class FolderComponent implements AfterViewInit {
         this.modelsService.stealModel(<Model>file).subscribe((response) => {
           Shared.openDialog("Obaveštenje", "Uspešno ste dodali javnu konfiguraciju neuronske mreže u vašu kolekciju.");
           this.refreshFiles(null);
-        }, (error:any) => {
+        }, (error: any) => {
           if (error.error == "Model already exisits or validation size is not between 0-1") {
             Shared.openDialog("Obaveštenje", "Model sa ovim imenom postoji u vašoj kolekciji.");
           }

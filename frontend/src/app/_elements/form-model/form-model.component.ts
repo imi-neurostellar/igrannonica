@@ -24,6 +24,8 @@ export class FormModelComponent implements AfterViewInit {
     this.forProblemType = ProblemType.BinaryClassification;
   }
 
+  @Output() editEvent = new EventEmitter();
+
   ngAfterViewInit(): void { }
 
   selectFormControl = new FormControl('', Validators.required);
@@ -80,6 +82,7 @@ export class FormModelComponent implements AfterViewInit {
       this.newModel.layers.splice(this.newModel.layers.length - 1, 1);
       this.newModel.hiddenLayers -= 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
   }
 
@@ -89,6 +92,7 @@ export class FormModelComponent implements AfterViewInit {
 
       this.newModel.hiddenLayers += 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
   }
 
@@ -100,6 +104,7 @@ export class FormModelComponent implements AfterViewInit {
     if (this.newModel.layers[index].neurons > 1) {
       this.newModel.layers[index].neurons -= 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
   }
 
@@ -107,6 +112,7 @@ export class FormModelComponent implements AfterViewInit {
     if (this.newModel.layers[index].neurons < 18) {
       this.newModel.layers[index].neurons += 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
   }
 
@@ -119,22 +125,26 @@ export class FormModelComponent implements AfterViewInit {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].activationFunction = this.selectedActivation;
     }
+    this.editEvent.emit();
   }
   changeAllRegularisation() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].regularisation = this.selectedRegularisation;
     }
+    this.editEvent.emit();
   }
   changeAllRegularisationRate() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].regularisationRate = this.selectedRegularisationRate;
     }
+    this.editEvent.emit();
   }
   changeAllNumberOfNeurons() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].neurons = this.selectedNumberOfNeurons;
-      this.updateGraph();
     }
+    this.updateGraph();
+    this.editEvent.emit();
   }
   updateTestSet(event: MatSliderChange) {
     this.testSetDistribution = event.value!;
@@ -149,5 +159,6 @@ export class FormModelComponent implements AfterViewInit {
 
   updateValidation(event: MatSliderChange) {
     this.validationSize = event.value!;
+    this.editEvent.emit();
   }
 }
