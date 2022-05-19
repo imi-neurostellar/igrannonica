@@ -1,10 +1,10 @@
-<h2 mat-dialog-title class="text-muted">{{data.title}}</h2>
-<div mat-dialog-content class="mt-4" style="color: rgb(81, 76, 76);">
+<h2 mat-dialog-title class="text-center">{{data.title}}</h2>
+<div mat-dialog-content class="mt-5 mb-4 mx-1">
     <form (keydown)="withEnterKey($event)">
         {{data.message}}
     </form>
 </div>
 <div mat-dialog-actions class="d-flex justify-content-center mt-4">
-    <button mat-button cdkFocusInitial (click)="onYesClick()" style="background-color: lightgray;">Da</button>
-    <button mat-button cdkFocusInitial (click)="onNoClick()" style="background-color: lightgray;">Ne</button>
+    <button id="btnYes" mat-stroked-button color="basic" (click)="onYesClick()" style="background-color: lightgray;">Da</button>
+    <button id="btnNo" mat-stroked-button (click)="onNoClick()" style="background-color: lightgray;">Ne</button>
 </div>

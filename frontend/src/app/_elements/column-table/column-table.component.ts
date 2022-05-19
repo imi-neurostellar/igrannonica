@@ -85,7 +85,7 @@ export class ColumnTableComponent implements AfterViewInit {
   loadDataset(dataset: Dataset) {
     console.log("LOADED DATASET");
 
-    if (this.route.snapshot.paramMap.get("id") == null) {
+    if (this.route.snapshot.paramMap.get("id") == null && this.route.snapshot.paramMap.get("predictorId") == null) {
       this.dataset = dataset;
       this.setColumnTypeInitial();
   

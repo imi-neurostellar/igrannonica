@@ -251,8 +251,13 @@ namespace api.Controllers
                 return NotFound($"Dataset with ID = {id} or user with ID = {uploaderId} not found");
 
             dataset.lastUpdated = DateTime.UtcNow;
-
             _datasetService.Update(uploaderId, id, dataset);
+
+            if (!dataset.isPreProcess)
+            {
+                FileModel fileModel = _fileService.getFile(dataset.fileId);
+                _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
+            }
 
             return Ok($"Dataset with ID = {id} updated");
         }

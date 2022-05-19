@@ -1,49 +1,48 @@
 <div class="folderBox" *ngIf="dataset">
- 
-        <div class="topBar">
-                <div class="kolona mb-3">
-                    <div class="fileButton">
-                        <button type="button" mat-raised-button (click)="fileInput.click()"><span *ngIf="!firstInput">Dodaj izvor podataka</span><span *ngIf="firstInput">{{filename}}</span></button>
-                    </div>
-                </div>
-
-                <div class="kolona">
-                    <div role="group">
-                            <mat-form-field class="example-full-width" appearance="fill">
-                                <mat-label>Naziv</mat-label>
-                                <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name">
-
-
-                                <mat-error *ngIf="nameFormControl.hasError('required')">
-                                    Naziv je <strong>obavezan</strong>
-                                </mat-error>
-                            </mat-form-field>
-                    </div>
-                </div>
-                <div class="kolona">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Delimiter</mat-label>
-                        <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (selectionChange)="update()" value=",">
-                            <mat-option *ngFor="let option of delimiterOptions" [value]="option">
-                                {{ option }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+    <div class="topBar">
+        <div class="kolona mb-3">
+            <div class="fileButton">
+                <button type="button" mat-raised-button (click)="fileInput.click()"><span *ngIf="!firstInput">Dodaj izvor podataka</span><span *ngIf="firstInput">{{filename}}</span></button>
+            </div>
         </div>
-     
+
+        <div class="kolona">
+            <div role="group">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Naziv</mat-label>
+                    <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name" (change)="editEvent.emit()">
+
+
+                    <mat-error *ngIf="nameFormControl.hasError('required')">
+                        Naziv je <strong>obavezan</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="kolona">
+            <mat-form-field appearance="fill">
+                <mat-label>Delimiter</mat-label>
+                <mat-select id="delimiterOptions" [(ngModel)]="dataset.delimiter" (selectionChange)="update(); editEvent.emit();" value=",">
+                    <mat-option *ngFor="let option of delimiterOptions" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
 
     <div class="row" style="margin-right: 0;">
         <div class="file-container" [ngClass]="{'dottedClass': !tableData.hasInput}">
 
             <i class="material-icons-outlined icon-display" [ngClass]="{'hidden': tableData.hasInput}">file_upload</i>
-            
 
-            <input class="file" id="file-upload" (change)="changeListener($event)" #fileInput type="file" accept=".csv">
+
+            <input class="file" id="file-upload" (change)="changeListener($event)" (valueChange)="dataset.isPreProcess = false; editEvent.emit()" #fileInput type="file" accept=".csv">
 
             <div class="mt-5 datatable">
                 <div [ngClass]="{'hidden': (!existingFlag)}" class="text-center">
-                    <button mat-button  (click)="goBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+                    <button mat-button (click)="goBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
                     <div style="display: inline;">{{(this.begin/10)+1}}...{{getPage()}}</div>
                     <button mat-button (click)="goForward()"><mat-icon>keyboard_arrow_right</mat-icon></button>
                 </div>

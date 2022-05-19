@@ -41,32 +41,33 @@ export class LineChartComponent implements AfterViewInit {
     }
   }
   update(myEpochs: number[], myAcc: number[], myLoss: number[], myMae: number[], myMse: number[], myValAcc:number[],myValLoss:number[],myValMae:number[],myValMse:number[]) {
-    this.dataAcc.length = 0;
-    this.dataAcc.push(...myAcc);
-
+   
     this.dataEpoch.length = 0;
     this.dataEpoch.push(...myEpochs);
 
-    this.dataMAE.length = 0;
-    this.dataMAE.push(...myMae);
+    this.dataAcc.length = 0;
+    this.dataAcc.push(...myAcc);
 
     this.dataLOSS.length = 0;
     this.dataLOSS.push(...myLoss);
 
-    this.dataMSE.length = 0;
-    this.dataMSE.push(...myValAcc);
-
-    this.dataMSE.length = 0;
-    this.dataMSE.push(...myValLoss);
-
-    this.dataMSE.length = 0;
-    this.dataMSE.push(...myValMae);
-
-    this.dataMSE.length = 0;
-    this.dataMSE.push(...myValMse);
+    this.dataMAE.length = 0;
+    this.dataMAE.push(...myMae);
 
     this.dataMSE.length = 0;
     this.dataMSE.push(...myMse);
+
+    this.dataValAcc.length = 0;
+    this.dataValAcc.push(...myValAcc);
+
+    this.dataValLoss.length = 0;
+    this.dataValLoss.push(...myValLoss);
+
+    this.dataValMAE.length = 0;
+    this.dataValMAE.push(...myValMae);
+
+    this.dataValMSE.length = 0;
+    this.dataValMSE.push(...myValMse);
 
     this.myChart.update();
   }
@@ -89,7 +90,7 @@ export class LineChartComponent implements AfterViewInit {
           },
           {
             label: 'Val_Accuracy',
-            data: this.dataMSE,
+            data: this.dataValAcc,
             borderWidth: 1
           },
           {
@@ -99,7 +100,7 @@ export class LineChartComponent implements AfterViewInit {
           },
           {
             label: 'Val_Loss',
-            data: this.dataMSE,
+            data: this.dataValLoss,
             borderWidth: 1
           },
           {
@@ -109,7 +110,7 @@ export class LineChartComponent implements AfterViewInit {
           },
           {
             label: 'Val_MAE',
-            data: this.dataMSE,
+            data: this.dataValMAE,
             borderWidth: 1
           },
           {
@@ -119,7 +120,7 @@ export class LineChartComponent implements AfterViewInit {
           },
           {
             label: 'Val_MSE',
-            data: this.dataMSE,
+            data: this.dataValMSE,
             borderWidth: 1
           }
           ]

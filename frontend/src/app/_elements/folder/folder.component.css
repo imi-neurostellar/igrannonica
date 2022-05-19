@@ -105,8 +105,9 @@
 .bottom-button {
     font-size: large;
     position: relative;
+    text-align: center;
     background-color: var(--ns-primary);
-    width: 10rem;
+    width: 12rem;
     height: 2.3rem;
     border-color: var(--ns-primary);
     border-style: solid;
@@ -170,7 +171,8 @@
 
 .folder-inside {
     width: 100%;
-    min-height: 40rem;
+    min-height: 33rem;
+    height: 100%;
     max-height: 100%;
 }
 
