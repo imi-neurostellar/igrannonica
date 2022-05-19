@@ -81,10 +81,9 @@ namespace api.Controllers
         [ServiceFilter(typeof(MlApiCheckActionFilter))]
         public async Task<ActionResult<string>> Epoch([FromBody] Epoch info)
         {
-            
             var model=_modelService.GetOneModel(info.ModelId);
             var user = _userService.GetUserById(model.uploaderId);
-
+            if((model.epochs>100 && info.EpochNum%Math.Round(Math.Sqrt(model.epochs))==0) || model.epochs<=100 ||model.epochs-1==info.EpochNum)
             if (ChatHub.CheckUser(user._id))
                 foreach (var connection in ChatHub.getAllConnectionsOfUser(user._id))
                     await _ichat.Clients.Client(connection).SendAsync("NotifyEpoch",model.name,info.ModelId,info.Stat,model.epochs,info.EpochNum);
