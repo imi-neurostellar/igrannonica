@@ -23,3 +23,8 @@ mat-form-field {
 .selectedPicture {
     background-color: var(--ns-accent);
 }
+
+.mat-raised-button {
+    width: 180px !important;
+    height: 50px !important;
+}

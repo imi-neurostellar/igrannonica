@@ -160,7 +160,11 @@ namespace api.Controllers
             var model = _modelService.GetOneModel(predictor.modelId);
             if (model == null || user==null)
                 return BadRequest("Model not found or user doesnt exist");
-            _predictorService.Create(predictor);       
+            Predictor p=_predictorService.Exists(predictor.modelId, predictor.experimentId);
+            if (p == null)
+                _predictorService.Create(predictor);
+            else
+                _predictorService.Update(p._id, predictor);
             if (ChatHub.CheckUser(user._id))
                 foreach(var connection in ChatHub.getAllConnectionsOfUser(user._id))
                     await _ichat.Clients.Client(connection).SendAsync("NotifyPredictor", predictor._id,model.name);

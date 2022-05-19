@@ -179,6 +179,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     ###KATEGORIJSKE KOLONE
     kategorijskekolone=[]
     ###PRETVARANJE NUMERICKIH U KATREGORIJSKE AKO JE KORISNIK TAKO OZNACIO
+
     columnInfo=paramsDataset['columnInfo']
     columnTypes=paramsExperiment['columnTypes']
     for i in range(len(columnInfo)):
@@ -187,25 +188,27 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
             data[col['columnName']]=data[col['columnName']].apply(str)
             kategorijskekolone.append(col['columnName'])
     #kategorijskekolone=data.select_dtypes(include=['object']).columns
-    print(kategorijskekolone)
+    #print(kategorijskekolone)
     ###NULL
-    null_value_options = paramsExperiment["nullValues"]
-    null_values_replacers = paramsExperiment["nullValuesReplacers"]
+    #null_value_options = paramsExperiment["nullValues"] #
+    null_values_replacers = paramsExperiment["nullValuesReplacers"] #{"column":"naziv","opt":"tip promene","value":"vrednost za zamenu"}
     
-    if(null_value_options=='replace'):
+    #if(null_value_options=='replace'):
         #print("replace null") 
-        dict=null_values_replacers
-        while(len(dict)>0):
-            replace=dict.pop()
-            col=replace['column']
-            opt=replace['option']
-            if(opt=='replace'):
-                replacevalue=replace['value']
-                data[col]=data[col].fillna(replacevalue)
-    elif(null_value_options=='delete_rows'):
-        data=data.dropna()
-    elif(null_value_options=='delete_columns'):
-        data=data.dropna(axis=1)
+    dict=null_values_replacers
+    while(len(dict)>0):
+        replace=dict.pop()
+        col=replace['column']
+        opt=replace['option']
+
+        if(opt=='replace'):
+            replacevalue=replace['value']
+            data[col]=data[col].fillna(replacevalue)
+        
+    data=data.dropna()
+            
+    #print(data)
+
     #print(data.shape)
     
     #
@@ -237,11 +240,12 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     
     
             elif(encoding=='onehot'):
-                category_columns=[]
-                for col in data.columns:
-                    if(data[col].dtype==np.object_):
-                        category_columns.append(col)
-                data=pd.get_dummies(data, columns=category_columns, prefix=category_columns)
+                if((len(pd.unique(data[kolona]))>20)or (kolona==output_column)):
+                    encoder=LabelEncoder()
+                    data[kolona]=encoder.fit_transform(data[kolona])
+                
+                else:    
+                    data=pd.get_dummies(data, columns=kolona, prefix=kolona)
 
             elif(encoding=='ordinal'):
                 encoder = OrdinalEncoder()
@@ -296,7 +300,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
     #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test, random_state=random)
     #print(x_train,x_test)
     x, x_test, y, y_test = train_test_split(x, y, test_size=test, random_state=random, shuffle=True)
-    x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.15, shuffle=True)
+    x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=(1.0-paramsModel['validationSize']))
     # Treniranje modela
     #
     #

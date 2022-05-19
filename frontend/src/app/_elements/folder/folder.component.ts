@@ -122,7 +122,7 @@ export class FolderComponent implements AfterViewInit {
   }
 
   goToExperimentPageWithPredictor(file: FolderFile, predictor: Predictor) {
-    this.router.navigate(['/experiment/' + file._id + "/" + predictor._id]);
+    this.router.navigate(['/experiment/p/' + predictor._id]);
   }
 
   createNewFile() {

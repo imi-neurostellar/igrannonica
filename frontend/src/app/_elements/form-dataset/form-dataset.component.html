@@ -10,7 +10,7 @@
             <div role="group">
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>Naziv</mat-label>
-                    <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name" (change)="editEvent.emit()">
+                    <input type="text" matInput value="{{dataset?.name}}" [(ngModel)]="dataset.name" (input)="editEvent.emit()">
 
 
                     <mat-error *ngIf="nameFormControl.hasError('required')">

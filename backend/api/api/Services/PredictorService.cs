@@ -62,5 +62,10 @@ namespace api.Services
         {
             _predictor.ReplaceOne(predictor => predictor._id == id, predictor);
         }
+        public Predictor Exists(string modelId, string experimentId)
+        {
+            Predictor p=_predictor.Find(pre=> pre.modelId == modelId && pre.experimentId==experimentId).FirstOrDefault();
+            return p;
+        }
     }
 }

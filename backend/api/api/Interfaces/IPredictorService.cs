@@ -12,5 +12,6 @@ namespace api.Services
         List<Predictor> GetPublicPredictors();
         List<Predictor> SortPredictors(string userId, bool ascdsc, int latest);
         void Update(string id, Predictor predictor);
+        public Predictor Exists(string modelId, string experimentId);
     }
 }
