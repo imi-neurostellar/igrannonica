@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let row of tableData; let i = index">
-                            <th>#{{i}}</th>
+                            <th>#{{((this.begin/10)+1)*10-10+i+1}}</th>
                             <td *ngFor="let col of row; let j = index" [ngClass]="{'text-disabled' : !columnsChecked[j]}">
                                 <div class="text-overflow">
                                     {{col}}
@@ -200,7 +200,7 @@
                                     </mat-menu>
                                 </div>
                                 <div *ngIf="colInfo.numNulls == 0" class="text-left">
-                                    Nema null vrednosti.
+                                    Nema nedostajućih vrednosti.
                                 </div>
                             </td>
                         </tr>

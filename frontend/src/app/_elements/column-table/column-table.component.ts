@@ -131,6 +131,7 @@ export class ColumnTableComponent implements AfterViewInit {
     }
     else {
       this.dataset = dataset;
+      this.experimentChanged.emit();
       this.columnsChecked = [];
       this.dataset.columnInfo.forEach(column => {
         if (this.experiment.inputColumns.find(x => x == column.columnName) != undefined)
@@ -157,9 +158,6 @@ export class ColumnTableComponent implements AfterViewInit {
     this.resetPagging();
     this.loadData();
     this.loaded = true;
-
-    this.updateCharts();
-    this.updatePieChart();
   }
 
   loadData(){
@@ -336,7 +334,8 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   openMissingValuesDialog() {
     const dialogRef = this.dialog.open(MissingvaluesDialogComponent, {
-      width: '500px'
+      width: '500px',
+      panelClass: 'custom-modalbox'
     });
     dialogRef.afterClosed().subscribe(selectedMissingValuesOption => {
       if (selectedMissingValuesOption != undefined)
