@@ -18,15 +18,25 @@ namespace api.Models
 		public string experimentId { get; set; }
 		public string modelId { get; set; }
 		public string h5FileId { get; set; }
-		public Metric[] metrics { get; set; }
-		public Metric[] finalMetrics { get; set; }
-	}
 
-	public class Metric
+		//public Metric[] metrics { get; set; }
+	
+		public float[] metricsLoss { get; set; }
+		public float[] metricsValLoss { get; set; }
+		public float[] metricsAcc { get; set; }
+		public float[] metricsValAcc { get; set; }
+		public float[] metricsMae { get; set; }
+		public float[] metricsValMae { get; set; }
+		public float[] metricsMse { get; set; }
+		public float[] metricsValMse { get; set; }
+		//public Metric[] finalMetrics { get; set; }
+	}
+	
+	/*public class Metric
     {
 		string Name { get; set; }
 		string JsonValue { get; set; }
 
-    }
-
+    }*/
+	
 }

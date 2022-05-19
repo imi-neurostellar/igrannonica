@@ -2,10 +2,10 @@
     <div class="d-flex flex-colum align-items-center sidenav">
         <div>
             <div class="ekspName " style="width: 250px;">
-                <div class="text-overflow" *ngIf="experiment.name=='exp1'" style="width: 250px;">
+                <div class="text-overflow-experiment-name" *ngIf="experiment.name=='exp1'" style="width: 250px;">
                     Novi Eksperiment
                 </div>
-                <div class="text-overflow" *ngIf="experiment.name!='exp1'" style="width: 250px;">
+                <div class="text-overflow-experiment-name" *ngIf="experiment.name!='exp1'" style="width: 250px;">
                     {{experiment.name}}
                 </div>
 
@@ -14,37 +14,37 @@
                 <mat-step [completed]="this.step1">
                     <!--editable="false"-->
                     <ng-template matStepLabel>
-                        <span class="label" *ngIf="dataset==undefined">Izvor podataka </span>
-                        <span class="label addedElement" *ngIf="dataset!=undefined">{{dataset.name}}</span>
+                        <span class="label text-overflow" *ngIf="dataset==undefined">Izvor podataka </span>
+                        <span class="label addedElement text-overflow" *ngIf="dataset!=undefined">{{dataset.name}}</span>
                     </ng-template>
                     <ng-template matStepContent>
-                        <p class="text-left">Izaberite izvor podataka</p>
+                        <p class="text-left text-overflow">Izaberite izvor podataka</p>
                     </ng-template>
                 </mat-step>
                 <mat-step [completed]="experiment._id!=''">
                     <ng-template matStepLabel>
-                        <span class="label addedElement" *ngIf="experiment._id!=''">Predvideti:{{experiment.outputColumn}}</span>
+                        <span class="label addedElement text-overflow" *ngIf="experiment._id!=''">Predvideti:{{experiment.outputColumn}}</span>
                         <span *ngIf="!this.step1" class="align-middle"><mat-icon>lock</mat-icon></span>
-                        <span class="label" *ngIf="experiment._id==''">Odabir kolona </span>
+                        <span class="label text-overflow" *ngIf="experiment._id==''">Odabir kolona </span>
                     </ng-template>
                     <ng-template matStepContent>
-                        <p class="text-left">Pripremite podatke i izaberite izlazne kolone</p>
+                        <p class="text-left text-overflow">Pripremite podatke i izaberite izlazne kolone</p>
                     </ng-template>
                 </mat-step>
                 <mat-step [completed]="this.step3">
                     <ng-template matStepLabel>
                         <span *ngIf="experiment._id==''" class="align-middle"><mat-icon>lock</mat-icon></span>
-                        <span class="label addedElement" *ngIf="modelToTrain!=undefined">{{modelToTrain.name}}</span>
-                        <span class="label" *ngIf="modelToTrain==undefined">Treniranje</span>
+                        <span class="label addedElement text-overflow" *ngIf="modelToTrain!=undefined">{{modelToTrain.name}}</span>
+                        <span class="label text-overflow" *ngIf="modelToTrain==undefined">Treniranje</span>
                     </ng-template>
-                    <p class="text-left">Odaberite parametre i trenirajte model</p>
+                    <p class="text-left text-overflow">Odaberite parametre i trenirajte model</p>
                 </mat-step>
                 <mat-step [completed]="this.step4">
                     <ng-template matStepLabel>
                         <span *ngIf="!this.step3" class="align-middle"><mat-icon>lock</mat-icon></span>
-                        <span class="label">Pregled rezultata<br> treniranja</span>
+                        <span class="label text-overflow align-middle">Pregled rezultata<br> treniranja</span>
                     </ng-template>
-                    <p class="text-left">Pregledajte tok treniranja i<br> grafički prikaz rezultata</p>
+                    <p class="text-left text-overflow">Pregledajte tok treniranja i<br> grafički prikaz rezultata</p>
                 </mat-step>
             </mat-stepper>
         </div>

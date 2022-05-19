@@ -18,7 +18,8 @@ const routes: Routes = [
   { path: 'archive', component: ArchiveComponent, data: { title: 'Arhiva' } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService], data: { title: 'Profil' } },
   { path: 'playground', component: PlaygroundComponent, data: { title: 'Zabava' } },
-  { path: 'test', component: TestComponent, data: { title: 'Test' } }
+  { path: 'test', component: TestComponent, data: { title: 'Test' } },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

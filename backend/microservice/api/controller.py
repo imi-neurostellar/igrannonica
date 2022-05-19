@@ -69,15 +69,26 @@ def train():
     
 
     #dataset, paramsModel, paramsExperiment, callback)
-    filepath,result,finalMetrics= newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
+    filepath,histMetrics= newmlservice.train(data, paramsModel, paramsExperiment,paramsDataset, train_callback)
     """
     f = request.json['filepath']
     dataset = pd.read_csv(f)
     filepath,result=newmlservice.train(dataset,request.json['model'],train_callback)
     print(result)
     """
-
-
+    #m = []
+    #for attribute, value in result.items():
+       #m.append(histMetrics(attribute,str(value)).__dict__)
+    '''
+    m = []
+    for attribute, value in result.items():
+        m.append({"Name" : attribute, "JsonValue" : value}))
+    
+    print("**************************************************************")
+    print(m)
+    
+    print("**************************************************************")
+    '''
     url = config.api_url + "/file/h5"
     files = {'file': open(filepath, 'rb')}
     r=requests.post(url, files=files,data={"uploaderId":paramsExperiment['uploaderId']})
@@ -92,15 +103,21 @@ def train():
         "experimentId" : paramsExperiment["_id"],
         "modelId" : paramsModel["_id"],
         "h5FileId" : fileId,
-        "metrics" : result,
-        "finalMetrics":finalMetrics
+        "metricsLoss":histMetrics[0],
+        "metricsValLoss":histMetrics[1],
+        "metricsAcc":histMetrics[2],
+        "metricsValAcc":histMetrics[3],
+        "metricsMae":histMetrics[4],
+        "metricsValMae":histMetrics[5],
+        "metricsMse":histMetrics[6],
+        "metricsValMse":histMetrics[7]
     }
     #print(predictor)
-   
+    
     url = config.api_url + "/Predictor/add"
     r = requests.post(url, json=predictor).text
     
-    print(r)
+    #print(r)
     return r
 
 @app.route('/predict', methods = ['POST'])

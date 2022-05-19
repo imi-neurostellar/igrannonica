@@ -24,10 +24,13 @@ export class YesNoDialogComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
-  onYesClick():void{
+
+  withEnterKey(keyboardEvent: KeyboardEvent) {
+      if (keyboardEvent.code == "Enter" || keyboardEvent.code == "NumpadEnter") 
+        this.onYesClick();
+  }
+  onYesClick():void {
     this.data.yesFunction();
     this.dialogRef.close();
   }
-
-
 }

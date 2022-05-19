@@ -28,9 +28,27 @@ export class BoxPlotComponent implements AfterViewInit {
   updateChart(min: number, max: number, q1: number, q3: number, median: number) {
     if (this.myChart) {
       this.boxplotData.datasets[0].data = [[min, q1, median, q3, max]]
-      this.myChart.update();
+      this.myChart?.update();
     }
+    /*this.boxplotData.datasets = [{
+      data: [[min, q1, median, q3, max]],
+    }]*/
+
   };
+
+  /*
+  updatePieChart(uniqueValues: string[], uniqueValuesPercent: number[]){
+    //console.log(this.uniqueValues, this.uniqueValuesPercent);
+    this.pieChartData.datasets =  [{
+        label: "%",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#000000"],
+        data: uniqueValuesPercent,
+      }];
+      this.pieChartData.labels = uniqueValues
+      console.log(this.uniqueValues, this.uniqueValuesPercent);
+      this.myChart?.update() 
+    };
+  */
 
   @ViewChild('boxplot') chartRef!: ElementRef;
   constructor() {
