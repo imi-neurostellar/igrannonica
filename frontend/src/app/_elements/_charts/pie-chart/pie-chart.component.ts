@@ -14,6 +14,23 @@ export class PieChartComponent implements AfterViewInit {
   @ViewChild('piechart') chartRef!: ElementRef;
   constructor() { }
 
+  @Input()width?: number;
+  @Input()height?: number;
+  @Input()uniqueValues?: string[] = [];
+  @Input()uniqueValuesPercent?: number[] = [];
+
+  updatePieChart(uniqueValues: string[], uniqueValuesPercent: number[]){
+    //console.log(this.uniqueValues, this.uniqueValuesPercent);
+    this.pieChartData.datasets =  [{
+        label: "%",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#000000"],
+        data: uniqueValuesPercent,
+      }];
+      this.pieChartData.labels = uniqueValues
+      console.log(this.uniqueValues, this.uniqueValuesPercent);
+      this.myChart?.update() 
+    };
+
   ngAfterViewInit(): void {
   const myChart = new Chart(this.chartRef.nativeElement, {
     type: 'pie',
