@@ -58,10 +58,6 @@ export class PieChartComponent implements AfterViewInit {
     data: data     
   ,
     options: {
-      /*title: {
-        display: true,
-        text: 'Predicted world population (millions) in 2050'
-      }*/
       plugins:{   
         legend: {
           display: false
