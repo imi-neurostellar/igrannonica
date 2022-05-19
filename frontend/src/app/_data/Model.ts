@@ -117,8 +117,8 @@ export enum ActivationFunctionOutputLayer
 export enum LossFunction {
     // binary classification loss functions
     BinaryCrossEntropy = 'binary_crossentropy',
-    SquaredHingeLoss = 'squared_hinge_loss',
-    HingeLoss = 'hinge_loss',
+    SquaredHingeLoss = 'squared_hinge',
+    HingeLoss = 'hinge',
     // multi-class classification loss functions
     CategoricalCrossEntropy = 'categorical_crossentropy',
     SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
