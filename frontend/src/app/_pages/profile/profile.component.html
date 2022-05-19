@@ -27,11 +27,11 @@
                             <div class="row gx-3 mb-3">
                                 <!-- Form Group (password)-->
                                 <div class="col-md-6">
-                                    <small *ngIf="wrongPassBool" class="form-text danger-Text">Neispravna lozinka.</small>
                                     <mat-form-field appearance="fill">
                                         <mat-label>Važeća lozinka</mat-label>
                                         <input matInput id="inputPassword" name="inputPassword" type="password" placeholder="" [(ngModel)]="this.oldPass">
                                     </mat-form-field>
+                                    <small *ngIf="wrongPassBool" class="form-text danger-Text">Neispravna lozinka.</small>
                                     <small *ngIf="wrongOldPassBool" class="form-text danger-Text">Pogrešan format.</small>
                                 </div>
                                 <!-- Form Group (new password)-->
@@ -50,7 +50,7 @@
                                 <div class="col-md-6">
                                     <div class="col text-center">
                                         <!-- Save changes button-->
-                                        <button mat-raised-button color="primary" (click)="savePasswordChanges()">Promeni lozinku</button>
+                                        <button mat-raised-button color="basic" (click)="savePasswordChanges()">Promeni lozinku</button>
                                     </div>
                                 </div>
                                 <!-- Form Group (new password again)-->
@@ -122,7 +122,7 @@
                             <div class="container">
                                 <div class="card-group">
                                     <!--bootstrap card with 3 horizontal images-->
-                                    <div class="row overflow-auto" style="max-height: 200px;">
+                                    <div class="row overflow-auto" style="max-height: 255px;">
                                         <div class="card col-md-3" *ngFor="let picture of this.pictures" (click)="this.photoId = picture.photoId.toString()" [ngClass]="{'selectedPicture': this.photoId == picture.photoId.toString()}">
                                             <img src="{{picture.path}}">
                                         </div>
@@ -134,7 +134,7 @@
                         <div class="row mt-5">
                             <div class="col text-center">
                                 <!-- Save changes button-->
-                                <button mat-raised-button color="primary" (click)="saveInfoChanges()">Sačuvaj izmene</button>
+                                <button mat-raised-button color="basic" (click)="saveInfoChanges()">Sačuvaj izmene</button>
                             </div>
                         </div>
                     </form>

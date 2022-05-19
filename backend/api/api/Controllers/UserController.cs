@@ -125,7 +125,16 @@ namespace api.Controllers
             if (username == null)
                 return BadRequest();
 
-            return Ok(userService.Update(username, user));
+            if (user.Username != username)
+            {
+                User user2 = userService.GetUserByUsername(user.Username);
+                if (user2 == null)
+                    return Ok(userService.Update(username, user));
+                else
+                    return BadRequest("Username already exists!");
+            }
+            else
+                return Ok(userService.Update(username, user));
         }
 
         // DELETE api/<UserController>/5

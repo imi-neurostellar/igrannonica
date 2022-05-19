@@ -52,6 +52,7 @@ import { DoughnutChartComponent } from './_elements/_charts/doughnut-chart/dough
 import { HeatmapComponent } from './_elements/_charts/heatmap/heatmap.component';
 import { HeatMapAllModule } from '@syncfusion/ej2-angular-heatmap';
 import { MetricViewComponent } from './_elements/metric-view/metric-view.component';
+import { SpinnerComponent } from './_elements/spinner/spinner.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -91,7 +92,8 @@ export function initializeApp(appConfig: Configuration) {
     HeatmapComponent,
     MetricViewComponent,
     LineChartComponent,
-    SaveExperimentDialogComponent
+    SaveExperimentDialogComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

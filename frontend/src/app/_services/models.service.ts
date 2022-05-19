@@ -51,7 +51,7 @@ export class ModelsService {
   }
 
   editModel(model: Model): Observable<Model> {
-    return this.http.put<Model>(`${Configuration.settings.apiURL}/model/`, model, { headers: this.authService.authHeader() });
+    return this.http.put<Model>(`${Configuration.settings.apiURL}/model/` + model.name, model, { headers: this.authService.authHeader() });
   }
 
   deleteModel(model: Model) {

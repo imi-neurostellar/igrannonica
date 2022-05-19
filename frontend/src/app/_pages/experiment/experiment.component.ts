@@ -21,7 +21,7 @@ import { PredictorsService } from 'src/app/_services/predictors.service';
   templateUrl: './experiment.component.html',
   styleUrls: ['./experiment.component.css']
 })
-export class ExperimentComponent implements AfterViewInit, OnInit {
+export class ExperimentComponent implements AfterViewInit {
 
   @ViewChild(MatStepper) stepper!: MatStepper;
   @ViewChild('stepsContainer') stepsContainer!: ElementRef;
@@ -42,46 +42,6 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
 
   constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private datasetsService: DatasetsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private route: ActivatedRoute) {
     this.experiment = new Experiment("exp1");
-  }
-
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-
-      let experimentId = this.route.snapshot.paramMap.get("id");
-      let predictorId = this.route.snapshot.paramMap.get("predictorId");
-
-      if (predictorId != null && experimentId != null) {
-        this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
-          this.experiment = response;
-          this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
-            this.dataset = response;
-            this.folderDataset.forExperiment = this.experiment;
-            this.folderDataset.selectFile(this.dataset); //sad 3. i 4. korak da se ucitaju
-  
-            //this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
-              let predictor = response;
-              //this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
-                this.modelsService.getModelById("62853d70696d62ceeb8db7cd").subscribe((response) => {
-                //imamo model
-                this.folderModel.formModel.newModel = response;
-                //this.metricView.update(predictor.metrics);
-              });
-            //});
-          });
-        });
-      }
-      else if (predictorId == null && experimentId != null) {
-        this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
-          this.experiment = response;
-          this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
-            this.dataset = response;
-            this.folderDataset.forExperiment = this.experiment;
-            this.folderDataset.selectFile(this.dataset);
-          });
-        });
-      }
-
-    });
   }
 
   /*updateExperiment(){
@@ -131,11 +91,57 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
           stat = stat.replace(/'/g, '"');
           //console.log('JSON', this.trainingResult);
           this.history.push(JSON.parse(stat));
-          this.metricView.update(this.history);
+          this.metricView.update(this.history,this.modelToTrain.epochs);
         }
       });
 
     }
+
+    this.route.queryParams.subscribe(params => {
+
+      let experimentId = this.route.snapshot.paramMap.get("id");
+      let predictorId = this.route.snapshot.paramMap.get("predictorId");
+      console.log("paramexp: ", experimentId, ", parampredictor: ", predictorId);
+      if (predictorId != null) {
+        this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
+          let predictor = response;
+          //console.log("predictor: ", predictor);
+          this.experimentsService.getExperimentById(predictor.experimentId).subscribe((response) => {
+            this.experiment = response;
+            //console.log("experiment: ", this.experiment);
+            this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
+              this.dataset = response;
+              //console.log("dataset: ", this.dataset);
+              this.folderDataset.forExperiment = this.experiment;
+              this.folderDataset.selectFile(this.dataset); //sad 3. i 4. korak da se ucitaju
+
+              this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
+                let model = response;
+                //console.log("model: ", model);
+                this.folderModel.formModel.newModel = model;
+                this.step3 = true;
+                let numOfEpochsArray = Array.from({length: model.epochs}, (_, i) => i + 1);
+                //console.log("metric view1:", this.metricView);
+                setTimeout(() => {
+                  this.metricView.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
+                })
+              });
+            });
+          });
+        });
+      }
+      else if (experimentId != null) {
+        this.experimentsService.getExperimentById(experimentId).subscribe((response) => {
+          this.experiment = response;
+          this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
+            this.dataset = response;
+            this.folderDataset.forExperiment = this.experiment;
+            this.folderDataset.selectFile(this.dataset);
+          });
+        });
+      }
+
+    });
   }
 
   history: any[] = [];

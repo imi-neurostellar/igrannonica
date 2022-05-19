@@ -27,4 +27,8 @@ export class ExperimentsService {
   updateExperiment(experiment: Experiment): Observable<Experiment> {
     return this.http.put<Experiment>(`${Configuration.settings.apiURL}/experiment/` + experiment._id, experiment, { headers: this.authService.authHeader() });
   }
+
+  deleteExperiment(experiment: Experiment) {
+    return this.http.delete(`${Configuration.settings.apiURL}/experiment/` + experiment._id, { headers: this.authService.authHeader(), responseType: "text" });
+  }
 }

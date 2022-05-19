@@ -44,8 +44,8 @@ export class DatasetsService {
     return this.http.get<Dataset>(`${Configuration.settings.apiURL}/dataset/get/${datasetId}`, { headers: this.authService.authHeader() });
   }
 
-  editDataset(dataset: Dataset): Observable<Dataset> {
-    return this.http.put<Dataset>(`${Configuration.settings.apiURL}/dataset/` + dataset._id, dataset, { headers: this.authService.authHeader() });
+  editDataset(dataset: Dataset){
+    return this.http.put(`${Configuration.settings.apiURL}/dataset/` + dataset._id, dataset, { headers: this.authService.authHeader() ,responseType:'text'});
   }
 
   deleteDataset(dataset: Dataset) {
