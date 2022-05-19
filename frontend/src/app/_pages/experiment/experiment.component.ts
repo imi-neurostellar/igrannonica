@@ -59,13 +59,13 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
             this.folderDataset.selectFile(this.dataset); //sad 3. i 4. korak da se ucitaju
 
             //this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
-              let predictor = response;
-              //this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
-                this.modelsService.getModelById("62853d70696d62ceeb8db7cd").subscribe((response) => {
-                //imamo model
-                this.folderModel.formModel.newModel = response;
-                //this.metricView.update(predictor.metrics);
-              });
+            let predictor = response;
+            //this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
+            this.modelsService.getModelById("62853d70696d62ceeb8db7cd").subscribe((response) => {
+              //imamo model
+              this.folderModel.formModel.newModel = response;
+              //this.metricView.update(predictor.metrics);
+            });
             //});
           });
         });
@@ -208,6 +208,7 @@ export class ExperimentComponent implements AfterViewInit, OnInit {
       this.columnTable.loaded = false;
       this.dataset = undefined;
       this.experiment.datasetId = '';
+      this.step1 = false;
       return;
     }
     const d = <Dataset>dataset;
