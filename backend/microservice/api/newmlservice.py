@@ -514,15 +514,13 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
-        print()
+        
         y_pred=classifier.predict(x_test)
         #print(classifier.evaluate(x_test, y_test))
  
         classifier.save(filepath, save_format='h5')
-        metrics={}
-
+       
         mse = float(sm.mean_squared_error(y_test,y_pred))
-        metrics.append
         mae = float(sm.mean_absolute_error(y_test,y_pred))
         mape = float(sm.mean_absolute_percentage_error(y_test,y_pred))
         rmse = float(np.sqrt(sm.mean_squared_error(y_test,y_pred)))
