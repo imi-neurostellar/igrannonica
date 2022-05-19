@@ -16,7 +16,7 @@ export class MetricViewComponent implements OnInit {
 
   history: any[] = [];
 
-  update(history: any[]) {
+  update(history: any[],totalEpochs:number) {
     const myAcc: number[] = [];
     const myMae: number[] = [];
     const myMse: number[] = [];
@@ -29,7 +29,15 @@ export class MetricViewComponent implements OnInit {
     const myEpochs: number[] = [];
     this.history = history;
     this.history.forEach((metrics, epoch) => {
-      myEpochs.push(epoch + 1);
+      if(totalEpochs>100)
+      {
+        let epochEstimate=epoch*Math.round(Math.sqrt(totalEpochs))
+        if(epochEstimate>totalEpochs)
+          epochEstimate=totalEpochs;
+        myEpochs.push(epochEstimate);
+      }
+      else
+        myEpochs.push(epoch + 1);
       for (let key in metrics) {
         let value = metrics[key];
         //console.log(key, ':::', value, epoch);

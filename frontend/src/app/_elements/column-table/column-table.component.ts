@@ -78,34 +78,9 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
 
-  updateCharts() {
-    //min: number, max: number, q1: number, q3: number, median: number
-    let i = 0;
-    this.boxplotComp.changes.subscribe(() => {
-      const bps = this.boxplotComp.toArray();
-      this.dataset?.columnInfo.forEach((colInfo, index) => {
-        if (this.experiment.columnTypes[index] == ColumnType.numerical) {
-          bps[i].updateChart(colInfo!.min, colInfo.max, colInfo.q1, colInfo.q3, colInfo.median);
-          i++;
-        }
-      });
-    });
-  }
+  
 
-  updatePieChart() {
-    //min: number, max: number, q1: number, q3: number, median: number
-    let i = 0;
-    const pieChart = this.piechartComp.toArray();
-    console.log(pieChart)
-    this.dataset?.columnInfo.forEach((colInfo, index) => {
-      console.log(i)
-      if (this.experiment.columnTypes[index] == ColumnType.categorical) {
-        console.log("prosao IF")
-        pieChart[i].updatePieChart(colInfo!.uniqueValues, colInfo.uniqueValuesPercent);
-        i++;
-      }
-    });
-  }
+
 
   loadDataset(dataset: Dataset) {
     console.log("LOADED DATASET");

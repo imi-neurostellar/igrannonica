@@ -91,7 +91,7 @@ export class ExperimentComponent implements AfterViewInit {
           stat = stat.replace(/'/g, '"');
           //console.log('JSON', this.trainingResult);
           this.history.push(JSON.parse(stat));
-          this.metricView.update(this.history);
+          this.metricView.update(this.history,this.modelToTrain.epochs);
         }
       });
 
