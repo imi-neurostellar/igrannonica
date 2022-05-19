@@ -14,7 +14,7 @@ namespace api.Models
 		public string output { get; set; }
 		public bool isPublic { get; set; }
 		public bool accessibleByLink { get; set; }
-		//public DateTime dateCreated { get; set; }
+		public DateTime dateCreated { get; set; }
 		public string experimentId { get; set; }
 		public string modelId { get; set; }
 		public string h5FileId { get; set; }
