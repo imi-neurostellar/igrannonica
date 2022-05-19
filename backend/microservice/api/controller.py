@@ -111,8 +111,6 @@ def train():
         "metricsValMae":histMetrics[5],
         "metricsMse":histMetrics[6],
         "metricsValMse":histMetrics[7]
-
-
     }
     #print(predictor)
     
