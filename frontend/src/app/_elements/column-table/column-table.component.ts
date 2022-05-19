@@ -334,7 +334,8 @@ export class ColumnTableComponent implements AfterViewInit {
   }
   openMissingValuesDialog() {
     const dialogRef = this.dialog.open(MissingvaluesDialogComponent, {
-      width: '500px'
+      width: '500px',
+      panelClass: 'custom-modalbox'
     });
     dialogRef.afterClosed().subscribe(selectedMissingValuesOption => {
       if (selectedMissingValuesOption != undefined)

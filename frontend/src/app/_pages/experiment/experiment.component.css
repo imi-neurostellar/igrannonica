@@ -48,6 +48,7 @@ mat-stepper {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-bottom: 100px;
 }
 
 .step-content-inside {
@@ -70,6 +71,7 @@ mat-stepper {
     display: inline-block;
     text-align: left;
 }
-.text-overflow-experiment-name{
+
+.text-overflow-experiment-name {
     overflow-wrap: break-word;
 }
