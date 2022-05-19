@@ -82,9 +82,6 @@ def train():
     files = {'file': open(filepath, 'rb')}
     r=requests.post(url, files=files,data={"uploaderId":paramsExperiment['uploaderId']})
     fileId=r.text
-    m = []
-    for attribute, value in result.items():
-        m.append({"Name" : attribute, "JsonValue" : value})
     predictor = {
         "_id" : "",
         "uploaderId" : paramsModel["uploaderId"],
@@ -95,13 +92,14 @@ def train():
         "experimentId" : paramsExperiment["_id"],
         "modelId" : paramsModel["_id"],
         "h5FileId" : fileId,
-        "metrics" : m,
+        "metrics" : result,
         "finalMetrics":finalMetrics
-        
     }
     #print(predictor)
+   
     url = config.api_url + "/Predictor/add"
     r = requests.post(url, json=predictor).text
+    
     print(r)
     return r
 

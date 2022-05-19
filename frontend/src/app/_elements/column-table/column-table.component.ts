@@ -83,8 +83,8 @@ export class ColumnTableComponent implements AfterViewInit {
     let i = 0;
     this.boxplotComp.changes.subscribe(() => {
       const bps = this.boxplotComp.toArray();
-      this.dataset?.columnInfo.forEach(colInfo => {
-        if (this.experiment.columnTypes[i] == ColumnType.numerical) {
+      this.dataset?.columnInfo.forEach((colInfo, index) => {
+        if (this.experiment.columnTypes[index] == ColumnType.numerical) {
           bps[i].updateChart(colInfo!.min, colInfo.max, colInfo.q1, colInfo.q3, colInfo.median);
           i++;
         }
@@ -96,8 +96,11 @@ export class ColumnTableComponent implements AfterViewInit {
     //min: number, max: number, q1: number, q3: number, median: number
     let i = 0;
     const pieChart = this.piechartComp.toArray();
-    this.dataset?.columnInfo.forEach(colInfo => {
-      if (this.experiment.columnTypes[i] == ColumnType.categorical) {
+    console.log(pieChart)
+    this.dataset?.columnInfo.forEach((colInfo, index) => {
+      console.log(i)
+      if (this.experiment.columnTypes[index] == ColumnType.categorical) {
+        console.log("prosao IF")
         pieChart[i].updatePieChart(colInfo!.uniqueValues, colInfo.uniqueValuesPercent);
         i++;
       }

@@ -54,7 +54,7 @@ namespace api.Services
 
                 dataset._id = "";
                 dataset.uploaderId = "000000000000000000000000";
-                dataset.name = "Titanik dataset(public)";
+                dataset.name = "Titanik dataset (public)";
                 dataset.description = "Titanik dataset";
                 dataset.fileId = _fileService.GetFileId(fullPath);
                 dataset.extension = ".csv";
@@ -277,6 +277,7 @@ namespace api.Services
                 model.lossFunction = "sparse_categorical_crossentropy";
                 model.hiddenLayers = 5;
                 model.batchSize = "64";
+                model.learningRate = "1";
                 model.outputNeurons = 0;
                 model.layers = new[]
                 {
@@ -368,7 +369,7 @@ namespace api.Services
                 dataset._id = "";
                 dataset.uploaderId = "000000000000000000000000";
                 dataset.name = "IMDB-Movie-Data Dataset (public)";
-                dataset.description = "IMDB-Movie-Data Dataset(public)";
+                dataset.description = "IMDB-Movie-Data Dataset (public)";
                 dataset.fileId = _fileService.GetFileId(fullPath);
                 dataset.extension = ".csv";
                 dataset.isPublic = true;
@@ -421,8 +422,8 @@ namespace api.Services
 
                 model._id = "";
                 model.uploaderId = "000000000000000000000000";
-                model.name = "IMDB model";
-                model.description = "IMDB model";
+                model.name = "IMDB model  (public)";
+                model.description = "IMDB model  (public)";
                 model.dateCreated = DateTime.Now;
                 model.lastUpdated = DateTime.Now;
                 model.type = "regresioni";
@@ -579,8 +580,8 @@ namespace api.Services
 
                 model._id = "";
                 model.uploaderId = "000000000000000000000000";
-                model.name = "Churn model";
-                model.description = "Churn model";
+                model.name = "Churn model (public)";
+                model.description = "Churn model (public)";
                 model.dateCreated = DateTime.Now;
                 model.lastUpdated = DateTime.Now;
                 model.type = "binarni-klasifikacioni";

@@ -20,9 +20,11 @@ export class AlertDialogComponent {
     //public dialog: MatDialog
   ) {}
 
+  withEnterKey(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.code == "Enter" || keyboardEvent.code == "NumpadEnter") 
+      this.onOkClick();
+  }
   onOkClick(): void {
     this.dialogRef.close();
   }
-
-
 }
