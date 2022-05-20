@@ -137,7 +137,6 @@ export class ProfileComponent implements OnInit {
 
     let passwordArray: string[] = [this.oldPass, this.newPass1];
     this.userInfoService.changeUserPassword(passwordArray).subscribe((response: any) => {
-      //console.log("PROMENIO LOZINKU");
       this.resetNewPassInputs();
       const dialogRef = this.dialog?.open(AlertDialogComponent, {
         width: '350px',

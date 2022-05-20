@@ -83,7 +83,6 @@ export class ColumnTableComponent implements AfterViewInit {
 
 
   loadDataset(dataset: Dataset) {
-    console.log("LOADED DATASET");
 
     if (this.route.snapshot.paramMap.get("id") == null && this.route.snapshot.paramMap.get("predictorId") == null) {
       this.dataset = dataset;
@@ -203,7 +202,6 @@ export class ColumnTableComponent implements AfterViewInit {
       }
       else {
         this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != columnName);
-        //console.log("Input columns: ", this.experiment.inputColumns);
         //TODO: da se zatamni kolona koja je unchecked
         //this.experiment.encodings = this.experiment.encodings.filter(x => x.columnName != columnName); samo na kraju iz enkodinga skloni necekirane
         let index = this.dataset?.columnInfo.findIndex(x => x.columnName == columnName)!;
@@ -235,19 +233,15 @@ export class ColumnTableComponent implements AfterViewInit {
 
   changeProblemType() {
     if (this.experiment != undefined && this.dataset != undefined) {
-      //console.log(this.experiment.outputColumn);
       let i = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment!.outputColumn);
       if (i == -1 || this.experiment.columnTypes[i] == ColumnType.numerical) {
-        //console.log("USAO U REGRESIONI");
         this.experiment.type = ProblemType.Regression;
       }
       else {
         if (this.dataset.columnInfo[i].uniqueValues!.length == 2) {
-          //console.log("USAO U BINARY");
           this.experiment.type = ProblemType.BinaryClassification;
         }
         else {
-          //console.log("USAO U multi");
           this.experiment.type = ProblemType.MultiClassification;
         }
       }
@@ -260,7 +254,6 @@ export class ColumnTableComponent implements AfterViewInit {
       this.experiment.encodings = [];
       for (let i = 0; i < this.dataset.columnInfo.length; i++) {
         this.experiment.encodings.push(new ColumnEncoding(this.dataset?.columnInfo[i].columnName, encodingType));
-        //console.log(this.experiment.encodings);
       }
       this.columnTableChangeDetected();
     }
@@ -293,7 +286,6 @@ export class ColumnTableComponent implements AfterViewInit {
           if (this.dataset.columnInfo[i].numNulls > 0 && this.dataset.columnInfo[i].columnName != this.experiment.outputColumn) {
             this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != this.dataset!.columnInfo[i].columnName);
             this.columnsChecked[i] = false;
-            console.log(this.dataset!.columnInfo[i].columnName);
 
             this.nullValOption[i] = "Isključi kolonu";
           }
@@ -327,7 +319,6 @@ export class ColumnTableComponent implements AfterViewInit {
           if (this.dataset.columnInfo[i].numNulls > 0) {
             this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != this.dataset!.columnInfo[i].columnName);
             this.columnsChecked[i] = false;
-            console.log(this.dataset!.columnInfo[i].columnName);
           }
         }*/
       }
@@ -369,7 +360,6 @@ export class ColumnTableComponent implements AfterViewInit {
         Object.assign(this.experiment, experiment);
         this.experiment._columnsSelected = true;
         this.experimentChanged.emit();
-        console.log(this.experiment);
       }
     });
   }

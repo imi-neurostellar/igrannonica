@@ -203,7 +203,6 @@ export class FolderComponent implements AfterViewInit {
   refreshDatasets(selectedDatasetId: string | null) {
     this.datasetsService.getMyDatasets().subscribe((datasets) => {
       this.folders[TabType.MyDatasets] = datasets;
-      console.log(this.filteredFiles);
       if (selectedDatasetId) {
         this.selectFile(datasets.filter(x => x._id == selectedDatasetId)[0]);
       }
@@ -286,7 +285,6 @@ export class FolderComponent implements AfterViewInit {
       if (!this.filteredFiles.includes(this.selectedFile)) {
         if (this.hoverTab === TabType.None && this.getFolderType(this.selectedTab) === this.type) {
           this.selectFile(undefined);
-          console.log(this.getFolderType(this.selectedTab), this.type);
         }
       } else {
         //this.selectedFileIndex = this.filteredFiles.indexOf(this.selectedFile);
@@ -301,7 +299,6 @@ export class FolderComponent implements AfterViewInit {
   lastFileData = {};
 
   onFileChange() {
-    console.log(this.selectedFile, this.lastFileData)
     setTimeout(() => {
       this.selectedFileHasChanges = !((this.selectedTab == TabType.NewFile) || isEqual(this.selectedFile, this.lastFileData));
     });
@@ -329,6 +326,7 @@ export class FolderComponent implements AfterViewInit {
     this.selectedFileHasChanges = false;
     Object.assign(this.lastFileData, this.selectedFile);
     this.refreshFiles();
+    this.selectedFileChanged.emit(this.selectedFile);
   }
 
   deleteFile(file: FolderFile, event: Event, deletePredictor: boolean = false) {
@@ -426,7 +424,6 @@ export class FolderComponent implements AfterViewInit {
         break;
       case FolderType.Experiment:
         // this.experimentsService.addExperiment(<Model>file).subscribe((response) => {
-        //   console.log(response);
         // });
         //todo delete za predictor
         break;

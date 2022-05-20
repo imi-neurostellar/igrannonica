@@ -40,7 +40,6 @@ export class MetricViewComponent implements OnInit {
         myEpochs.push(epoch + 1);
       for (let key in metrics) {
         let value = metrics[key];
-        //console.log(key, ':::', value, epoch);
         if (key === 'accuracy') {
           myAcc.push(parseFloat(value));
         }

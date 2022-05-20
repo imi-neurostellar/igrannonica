@@ -88,10 +88,12 @@ export class FormDatasetComponent {
   firstInput = false;
 
   update() {
-
-    this.firstInput = true
-    if (this.files.length < 1)
+    this.firstInput = true;
+    if (this.files.length < 1){
+      this.loadExisting();
       return;
+    }
+
 
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
@@ -157,7 +159,6 @@ export class FormDatasetComponent {
     }
 
     return this.modelsService.uploadData(this.files[0]).subscribe((file) => {
-      //console.log('ADD MODEL: STEP 2 - ADD DATASET WITH FILE ID ' + file._id);
       this.dataset._id = "";
       this.dataset.fileId = file._id;
       this.dataset.uploaderId = shared.userId;

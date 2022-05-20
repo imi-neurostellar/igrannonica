@@ -83,7 +83,6 @@ export class FormModelComponent implements AfterViewInit {
   }
 
   updateGraph() {
-    //console.log(this.newModel.layers);
     this.graph.update();
   }
 

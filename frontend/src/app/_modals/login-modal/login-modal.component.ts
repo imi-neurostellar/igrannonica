@@ -33,7 +33,6 @@ export class LoginModalComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
-    //console.log(this.usernameInput);
     this.usernameInput.nativeElement.focus();
   }
 
