@@ -40,7 +40,7 @@
 
             <input class="file" id="file-upload" (change)="changeListener($event)" (valueChange)="dataset.isPreProcess = false; editEvent.emit()" #fileInput type="file" accept=".csv">
 
-            <div class="mt-5 datatable">
+            <div class="datatable">
                 <div [ngClass]="{'hidden': (!existingFlag)}" class="text-center">
                     <button mat-button (click)="goBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
                     <div style="display: inline;">{{(this.begin/10)+1}}...{{getPage()}}</div>
