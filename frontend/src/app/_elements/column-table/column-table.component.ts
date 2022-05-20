@@ -155,8 +155,10 @@ export class ColumnTableComponent implements AfterViewInit {
     }
   }
   resetOutputColumn() {
-    if (this.experiment.inputColumns.length > 0)
+    if (this.experiment.inputColumns.length > 0) {
       this.experiment.outputColumn = this.experiment.inputColumns[0];
+      this.changeProblemType();
+    }
     else
       this.experiment.outputColumn = '-';
   }
@@ -233,15 +235,21 @@ export class ColumnTableComponent implements AfterViewInit {
 
   changeProblemType() {
     if (this.experiment != undefined && this.dataset != undefined) {
+      //console.log(this.experiment.outputColumn);
       let i = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment!.outputColumn);
       if (i == -1 || this.experiment.columnTypes[i] == ColumnType.numerical) {
+        //console.log("USAO U REGRESIONI");
         this.experiment.type = ProblemType.Regression;
       }
       else {
-        if (this.dataset.columnInfo[i].uniqueValues!.length == 2)
+        if (this.dataset.columnInfo[i].uniqueValues!.length == 2) {
+          //console.log("USAO U BINARY");
           this.experiment.type = ProblemType.BinaryClassification;
-        else
+        }
+        else {
+          //console.log("USAO U multi");
           this.experiment.type = ProblemType.MultiClassification;
+        }
       }
       this.columnTableChangeDetected();
     }
