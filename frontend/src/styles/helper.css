@@ -143,3 +143,11 @@ select:-webkit-autofill {
 a {
     color: var(--ns-accent) !important;
 }
+
+.clearfix:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}

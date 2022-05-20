@@ -182,6 +182,9 @@ export class FolderComponent implements AfterViewInit {
       this.folders[TabType.MyModels] = models;
       if (selectedModelId) {
         this.selectFile(models.filter(x => x._id == selectedModelId)[0]);
+        setTimeout(() => {
+          this.okPressed.emit();
+        });
       }
       this.searchTermsChanged();
     });
@@ -233,11 +236,14 @@ export class FolderComponent implements AfterViewInit {
   }
 
   saveNewFile() {
+    this.loadingAction = true;
     switch (this.type) {
       case FolderType.Dataset:
         this.formDataset!.uploadDataset((dataset: Dataset) => {
           this.newFile = undefined;
-          Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se obradi.");
+          this.loadingAction = false;
+          this.okPressed.emit();
+          //Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se obradi.");
           this.refreshFiles();
         },
           () => {
@@ -248,7 +254,8 @@ export class FolderComponent implements AfterViewInit {
         this.formModel.newModel.type = this.formModel.forProblemType;
         this.modelsService.addModel(this.formModel.newModel).subscribe(model => {
           this.newFile = undefined;
-          Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
+          this.loadingAction = false;
+          //Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
           this.refreshFiles(null, model._id); // todo select model
         }, (err) => {
           Shared.openDialog("Neuspeo pokušaj!", "Konfiguracija neuronske mreže sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeću konfiguraciju.");
