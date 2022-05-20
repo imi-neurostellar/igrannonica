@@ -116,9 +116,10 @@
                     </div>
 
                 </div>
-                <div class="list-add" [ngSwitch]="type">
-                    <button mat-raised-button *ngSwitchCase="FolderType.Dataset" (click)="selectNewFile()">Dodaj {{privacy == Privacy.Public ? 'javni ' : ' '}}izvor podataka</button>
-                    <button mat-raised-button *ngSwitchCase="FolderType.Model" (click)="selectNewFile()">Dodaj {{privacy == Privacy.Public ? 'javnu ' : ' '}}konfiguraciju neuronske mreže</button>
+                <div class="list-add" [ngSwitch]="type" *ngIf="privacy != Privacy.Public" >
+                    <!-- {{privacy == Privacy.Public ? 'javni ' : ' '}} -->
+                    <button mat-raised-button *ngSwitchCase="FolderType.Dataset" (click)="selectNewFile()">Dodaj izvor podataka</button>
+                    <button mat-raised-button *ngSwitchCase="FolderType.Model" (click)="selectNewFile()">Dodaj konfiguraciju neuronske mreže</button>
                     <button mat-raised-button *ngSwitchCase="FolderType.Experiment" routerLink="/experiment">Dodaj eksperiment</button>
                 </div>
             </div>

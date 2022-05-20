@@ -467,6 +467,7 @@ export class FolderComponent implements AfterViewInit {
     setTimeout(() => {
       if (tab == TabType.NewFile) {
         this.selectNewFile();
+        this.selectedFile=undefined!;
       }
 
       this.listView = this.getListView(tab);

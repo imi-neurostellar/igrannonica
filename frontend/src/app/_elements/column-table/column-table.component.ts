@@ -114,20 +114,11 @@ export class ColumnTableComponent implements AfterViewInit {
         else
           this.columnsChecked.push(false);
       });
-      this.nullValOption = [];
+      //this.nullValOption = [];
       for (let i = 0; i < this.dataset!.columnInfo.length; i++) {
-        let nullValRep = this.experiment.nullValuesReplacers.find(x => x.column == this.dataset!.columnInfo[i].columnName);
-        if (nullValRep != undefined) {
-          if (nullValRep.option == NullValueOptions.DeleteRows)
-            this.nullValOption.push(`Obriši redove (${this.dataset.columnInfo[i].numNulls})`);
-          else if (nullValRep.option == NullValueOptions.DeleteColumns)
-          this.nullValOption.push(`Obriši kolonu`);
-          else {
-            this.nullValOption.push(`Popuni sa ${nullValRep.value}`);
-          }
-        }
-        else 
-          this.nullValOption.push(`Obriši redove (${this.dataset.columnInfo[i].numNulls})`);
+        //let nullValRep = this.experiment.nullValuesReplacers.find(x => x.column == this.dataset!.columnInfo[i].columnName);
+        let nullValRep = this.experiment.nullValuesReplacers[i];
+        this.nullValOption[i] = (nullValRep.option == NullValueOptions.DeleteRows) ? `Obriši redove (${this.dataset.columnInfo[i].numNulls})` : ((nullValRep.option == NullValueOptions.DeleteColumns) ? `Isključi kolonu` : `Popuni sa ${nullValRep.value}`);
       }
     }
     this.resetPagging();
@@ -164,17 +155,19 @@ export class ColumnTableComponent implements AfterViewInit {
     }
   }
   resetOutputColumn() {
-    if (this.experiment.inputColumns.length > 0)
+    if (this.experiment.inputColumns.length > 0) {
       this.experiment.outputColumn = this.experiment.inputColumns[0];
+      this.changeProblemType();
+    }
     else
       this.experiment.outputColumn = '-';
   }
 
   setDeleteRowsForMissingValTreatment() {
-    if (this.experiment != undefined) {
+    if (this.experiment != undefined && this.dataset != undefined) {
       this.experiment.nullValues = NullValueOptions.DeleteRows;
       this.experiment.nullValuesReplacers = [];
-      for (let i = 0; i < this.experiment.inputColumns.length; i++) {
+      for (let i = 0; i < this.dataset?.columnInfo.length; i++) {
         this.experiment.nullValuesReplacers.push({
           column: this.experiment.inputColumns[i],
           option: NullValueOptions.DeleteRows,
@@ -204,13 +197,17 @@ export class ColumnTableComponent implements AfterViewInit {
         }
         if (this.experiment.inputColumns.length == 1)
           this.experiment.outputColumn = this.experiment.inputColumns[0];
+
+        let index = this.dataset?.columnInfo.findIndex(x => x.columnName == columnName)!;
+        this.nullValOption[index] = (this.experiment.nullValuesReplacers[index].option == NullValueOptions.DeleteRows) ? "Obriši redove (" + this.dataset?.columnInfo[index].numNulls + ")" : "Popuni sa " + this.experiment.nullValuesReplacers[index].value;
       }
       else {
         this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != columnName);
         //console.log("Input columns: ", this.experiment.inputColumns);
         //TODO: da se zatamni kolona koja je unchecked
         //this.experiment.encodings = this.experiment.encodings.filter(x => x.columnName != columnName); samo na kraju iz enkodinga skloni necekirane
-        this.experiment.nullValuesReplacers = this.experiment.nullValuesReplacers.filter(x => x.column != columnName);
+        let index = this.dataset?.columnInfo.findIndex(x => x.columnName == columnName)!;
+        this.nullValOption[index] = "Isključi kolonu";
         if (columnName == this.experiment.outputColumn) {
           if (this.experiment.inputColumns.length > 0)
             this.experiment.outputColumn = this.experiment.inputColumns[0];
@@ -224,11 +221,12 @@ export class ColumnTableComponent implements AfterViewInit {
 
   outputColumnChanged() {
     let outputColReplacer = this.experiment.nullValuesReplacers.find(x => x.column == this.experiment.outputColumn);
-    let index = this.experiment.nullValuesReplacers.findIndex(x => x.column == this.experiment.outputColumn);
+    //let index = this.experiment.nullValuesReplacers.findIndex(x => x.column == this.experiment.outputColumn);
     if (outputColReplacer != undefined) {
       outputColReplacer.option = NullValueOptions.DeleteRows;
       
       let numOfRowsToDelete = (this.dataset!.columnInfo.filter(x => x.columnName == this.experiment.outputColumn)[0]).numNulls;
+      let index = this.dataset!.columnInfo.findIndex(x => x.columnName == this.experiment.outputColumn);
       this.nullValOption[index] = "Obriši redove (" + numOfRowsToDelete + ")";
     }
 
@@ -237,15 +235,21 @@ export class ColumnTableComponent implements AfterViewInit {
 
   changeProblemType() {
     if (this.experiment != undefined && this.dataset != undefined) {
+      //console.log(this.experiment.outputColumn);
       let i = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment!.outputColumn);
       if (i == -1 || this.experiment.columnTypes[i] == ColumnType.numerical) {
+        //console.log("USAO U REGRESIONI");
         this.experiment.type = ProblemType.Regression;
       }
       else {
-        if (this.dataset.columnInfo[i].uniqueValues!.length == 2)
+        if (this.dataset.columnInfo[i].uniqueValues!.length == 2) {
+          //console.log("USAO U BINARY");
           this.experiment.type = ProblemType.BinaryClassification;
-        else
+        }
+        else {
+          //console.log("USAO U multi");
           this.experiment.type = ProblemType.MultiClassification;
+        }
       }
       this.columnTableChangeDetected();
     }
@@ -285,7 +289,16 @@ export class ColumnTableComponent implements AfterViewInit {
     if (this.experiment != undefined && this.dataset != undefined) {
 
       if (selectedMissingValuesOption == NullValueOptions.DeleteColumns) {
-        this.experiment.nullValues = NullValueOptions.DeleteColumns;
+        for (let i = 0; i < this.dataset.columnInfo.length; i++) {
+          if (this.dataset.columnInfo[i].numNulls > 0 && this.dataset.columnInfo[i].columnName != this.experiment.outputColumn) {
+            this.experiment.inputColumns = this.experiment.inputColumns.filter(x => x != this.dataset!.columnInfo[i].columnName);
+            this.columnsChecked[i] = false;
+            console.log(this.dataset!.columnInfo[i].columnName);
+
+            this.nullValOption[i] = "Isključi kolonu";
+          }
+        }
+        /*this.experiment.nullValues = NullValueOptions.DeleteColumns;
 
         let outputColReplacer = this.experiment.nullValuesReplacers.find(x => x.column == this.experiment.outputColumn);
 
@@ -297,16 +310,18 @@ export class ColumnTableComponent implements AfterViewInit {
               option: NullValueOptions.DeleteColumns,
               value: ""
             });
-            this.nullValOption[i] = "Obriši kolonu";
+            let colIndex = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment.inputColumns[i]);
+            this.nullValOption[colIndex] = "Isključi kolonu";
           }
           else {
             if (outputColReplacer != undefined) {
               this.experiment.nullValuesReplacers.push(outputColReplacer);
               let numOfRowsToDelete = (this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.inputColumns[i])[0]).numNulls;
-              this.nullValOption[i] = (outputColReplacer.option == NullValueOptions.DeleteRows) ? "Obriši redove (" + numOfRowsToDelete + ")" : "Popuni sa " + outputColReplacer.value + "";
+              let colIndex = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment.inputColumns[i]);
+              this.nullValOption[colIndex] = (outputColReplacer.option == NullValueOptions.DeleteRows) ? "Obriši redove (" + numOfRowsToDelete + ")" : "Popuni sa " + outputColReplacer.value + "";
             }
           }
-        }
+        }*/
         //obrisi kolone koje sadrze nedostajuce vrednosti iz input kolona 
         /*for (let i = 0; i < this.dataset.columnInfo.length; i++) {
           if (this.dataset.columnInfo[i].numNulls > 0) {
@@ -326,7 +341,8 @@ export class ColumnTableComponent implements AfterViewInit {
             value: ""
           });
           let numOfRowsToDelete = (this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.inputColumns[i])[0]).numNulls;
-          this.nullValOption[i] = "Obriši redove (" + numOfRowsToDelete + ")";
+          let colIndex = this.dataset.columnInfo.findIndex(x => x.columnName == this.experiment.inputColumns[i]);
+          this.nullValOption[colIndex] = "Obriši redove (" + numOfRowsToDelete + ")";
         }
       }
       this.columnTableChangeDetected();
@@ -369,7 +385,16 @@ export class ColumnTableComponent implements AfterViewInit {
 
   MissValsDeleteClicked(event: Event, replacementType: NullValueOptions, index: number) {
     if (this.experiment != undefined && this.dataset != undefined) {
-      let columnName = (<HTMLInputElement>event.currentTarget).value;
+
+        this.experiment.nullValuesReplacers[index].option = NullValueOptions.DeleteRows;
+        this.experiment.nullValuesReplacers[index].value = "";
+
+        this.nullValOption[index] = "Obriši redove (" + this.dataset.columnInfo[index].numNulls + ")";
+
+        this.columnTableChangeDetected();
+    }
+
+      /*let columnName = (<HTMLInputElement>event.currentTarget).value;
       let arrayElement = this.experiment.nullValuesReplacers.filter(x => x.column == columnName)[0];
 
       if (arrayElement == undefined) {
@@ -385,14 +410,21 @@ export class ColumnTableComponent implements AfterViewInit {
       }
 
       let numOfRowsToDelete = (this.dataset.columnInfo.filter(x => x.columnName == this.experiment!.inputColumns[index])[0]).numNulls;
-      this.nullValOption[index] = (replacementType == NullValueOptions.DeleteColumns) ? "Obriši kolonu" : "Obriši redove (" + numOfRowsToDelete + ")";
+      this.nullValOption[index] = (replacementType == NullValueOptions.DeleteColumns) ? "Isključi kolonu" : "Obriši redove (" + numOfRowsToDelete + ")";
       this.columnTableChangeDetected();
-    }
+    }*/
   }
 
   MissValsReplaceClicked(event: Event, columnName: string, index: number) {
     if (this.experiment != undefined) {
-      let fillValue = (<HTMLInputElement>event.currentTarget).value;
+      this.experiment.nullValuesReplacers[index].option = NullValueOptions.Replace;
+      let value = (<HTMLInputElement>event.currentTarget).value;
+      this.experiment.nullValuesReplacers[index].value = value;
+      this.nullValOption[index] = "Popuni sa " + value;
+
+      this.columnTableChangeDetected();
+
+      /*let fillValue = (<HTMLInputElement>event.currentTarget).value;
       let arrayElement = this.experiment.nullValuesReplacers.filter(x => x.column == columnName)[0];
 
       if (arrayElement == undefined) {
@@ -408,7 +440,7 @@ export class ColumnTableComponent implements AfterViewInit {
       }
 
       this.nullValOption[index] = "Popuni sa: " + fillValue;
-      this.columnTableChangeDetected();
+      this.columnTableChangeDetected();*/
     }
   }
   getValue(columnName: string): string {
