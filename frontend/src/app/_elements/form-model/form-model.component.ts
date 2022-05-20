@@ -15,18 +15,22 @@ export class FormModelComponent implements AfterViewInit {
   @ViewChild(GraphComponent) graph!: GraphComponent;
   @Input() forExperiment!: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
-  @Input() hideProblemType: boolean;
-  @Input() forProblemType: ProblemType;
+  @Input() hideProblemType!: boolean;
+  @Input() forProblemType!: ProblemType;
   testSetDistribution: number = 70;
   validationSize: number = 15;
   constructor() {
-    this.hideProblemType = false;
-    this.forProblemType = ProblemType.BinaryClassification;
   }
 
   @Output() editEvent = new EventEmitter();
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+    this.lossFunction = this.lossFunctions[this.forProblemType][0];
+    this.outputLayerActivationFunction = this.outputLayerActivationFunctions[this.forProblemType][0];
+
+    this.newModel.lossFunction = this.lossFunction;
+    this.newModel.outputLayerActivationFunction = this.outputLayerActivationFunction;
+  }
 
   selectFormControl = new FormControl('', Validators.required);
   nameFormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -65,6 +69,12 @@ export class FormModelComponent implements AfterViewInit {
     [ProblemType.Regression]: LossFunctionRegression,
     [ProblemType.BinaryClassification]: LossFunctionBinaryClassification,
     [ProblemType.MultiClassification]: LossFunctionMultiClassification
+  };
+
+  outputLayerActivationFunctions: { [index: string]: ActivationFunction[] } = {
+    [ProblemType.Regression]: [ActivationFunction.Linear],
+    [ProblemType.BinaryClassification]: [ActivationFunction.Sigmoid],
+    [ProblemType.MultiClassification]: [ActivationFunction.Softmax]
   };
 
   loadModel(model: Model) {
@@ -120,6 +130,9 @@ export class FormModelComponent implements AfterViewInit {
   selectedRegularisationRate: RegularisationRate = RegularisationRate.RR1;
   selectedRegularisation: Regularisation = Regularisation.L1;
   selectedNumberOfNeurons: number = 3;
+
+  lossFunction: LossFunction = LossFunction.MeanAbsoluteError;
+  outputLayerActivationFunction: ActivationFunction = ActivationFunction.Linear;
 
   changeAllActivation() {
     for (let i = 0; i < this.newModel.layers.length; i++) {

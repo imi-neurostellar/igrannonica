@@ -11,7 +11,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Tip problema</mat-label>
-                    <mat-select [(ngModel)]="forProblemType" [disabled]="this.hideProblemType" (valueChange)="editEvent.emit()">
+                    <mat-select [(ngModel)]="forProblemType" [disabled]="this.hideProblemType" (valueChange)="editEvent.emit(); newModel.type = forProblemType;">
                         <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -35,7 +35,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Funkcija troška</mat-label>
-                    <mat-select [(ngModel)]="newModel.lossFunction" (valueChange)="editEvent.emit()">
+                    <mat-select [(ngModel)]="lossFunction" (valueChange)="newModel.lossFunction = lossFunction!; editEvent.emit();">
                         <mat-option *ngFor="let option of Object.keys(lossFunctions[forProblemType]); let optionName of Object.values(lossFunctions[forProblemType])" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -48,7 +48,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Funkcija aktivacije izlaznog sloja</mat-label>
-                    <mat-select name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction" (valueChange)="editEvent.emit()">
+                    <mat-select name="outputLayerActivationFunction" [(ngModel)]="outputLayerActivationFunction" (valueChange)="newModel.outputLayerActivationFunction = outputLayerActivationFunction!; editEvent.emit();">
                         <mat-option *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -229,7 +229,7 @@
 
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Stopa regularizacije</mat-label>
-                    <mat-select [(ngModel)]="newModel.layers[i].regularisationRate" (valueChange)="editEvent.emit()">
+                    <mat-select [(ngModel)]="newModel.layers[i].regularisationRate">
                         <mat-option *ngFor="let option of Object.keys(RegularisationRate); let optionName of Object.values(RegularisationRate)" [value]="option">
                             {{ optionName }}
                         </mat-option>

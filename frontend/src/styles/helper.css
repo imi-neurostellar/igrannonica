@@ -17,8 +17,7 @@
 .bg-controls {
     position: fixed;
     bottom: 10px;
-    left: 50%;
-    right: 50%;
+    left: 5rem;
 }
 
 .center-horizontal {

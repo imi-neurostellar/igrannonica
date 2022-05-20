@@ -134,7 +134,7 @@
             </div>
         </button>
         <ng-container *ngSwitchCase="false">
-            <button mat-button (click)="ok()" class="bottom-button text-offwhite rounded-bottom" *ngIf="!selectedFileHasChanges">
+            <button mat-button (click)="ok()" class="bottom-button text-offwhite rounded-bottom" *ngIf="!selectedFileHasChanges && !archive">
                 <div class="f-row">
                     <div>Ok</div>
                     <div class="p-1 w-100" *ngIf="loadingAction">

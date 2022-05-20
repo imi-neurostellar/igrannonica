@@ -37,7 +37,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 builder.Services.AddScoped<IExperimentService, ExperimentService>();
 builder.Services.AddHostedService<TempFileService>();
-//builder.Services.AddHostedService<FillAnEmptyDb>();
+builder.Services.AddHostedService<FillAnEmptyDb>();
 
 //Ml Api Ip Filter
 builder.Services.AddScoped<MlApiCheckActionFilter>(container =>
