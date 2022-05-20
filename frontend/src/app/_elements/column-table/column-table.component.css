@@ -13,7 +13,7 @@ table.fixed {
 }
 
 table.fixed td {
-    overflow: hidden;
+    /* overflow: hidden; */
     max-width: 200px;
     min-width: 200px;
     vertical-align: middle;
@@ -21,7 +21,7 @@ table.fixed td {
 }
 
 table.fixed th {
-    overflow: hidden;
+    /* overflow: hidden; */
     max-width: 250px;
     min-width: 120px;
     vertical-align: middle;
