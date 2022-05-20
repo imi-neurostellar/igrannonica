@@ -14,16 +14,16 @@ export class PieChartComponent implements AfterViewInit {
   @Input()uniqueValuesPercent?: number[] = [];
 
   updatePieChart(uniqueValues: string[], uniqueValuesPercent: number[]){
-    console.log(this.uniqueValues, this.uniqueValuesPercent);
-    const newPieChartData = {
-      datasets: [{
-        label: "Population (millions)",
-        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-        data: [2478,5267,734,784,433],
-      }]
-        
-    }
-  };
+    //console.log(this.uniqueValues, this.uniqueValuesPercent);
+    this.pieChartData.datasets =  [{
+        label: "%",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#000000"],
+        data: uniqueValuesPercent,
+      }];
+      this.pieChartData.labels = uniqueValues
+      console.log(this.uniqueValues, this.uniqueValuesPercent);
+      this.myChart?.update() 
+    };
   
   @ViewChild('piechart') chartRef!: ElementRef;
   constructor() { }
@@ -33,18 +33,31 @@ export class PieChartComponent implements AfterViewInit {
       label: "Population (millions)",
       backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
       data: [2478,5267,734,784,433]
-    }]
+    }], labels : [""]
 }
 
+  myChart?: Chart;
   ngAfterViewInit(): void {
-  const myChart = new Chart(this.chartRef.nativeElement, {
+    let rem = 100;
+    const percents : number[] = []
+    this.uniqueValuesPercent?.forEach(percent => {
+      rem-=percent*100;
+      percents.push(percent*100)
+      
+    })
+    const data = {
+      datasets: [{
+        label: "%",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#000000"],
+        data: [...percents, rem]
+      }], labels : [...this.uniqueValues!,"Ostalo"]
+    }
+    
+    const myChart = new Chart(this.chartRef.nativeElement, {
     type: 'pie',
-    data: this.pieChartData,
+    data: data     
+  ,
     options: {
-      /*title: {
-        display: true,
-        text: 'Predicted world population (millions) in 2050'
-      }*/
       plugins:{   
         legend: {
           display: false

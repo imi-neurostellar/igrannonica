@@ -56,5 +56,6 @@ namespace api.Services
             _experiment.DeleteOne(experiment => (experiment.uploaderId == userId && experiment._id == id));
             _predictor.DeleteMany(predictor => (predictor.uploaderId == userId && predictor.experimentId == id));
         }
+
     }
 }

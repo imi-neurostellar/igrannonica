@@ -62,6 +62,7 @@ namespace api.Services
             if (ChatHub.CheckUser(id))
                 foreach (var connection in ChatHub.getAllConnectionsOfUser(id))
                     await _ichat.Clients.Client(connection).SendAsync("NotifyDataset",newDataset.name,newDataset._id);
+
             return;
 
         }

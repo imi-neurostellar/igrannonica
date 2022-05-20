@@ -14,18 +14,14 @@ namespace api.Models
 
         public string name { get; set; }
         public string description { get; set; }
-        //datetime
         public DateTime dateCreated { get; set; }
         public DateTime lastUpdated { get; set; }
-        //proveriti id
-        //public string experimentId { get; set; }
 
 
         //Neural net training
         public string type { get; set; }
         public string optimizer { get; set; }
         public string lossFunction { get; set; }
-        //public int inputNeurons { get; set; }
         public int hiddenLayers { get; set; }
         public string batchSize { get; set; }
         public string learningRate { get; set; }
@@ -36,17 +32,27 @@ namespace api.Models
 
         public string[] metrics { get; set; }
         public int epochs { get; set; }
-        //public bool isTrained { get; set; }
-        //public NullValues[] nullValues { get; set; }
         public bool randomOrder { get; set; }
         public bool randomTestSet { get; set; }
         public float randomTestSetDistribution { get; set; }
         public bool isPublic { get; set; }
         public bool accessibleByLink { get; set; }
+        public float validationSize { get; set; }//0-1 ne ukljucuje 0.1-0.9 ogranici
     }
 
     public class Layer
     {
+        
+
+        public Layer(int layerNumber, string activationFunction, int neurons, string regularisation, float regularisationRate) 
+        {
+            this.layerNumber = layerNumber;
+            this.activationFunction = activationFunction;
+            this.neurons = neurons;
+            this.regularisation = regularisation;
+            this.regularisationRate = regularisationRate;
+        }
+
         public int layerNumber { get; set; }
         public string activationFunction { get; set; }
         public int neurons { get; set; }

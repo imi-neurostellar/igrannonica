@@ -123,6 +123,22 @@ namespace api.Controllers
             return dataset;
         }
 
+        [HttpGet("get/{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Dataset> GetDatasetById(string id)
+        {
+            string userId = getUserId();
+
+            if (userId == null)
+                return BadRequest();
+
+            var dataset = _datasetService.GetOneDataset(userId, id);
+            if (dataset == null)
+                return NotFound($"Dataset with id = {id} not found or dataset is not public or not preprocessed");
+
+            return Ok(dataset);
+        }
+
         // POST api/<DatasetController>/add
         [HttpPost("add")]
         [Authorize(Roles = "User,Guest")]
@@ -145,10 +161,78 @@ namespace api.Controllers
                 dataset.isPreProcess = false;
                 _datasetService.Create(dataset);
                 _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
+
+
                 return Ok();
             }
         }
+        // POST api/<DatasetController>/stealDs
+        [HttpPost("stealDs")]
+        [Authorize(Roles = "User,Guest")]
+        public async Task<ActionResult<Dataset>> StealDs([FromBody] Dataset dataset)
+        {
+            string uploaderId = getUserId();
 
+            dataset.uploaderId = uploaderId;
+
+            //da li ce preko tokena da se ubaci username ili front salje
+            //dataset.username = usernameToken;
+            //username = "" ako je GUEST DODAO
+            var existingDataset = _datasetService.GetOneDatasetN(dataset.uploaderId, dataset.name);
+
+            if (existingDataset != null)
+                return NotFound($"Dataset with this name already exists");
+            else
+            {
+                dataset.dateCreated = DateTime.Now;
+                dataset.lastUpdated = DateTime.Now;
+                dataset.isPublic = false;
+                
+                FileModel fileModel = _fileService.getFile(dataset.fileId);
+
+                string folderName = "UploadedFiles";
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName, uploaderId);
+                
+                string ext = ".csv";
+
+                
+
+                //Check Directory
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                //Index file if same filename
+                var fullPath = Path.Combine(folderPath, dataset.name + ext);
+                int i = 0;
+
+                while (System.IO.File.Exists(fullPath))
+                {
+                    i++;
+                    fullPath = Path.Combine(folderPath, dataset.name + i.ToString() + ext);
+                }
+
+                dataset.fileId = "";
+
+                _fileService.CopyFile(fileModel.path, fullPath);
+
+                
+                FileModel fileModel1 = new FileModel();
+                fileModel1.type = ext;
+                fileModel1.path = fullPath;
+                fileModel1.uploaderId = uploaderId;
+                fileModel1.date = DateTime.Now.ToUniversalTime();
+                fileModel1 = _fileService.Create(fileModel1);
+
+                dataset.fileId = fileModel1._id;
+
+
+                dataset.isPreProcess = true;
+                _datasetService.Create(dataset);
+                //_mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
+                return Ok();
+            }
+        }
 
         // PUT api/<DatasetController>/{name}
         [HttpPut("{id}")]
@@ -167,8 +251,13 @@ namespace api.Controllers
                 return NotFound($"Dataset with ID = {id} or user with ID = {uploaderId} not found");
 
             dataset.lastUpdated = DateTime.UtcNow;
-
             _datasetService.Update(uploaderId, id, dataset);
+
+            if (!dataset.isPreProcess)
+            {
+                FileModel fileModel = _fileService.getFile(dataset.fileId);
+                _mlConnectionService.PreProcess(dataset, fileModel.path, uploaderId);
+            }
 
             return Ok($"Dataset with ID = {id} updated");
         }
@@ -195,18 +284,3 @@ namespace api.Controllers
         }
     }
 }
-
-/*
-{
-    "_id": "",
-    "name": "name",
-    "description": "description",
-    "header" : ["ag","rt"],
-    "fileId" : "652",
-    "extension": "csb",
-    "isPublic" : true,
-    "accessibleByLink": true,
-    "dateCreated": "dateCreated",
-    "lastUpdated" : "proba12"
-}
-*/

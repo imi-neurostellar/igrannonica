@@ -61,7 +61,7 @@ namespace api.Controllers
             return Ok(experiment);
         }
 
-        [HttpGet("get")]
+        [HttpGet("get/{id}")]
         [Authorize(Roles = "User,Guest")]
         public async Task<ActionResult<Experiment>> Get(string id)
         {

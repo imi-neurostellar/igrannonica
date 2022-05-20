@@ -7,7 +7,7 @@
 .topBar {
     display: table;
     width: 100%;
-    height: 100px;
+    height: 80px;
     margin-left: 1.5%; 
     margin-top: 1.5% ;
 }
@@ -63,4 +63,8 @@
 .file-container input{
     border-radius: 5px;
     left: 0%;
+}
+
+.naslov{
+    font-size: 30px;
 }

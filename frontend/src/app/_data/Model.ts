@@ -2,6 +2,7 @@ import { NgIf } from "@angular/common";
 import { FolderFile } from "./FolderFile";
 
 export default class Model extends FolderFile {
+    public lossFunction: LossFunction;
     constructor(
         name: string = 'Novi model',
         public description: string = '',
@@ -12,7 +13,6 @@ export default class Model extends FolderFile {
         // Neural net training settings
         public type: ProblemType = ProblemType.Regression,
         public optimizer: Optimizer = Optimizer.Adam,
-        public lossFunction: LossFunction = LossFunctionRegression[0],
         public inputNeurons: number = 1,
         public hiddenLayers: number = 1,
         public batchSize: BatchSize = BatchSize.O3,
@@ -21,18 +21,19 @@ export default class Model extends FolderFile {
         public metrics: string[] = [], // TODO add to add-model form
         public epochs: number = 5, // TODO add to add-model form
         public inputColNum: number = 5,
-        public learningRate: LearningRate = LearningRate.LR1,
+        public learningRate: LearningRate = LearningRate.LR3,
         public layers: Layer[] = [new Layer()],
 
         // Test set settings
         public randomOrder: boolean = true,
         public randomTestSet: boolean = true,
         public randomTestSetDistribution: number = 0.1, //0.1-0.9 (10% - 90%) JESTE OVDE ZAKUCANO 10, AL POSLATO JE KAO 0.1 BACK-U
-
+        public validationSize: number = 0.1,
         public isPublic: boolean = false,
         public accessibleByLink: boolean = false
     ) {
         super(name, dateCreated, lastUpdated);
+        this.lossFunction = (this.type == ProblemType.Regression ? LossFunctionRegression[0] : (this.type == ProblemType.BinaryClassification ? LossFunctionBinaryClassification[0] : LossFunctionMultiClassification[0]));
     }
 }
 export class Layer {
@@ -45,8 +46,8 @@ export class Layer {
     ) { }
 }
 export enum LearningRate {
-    LR1 = '0.00001',
-    LR2 = '0.0001',
+    // LR1 = '0.00001',
+    // LR2 = '0.0001',
     LR3 = '0.001',
     LR4 = '0.003',
     LR5 = '0.01',
@@ -117,10 +118,10 @@ export enum ActivationFunctionOutputLayer
 export enum LossFunction {
     // binary classification loss functions
     BinaryCrossEntropy = 'binary_crossentropy',
-    SquaredHingeLoss = 'squared_hinge_loss',
-    HingeLoss = 'hinge_loss',
+    SquaredHingeLoss = 'squared_hinge',
+    HingeLoss = 'hinge',
     // multi-class classification loss functions
-    CategoricalCrossEntropy = 'categorical_crossentropy',
+    // CategoricalCrossEntropy = 'categorical_crossentropy',
     SparseCategoricalCrossEntropy = 'sparse_categorical_crossentropy',
     KLDivergence = 'kullback_leibler_divergence',
 
@@ -134,7 +135,7 @@ export enum LossFunction {
 export const LossFunctionRegression = [LossFunction.MeanAbsoluteError, LossFunction.MeanSquaredError, LossFunction.MeanSquaredLogarithmicError]
 export const LossFunctionBinaryClassification = [LossFunction.BinaryCrossEntropy, LossFunction.SquaredHingeLoss, LossFunction.HingeLoss]
 
-export const LossFunctionMultiClassification = [LossFunction.CategoricalCrossEntropy, LossFunction.SparseCategoricalCrossEntropy, LossFunction.KLDivergence]
+export const LossFunctionMultiClassification = [/*LossFunction.CategoricalCrossEntropy,*/ LossFunction.SparseCategoricalCrossEntropy, LossFunction.KLDivergence]
 
 export enum Optimizer {
     Adam = 'Adam',

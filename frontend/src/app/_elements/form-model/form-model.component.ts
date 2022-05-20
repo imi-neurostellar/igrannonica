@@ -15,15 +15,22 @@ export class FormModelComponent implements AfterViewInit {
   @ViewChild(GraphComponent) graph!: GraphComponent;
   @Input() forExperiment!: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
-  @Input() hideProblemType:boolean;
-  @Input() forProblemType:ProblemType;
+  @Input() hideProblemType!: boolean;
+  @Input() forProblemType!: ProblemType;
   testSetDistribution: number = 70;
-  constructor() { 
-    this.hideProblemType=false;
-    this.forProblemType=ProblemType.BinaryClassification;
+  validationSize: number = 15;
+  constructor() {
   }
 
-  ngAfterViewInit(): void { }
+  @Output() editEvent = new EventEmitter();
+
+  ngAfterViewInit(): void {
+    this.lossFunction = this.lossFunctions[this.forProblemType][0];
+    this.outputLayerActivationFunction = this.outputLayerActivationFunctions[this.forProblemType][0];
+
+    this.newModel.lossFunction = this.lossFunction;
+    this.newModel.outputLayerActivationFunction = this.outputLayerActivationFunction;
+  }
 
   selectFormControl = new FormControl('', Validators.required);
   nameFormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -58,10 +65,21 @@ export class FormModelComponent implements AfterViewInit {
 
   term: string = "";
   selectedMetrics = [];
-  lossFunction: any = LossFunction;
+  lossFunctions: { [index: string]: LossFunction[] } = {
+    [ProblemType.Regression]: LossFunctionRegression,
+    [ProblemType.BinaryClassification]: LossFunctionBinaryClassification,
+    [ProblemType.MultiClassification]: LossFunctionMultiClassification
+  };
+
+  outputLayerActivationFunctions: { [index: string]: ActivationFunction[] } = {
+    [ProblemType.Regression]: [ActivationFunction.Linear],
+    [ProblemType.BinaryClassification]: [ActivationFunction.Sigmoid],
+    [ProblemType.MultiClassification]: [ActivationFunction.Softmax]
+  };
 
   loadModel(model: Model) {
     this.newModel = model;
+    this.forProblemType = model.type;
   }
 
   updateGraph() {
@@ -74,17 +92,20 @@ export class FormModelComponent implements AfterViewInit {
       this.newModel.layers.splice(this.newModel.layers.length - 1, 1);
       this.newModel.hiddenLayers -= 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
   }
+
   addLayer() {
-    if (this.newModel.hiddenLayers < 128) {
+    if (this.newModel.hiddenLayers < 150) {
       this.newModel.layers.push(new Layer(this.newModel.layers.length, this.selectedActivation, this.selectedNumberOfNeurons, this.selectedRegularisation, this.selectedRegularisationRate));
 
       this.newModel.hiddenLayers += 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
-
   }
+
   numSequence(n: number): Array<number> {
     return Array(n);
   }
@@ -93,59 +114,64 @@ export class FormModelComponent implements AfterViewInit {
     if (this.newModel.layers[index].neurons > 1) {
       this.newModel.layers[index].neurons -= 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
   }
+
   addNeuron(index: number) {
     if (this.newModel.layers[index].neurons < 18) {
       this.newModel.layers[index].neurons += 1;
       this.updateGraph();
+      this.editEvent.emit();
     }
   }
+
   selectedActivation: ActivationFunction = ActivationFunction.Sigmoid;
   selectedRegularisationRate: RegularisationRate = RegularisationRate.RR1;
   selectedRegularisation: Regularisation = Regularisation.L1;
   selectedNumberOfNeurons: number = 3;
 
+  lossFunction: LossFunction = LossFunction.MeanAbsoluteError;
+  outputLayerActivationFunction: ActivationFunction = ActivationFunction.Linear;
+
   changeAllActivation() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].activationFunction = this.selectedActivation;
     }
+    this.editEvent.emit();
   }
   changeAllRegularisation() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].regularisation = this.selectedRegularisation;
     }
+    this.editEvent.emit();
   }
   changeAllRegularisationRate() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].regularisationRate = this.selectedRegularisationRate;
     }
+    this.editEvent.emit();
   }
   changeAllNumberOfNeurons() {
     for (let i = 0; i < this.newModel.layers.length; i++) {
       this.newModel.layers[i].neurons = this.selectedNumberOfNeurons;
-      this.updateGraph();
     }
+    this.updateGraph();
+    this.editEvent.emit();
   }
   updateTestSet(event: MatSliderChange) {
     this.testSetDistribution = event.value!;
   }
-  filterLossFunction() {
-  if(this.newModel.type==ProblemType.Regression){
-    this.lossFunction = LossFunctionRegression;
-    this.newModel.lossFunction=LossFunction.MeanSquaredError;
-    }
-  else if(this.newModel.type==ProblemType.BinaryClassification){
-    this.lossFunction= LossFunctionBinaryClassification;
-    this.newModel.lossFunction=LossFunction.BinaryCrossEntropy;
-    }
-  else if(this.newModel.type==ProblemType.MultiClassification){
-    this.lossFunction = LossFunctionMultiClassification;
-    this.newModel.lossFunction=LossFunction.SparseCategoricalCrossEntropy;
-    }
-  
-}
-getInputColumns() {
-    return this.forExperiment.inputColumns.filter(x => x != this.forExperiment.outputColumn);
-}
+
+  getInputColumns() {
+    if (this.forExperiment)
+      return this.forExperiment.inputColumns.filter(x => x != this.forExperiment.outputColumn);
+    else
+      return ['Nisu odabrane ulazne kolone.']
+  }
+
+  updateValidation(event: MatSliderChange) {
+    this.validationSize = event.value!;
+    this.editEvent.emit();
+  }
 }

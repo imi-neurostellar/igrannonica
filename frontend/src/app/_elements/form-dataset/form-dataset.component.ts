@@ -24,8 +24,12 @@ export class FormDatasetComponent {
   files: File[] = [];
   rowsNumber: number = 0;
   colsNumber: number = 0;
+  begin: number = 0;
+  step: number = 10;
+  existingFlag: boolean = false;
 
   @Input() dataset: Dataset; //dodaj ! potencijalno
+  @Output() editEvent = new EventEmitter();
 
   tableData: TableData = new TableData();
 
@@ -40,9 +44,30 @@ export class FormDatasetComponent {
   }
 
   //@ViewChild('fileImportInput', { static: false }) fileImportInput: any; cemu je ovo sluzilo?
+  resetPagging() {
+    this.begin = 0;
+  }
+  goBack() {
+    if (this.begin - 10 < 0)
+      this.begin = 0;
+    else {
+      this.begin -= 10;
+      this.loadExisting();
+    }
 
-  clear(){
+  }
+  goForward() {
+    this.begin += 10;
+    if (this.dataset.rowCount < this.begin)
+      this.begin -= 10;
+    else
+      this.loadExisting();
+  }
+  clear() {
     this.tableData.hasInput = false;
+  }
+  getPage() {
+    return Math.ceil(this.dataset.rowCount / 10)
   }
 
   changeListener($event: any): void {
@@ -56,6 +81,7 @@ export class FormDatasetComponent {
 
     this.filename = this.files[0].name;
     this.tableData.loaded = false;
+    this.existingFlag = false;
     this.update();
   }
 
@@ -64,7 +90,6 @@ export class FormDatasetComponent {
   update() {
 
     this.firstInput = true
-
     if (this.files.length < 1)
       return;
 
@@ -90,23 +115,30 @@ export class FormDatasetComponent {
     this.dataset.name = this.filename.slice(0, this.filename.length - 4);
   }
 
-  loadExisting(){
+  loadExisting() {
+    this.existingFlag = true;
     this.firstInput = false;
 
     this.tableData.hasInput = true;
     this.tableData.loaded = false;
+    this.datasetsService.getDatasetHeader(this.dataset.fileId).subscribe((header: string | undefined) => {
 
-    this.datasetsService.getDatasetFile(this.dataset.fileId).subscribe((file: string | undefined) => {
-      if (file) {
-        this.tableData.loaded = true;
-        this.tableData.numRows = this.dataset.rowCount;
-        this.tableData.numCols = this.dataset.columnInfo.length;
-        this.tableData.data = this.csv.csvToArray(file, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter);
+      this.datasetsService.getDatasetFilePaging(this.dataset.fileId, this.begin, this.step).subscribe((file: string | undefined) => {
+        if (file) {
+          this.tableData.loaded = true;
+          this.tableData.numRows = this.dataset.rowCount;
+          this.tableData.numCols = this.dataset.columnInfo.length;
+          this.tableData.data = this.csv.csvToArray(header + '\n' + file, (this.dataset.delimiter == "razmak") ? " " : (this.dataset.delimiter == "novi red") ? "\t" : this.dataset.delimiter);
 
-      }
+        }
+        else {
+          this.begin -= 10;
+          this.loadExisting();
+        }
+      });
     });
 
-    
+
   }
 
   /*exportAsXLSX():void {

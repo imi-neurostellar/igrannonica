@@ -7,7 +7,8 @@ import { PICTURES } from 'src/app/_data/ProfilePictures';
 import { Picture } from 'src/app/_data/ProfilePictures';
 import shared from '../../Shared';
 import { share } from 'rxjs';
-
+import { MatDialog } from '@angular/material/dialog';
+import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -43,13 +44,13 @@ export class ProfileComponent implements OnInit {
   wrongNewPass2Bool: boolean = false;
 
   pattName: RegExp = /^[a-zA-ZšŠđĐčČćĆžŽ]+([ \-][a-zA-ZšŠđĐčČćĆžŽ]+)*$/;
-  pattUsername: RegExp = /^[a-zA-Z0-9]{6,18}$/;
+  pattUsername: RegExp = /^[a-zA-Z0-9]{4,18}$/;
   pattTwoSpaces: RegExp = /  /;
   pattEmail: RegExp = /^[a-zA-Z0-9]+([\.\-\+][a-zA-Z0-9]+)*\@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/;
   pattPassword: RegExp = /.{6,30}$/;
 
 
-  constructor(private userInfoService: UserInfoService, private authService: AuthService, private router: Router) { }
+  constructor(private userInfoService: UserInfoService, private authService: AuthService, private router: Router, public dialog?: MatDialog) { }
 
   ngOnInit(): void {
     this.userInfoService.getUserInfo().subscribe((response) => {
@@ -95,19 +96,24 @@ export class ProfileComponent implements OnInit {
       if (this.user.username != editedUser.username) { //promenio username, ide logout
         this.user = editedUser;
         this.resetInfo();
-        shared.openDialog("Obaveštenje", "Nakon promene korisničkog imena, moraćete ponovo da se ulogujete.");
-        this.authService.logOut();
-        this.router.navigate(['']);
-        return;
+        const dialogRef = this.dialog?.open(AlertDialogComponent, {
+          width: '350px',
+          data: { title: "Obaveštenje", message: "Nakon promene korisničkog imena, moraćete ponovo da se ulogujete." }
+        });
+        dialogRef?.afterClosed().subscribe(res => {
+          this.authService.logOut();
+          this.router.navigate(['']);
+          return;
+        });
       }
-      shared.openDialog("Obaveštenje", "Podaci su uspešno promenjeni.");
-      this.user = editedUser;
-      this.resetInfo();
+      else {
+        shared.openDialog("Obaveštenje", "Podaci su uspešno promenjeni.");
+        this.user = editedUser;
+        this.resetInfo();
+      }
     }, (error: any) =>{
       if (error.error == "Username already exists!") {
         shared.openDialog("Obaveštenje", "Ukucano korisničko ime je već zauzeto! Izaberite neko drugo.");
-        //(<HTMLSelectElement>document.getElementById("inputUsername")).focus();
-        //poruka obavestenja ispod inputa
         this.resetInfo();
       }
     });
@@ -122,12 +128,10 @@ export class ProfileComponent implements OnInit {
 
     if (this.newPass1 == '' && this.newPass2 == '') //ne zeli da promeni lozinku
       return;
-    //console.log("zeli da promeni lozinku");
 
     if (this.newPass1 != this.newPass2) { //netacno ponovio novu lozinku
       this.wrongNewPassBool = true;
       this.resetNewPassInputs();
-      //console.log("Netacno ponovljena lozinka");
       return;
     }
 
@@ -135,19 +139,23 @@ export class ProfileComponent implements OnInit {
     this.userInfoService.changeUserPassword(passwordArray).subscribe((response: any) => {
       //console.log("PROMENIO LOZINKU");
       this.resetNewPassInputs();
-      shared.openDialog("Obaveštenje", "Nakon promene lozinke, moraćete ponovo da se ulogujete.");
-      this.authService.logOut();
-      this.router.navigate(['']);
+      const dialogRef = this.dialog?.open(AlertDialogComponent, {
+        width: '350px',
+        data: { title: "Obaveštenje", message: "Nakon promene lozinke, moraćete ponovo da se ulogujete." }
+      });
+      dialogRef?.afterClosed().subscribe(res => {
+        this.authService.logOut();
+        this.router.navigate(['']);
+        return;
+      });
     }, (error: any) => {
       if (error.error == 'Wrong old password!') {
         this.wrongPassBool = true;
-        //(<HTMLSelectElement>document.getElementById("inputPassword")).focus();
         return;
       }
       else if (error.error == 'Identical password!') {
         shared.openDialog("Obaveštenje", "Stara i nova lozinka su identične."); 
         this.resetNewPassInputs();
-        //(<HTMLSelectElement>document.getElementById("inputNewPassword")).focus();
         return;
       }
     });

@@ -81,10 +81,9 @@ namespace api.Controllers
         [ServiceFilter(typeof(MlApiCheckActionFilter))]
         public async Task<ActionResult<string>> Epoch([FromBody] Epoch info)
         {
-            
             var model=_modelService.GetOneModel(info.ModelId);
             var user = _userService.GetUserById(model.uploaderId);
-
+            if((model.epochs>100 && info.EpochNum%Math.Round(Math.Sqrt(model.epochs))==0) || model.epochs<=100 ||model.epochs-1==info.EpochNum)
             if (ChatHub.CheckUser(user._id))
                 foreach (var connection in ChatHub.getAllConnectionsOfUser(user._id))
                     await _ichat.Clients.Client(connection).SendAsync("NotifyEpoch",model.name,info.ModelId,info.Stat,model.epochs,info.EpochNum);
@@ -149,6 +148,26 @@ namespace api.Controllers
             return model;
         }
 
+
+        // GET api/<ModelController>/byid/{id}
+        [HttpGet("byid/{id}")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Model> GetModelById(string id)
+        {
+            string userId = getUserId();
+
+            if (userId == null)
+                return BadRequest();
+
+            var model = _modelService.GetOneModelById(userId, id);
+
+            if (model == null)
+                return NotFound($"Model with id = {id} not found");
+
+            return model;
+        }
+
+
         //odraditi da vraca modele prema nekom imenu
 
 
@@ -191,14 +210,54 @@ namespace api.Controllers
                 return BadRequest("Bad parameters!");*/
 
             model.uploaderId = getUserId();
+            model.dateCreated = DateTime.Now;
+            model.lastUpdated = DateTime.Now;
 
             var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
 
 
-            if (existingModel != null && !overwrite)
-                return NotFound($"Model with name = {model.name} exisits");
+            if (existingModel != null && !overwrite && model.validationSize < 1 && model.validationSize > 0)
+                return NotFound($"Model with name = {model.name} exisits or validation size is not between 0-1");
             else
             { 
+                //_modelService.Create(model);
+                //return Ok();
+                if (existingModel == null)
+                    _modelService.Create(model);
+                else
+                {
+                    _modelService.Replace(model);
+                }
+
+                return CreatedAtAction(nameof(Get), new { id = model._id }, model);
+            }
+        }
+
+        // POST api/<ModelController>/stealModel
+        [HttpPost("stealModel")]
+        [Authorize(Roles = "User,Guest")]
+        public ActionResult<Model> StealModel([FromBody] Model model)//, bool overwrite)
+        {
+            bool overwrite = false;
+            //username="" ako je GUEST
+            //Experiment e = _experimentService.Get(model.experimentId); umesto 1 ide e.inputColumns.Length   TODO!!!!!!!!!!!!!!!!!
+            //model.inputNeurons = e.inputColumns.Length;
+            /*if (_modelService.CheckHyperparameters(1, model.hiddenLayerNeurons, model.hiddenLayers, model.outputNeurons) == false)
+                return BadRequest("Bad parameters!");*/
+
+            model.uploaderId = getUserId();
+            model._id = "";
+            model.dateCreated = DateTime.Now;
+            model.lastUpdated = DateTime.Now;
+            model.isPublic = false;
+
+            var existingModel = _modelService.GetOneModel(model.uploaderId, model.name);
+
+
+            if (existingModel != null && !overwrite && model.validationSize < 1 && model.validationSize > 0)
+                return NotFound($"Model already exisits or validation size is not between 0-1");
+            else
+            {
                 //_modelService.Create(model);
                 //return Ok();
                 if (existingModel == null)
@@ -225,8 +284,8 @@ namespace api.Controllers
 
             var existingModel = _modelService.GetOneModel(userId, name);
 
-            if (existingModel == null)
-                return NotFound($"Model with name = {name} or user with ID = {userId} not found");
+            if (existingModel == null && model.validationSize < 1 && model.validationSize > 0)
+                return NotFound($"Model with name = {name} or validation size is not between 0-1");
 
             _modelService.Update(userId, name, model);
             return NoContent();

@@ -33,6 +33,7 @@
                         <mat-icon matSuffix></mat-icon>
                     </mat-form-field>
                     <p *ngIf="wrongUsernameBool" class="wrong-creds">Unesite ispravno korisničko ime.</p>
+                    <p *ngIf="usernameAlreadyExistsBool" class="wrong-creds">Uneto korisničko ime je zauzeto.</p>
                 </div>
                 <!--Email-->
                 <div>
@@ -42,6 +43,7 @@
                         <mat-icon matSuffix></mat-icon>
                     </mat-form-field>
                     <p *ngIf="wrongEmailBool" class="wrong-creds">Unesite ispravno e-mail adresu.</p>
+                    <p *ngIf="emailAlreadyExistsBool" class="wrong-creds">Uneta e-mail adresa je zauzeta.</p>
                 </div>
                 <!-- Lozinka 1. -->
                 <div>

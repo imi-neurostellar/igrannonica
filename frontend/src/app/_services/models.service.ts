@@ -31,6 +31,10 @@ export class ModelsService {
   addModel(model: Model): Observable<any> {
     return this.http.post(`${Configuration.settings.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }
+
+  stealModel(model: Model): Observable<any> {
+    return this.http.post(`${Configuration.settings.apiURL}/model/stealModel`, model, { headers: this.authService.authHeader() });
+  }
   addDataset(dataset: Dataset): Observable<any> {
     return this.http.post(`${Configuration.settings.apiURL}/dataset/add`, dataset, { headers: this.authService.authHeader() });
   }
@@ -47,7 +51,7 @@ export class ModelsService {
   }
 
   editModel(model: Model): Observable<Model> {
-    return this.http.put<Model>(`${Configuration.settings.apiURL}/model/`, model, { headers: this.authService.authHeader() });
+    return this.http.put<Model>(`${Configuration.settings.apiURL}/model/` + model.name, model, { headers: this.authService.authHeader() });
   }
 
   deleteModel(model: Model) {
@@ -56,6 +60,10 @@ export class ModelsService {
 
   getPublicModels(): Observable<Model[]> {
     return this.http.get<Model[]>(`${Configuration.settings.apiURL}/model/publicmodels`, { headers: this.authService.authHeader() });
+  }
+
+  getModelById(modelId: string): Observable<Model> {
+    return this.http.get<Model>(`${Configuration.settings.apiURL}/model/byid/${modelId}`, { headers: this.authService.authHeader() });
   }
 
 }

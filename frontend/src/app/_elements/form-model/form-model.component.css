@@ -86,12 +86,12 @@ hr {
     max-height: 20 rem;
 }
 
-mat-slider {
-    width: 50%;
-}
-
 .slider {
     background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .center-center {
@@ -101,4 +101,30 @@ mat-slider {
     padding-bottom: 15px;
     font-size: 20px !important;
     font-weight: 600;
+}
+
+.slider-pad {
+    min-width: 10%;
+    background-color: gray;
+    height: 2px;
+}
+
+.slider-pad:first-child {
+    margin-right: -8px;
+}
+
+.slider-pad:last-child {
+    margin-left: -8px;
+}
+
+.slider-extended {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+}
+
+.slide {
+    width: 80%;
 }

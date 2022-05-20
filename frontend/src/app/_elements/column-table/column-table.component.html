@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let row of tableData; let i = index">
-                            <th>#{{i}}</th>
+                            <th>#{{((this.begin/10)+1)*10-10+i+1}}</th>
                             <td *ngFor="let col of row; let j = index" [ngClass]="{'text-disabled' : !columnsChecked[j]}">
                                 <div class="text-overflow">
                                     {{col}}
@@ -44,6 +44,12 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="mb-3">
+                    <button mat-button (click)="goBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+                    <div style="display: inline;">{{(this.begin/10)+1}}...{{getPage()}}</div>
+                    <button mat-button (click)="goForward()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+
+                </div>
             </div>
 
             <div [ngClass]="{'hidden': tabToDisplay != Table.CorrelationMatrix}">
@@ -211,7 +217,7 @@
             <div class="ns-col rounded">
                 <mat-form-field appearance="fill" class="align-items-center justify-content-center pt-3 w-100">
                     <mat-label>Izlazna kolona</mat-label>
-                    <mat-select [(value)]="experiment.outputColumn" (selectionChange)="changeProblemType()">
+                    <mat-select [(value)]="experiment.outputColumn" (selectionChange)="outputColumnChanged()">
                         <mat-option *ngFor="let inputColumn of experiment.inputColumns" [value]="inputColumn">{{inputColumn}}</mat-option>
                         <mat-option *ngIf="experiment.inputColumns.length == 0" value="-">-</mat-option>
                     </mat-select>

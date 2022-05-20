@@ -13,7 +13,7 @@ table.fixed {
 }
 
 table.fixed td {
-    overflow: hidden;
+    /* overflow: hidden; */
     max-width: 200px;
     min-width: 200px;
     vertical-align: middle;
@@ -21,8 +21,8 @@ table.fixed td {
 }
 
 table.fixed th {
-    overflow: hidden;
-    max-width: 120px;
+    /* overflow: hidden; */
+    max-width: 250px;
     min-width: 120px;
     vertical-align: middle;
     background-color: var(--ns-primary-50);
@@ -198,7 +198,7 @@ table ::ng-deep .mat-form-field-wrapper {
     font-size: large;
     position: relative;
     background-color: var(--ns-primary);
-    width: 10rem;
+    width: 13rem;
     height: 2.3rem;
     border-color: var(--ns-primary);
     border-style: solid;

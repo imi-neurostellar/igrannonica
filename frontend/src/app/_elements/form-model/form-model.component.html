@@ -5,18 +5,13 @@
             <div class="ns-col">
                 <mat-form-field class="example-full-width" appearance="fill" class="mat-fix">
                     <mat-label>Naziv</mat-label>
-                    <input type="text" matInput [(ngModel)]="newModel.name">
+                    <input type="text" matInput [(ngModel)]="newModel.name" (valueChange)="editEvent.emit()">
                 </mat-form-field>
             </div>
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Tip problema</mat-label>
-                    <mat-select [(ngModel)]="newModel.type"  (selectionChange)="filterLossFunction()" *ngIf="this.hideProblemType" disabled="true">
-                        <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
-                            {{ optionName }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-select [(ngModel)]="newModel.type"  (selectionChange)="filterLossFunction()" *ngIf="!this.hideProblemType" disabled="false">
+                    <mat-select [(ngModel)]="forProblemType" [disabled]="this.hideProblemType" (valueChange)="editEvent.emit(); newModel.type = forProblemType;">
                         <mat-option *ngFor="let option of Object.keys(ProblemType); let optionName of Object.values(ProblemType)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -29,7 +24,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Optimizacija</mat-label>
-                    <mat-select [(ngModel)]="newModel.optimizer">
+                    <mat-select [(ngModel)]="newModel.optimizer" (valueChange)="editEvent.emit()">
                         <mat-option *ngFor="let option of Object.keys(Optimizer); let optionName of Object.values(Optimizer)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -40,8 +35,8 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Funkcija troška</mat-label>
-                    <mat-select [(ngModel)]="newModel.lossFunction">
-                        <mat-option *ngFor="let option of Object.keys(lossFunction); let optionName of Object.values(lossFunction)" [value]="option">
+                    <mat-select [(ngModel)]="lossFunction" (valueChange)="newModel.lossFunction = lossFunction!; editEvent.emit();">
+                        <mat-option *ngFor="let option of Object.keys(lossFunctions[forProblemType]); let optionName of Object.values(lossFunctions[forProblemType])" [value]="option">
                             {{ optionName }}
                         </mat-option>
                     </mat-select>
@@ -53,7 +48,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Funkcija aktivacije izlaznog sloja</mat-label>
-                    <mat-select name="outputLayerActivationFunction" [(ngModel)]="newModel.outputLayerActivationFunction">
+                    <mat-select name="outputLayerActivationFunction" [(ngModel)]="outputLayerActivationFunction" (valueChange)="newModel.outputLayerActivationFunction = outputLayerActivationFunction!; editEvent.emit();">
                         <mat-option *ngFor="let option of Object.keys(ActivationFunction); let optionName of Object.values(ActivationFunction)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -63,7 +58,7 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Stopa učenja</mat-label>
-                    <mat-select [(ngModel)]="newModel.learningRate">
+                    <mat-select [(ngModel)]="newModel.learningRate" (valueChange)="editEvent.emit()">
                         <mat-option *ngFor="let option of Object.keys(LearningRate); let optionName of Object.values(LearningRate)" [value]="option">
                             {{ optionName }}
                         </mat-option>
@@ -76,14 +71,14 @@
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Broj epoha</mat-label>
-                    <input type="number" matInput [(ngModel)]="newModel.epochs" min="1" max="1000">
+                    <input type="number" matInput [(ngModel)]="newModel.epochs" min="1" max="1000" (valueChange)="editEvent.emit()">
                 </mat-form-field>
             </div>
             <div class="ns-col">
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Broj uzoraka po iteraciji</mat-label>
 
-                    <mat-select matNativeControl [(value)]="newModel.batchSize">
+                    <mat-select matNativeControl [(value)]="newModel.batchSize" (valueChange)="editEvent.emit()">
                         <mat-option *ngFor="let option of Object.keys(BatchSize); let optionName of Object.values(BatchSize)" [value]="option">{{option}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -96,26 +91,38 @@
 
     <div class="m-2">
         <div class="row">
-            <div class="col-sm-3 rounded" style="border:1px solid var(--ns-primary);margin-top: 10px;">
-                <div class="row slider rounded mb-3" style="margin-left: 10px;">
-
+            <div class="col-sm-3 rounded" style="border:1px solid var(--ns-primary);margin-top: 10px; width: fit-content;">
+                <!-- <label>Veličina skupa za validaciju: </label><b>{{validationSize}} %</b> 
                     <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
-                    <div class="text-center pt-0 mt-0">Trening
-                        <mat-slider min="10" max="90" step="10" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)"></mat-slider>
-                        Test</div>
-
+                    <div class="text-center pt-0 mt-0 p-0">Trening ////slider////// Test</div>
+                -->
+                <div class="slider mt-2">
+                    <div>
+                        Trening {{testSetDistribution}}% : Test i validacija {{100-testSetDistribution}}%
+                    </div>
+                    <div class="slider-extended">
+                        <div class="slider-pad"></div>
+                        <mat-slider class="slide" min="10" max="90" step="5" [(ngModel)]="testSetDistribution" (input)="updateTestSet($event)" (valueChange)="editEvent.emit()"></mat-slider>
+                        <div class="slider-pad"></div>
+                    </div>
+                    <div>
+                        Test {{validationSize}}% : Validacija {{100-validationSize}}%
+                    </div>
+                    <div class="slider-extended">
+                        <div class="slider-pad"></div>
+                        <mat-slider class="slide" min="10" max="90" step="5" [(ngModel)]="validationSize" (input)="updateValidation($event)" (valueChange)="editEvent.emit()"></mat-slider>
+                        <div class="slider-pad"></div>
+                    </div>
                 </div>
-                <div class="row slider rounded text-offwhite justify-content-center align-items-center" style="margin-left: 10px;">
-                    <mat-checkbox class="pt-4 mb-3" color="accent">Nasumični redosled podataka</mat-checkbox>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <mat-checkbox color="accent" (valueChange)="editEvent.emit()">Nasumični redosled podataka</mat-checkbox>
                 </div>
-
-
             </div>
 
             <div class="col-sm-9">
                 <!-- {{forExperiment._columnsSelected}} -->
-                <app-graph [model]="newModel" *ngIf="forExperiment._columnsSelected" [inputColumns]="getInputColumns()"></app-graph>
-                <app-graph [model]="newModel" *ngIf="!forExperiment._columnsSelected" [inputColumns]="['Nisu odabrane ulazne kolone']"></app-graph>
+                <app-graph [model]="newModel" [inputColumns]="getInputColumns()"></app-graph>
             </div>
         </div>
     </div>
@@ -213,7 +220,7 @@
 
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Regularizacija</mat-label>
-                    <mat-select [(ngModel)]="newModel.layers[i].regularisation">
+                    <mat-select [(ngModel)]="newModel.layers[i].regularisation" (valueChange)="editEvent.emit()">
                         <mat-option *ngFor="let option of Object.keys(Regularisation); let optionName of Object.values(Regularisation)" [value]="option">
                             {{ optionName }}
                         </mat-option>

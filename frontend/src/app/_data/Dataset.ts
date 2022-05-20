@@ -4,7 +4,7 @@ export default class Dataset extends FolderFile {
     constructor(
         name: string = 'Novi izvor podataka',
         public description: string = '',
-        public fileId?: number,
+        public fileId?: string,
         public extension: string = '.csv',
         public isPublic: boolean = false,
         public accessibleByLink: boolean = false,
@@ -17,6 +17,7 @@ export default class Dataset extends FolderFile {
         public rowCount: number = 0,
         public nullRows: number = 0,
         public nullCols: number = 0,
+        public isPreProcess : Boolean = false,
         public cMatrix: number[][] = []
     ) {
         super(name, dateCreated, lastUpdated);
