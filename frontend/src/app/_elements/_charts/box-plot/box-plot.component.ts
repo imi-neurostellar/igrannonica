@@ -29,14 +29,13 @@ export class BoxPlotComponent implements AfterViewInit {
 
   /*
   updatePieChart(uniqueValues: string[], uniqueValuesPercent: number[]){
-    //console.log(this.uniqueValues, this.uniqueValuesPercent);
+    
     this.pieChartData.datasets =  [{
         label: "%",
         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#000000"],
         data: uniqueValuesPercent,
       }];
       this.pieChartData.labels = uniqueValues
-      console.log(this.uniqueValues, this.uniqueValuesPercent);
       this.myChart?.update() 
     };
   */

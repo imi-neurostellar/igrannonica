@@ -83,13 +83,11 @@ export class ExperimentComponent implements AfterViewInit {
 
     if (this.signalRService.hubConnection) {
       this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
-        console.log(this.modelToTrain?._id, mId);
         if (currentEpoch == 0) {
           this.history = [];
         }
         if (this.modelToTrain?._id == mId) {
           stat = stat.replace(/'/g, '"');
-          //console.log('JSON', this.trainingResult);
           this.history.push(JSON.parse(stat));
           this.metricView.update(this.history,this.modelToTrain.epochs);
         }
@@ -101,27 +99,21 @@ export class ExperimentComponent implements AfterViewInit {
 
       let experimentId = this.route.snapshot.paramMap.get("id");
       let predictorId = this.route.snapshot.paramMap.get("predictorId");
-      console.log("paramexp: ", experimentId, ", parampredictor: ", predictorId);
       if (predictorId != null) {
         this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
           let predictor = response;
-          //console.log("predictor: ", predictor);
           this.experimentsService.getExperimentById(predictor.experimentId).subscribe((response) => {
             this.experiment = response;
-            //console.log("experiment: ", this.experiment);
             this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
               this.dataset = response;
-              //console.log("dataset: ", this.dataset);
               this.folderDataset.forExperiment = this.experiment;
               this.folderDataset.selectFile(this.dataset); //sad 3. i 4. korak da se ucitaju
 
               this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
                 let model = response;
-                //console.log("model: ", model);
                 this.folderModel.formModel.newModel = model;
                 this.step3 = true;
                 let numOfEpochsArray = Array.from({length: model.epochs}, (_, i) => i + 1);
-                //console.log("metric view1:", this.metricView);
                 setTimeout(() => {
                   this.metricView.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
                 })
@@ -199,7 +191,6 @@ export class ExperimentComponent implements AfterViewInit {
 
   columnTableChangedEvent() {
     //sta se desi kad se nesto promeni u column-table komponenti...
-    //console.log("promenio se column-table");
   }
 
   experimentChangedEvent() {
