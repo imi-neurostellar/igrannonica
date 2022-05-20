@@ -88,10 +88,12 @@ export class FormDatasetComponent {
   firstInput = false;
 
   update() {
-
-    this.firstInput = true
-    if (this.files.length < 1)
+    this.firstInput = true;
+    if (this.files.length < 1){
+      this.loadExisting();
       return;
+    }
+
 
     const fileReader = new FileReader();
     fileReader.onload = (e) => {

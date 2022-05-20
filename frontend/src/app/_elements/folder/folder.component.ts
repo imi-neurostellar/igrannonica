@@ -326,6 +326,7 @@ export class FolderComponent implements AfterViewInit {
     this.selectedFileHasChanges = false;
     Object.assign(this.lastFileData, this.selectedFile);
     this.refreshFiles();
+    this.selectedFileChanged.emit(this.selectedFile);
   }
 
   deleteFile(file: FolderFile, event: Event, deletePredictor: boolean = false) {
