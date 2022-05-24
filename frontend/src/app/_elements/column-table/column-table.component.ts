@@ -378,6 +378,7 @@ export class ColumnTableComponent implements AfterViewInit {
       else
         Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
       Object.assign(this.experiment, experiment);
+      this.experiment._columnsSelected = true;
       this.experimentChanged.emit();
     });
   }
