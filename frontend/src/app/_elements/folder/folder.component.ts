@@ -345,7 +345,9 @@ export class FolderComponent implements AfterViewInit {
             this.loadingAction = false;
             if(this.selectedTab==TabType.File){
               this.refreshDatasets(null);
-              this.selectTab(TabType.MyDatasets);
+              setTimeout(() => {
+                this.selectTab(TabType.MyDatasets);
+              });
             }
 
           });
@@ -363,7 +365,9 @@ export class FolderComponent implements AfterViewInit {
             this.loadingAction = false;
             if(this.selectedTab==TabType.File){
               this.refreshModels(null);
-              this.selectTab(TabType.MyModels);
+              setTimeout(() => {
+                this.selectTab(TabType.MyModels);
+              });
             }
           });
         })
@@ -392,7 +396,9 @@ export class FolderComponent implements AfterViewInit {
             this.loadingAction = false;
             if(this.selectedTab==TabType.File){
               this.refreshExperiments();
-              this.selectTab(TabType.MyExperiments);
+              setTimeout(() => {
+                this.selectTab(TabType.MyExperiments);
+              });
             }
             });
           });
