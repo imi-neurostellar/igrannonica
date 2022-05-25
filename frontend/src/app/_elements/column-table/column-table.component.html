@@ -27,7 +27,9 @@
                             <th>#</th>
                             <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                                 <div class="cell-align">
-                                    #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    <div class="text-overflow">
+                                        #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    </div>
                                     <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                                 </div>
                             </th>
@@ -63,7 +65,9 @@
                             <th>Kolona</th>
                             <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                                 <div class="cell-align">
-                                    #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    <div class="text-overflow">
+                                        #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    </div>
                                     <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                                 </div>
                             </th>
@@ -72,7 +76,7 @@
                     <tbody>
                         <tr *ngFor="let row of dataset.cMatrix; let i = index">
                             <th [ngClass]="{'header-disabled col-disabled' : !columnsChecked[i]}">
-                                <div class="text-left">
+                                <div class="text-left text-overflow">
                                     {{dataset.columnInfo[i].columnName}}
                                 </div>
                             </th>
@@ -97,7 +101,9 @@
                             <th>Naziv</th>
                             <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                                 <div class="cell-align">
-                                    #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    <div class="text-overflow">
+                                        #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    </div>
                                     <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                                 </div>
                             </th>
@@ -168,11 +174,13 @@
 
                                 <div *ngIf="colInfo.numNulls > 0">
                                     <button class="w-100" mat-raised-button [ngClass]="{ 'menu-disabled' : !columnsChecked[i]}" [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}" #nullValMenu>
-                                    <div class="cell-align">
-                                        {{nullValOption[i]}}
-                                        <mat-icon>arrow_drop_down</mat-icon>
-                                    </div>
-                                </button>
+                                        <div class="cell-align">
+                                            <div [ngClass]="{'text-overflow' : experiment.nullValuesReplacers[i].option == NullValueOptions.Replace}">
+                                                {{nullValOption[i]}}
+                                            </div>
+                                            <mat-icon>arrow_drop_down</mat-icon>
+                                        </div>
+                                    </button>
                                     <mat-menu #menu="matMenu">
                                         <!--<button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteColumns, i)" value={{colInfo.columnName}}>Obriši kolonu</button>-->
                                         <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteRows, i)" value={{colInfo.columnName}}>Obriši redove ({{colInfo.numNulls}})</button>

@@ -13,8 +13,8 @@
             <a class="m-1 stretched-link tab-link" (click)="selectTab(tab)" (mouseenter)="hoverOverTab(tab)" (mouseleave)="hoverOverTab(TabType.None)">{{tabTitles[tab]}}</a>
         </div>
 
-        <div class="folder-tab p-1 rounded-top" *ngIf="selectedFile" [style]="'z-index:' + (selectedTab == TabType.File ? 11 : (tabsToShow.length)) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.File, 'hover-tab' : hoverTab == TabType.File}">
-            <a class="m-1 stretched-link tab-link" (click)="selectTab(TabType.File)" (mouseenter)="hoverOverTab(TabType.File)" (mouseleave)="hoverOverTab(TabType.None)">{{selectedFile.name}}</a>
+        <div class="folder-tab p-1 rounded-top selected-file-tab" *ngIf="selectedFile" [style]="'z-index:' + (selectedTab == TabType.File ? 11 : (tabsToShow.length)) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.File, 'hover-tab' : hoverTab == TabType.File}">
+            <a class="m-1 stretched-link tab-link text-overflow" (click)="selectTab(TabType.File)" (mouseenter)="hoverOverTab(TabType.File)" (mouseleave)="hoverOverTab(TabType.None)">{{selectedFile.name}}</a>
         </div>
     </div>
     <div id="selected-content" class="rounded-bottom text-offwhite">
@@ -105,7 +105,7 @@
                     </div>
 
                 </div>
-                <div class="list-add" [ngSwitch]="type" *ngIf="privacy != Privacy.Public" >
+                <div class="list-add" [ngSwitch]="type" *ngIf="privacy != Privacy.Public">
                     <!-- {{privacy == Privacy.Public ? 'javni ' : ' '}} -->
                     <button mat-raised-button *ngSwitchCase="FolderType.Dataset" (click)="selectNewFile()">Dodaj izvor podataka</button>
                     <button mat-raised-button *ngSwitchCase="FolderType.Model" (click)="selectNewFile()">Dodaj konfiguraciju neuronske mreže</button>
@@ -152,17 +152,17 @@
     <div [ngSwitch]="newFileSelected" *ngIf="!listView">
         <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
             <div class="file-bottom-buttons-helper">
-            <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
                 <mat-icon matTooltip="Obriši" matTooltipPosition="right">delete</mat-icon>
             </button>
-            <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
+                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
                 <mat-icon matTooltip="Preuzmi" matTooltipPosition="before">download</mat-icon>
             </button>
-        </div>
+            </div>
             <!-- <button class="btn-clear file-button">
                 <mat-icon>zoom_out_map</mat-icon>
             </button> -->
         </div>
     </div>
-    
+
 </div>
