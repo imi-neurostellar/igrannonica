@@ -172,7 +172,9 @@ export class FolderComponent implements AfterViewInit {
     if (!this._initialized) {
       this.files = this.folders[this.startingTab];
       this.filteredFiles = [];
-      this.selectTab(this.startingTab);
+      setTimeout(()=>{
+        this.selectTab(this.startingTab);
+      });
       this._initialized = true;
     }
   }
@@ -229,6 +231,8 @@ export class FolderComponent implements AfterViewInit {
           })
           /* ------------------------------------------------ */
           this.searchTermsChanged();
+          if(this.selectedTab==TabType.MyExperiments)
+            this.selectTab(TabType.MyExperiments);
         })
       });
     });
@@ -352,6 +356,10 @@ export class FolderComponent implements AfterViewInit {
                 this.selectTab(TabType.MyDatasets);
               });
             }
+            if(this.archive)
+            {
+              this.refreshExperiments();
+            }
 
           });
         })
@@ -372,6 +380,10 @@ export class FolderComponent implements AfterViewInit {
               setTimeout(() => {
                 this.selectTab(TabType.MyModels);
               });
+            }
+            if(this.archive)
+            {
+              this.refreshExperiments();
             }
           });
         })
