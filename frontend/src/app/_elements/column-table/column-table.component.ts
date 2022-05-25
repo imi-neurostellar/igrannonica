@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dialog/missingvalues-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
-import { ProblemType } from 'src/app/_data/Model';
+import { NullValReplacer, ProblemType } from 'src/app/_data/Model';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { SaveExperimentDialogComponent } from 'src/app/_modals/save-experiment-dialog/save-experiment-dialog.component';
 import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.component';
@@ -181,8 +181,13 @@ export class ColumnTableComponent implements AfterViewInit {
     this.columnTableChanged.emit();
   }
 
-  columnTypeChanged(columnName: string) {
-    if (this.experiment.outputColumn == columnName)
+  columnTypeChanged(columnName: string, colIndex: number) {
+
+    this.experiment.nullValuesReplacers[colIndex].option = NullValueOptions.DeleteRows;
+    this.experiment.nullValuesReplacers[colIndex].value = "";
+    this.nullValOption[colIndex] = "Obriši redove (" + this.dataset?.columnInfo[colIndex].numNulls + ")";
+
+    if (this.experiment.outputColumn == columnName) 
       this.changeProblemType();
     else
       this.columnTableChangeDetected();
