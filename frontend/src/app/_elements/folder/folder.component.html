@@ -115,7 +115,7 @@
         </div>
     </div>
     <div id="footer" [ngSwitch]="newFileSelected" *ngIf="!listView">
-        <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" *ngSwitchCase="true">
+        <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" [disabled]="saveDisabled" *ngSwitchCase="true">
             <div  class="f-row">
                 <div>Sačuvaj</div>
                 <div class="pt-1">
