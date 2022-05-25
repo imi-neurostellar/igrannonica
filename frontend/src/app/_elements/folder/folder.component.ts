@@ -42,7 +42,7 @@ export class FolderComponent implements AfterViewInit {
   hoveringOverFileIndex: number = -1;
 
   fileToDisplay?: FolderFile;
-
+  saveDisabled:boolean=false;
   @Output() selectedFileChanged: EventEmitter<FolderFile> = new EventEmitter();
   @Output() fileFromRoute: EventEmitter<FolderFile> = new EventEmitter();
   @Output() okPressed: EventEmitter<string> = new EventEmitter();
@@ -235,6 +235,7 @@ export class FolderComponent implements AfterViewInit {
   }
 
   saveNewFile() {
+    this.saveDisabled=true;
     this.loadingAction = true;
     switch (this.type) {
       case FolderType.Dataset:
@@ -261,6 +262,7 @@ export class FolderComponent implements AfterViewInit {
         });
         break;
     }
+    this.saveDisabled=false;
   }
 
   predictorsForExp: { [expId: string]: Predictor[] } = {}
