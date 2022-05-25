@@ -23,8 +23,10 @@ import isEqual from 'lodash.isequal';
 })
 export class FolderComponent implements AfterViewInit {
 
-  @ViewChild(FormDatasetComponent) formDataset!: FormDatasetComponent;
-  @ViewChild(FormModelComponent) formModel!: FormModelComponent;
+  @ViewChild('selectedDataset') formDataset!: FormDatasetComponent;
+  @ViewChild('selectedModel') formModel!: FormModelComponent;
+  @ViewChild('newDataset') formNewDataset!: FormDatasetComponent;
+  @ViewChild('newModel') formNewModel!: FormModelComponent;
 
   @Input() folderName: string = 'Moji podaci';
   @Input() files!: FolderFile[]
@@ -40,8 +42,6 @@ export class FolderComponent implements AfterViewInit {
   selectedFileIndex: number = -1;
   selectedFile?: FolderFile;
   hoveringOverFileIndex: number = -1;
-
-  fileToDisplay?: FolderFile;
 
   @Output() selectedFileChanged: EventEmitter<FolderFile> = new EventEmitter();
   @Output() fileFromRoute: EventEmitter<FolderFile> = new EventEmitter();
@@ -68,57 +68,68 @@ export class FolderComponent implements AfterViewInit {
   }
 
   displayFile() {
-    if (this.type == FolderType.Dataset) {
-      this.formDataset.dataset = <Dataset>this.fileToDisplay;
-      this.formDataset.existingFlag = false;
-    }
-    else if (this.type == FolderType.Model)
-      this.formModel.newModel = <Model>this.fileToDisplay;
-  }
-
-  hoverOverFile(i: number) {
-    /*this.hoveringOverFileIndex = i;
-    if (i != -1) {
-      this.fileToDisplay = this.files[i];
-    } else {
-      if (this.newFileSelected) {
-        this.fileToDisplay = this.newFile;
-      } else {
-        this.fileToDisplay = this.files[this.selectedFileIndex];
+    if (this.newFileSelected) {
+      if (this.type == FolderType.Dataset) {
+        this.formNewDataset.dataset = <Dataset>this.newFile;
+        this.formNewDataset.existingFlag = false;
       }
+      else if (this.type == FolderType.Model)
+        this.formNewModel.newModel = <Model>this.newFile;
+    } else {
+      if (this.type == FolderType.Dataset) {
+        this.formDataset.dataset = <Dataset>this.selectedFile;
+        this.formDataset.existingFlag = false;
+      }
+      else if (this.type == FolderType.Model)
+        this.formModel.newModel = <Model>this.selectedFile;
     }
-    this.displayFile();*/
   }
 
   selectNewFile() {
     if (!this.newFile) {
       this.createNewFile();
     }
-    this.fileToDisplay = this.newFile;
     this.newFileSelected = true;
     this.listView = false;
     this.displayFile();
+
+    this.selectedTab = TabType.NewFile;
+
     if (this.type == FolderType.Dataset) {
-      this.formDataset.clear();
+      this.formNewDataset.clear();
     }
   }
 
   selectFile(file?: FolderFile) {
     this.formDataset.resetPagging();
     this.selectedFile = file;
-    Object.assign(this.lastFileData, this.selectedFile);
-    this.fileToDisplay = file;
+    this.updateLastFileData(file);
     if (this.type == FolderType.Experiment && file) {
       this.router.navigate(['/experiment/' + file._id]);
     }
     this.newFileSelected = false;
     this.listView = false;
     this.selectedFileChanged.emit(this.selectedFile);
-    this.selectTab(TabType.File);
     this.displayFile();
+
+    this.selectedTab = TabType.File;
 
     if (this.type == FolderType.Dataset)
       this.formDataset.loadExisting();
+  }
+
+  updateLastFileData(file: FolderFile | undefined) {
+    if (!file) return;
+
+    Object.assign(this.lastFileData, file);
+    if (this.type == FolderType.Model) {
+      const lastModel = (<Model>this.lastFileData)
+      lastModel.layers = [];
+      (<Model>file).layers.forEach(layer => {
+        const clone = Object.assign({}, layer);
+        lastModel.layers.push(clone);
+      })
+    }
   }
 
   goToExperimentPageWithPredictor(file: FolderFile, predictor: Predictor) {
@@ -172,7 +183,7 @@ export class FolderComponent implements AfterViewInit {
     if (!this._initialized) {
       this.files = this.folders[this.startingTab];
       this.filteredFiles = [];
-      this.selectTab(this.startingTab);
+      setTimeout(() => this.selectTab(this.startingTab));
       this._initialized = true;
     }
   }
@@ -238,7 +249,7 @@ export class FolderComponent implements AfterViewInit {
     this.loadingAction = true;
     switch (this.type) {
       case FolderType.Dataset:
-        this.formDataset!.uploadDataset((dataset: Dataset) => {
+        this.formNewDataset!.uploadDataset((dataset: Dataset) => {
           this.newFile = undefined;
           this.loadingAction = false;
           this.okPressed.emit();
@@ -250,7 +261,7 @@ export class FolderComponent implements AfterViewInit {
           });
         break;
       case FolderType.Model:
-        this.formModel.newModel.type = this.formModel.forProblemType;
+        this.formNewModel.newModel.type = this.formModel.forProblemType;
         this.modelsService.addModel(this.formModel.newModel).subscribe(model => {
           this.newFile = undefined;
           this.loadingAction = false;
@@ -300,8 +311,27 @@ export class FolderComponent implements AfterViewInit {
 
   onFileChange() {
     setTimeout(() => {
-      this.selectedFileHasChanges = !((this.selectedTab == TabType.NewFile) || isEqual(this.selectedFile, this.lastFileData));
+      this.selectedFileHasChanges = !((this.selectedTab == TabType.NewFile) || this.checkFileDataEqualToLastFileData());
     });
+  }
+
+  checkFileDataEqualToLastFileData() {
+    if (this.type == FolderType.Model) {
+      let layersEqual = true;
+      const oldModel = (<Model>this.lastFileData);
+      const selectedModel = (<Model>this.selectedFile)
+      const oldLayers = oldModel.layers;
+      oldModel.layers = selectedModel.layers;
+      const objEqual = isEqual(this.selectedFile, oldModel);
+      oldLayers.forEach((layer, index) => {
+        if (!isEqual(layer, selectedModel.layers[index])) {
+          layersEqual = false;
+        }
+      });
+      return objEqual && layersEqual;
+    } else {
+      return isEqual(this.selectedFile, this.lastFileData);
+    }
   }
 
   updateFile() {
@@ -324,7 +354,7 @@ export class FolderComponent implements AfterViewInit {
   fileUpdatedSuccess() {
     this.loadingAction = false;
     this.selectedFileHasChanges = false;
-    Object.assign(this.lastFileData, this.selectedFile);
+    this.updateLastFileData(this.selectedFile);
     this.refreshFiles();
     this.selectedFileChanged.emit(this.selectedFile);
   }
@@ -336,16 +366,16 @@ export class FolderComponent implements AfterViewInit {
       case FolderType.Dataset:
         const dataset = <Dataset>file;
         Shared.openYesNoDialog("Obriši izvor podataka", "Eksperimenti i trenirani modeli nad ovim izvorom podataka će takođe biti obrisani, da li ste sigurni da želite da obrišete izvor: " + dataset.name + "?", () => {
-          if(this.selectedTab==TabType.MyDatasets){
-          this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
-          this.files.splice(this.files.indexOf(file), 1);
+          if (this.selectedTab == TabType.MyDatasets) {
+            this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+            this.files.splice(this.files.indexOf(file), 1);
           }
           this.loadingAction = true;
           this.datasetsService.deleteDataset(dataset).subscribe((response) => {
             this.loadingAction = false;
-            if(this.selectedTab==TabType.File){
+            if (this.selectedTab == TabType.File) {
               this.refreshDatasets(null);
-              this.selectedFile=undefined!;
+              this.selectedFile = undefined!;
               setTimeout(() => {
                 this.selectTab(TabType.MyDatasets);
               });
@@ -357,16 +387,16 @@ export class FolderComponent implements AfterViewInit {
       case FolderType.Model:
         const model = <Model>file;
         Shared.openYesNoDialog("Obriši konfiguraciju neuronske mreže", "Trenirani modeli za ovu konfiguraciju će takođe biti obrisani, da li ste sigurni da želite da obrišete konfiguraciju: " + model.name + "?", () => {
-          if(this.selectedTab==TabType.MyModels){
-          this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
-          this.files.splice(this.files.indexOf(file), 1);
+          if (this.selectedTab == TabType.MyModels) {
+            this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+            this.files.splice(this.files.indexOf(file), 1);
           }
           this.loadingAction = true;
           this.modelsService.deleteModel(<Model>file).subscribe((response) => {
             this.loadingAction = false;
-            if(this.selectedTab==TabType.File){
+            if (this.selectedTab == TabType.File) {
               this.refreshModels(null);
-              this.selectedFile=undefined!;
+              this.selectedFile = undefined!;
               setTimeout(() => {
                 this.selectTab(TabType.MyModels);
               });
@@ -389,20 +419,20 @@ export class FolderComponent implements AfterViewInit {
         } else {
           const experiment = <Experiment>file;
           Shared.openYesNoDialog("Obriši eksperiment", "Trenirani modeli za ovaj eksperiment će takođe biti obrisani, da li ste sigurni da želite da obrišete eksperiment: " + experiment.name + "?", () => {
-            if(this.selectedTab==TabType.MyExperiments){
-            this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
-            this.files.splice(this.files.indexOf(file), 1);
+            if (this.selectedTab == TabType.MyExperiments) {
+              this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
+              this.files.splice(this.files.indexOf(file), 1);
             }
             this.loadingAction = true;
             this.experimentsService.deleteExperiment(experiment).subscribe((response) => {
-            this.loadingAction = false;
-            if(this.selectedTab==TabType.File){
-              this.refreshExperiments();
-              this.selectedFile=undefined!;
-              setTimeout(() => {
-                this.selectTab(TabType.MyExperiments);
-              });
-            }
+              this.loadingAction = false;
+              if (this.selectedTab == TabType.File) {
+                this.refreshExperiments();
+                this.selectedFile = undefined!;
+                setTimeout(() => {
+                  this.selectTab(TabType.MyExperiments);
+                });
+              }
             });
           });
         }
@@ -489,21 +519,19 @@ export class FolderComponent implements AfterViewInit {
   hoverTab: TabType = TabType.None;
 
   selectTab(tab: TabType) {
-    setTimeout(() => {
-      if (tab == TabType.NewFile) {
-        this.selectNewFile();
-        this.selectedFile=undefined!;
-      }
+    if (tab == TabType.NewFile) {
+      this.selectNewFile();
+    } else if (tab == TabType.File) {
+      this.selectFile(this.selectedFile);
+    }
+    this.listView = this.getListView(tab);
+    this.type = this.getFolderType(tab);
+    this.privacy = this.getPrivacy(tab);
+    this.selectedTab = tab;
+    this.files = this.folders[tab];
 
-      this.listView = this.getListView(tab);
-      this.type = this.getFolderType(tab);
-      this.privacy = this.getPrivacy(tab);
-      this.selectedTab = tab;
-      this.files = this.folders[tab];
-
-      if (tab !== TabType.File && tab !== TabType.NewFile)
-        this.searchTermsChanged();
-    });
+    if (tab !== TabType.File && tab !== TabType.NewFile)
+      this.searchTermsChanged();
   }
 
   getListView(tab: TabType) {

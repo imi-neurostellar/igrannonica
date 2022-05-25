@@ -117,10 +117,10 @@ namespace api.Services
                 model.outputNeurons = 0;
                 model.layers = new[]
                 {
-                    new Layer ( 0,"sigmoid", 3,"l1", 1f ),
-                    new Layer ( 1,"sigmoid", 3,"l1", 1f ),
-                    new Layer ( 2,"sigmoid", 3,"l1", 1f ),
-                    new Layer ( 3,"sigmoid", 3,"l1", 1f ),
+                    new Layer ( 0,"sigmoid", 3,"l1", "0" ),
+                    new Layer ( 1,"sigmoid", 3,"l1", "0" ),
+                    new Layer ( 2,"sigmoid", 3,"l1", "0" ),
+                    new Layer ( 3,"sigmoid", 3,"l1", "0" ),
                 };
                 model.outputLayerActivationFunction = "sigmoid";
                 model.metrics = new string[] { };
@@ -281,11 +281,11 @@ namespace api.Services
                 model.outputNeurons = 0;
                 model.layers = new[]
                 {
-                    new Layer ( 0,"softmax", 3,"l1", 3f ),
-                    new Layer ( 1,"softmax", 3,"l1", 3f ),
-                    new Layer ( 2,"softmax", 3,"l1", 3f ),
-                    new Layer ( 3,"softmax", 3,"l1", 3f ),
-                    new Layer ( 4,"softmax", 3,"l1", 3f )
+                    new Layer ( 0,"softmax", 3,"l1", "0" ),
+                    new Layer ( 1,"softmax", 3,"l1", "0" ),
+                    new Layer ( 2,"softmax", 3,"l1", "0" ),
+                    new Layer ( 3,"softmax", 3,"l1", "0" ),
+                    new Layer ( 4,"softmax", 3,"l1", "0" )
                 };
                 model.outputLayerActivationFunction = "softmax";
                 model.metrics = new string[] { };
@@ -435,9 +435,9 @@ namespace api.Services
                 model.outputNeurons = 0;
                 model.layers = new[]
                 {
-                    new Layer ( 0,"relu", 3,"l1", 1f ),
-                    new Layer ( 1,"relu", 3,"l1", 1f ),
-                    new Layer ( 2,"relu", 3,"l1", 1f )
+                    new Layer ( 0,"relu", 3,"l1", "0" ),
+                    new Layer ( 1,"relu", 3,"l1", "0" ),
+                    new Layer ( 2,"relu", 3,"l1", "0" )
                 };
                 model.outputLayerActivationFunction = "relu";
                 model.metrics = new string[] { };
@@ -593,10 +593,10 @@ namespace api.Services
                 model.outputNeurons = 0;
                 model.layers = new[]
                 {
-                    new Layer ( 0,"sigmoid", 3,"l1", 1f ),
-                    new Layer ( 1,"sigmoid", 3,"l1", 1f ),
-                    new Layer ( 2,"sigmoid", 3,"l1", 1f ),
-                    new Layer ( 3,"sigmoid", 3,"l1", 1f )
+                    new Layer ( 0,"sigmoid", 3,"l1", "0" ),
+                    new Layer ( 1,"sigmoid", 3,"l1", "0" ),
+                    new Layer ( 2,"sigmoid", 3,"l1", "0" ),
+                    new Layer ( 3,"sigmoid", 3,"l1", "0" )
                 };
                 model.outputLayerActivationFunction = "sigmoid";
                 model.metrics = new string[] { };
@@ -748,8 +748,8 @@ namespace api.Services
                 model.outputNeurons = 0;
                 model.layers = new[]
                 {
-                    new Layer ( 0,"relu", 3,"l1", 1f ),
-                    new Layer ( 1,"relu", 3,"l1", 1f )
+                    new Layer ( 0,"relu", 3,"l1", "0" ),
+                    new Layer ( 1,"relu", 3,"l1", "0" )
                 };
                 model.outputLayerActivationFunction = "relu";
                 model.metrics = new string[] { };

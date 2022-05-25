@@ -58,8 +58,13 @@
         <!--{{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
         <div class="folder-inside bg-blur">
             <div class="file-content" [ngClass]="{'form-hidden' : listView}">
-                <app-form-model [ngClass]="{'form-hidden': type != FolderType.Model}" [forExperiment]="forExperiment" [hideProblemType]="(forExperiment ? true : false)" [forProblemType]="(forExperiment ? forExperiment.type : ProblemType.Regression)" (editEvent)="onFileChange()"></app-form-model>
-                <app-form-dataset [ngClass]="{'form-hidden': type != FolderType.Dataset}" [forExperiment]="forExperiment" (editEvent)="onFileChange()"></app-form-dataset>
+                <!-- New File -->
+                <app-form-model #newModel [ngClass]="{'form-hidden': type != FolderType.Model || !newFileSelected}" [forExperiment]="forExperiment" [hideProblemType]="(forExperiment ? true : false)" [forProblemType]="(forExperiment ? forExperiment.type : ProblemType.Regression)"></app-form-model>
+                <app-form-dataset #newDataset [ngClass]="{'form-hidden': type != FolderType.Dataset || !newFileSelected}" [forExperiment]="forExperiment"></app-form-dataset>
+                <!-- Selected File -->
+                <app-form-model #selectedModel [ngClass]="{'form-hidden': type != FolderType.Model  || newFileSelected}" [forExperiment]="forExperiment" [hideProblemType]="(forExperiment ? true : false)" [forProblemType]="(forExperiment ? forExperiment.type : ProblemType.Regression)"
+                    (editEvent)="onFileChange()"></app-form-model>
+                <app-form-dataset #selectedDataset [ngClass]="{'form-hidden': type != FolderType.Dataset  || newFileSelected}" [forExperiment]="forExperiment" (editEvent)="onFileChange()"></app-form-dataset>
             </div>
             <div [ngClass]="{'form-hidden' : !listView}" class="list-view">
                 <div *ngFor="let file of filteredFiles; let i = index">
@@ -105,7 +110,7 @@
                     </div>
 
                 </div>
-                <div class="list-add" [ngSwitch]="type" *ngIf="privacy != Privacy.Public" >
+                <div class="list-add" [ngSwitch]="type" *ngIf="privacy != Privacy.Public">
                     <!-- {{privacy == Privacy.Public ? 'javni ' : ' '}} -->
                     <button mat-raised-button *ngSwitchCase="FolderType.Dataset" (click)="selectNewFile()">Dodaj izvor podataka</button>
                     <button mat-raised-button *ngSwitchCase="FolderType.Model" (click)="selectNewFile()">Dodaj konfiguraciju neuronske mreže</button>
@@ -152,17 +157,17 @@
     <div [ngSwitch]="newFileSelected" *ngIf="!listView">
         <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
             <div class="file-bottom-buttons-helper">
-            <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
                 <mat-icon matTooltip="Obriši" matTooltipPosition="right">delete</mat-icon>
             </button>
-            <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
+                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
                 <mat-icon matTooltip="Preuzmi" matTooltipPosition="before">download</mat-icon>
             </button>
-        </div>
+            </div>
             <!-- <button class="btn-clear file-button">
                 <mat-icon>zoom_out_map</mat-icon>
             </button> -->
         </div>
     </div>
-    
+
 </div>

@@ -229,7 +229,7 @@
 
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Stopa regularizacije</mat-label>
-                    <mat-select [(ngModel)]="newModel.layers[i].regularisationRate">
+                    <mat-select [(ngModel)]="newModel.layers[i].regularisationRate" (selectionChange)="editEvent.emit();">
                         <mat-option *ngFor="let option of Object.keys(RegularisationRate); let optionName of Object.values(RegularisationRate)" [value]="option">
                             {{ optionName }}
                         </mat-option>
