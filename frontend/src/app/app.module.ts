@@ -22,6 +22,7 @@ import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.comp
 import { EncodingDialogComponent } from './_modals/encoding-dialog/encoding-dialog.component';
 import { MissingvaluesDialogComponent } from './_modals/missingvalues-dialog/missingvalues-dialog.component';
 import { SaveExperimentDialogComponent } from './_modals/save-experiment-dialog/save-experiment-dialog.component';
+import { UpdateExperimentDialogComponent } from './_modals/update-experiment-dialog/update-experiment-dialog.component';
 // Pages
 import { HomeComponent } from './_pages/home/home.component';
 import { ProfileComponent } from './_pages/profile/profile.component';
@@ -93,7 +94,8 @@ export function initializeApp(appConfig: Configuration) {
     MetricViewComponent,
     LineChartComponent,
     SaveExperimentDialogComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    UpdateExperimentDialogComponent
   ],
   imports: [
     BrowserModule,

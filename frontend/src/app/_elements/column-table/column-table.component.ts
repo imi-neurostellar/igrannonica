@@ -15,6 +15,7 @@ import Shared from 'src/app/Shared';
 import { PieChartComponent } from '../_charts/pie-chart/pie-chart.component';
 import { BoxPlotComponent } from '../_charts/box-plot/box-plot.component';
 import { ActivatedRoute } from '@angular/router';
+import { UpdateExperimentDialogComponent } from 'src/app/_modals/update-experiment-dialog/update-experiment-dialog.component';
 
 @Component({
   selector: 'app-column-table',
@@ -365,11 +366,20 @@ export class ColumnTableComponent implements AfterViewInit {
   }
 
   openUpdateExperimentDialog() {
-    this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
-      Object.assign(this.experiment, response);
+    const dialogRef = this.dialog.open(UpdateExperimentDialogComponent, {
+      width: '350px',
+      data: { experiment: this.experiment }
+    });
+    dialogRef.afterClosed().subscribe(experiment => {
+      if (experiment == undefined)
+        return;
+      if (this.experiment._id != experiment._id)
+        Shared.openDialog("Novi eksperiment", "Uspešno ste sačuvali novi eksperiment. Nastavite rad na njemu.");
+      else
+        Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
+      Object.assign(this.experiment, experiment);
       this.experiment._columnsSelected = true;
       this.experimentChanged.emit();
-      Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
     });
   }
 

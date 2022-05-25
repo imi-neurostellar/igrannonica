@@ -336,22 +336,41 @@ export class FolderComponent implements AfterViewInit {
       case FolderType.Dataset:
         const dataset = <Dataset>file;
         Shared.openYesNoDialog("Obriši izvor podataka", "Eksperimenti i trenirani modeli nad ovim izvorom podataka će takođe biti obrisani, da li ste sigurni da želite da obrišete izvor: " + dataset.name + "?", () => {
+          if(this.selectedTab==TabType.MyDatasets){
           this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
           this.files.splice(this.files.indexOf(file), 1);
+          }
           this.loadingAction = true;
           this.datasetsService.deleteDataset(dataset).subscribe((response) => {
             this.loadingAction = false;
+            if(this.selectedTab==TabType.File){
+              this.refreshDatasets(null);
+              this.selectedFile=undefined!;
+              setTimeout(() => {
+                this.selectTab(TabType.MyDatasets);
+              });
+            }
+
           });
         })
         break;
       case FolderType.Model:
         const model = <Model>file;
         Shared.openYesNoDialog("Obriši konfiguraciju neuronske mreže", "Trenirani modeli za ovu konfiguraciju će takođe biti obrisani, da li ste sigurni da želite da obrišete konfiguraciju: " + model.name + "?", () => {
+          if(this.selectedTab==TabType.MyModels){
           this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
           this.files.splice(this.files.indexOf(file), 1);
+          }
           this.loadingAction = true;
           this.modelsService.deleteModel(<Model>file).subscribe((response) => {
             this.loadingAction = false;
+            if(this.selectedTab==TabType.File){
+              this.refreshModels(null);
+              this.selectedFile=undefined!;
+              setTimeout(() => {
+                this.selectTab(TabType.MyModels);
+              });
+            }
           });
         })
 
@@ -370,11 +389,20 @@ export class FolderComponent implements AfterViewInit {
         } else {
           const experiment = <Experiment>file;
           Shared.openYesNoDialog("Obriši eksperiment", "Trenirani modeli za ovaj eksperiment će takođe biti obrisani, da li ste sigurni da želite da obrišete eksperiment: " + experiment.name + "?", () => {
+            if(this.selectedTab==TabType.MyExperiments){
             this.filteredFiles.splice(this.filteredFiles.indexOf(file), 1);
             this.files.splice(this.files.indexOf(file), 1);
+            }
             this.loadingAction = true;
             this.experimentsService.deleteExperiment(experiment).subscribe((response) => {
-              this.loadingAction = false;
+            this.loadingAction = false;
+            if(this.selectedTab==TabType.File){
+              this.refreshExperiments();
+              this.selectedFile=undefined!;
+              setTimeout(() => {
+                this.selectTab(TabType.MyExperiments);
+              });
+            }
             });
           });
         }
