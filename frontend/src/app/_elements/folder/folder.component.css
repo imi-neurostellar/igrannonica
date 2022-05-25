@@ -184,9 +184,13 @@
 }
 
 .file-bottom-buttons {
-    position: absolute;
-    bottom: 5px;
-    right: 4%;
+    position: relative;
+    position: relative;
+    top:-36px
+    
+}
+.file-bottom-buttons-helper{
+    position: relative;
     display: flex;
     flex-direction: row-reverse;
 }
@@ -196,6 +200,7 @@
     color: var(--offwhite);
     border-radius: 4px;
     border: 1px solid var(--ns-primary);
+    background-color: var(--ns-bg-dark-50);
     margin: 5px;
     padding: 5px;
     cursor: pointer;
