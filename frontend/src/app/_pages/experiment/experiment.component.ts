@@ -60,6 +60,10 @@ export class ExperimentComponent implements AfterViewInit {
     this.stepsContainer.nativeElement.addEventListener('scroll', (event: Event) => {
       Shared.emitBGScrollEvent(this.stepsContainer.nativeElement.scrollTop);
     });
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
+      this.scrolling = false;
+    }, 800);
   }
 
   updatePageIfScrolled() {
@@ -70,11 +74,17 @@ export class ExperimentComponent implements AfterViewInit {
 
   updatePageHeight() {
     this.stepHeight = this.calcStepHeight();
+    this.stepper.selectedIndex = pageNum;
     const stepHeight = `${this.stepHeight}px`;
     this.stepsContainer.nativeElement.style.minHeight = stepHeight;
     this.steps.forEach(step => {
       step.nativeElement.style.minHeight = stepHeight;
     })
+    this.stepsContainer.nativeElement.scroll({
+      top: scrollAmount,
+      behavior: 'smooth' //auto, smooth, initial, inherit
+    });
+  }
   }
 
   changePage(event: StepperSelectionEvent) {
