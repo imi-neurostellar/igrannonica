@@ -109,7 +109,7 @@
                             <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix" [ngClass]="{'text-disabled' : !columnsChecked[i]}">
                                 <p class="verticalAlign text-left" style="font-size:13px;" *ngIf="!colInfo.isNumber">Kategorijski</p>
                                 <mat-form-field *ngIf="colInfo.isNumber">
-                                    <mat-select matNativeControl [(value)]="this.experiment.columnTypes[i]" [disabled]="!columnsChecked[i]" (selectionChange)="columnTypeChanged(colInfo.columnName);">
+                                    <mat-select matNativeControl [(value)]="this.experiment.columnTypes[i]" [disabled]="!columnsChecked[i]" (selectionChange)="columnTypeChanged(colInfo.columnName, i);">
                                         <mat-option [value]="ColumnType.categorical">Kategorijski</mat-option>
                                         <mat-option [value]="ColumnType.numerical">Numerički</mat-option>
                                     </mat-select>
@@ -180,12 +180,12 @@
                                     </mat-menu>
 
                                     <mat-menu #fillWith="matMenu">
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.mean}}>Mean ({{colInfo.mean}})</button>
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.median}}>Median ({{colInfo.median}})</button>
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.max}}>Max ({{colInfo.max}})</button>
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.min}}>Min ({{colInfo.min}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.mean}}>Mean ({{colInfo.mean}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.median}}>Median ({{colInfo.median}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.max}}>Max ({{colInfo.max}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.min}}>Min ({{colInfo.min}})</button>
 
-                                        <button *ngIf="!colInfo.isNumber" mat-menu-item [matMenuTriggerFor]="uniques">Najčešće vrednosti</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.categorical" mat-menu-item [matMenuTriggerFor]="uniques">Najčešće vrednosti</button>
 
                                         <button mat-menu-item [matMenuTriggerFor]="replaceWith">Unesi vrednost...</button>
                                     </mat-menu>
@@ -195,7 +195,8 @@
                                     </mat-menu>
 
                                     <mat-menu #replaceWith="matMenu">
-                                        <input type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value] #enterAValue>
+                                        <input *ngIf="experiment.columnTypes[i] == ColumnType.categorical" type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value] #enterAValue>
+                                        <input *ngIf="experiment.columnTypes[i] == ColumnType.numerical" type="number" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value] #enterAValue>
                                         <button [disabled]="getValue(colInfo.columnName) == ''" mat-menu-item value={{getValue(colInfo.columnName)}} (click)="MissValsReplaceClicked($event, colInfo.columnName, i)">Potvrdi unos</button>
                                     </mat-menu>
                                 </div>
