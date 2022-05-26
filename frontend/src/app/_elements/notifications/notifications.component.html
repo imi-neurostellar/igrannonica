@@ -1,4 +1,4 @@
-<div *ngIf="notifications && notifications.length > 0" class="position-fixed card card-body p-1 m-3" style="bottom: 0; right: 0; width: 18rem;">
+<div *ngIf="notifications && notifications.length > 0" class="position-fixed card card-body p-1 m-3" style="bottom: 0; right: 0; width: 18rem; z-index: 5000;">
     <h2 class="m-auto" (click)="closed = !closed;" data-bs-toggle="collapse" href="#collapseNotifs" role="button" aria-expanded="true" aria-controls="collapseNotifs">
         Notifikacije
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

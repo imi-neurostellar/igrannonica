@@ -2,7 +2,11 @@
     <div class="topBar">
         <div class="kolona mb-3">
             <div class="fileButton">
-                <button type="button" mat-raised-button (click)="fileInput.click()"><span *ngIf="!firstInput">Dodaj izvor podataka</span><span *ngIf="firstInput">{{filename}}</span></button>
+                <button type="button" mat-raised-button (click)="fileInput.click()" [disabled]="dataset._id != ''" >
+                    <span *ngIf="!firstInput && dataset._id == '' ">Dodaj izvor podataka</span>
+                    <span *ngIf="firstInput && dataset._id == '' ">{{filename}}</span>
+                    <span *ngIf="dataset._id != '' ">Fajl je odabran</span>
+                </button>
             </div>
         </div>
 
@@ -38,7 +42,7 @@
             <i class="material-icons-outlined icon-display" [ngClass]="{'hidden': tableData.hasInput}">file_upload</i>
 
 
-            <input class="file" id="file-upload" (change)="changeListener($event)" (valueChange)="dataset.isPreProcess = false; editEvent.emit()" #fileInput type="file" accept=".csv">
+            <input class="file" id="file-upload" [disabled]="dataset._id != ''" (change)="changeListener($event)" (valueChange)="dataset.isPreProcess = false; editEvent.emit()" #fileInput type="file" accept=".csv">
 
             <div class="datatable">
                 <div [ngClass]="{'hidden': (!existingFlag)}" class="text-center">

@@ -15,6 +15,7 @@ import { MetricViewComponent } from 'src/app/_elements/metric-view/metric-view.c
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
+import { LineChartComponent } from 'src/app/_elements/_charts/line-chart/line-chart.component';
 
 @Component({
   selector: 'app-experiment',
@@ -33,7 +34,7 @@ export class ExperimentComponent implements AfterViewInit {
   @ViewChild("folderDataset") folderDataset!: FolderComponent;
   @ViewChild(ColumnTableComponent) columnTable!: ColumnTableComponent;
   @ViewChild("folderModel") folderModel!: FolderComponent;
-  @ViewChild("metricView") metricView!: MetricViewComponent;
+  @ViewChild(LineChartComponent) linechartComponent!: LineChartComponent;
 
   step1: boolean = false;
   step2: boolean = false;
@@ -89,7 +90,7 @@ export class ExperimentComponent implements AfterViewInit {
         if (this.modelToTrain?._id == mId) {
           stat = stat.replace(/'/g, '"');
           this.history.push(JSON.parse(stat));
-          this.metricView.update(this.history,this.modelToTrain.epochs);
+          this.linechartComponent.updateAll(this.history,this.modelToTrain.epochs);
         }
       });
 
@@ -115,7 +116,7 @@ export class ExperimentComponent implements AfterViewInit {
                 this.step3 = true;
                 let numOfEpochsArray = Array.from({length: model.epochs}, (_, i) => i + 1);
                 setTimeout(() => {
-                  this.metricView.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
+                  this.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
                 })
               });
             });

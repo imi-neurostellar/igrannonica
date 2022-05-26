@@ -184,14 +184,19 @@
 
 .file-bottom-buttons {
     position: relative;
-    position: relative;
-    top: -36px
+    display: flex;
+    flex-direction: row-reverse;
+    height: 0;
+
 }
+
 
 .file-bottom-buttons-helper {
     position: relative;
     display: flex;
     flex-direction: row-reverse;
+    width: fit-content;
+    height: 45px;
 }
 
 .file-button {
