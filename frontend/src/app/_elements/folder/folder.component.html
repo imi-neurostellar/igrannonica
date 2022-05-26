@@ -72,10 +72,10 @@
                         </div>
                         <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
                             <button *ngIf="selectedTab==TabType.MyDatasets" class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;">
-                                <mat-icon matTooltip="Preuzmi" matTooltipPosition="before">download</mat-icon>
+                                <mat-icon matTooltip="Preuzmi" matTooltipPosition="above">download</mat-icon>
                             </button>
                             <button class="btn-clear file-button" (click)="deleteFile(file, $event)" style="display: inline-block;">
-                                <mat-icon matTooltip="Obriši" matTooltipPosition="right">delete</mat-icon>
+                                <mat-icon matTooltip="Obriši" matTooltipPosition="above">delete</mat-icon>
                             </button>
                         </div>
                         <div class="mx-2 hover-show" *ngIf="selectedTab == TabType.PublicDatasets || selectedTab == TabType.PublicModels">
@@ -114,6 +114,21 @@
             </div>
         </div>
     </div>
+    <div [ngSwitch]="newFileSelected" *ngIf="!listView">
+        <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
+            <div class="file-bottom-buttons-helper">
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
+                    <mat-icon matTooltip="Obriši" matTooltipPosition="above">delete</mat-icon>
+                </button>
+                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
+                    <mat-icon matTooltip="Preuzmi" matTooltipPosition="above">download</mat-icon>
+                </button>
+            </div>
+            <!-- <button class="btn-clear file-button">
+                <mat-icon>zoom_out_map</mat-icon>
+            </button> -->
+        </div>
+    </div>
     <div id="footer" [ngSwitch]="newFileSelected" *ngIf="!listView">
         <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" [disabled]="saveDisabled" *ngSwitchCase="true">
             <div  class="f-row">
@@ -149,20 +164,6 @@
             </button>
         </ng-container>
     </div>
-    <div [ngSwitch]="newFileSelected" *ngIf="!listView">
-        <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
-            <div class="file-bottom-buttons-helper">
-                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
-                <mat-icon matTooltip="Obriši" matTooltipPosition="right">delete</mat-icon>
-            </button>
-                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
-                <mat-icon matTooltip="Preuzmi" matTooltipPosition="before">download</mat-icon>
-            </button>
-            </div>
-            <!-- <button class="btn-clear file-button">
-                <mat-icon>zoom_out_map</mat-icon>
-            </button> -->
-        </div>
-    </div>
+    
 
 </div>
