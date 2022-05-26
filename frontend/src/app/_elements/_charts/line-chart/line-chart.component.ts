@@ -159,7 +159,6 @@ export class LineChartComponent implements AfterViewInit {
         options: {
           responsive: true,
           maintainAspectRatio: true,
-
           plugins: {
             legend: {
                 labels: {
@@ -179,6 +178,11 @@ export class LineChartComponent implements AfterViewInit {
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
               },
+              title: {
+                display: true,
+                text: 'Epoha',
+                color:"white"
+              }
             },
             y: {
               beginAtZero: true,
@@ -188,6 +192,11 @@ export class LineChartComponent implements AfterViewInit {
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
+              },
+              title: {
+                display: true,
+                text: 'Vrednost',
+                color:"white"
               }
             }
 
@@ -200,6 +209,7 @@ export class LineChartComponent implements AfterViewInit {
       },
       
     );
+    if(this.experiment.type==ProblemType.BinaryClassification || this.experiment.type==ProblemType.MultiClassification){}
     this.myChartLoss = new Chart("myChartloss",
       {
         type: 'line',
@@ -241,6 +251,11 @@ export class LineChartComponent implements AfterViewInit {
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
               },
+              title: {
+                display: true,
+                text: 'Epoha',
+                color:"white"
+              }
             },
             y: {
               beginAtZero: true,
@@ -250,6 +265,11 @@ export class LineChartComponent implements AfterViewInit {
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
+              },
+              title: {
+                display: true,
+                text: 'Vrednost',
+                color:"white"
               }
             }
 
@@ -303,6 +323,11 @@ export class LineChartComponent implements AfterViewInit {
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
               },
+              title: {
+                display: true,
+                text: 'Epoha',
+                color:"white"
+              }
             },
             y: {
               beginAtZero: true,
@@ -312,6 +337,11 @@ export class LineChartComponent implements AfterViewInit {
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
+              },
+              title: {
+                display: true,
+                text: 'Vrednost',
+                color:"white"
               }
             }
 
@@ -365,6 +395,11 @@ export class LineChartComponent implements AfterViewInit {
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
               },
+              title: {
+                display: true,
+                text: 'Epoha',
+                color:"white"
+              }
             },
             y: {
               beginAtZero: true,
@@ -374,6 +409,11 @@ export class LineChartComponent implements AfterViewInit {
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
+              },
+              title: {
+                display: true,
+                text: 'Vrednost',
+                color:"white"
               }
             }
 
