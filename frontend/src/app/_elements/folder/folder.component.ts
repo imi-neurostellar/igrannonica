@@ -42,6 +42,7 @@ export class FolderComponent implements AfterViewInit {
   selectedFileIndex: number = -1;
   selectedFile?: FolderFile;
   hoveringOverFileIndex: number = -1;
+  saveDisabled: boolean = false;
 
   @Output() selectedFileChanged: EventEmitter<FolderFile> = new EventEmitter();
   @Output() fileFromRoute: EventEmitter<FolderFile> = new EventEmitter();
@@ -183,7 +184,9 @@ export class FolderComponent implements AfterViewInit {
     if (!this._initialized) {
       this.files = this.folders[this.startingTab];
       this.filteredFiles = [];
-      setTimeout(() => this.selectTab(this.startingTab));
+      setTimeout(() => {
+        this.selectTab(this.startingTab);
+      });
       this._initialized = true;
     }
   }
@@ -240,12 +243,15 @@ export class FolderComponent implements AfterViewInit {
           })
           /* ------------------------------------------------ */
           this.searchTermsChanged();
+          if (this.selectedTab == TabType.MyExperiments)
+            this.selectTab(TabType.MyExperiments);
         })
       });
     });
   }
 
   saveNewFile() {
+    this.saveDisabled = true;
     this.loadingAction = true;
     switch (this.type) {
       case FolderType.Dataset:
@@ -272,6 +278,7 @@ export class FolderComponent implements AfterViewInit {
         });
         break;
     }
+    this.saveDisabled = false;
   }
 
   predictorsForExp: { [expId: string]: Predictor[] } = {}
@@ -380,6 +387,9 @@ export class FolderComponent implements AfterViewInit {
                 this.selectTab(TabType.MyDatasets);
               });
             }
+            if (this.archive) {
+              this.refreshExperiments();
+            }
 
           });
         })
@@ -400,6 +410,9 @@ export class FolderComponent implements AfterViewInit {
               setTimeout(() => {
                 this.selectTab(TabType.MyModels);
               });
+            }
+            if (this.archive) {
+              this.refreshExperiments();
             }
           });
         })

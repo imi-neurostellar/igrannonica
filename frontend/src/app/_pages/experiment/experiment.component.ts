@@ -215,6 +215,10 @@ export class ExperimentComponent implements AfterViewInit {
     setTimeout(() => {
       this.columnTable.loadDataset(d);
     });
+
+    this.folderModel.selectFile(undefined);
+    this.folderModel.selectTab(TabType.NewFile);
+    // REFRESH GRAFIKA (4. KORAKA) URADITI 
   }
 
   modelToTrain?: Model;

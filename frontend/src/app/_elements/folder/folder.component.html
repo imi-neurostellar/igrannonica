@@ -13,8 +13,8 @@
             <a class="m-1 stretched-link tab-link" (click)="selectTab(tab)" (mouseenter)="hoverOverTab(tab)" (mouseleave)="hoverOverTab(TabType.None)">{{tabTitles[tab]}}</a>
         </div>
 
-        <div class="folder-tab p-1 rounded-top" *ngIf="selectedFile" [style]="'z-index:' + (selectedTab == TabType.File ? 11 : (tabsToShow.length)) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.File, 'hover-tab' : hoverTab == TabType.File}">
-            <a class="m-1 stretched-link tab-link" (click)="selectTab(TabType.File)" (mouseenter)="hoverOverTab(TabType.File)" (mouseleave)="hoverOverTab(TabType.None)">{{selectedFile.name}}</a>
+        <div class="folder-tab p-1 rounded-top selected-file-tab" *ngIf="selectedFile" [style]="'z-index:' + (selectedTab == TabType.File ? 11 : (tabsToShow.length)) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.File, 'hover-tab' : hoverTab == TabType.File}">
+            <a class="m-1 stretched-link tab-link text-overflow" (click)="selectTab(TabType.File)" (mouseenter)="hoverOverTab(TabType.File)" (mouseleave)="hoverOverTab(TabType.None)">{{selectedFile.name}}</a>
         </div>
     </div>
     <div id="selected-content" class="rounded-bottom text-offwhite">
@@ -120,7 +120,7 @@
         </div>
     </div>
     <div id="footer" [ngSwitch]="newFileSelected" *ngIf="!listView">
-        <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" *ngSwitchCase="true">
+        <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" [disabled]="saveDisabled" *ngSwitchCase="true">
             <div  class="f-row">
                 <div>Sačuvaj</div>
                 <div class="pt-1">
