@@ -22,4 +22,41 @@ export class ArchiveComponent implements OnInit {
     });
   }
 
+
+  changePage(event: StepperSelectionEvent) {
+    this.updatePage(<number>event.selectedIndex)
+  }
+
+  goToPage(pageNum: number) {
+    this.stepper.selectedIndex = pageNum;
+    this.updatePage(pageNum);
+  }
+
+  scrollTimeout: any;
+
+  updatePage(pageNum: number) {
+    this.scrolling = true;
+    this.event = pageNum;
+    let scrollAmount = 0;
+    this.steps.forEach((step, index) => {
+      if (index == pageNum) {
+        scrollAmount = step.nativeElement.offsetTop;
+      }
+    })
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
+      this.scrolling = false;
+    }, 800);
+    this.stepsContainer.nativeElement.scroll({
+      top: scrollAmount,
+      behavior: 'smooth' //auto, smooth, initial, inherit
+    });
+  }
+
+  scrolling: boolean = false;
+
+  FolderType = FolderType;
+
+  TabType = TabType;
+
 }

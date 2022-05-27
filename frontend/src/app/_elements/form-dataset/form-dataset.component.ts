@@ -267,4 +267,16 @@ export class FormDatasetComponent {
     this.searchTermsChanged();
   }
 
+  changePage(event: StepperSelectionEvent) {
+    this.updatePage(<number>event.selectedIndex)
+  }
+
+  goToPage(pageNum: number) {
+    this.stepper.selectedIndex = pageNum;
+    this.updatePage(pageNum);
+  }
+
+  scrollTimeout: any;
+
+
 }
