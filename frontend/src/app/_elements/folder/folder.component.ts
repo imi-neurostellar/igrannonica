@@ -268,7 +268,7 @@ export class FolderComponent implements AfterViewInit {
         break;
       case FolderType.Model:
         this.formNewModel.newModel.type = this.formModel.forProblemType;
-        this.modelsService.addModel(this.formModel.newModel).subscribe(model => {
+        this.modelsService.addModel(this.formNewModel.newModel).subscribe(model => {
           this.newFile = undefined;
           this.loadingAction = false;
           //Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
