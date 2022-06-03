@@ -13,21 +13,6 @@ export class ModelsService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  uploadData(file: File): Observable<any> {
-    let formData = new FormData();
-    formData.append('file', file, file.name);
-
-    let params = new HttpParams();
-
-    const options = {
-      params: params,
-      reportProgress: false,
-      headers: this.authService.authHeader()
-    };
-
-    return this.http.post(`${Configuration.settings.apiURL}/file/csv`, formData, options);
-  }
-
   addModel(model: Model): Observable<any> {
     return this.http.post(`${Configuration.settings.apiURL}/model/add`, model, { headers: this.authService.authHeader() });
   }

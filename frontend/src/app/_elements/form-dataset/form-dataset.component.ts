@@ -89,7 +89,7 @@ export class FormDatasetComponent {
 
   update() {
     this.firstInput = true;
-    if (this.files.length < 1){
+    if (this.files.length < 1) {
       this.loadExisting();
       return;
     }
@@ -158,7 +158,7 @@ export class FormDatasetComponent {
       return;
     }
 
-    return this.modelsService.uploadData(this.files[0]).subscribe((file) => {
+    return this.datasetsService.uploadData(this.files[0]).subscribe((file) => {
       this.dataset._id = "";
       this.dataset.fileId = file._id;
       this.dataset.uploaderId = shared.userId;

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Configuration } from './configuration.service';
@@ -11,6 +11,21 @@ import { AuthService } from './auth.service';
 export class DatasetsService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
+
+  uploadData(file: File): Observable<any> {
+    let formData = new FormData();
+    formData.append('file', file, file.name);
+
+    let params = new HttpParams();
+
+    const options = {
+      params: params,
+      reportProgress: false,
+      headers: this.authService.authHeader()
+    };
+
+    return this.http.post(`${Configuration.settings.apiURL}/file/csv`, formData, options);
+  }
 
   getPublicDatasets(): Observable<Dataset[]> {
     return this.http.get<Dataset[]>(`${Configuration.settings.apiURL}/dataset/publicdatasets`, { headers: this.authService.authHeader() });
@@ -31,10 +46,10 @@ export class DatasetsService {
   getDatasetFile(fileId: any): any {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/-1/11`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
-  getDatasetFilePaging(fileId:any,begin:any,end:any){
+  getDatasetFilePaging(fileId: any, begin: any, end: any) {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/${begin}/${end}`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
-  getDatasetHeader(fileId:any){
+  getDatasetHeader(fileId: any) {
     return this.http.get(`${Configuration.settings.apiURL}/file/csvRead/${fileId}/-1/1`, { headers: this.authService.authHeader(), responseType: 'text' });
   }
   getDatasetFilePartial(fileId: any, startRow: number, rowNum: number): Observable<any> {
@@ -44,15 +59,15 @@ export class DatasetsService {
     return this.http.get<Dataset>(`${Configuration.settings.apiURL}/dataset/get/${datasetId}`, { headers: this.authService.authHeader() });
   }
 
-  editDataset(dataset: Dataset){
-    return this.http.put(`${Configuration.settings.apiURL}/dataset/` + dataset._id, dataset, { headers: this.authService.authHeader() ,responseType:'text'});
+  editDataset(dataset: Dataset) {
+    return this.http.put(`${Configuration.settings.apiURL}/dataset/` + dataset._id, dataset, { headers: this.authService.authHeader(), responseType: 'text' });
   }
 
   deleteDataset(dataset: Dataset) {
     return this.http.delete(`${Configuration.settings.apiURL}/dataset/` + dataset._id, { headers: this.authService.authHeader(), responseType: "text" });
   }
 
-  downloadFile(id:string):Observable<Blob>{
-    return this.http.get(`${Configuration.settings.apiURL}/file/Download?id=`+id, { headers: this.authService.authHeader(), responseType: 'blob' });
+  downloadFile(id: string): Observable<Blob> {
+    return this.http.get(`${Configuration.settings.apiURL}/file/Download?id=` + id, { headers: this.authService.authHeader(), responseType: 'blob' });
   }
 }
