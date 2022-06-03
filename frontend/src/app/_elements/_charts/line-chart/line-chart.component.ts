@@ -26,8 +26,12 @@ export class LineChartComponent implements AfterViewInit {
 
   @ViewChild('wrapper')
   wrapper!: ElementRef;
-  @ViewChildren('canvas')
-  canvas!: QueryList<ElementRef>;
+
+  @ViewChild('myChartacc') myChartacc!: ElementRef;
+  @ViewChild('myChartloss') myChartloss!: ElementRef;
+  @ViewChild('myChartmse') myChartmse!: ElementRef;
+  @ViewChild('myChartmae') myChartmae!: ElementRef;
+
   @Input() experiment!: Experiment;
   @Input() predictor?: Predictor;
 
@@ -149,7 +153,7 @@ export class LineChartComponent implements AfterViewInit {
 
     window.addEventListener('resize', () => { this.resize() });
     this.resize();
-    this.myChartAcc = new Chart("myChartacc",
+    this.myChartAcc = new Chart(this.myChartacc.nativeElement,
       {
         type: 'line',
         data: {
@@ -222,7 +226,7 @@ export class LineChartComponent implements AfterViewInit {
 
     );
     if (this.experiment.type == ProblemType.BinaryClassification || this.experiment.type == ProblemType.MultiClassification) { }
-    this.myChartLoss = new Chart("myChartloss",
+    this.myChartLoss = new Chart(this.myChartloss.nativeElement,
       {
         type: 'line',
         data: {
@@ -294,7 +298,7 @@ export class LineChartComponent implements AfterViewInit {
       },
 
     );
-    this.myChartMse = new Chart("myChartmse",
+    this.myChartMse = new Chart(this.myChartmse.nativeElement,
       {
         type: 'line',
         data: {
@@ -366,7 +370,7 @@ export class LineChartComponent implements AfterViewInit {
       },
 
     );
-    this.myChartMae = new Chart("myChartmae",
+    this.myChartMae = new Chart(this.myChartmae.nativeElement,
       {
         type: 'line',
         data: {
@@ -439,6 +443,13 @@ export class LineChartComponent implements AfterViewInit {
 
     );
 
+  }
+
+  modelName: string = '';
+
+  setName(name: string) {
+    this.modelName = name;
+    this.predictor = undefined;
   }
 }
 

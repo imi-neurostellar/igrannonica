@@ -21,7 +21,7 @@ namespace api.Controllers
         private readonly IHubContext<ChatHub> _ichat;
         private readonly IModelService _modelService;
 
-        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IExperimentService experimentService,IUserService userService, IHubContext<ChatHub> ichat,IModelService modelService)
+        public PredictorController(IPredictorService predictorService, IConfiguration configuration, IJwtToken Token, IMlConnectionService mlConnectionService, IExperimentService experimentService, IUserService userService, IHubContext<ChatHub> ichat, IModelService modelService)
         {
             _predictorService = predictorService;
             jwtToken = Token;
@@ -78,7 +78,7 @@ namespace api.Controllers
         //public ActionResult<List<Predictor>> Search(string name)
         //{
         //    string username = getUsername();
-            
+
         //    if (username == null)
         //        return BadRequest();
 
@@ -138,7 +138,7 @@ namespace api.Controllers
 
             List<Predictor> lista = _predictorService.SortPredictors(userId, ascdsc, latest);
 
-            if(latest == 0)
+            if (latest == 0)
                 return lista;
             else
             {
@@ -155,19 +155,23 @@ namespace api.Controllers
         [HttpPost("add")]
         public async Task<ActionResult<Predictor>> Post([FromBody] Predictor predictor)
         {
-            var user=_userService.GetUserById(predictor.uploaderId);
+            var user = _userService.GetUserById(predictor.uploaderId);
             predictor.dateCreated = DateTime.Now.ToUniversalTime();
             var model = _modelService.GetOneModel(predictor.modelId);
-            if (model == null || user==null)
+            if (model == null || user == null)
                 return BadRequest("Model not found or user doesnt exist");
-            Predictor p=_predictorService.Exists(predictor.modelId, predictor.experimentId);
-            if (p == null)
+            Predictor p = _predictorService.Exists(predictor.modelId, predictor.experimentId);
+
+            if (p == null) {
                 _predictorService.Create(predictor);
-            else
+            }
+            else {
+                predictor._id = p._id;
                 _predictorService.Update(p._id, predictor);
+            }
             if (ChatHub.CheckUser(user._id))
                 foreach(var connection in ChatHub.getAllConnectionsOfUser(user._id))
-                    await _ichat.Clients.Client(connection).SendAsync("NotifyPredictor", predictor._id,model.name);
+                    await _ichat.Clients.Client(connection).SendAsync("NotifyPredictor", predictor._id, model._id);
             return CreatedAtAction(nameof(Get), new { id = predictor._id }, predictor);
             
         }

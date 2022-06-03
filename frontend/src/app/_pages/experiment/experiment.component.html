@@ -25,10 +25,10 @@
                     <ng-template matStepLabel>
                         <span class="label addedElement text-overflow" *ngIf="experiment._id!=''">Predvideti:{{experiment.outputColumn}}</span>
                         <span *ngIf="!this.step1" class="align-middle"><mat-icon>lock</mat-icon></span>
-                        <span class="label text-overflow" *ngIf="experiment._id==''">Odabir kolona </span>
+                        <span class="label text-overflow" *ngIf="experiment._id==''">Priprema podataka </span>
                     </ng-template>
                     <ng-template matStepContent>
-                        <p class="text-left text-overflow">Pripremite podatke i izaberite izlazne kolone</p>
+                        <p class="text-left text-overflow">Pripremite podatke i odaberite ulazne i izlaznu kolonu</p>
                     </ng-template>
                 </mat-step>
                 <mat-step [completed]="this.step3">
@@ -62,12 +62,23 @@
         </div>
         <div #steps id="step_3" class="step-content" *ngIf="step2">
             <div class="step-content-inside">
-                <app-folder #folderModel [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.NewFile" [tabsToShow]="[TabType.MyModels]" (okPressed)="goToPage(3); trainModel();" (selectedFileChanged)="setModel($event)"></app-folder>
+                <div id="compareButton">
+                    <button mat-raised-button color="accent" *ngIf="!comparing" (click)="toggleCompare()"><mat-icon>compare</mat-icon> Dodaj konfiguraciju za upoređivanje</button>
+                    <button mat-raised-button *ngIf="comparing" (click)="toggleCompare()"><mat-icon>not_interested</mat-icon> Prekini upoređivanje</button>
+                </div>
+                <div class="side-by-side">
+                    <app-folder #folderModel [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.NewFile" [tabsToShow]="[TabType.MyModels]" (okPressed)="goToPage(3); trainModel();" (selectedFileChanged)="setModel($event);"></app-folder>
+                    <app-folder #folderModelCompare [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.MyModels" [tabsToShow]="[TabType.MyModels]" (okPressed)="goToPage(3); trainModelCmp();" (selectedFileChanged)="setModelCmp($event);" style="width: 50%;"
+                        *ngIf="comparing"></app-folder>
+                </div>
             </div>
         </div>
         <div #steps id="step_4" class="step-content" *ngIf="step3">
             <div class="step-content-inside">
-                <app-line-chart [experiment]="experiment" [predictor]="predictor!"></app-line-chart>
+                <div class="side-by-side">
+                    <app-line-chart #linechart [experiment]="experiment" [predictor]="predictor!"></app-line-chart>
+                    <app-line-chart #linechartCompare [experiment]="experiment" style="width: 50%;" *ngIf="comparing"></app-line-chart>
+                </div>
             </div>
         </div>
         <!--

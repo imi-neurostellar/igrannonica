@@ -75,3 +75,33 @@ mat-stepper {
 .text-overflow-experiment-name {
     overflow-wrap: break-word;
 }
+
+#compareButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.side-by-side {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* one item */
+
+.side-by-side>*:first-child:nth-last-child(1) {
+    /* -or- li:only-child { */
+    width: 100%;
+}
+
+
+/* two items */
+
+.side-by-side>*:first-child:nth-last-child(2),
+.side-by-side>*:first-child:nth-last-child(2)~li {
+    width: 50%;
+    margin: 5px;
+}

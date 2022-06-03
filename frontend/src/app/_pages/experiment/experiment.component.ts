@@ -37,12 +37,26 @@ export class ExperimentComponent implements AfterViewInit {
   @ViewChild("folderDataset") folderDataset!: FolderComponent;
   @ViewChild(ColumnTableComponent) columnTable!: ColumnTableComponent;
   @ViewChild("folderModel") folderModel!: FolderComponent;
-  @ViewChild(LineChartComponent) linechartComponent!: LineChartComponent;
+  @ViewChild("folderModelCompare") folderModelCmp!: FolderComponent;
+  @ViewChild("linechart") linechartComponent!: LineChartComponent;
+  @ViewChild("linechartCompare") linechartComponentCmp!: LineChartComponent;
 
   step1: boolean = false;
   step2: boolean = false;
   step3: boolean = false;
   step4: boolean = false;
+
+  comparing: boolean = false;
+
+  toggleCompare() {
+    this.comparing = !this.comparing;
+    setTimeout(() => {
+      if (this.folderModel.formModel)
+        this.folderModel.formModel.graph.resize();
+      if (this.folderModel.formNewModel)
+        this.folderModel.formNewModel.graph.resize();
+    });
+  }
 
   constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private datasetsService: DatasetsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private route: ActivatedRoute) {
     this.experiment = new Experiment("exp1");
@@ -61,6 +75,15 @@ export class ExperimentComponent implements AfterViewInit {
       Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
     } else {
       this.modelsService.trainModel(this.modelToTrain._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
+      this.step4 = true;
+    }
+  }
+
+  trainModelCmp() {
+    if (!this.modelToTrainCmp) {
+      Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
+    } else {
+      this.modelsService.trainModel(this.modelToTrainCmp._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
       this.step4 = true;
     }
   }
@@ -87,15 +110,47 @@ export class ExperimentComponent implements AfterViewInit {
 
     if (this.signalRService.hubConnection) {
       this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
-        if (currentEpoch == 0) {
-          this.history = [];
-        }
+
         if (this.modelToTrain?._id == mId) {
+          if (currentEpoch == 0) {
+            this.linechartComponent.setName(mName);
+            this.history = [];
+          }
+
           stat = stat.replace(/'/g, '"');
           this.history.push(JSON.parse(stat));
+
           this.linechartComponent.updateAll(this.history, this.modelToTrain.epochs);
         }
+
+        if (this.modelToTrainCmp?._id == mId) {
+          if (currentEpoch == 0) {
+            this.linechartComponentCmp.setName(mName);
+            this.historyCmp = [];
+          }
+
+          stat = stat.replace(/'/g, '"');
+
+          this.historyCmp.push(JSON.parse(stat));
+          this.linechartComponentCmp.updateAll(this.historyCmp, this.modelToTrainCmp.epochs);
+        }
       });
+
+      this.signalRService.hubConnection.on("NotifyPredictor", (pId: string, mId: string) => {
+        console.log("Predictor trained: ", pId, "for model:", mId);
+
+        if (this.modelToTrain && mId == this.modelToTrain._id) {
+          this.predictorsService.getPredictor(pId).subscribe((predictor) => {
+            this.linechartComponent.predictor = predictor;
+          });
+        }
+
+        if (this.modelToTrainCmp && mId == this.modelToTrainCmp._id) {
+          this.predictorsService.getPredictor(pId).subscribe((predictor) => {
+            this.linechartComponentCmp.predictor = predictor;
+          });
+        }
+      })
 
     }
 
@@ -142,6 +197,7 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   history: any[] = [];
+  historyCmp: any[] = [];
 
   updatePageIfScrolled() {
     if (this.scrolling) return;
@@ -227,10 +283,17 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   modelToTrain?: Model;
+  modelToTrainCmp?: Model;
 
   setModel(model: FolderFile) {
     const m = <Model>model;
     this.modelToTrain = m;
+    this.step3 = true;
+  }
+
+  setModelCmp(model: FolderFile) {
+    const m = <Model>model;
+    this.modelToTrainCmp = m;
     this.step3 = true;
   }
 }
