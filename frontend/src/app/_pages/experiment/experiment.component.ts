@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
 import { LineChartComponent } from 'src/app/_elements/_charts/line-chart/line-chart.component';
+import Predictor from 'src/app/_data/Predictor';
 
 @Component({
   selector: 'app-experiment',
@@ -31,6 +32,8 @@ export class ExperimentComponent implements AfterViewInit {
   event: number = 0;
   experiment: Experiment;
   dataset?: Dataset;
+  predictor?: Predictor;
+
   @ViewChild("folderDataset") folderDataset!: FolderComponent;
   @ViewChild(ColumnTableComponent) columnTable!: ColumnTableComponent;
   @ViewChild("folderModel") folderModel!: FolderComponent;
@@ -90,7 +93,7 @@ export class ExperimentComponent implements AfterViewInit {
         if (this.modelToTrain?._id == mId) {
           stat = stat.replace(/'/g, '"');
           this.history.push(JSON.parse(stat));
-          this.linechartComponent.updateAll(this.history,this.modelToTrain.epochs);
+          this.linechartComponent.updateAll(this.history, this.modelToTrain.epochs);
         }
       });
 
@@ -103,6 +106,7 @@ export class ExperimentComponent implements AfterViewInit {
       if (predictorId != null) {
         this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
           let predictor = response;
+          this.predictor = predictor;
           this.experimentsService.getExperimentById(predictor.experimentId).subscribe((response) => {
             this.experiment = response;
             this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
@@ -114,7 +118,7 @@ export class ExperimentComponent implements AfterViewInit {
                 let model = response;
                 this.folderModel.formModel.newModel = model;
                 this.step3 = true;
-                let numOfEpochsArray = Array.from({length: model.epochs}, (_, i) => i + 1);
+                let numOfEpochsArray = Array.from({ length: model.epochs }, (_, i) => i + 1);
                 setTimeout(() => {
                   this.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
                 })

@@ -1,7 +1,10 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, Input, ViewChildren, QueryList } from '@angular/core';
 import { Chart } from 'chart.js';
+import FileSaver from 'file-saver';
 import Experiment from 'src/app/_data/Experiment';
 import Model, { ProblemType } from 'src/app/_data/Model';
+import Predictor from 'src/app/_data/Predictor';
+import { PredictorsService } from 'src/app/_services/predictors.service';
 
 @Component({
   selector: 'app-line-chart',
@@ -15,19 +18,34 @@ export class LineChartComponent implements AfterViewInit {
   dataMAE: number[] = [];
   dataMSE: number[] = [];
   dataLOSS: number[] = [];
-  dataValAcc:number[]=[];
-  dataValMAE:number[]=[];
-  dataValMSE:number[]=[];
-  dataValLoss:number[]=[];
+  dataValAcc: number[] = [];
+  dataValMAE: number[] = [];
+  dataValMSE: number[] = [];
+  dataValLoss: number[] = [];
   dataEpoch: number[] = [];
 
   @ViewChild('wrapper')
   wrapper!: ElementRef;
-  @ViewChild('canvas')
-  canvas!: ElementRef;
-  @Input() experiment!:Experiment;
-  constructor() {
-    
+  @ViewChildren('canvas')
+  canvas!: QueryList<ElementRef>;
+  @Input() experiment!: Experiment;
+  @Input() predictor?: Predictor;
+
+
+  downloadFile() {
+    if (!this.predictor) {
+      return;
+    }
+
+    const fileId = this.predictor.h5FileId;
+    if (fileId != undefined)
+      this.predictorsService.downloadH5(fileId).subscribe((response) => {
+        FileSaver.saveAs(response, fileId + '.h5');
+      });
+  }
+
+  constructor(private predictorsService: PredictorsService) {
+
   }
   width = 700;
   height = 400;
@@ -36,18 +54,13 @@ export class LineChartComponent implements AfterViewInit {
   myChartMae!: Chart;
   myChartMse!: Chart;
   myChartLoss!: Chart;
-  ProblemType=ProblemType;
+  ProblemType = ProblemType;
   resize() {
-    this.width = this.wrapper.nativeElement.offsetWidth;
+    //this.width = this.wrapper.nativeElement.offsetWidth;
     this.height = this.wrapper.nativeElement.offsetHeight;
-
-    if (this.canvas) {
-      this.canvas.nativeElement.width = this.width;
-      this.canvas.nativeElement.height = this.height;
-    }
   }
-  update(myEpochs: number[], myAcc: number[], myLoss: number[], myMae: number[], myMse: number[], myValAcc:number[],myValLoss:number[],myValMae:number[],myValMse:number[]) {
-   
+  update(myEpochs: number[], myAcc: number[], myLoss: number[], myMae: number[], myMse: number[], myValAcc: number[], myValLoss: number[], myValMae: number[], myValMse: number[]) {
+
     this.dataEpoch.length = 0;
     this.dataEpoch.push(...myEpochs);
 
@@ -80,7 +93,7 @@ export class LineChartComponent implements AfterViewInit {
     this.myChartMae.update();
     this.myChartMse.update();
   }
-  updateAll(history: any[],totalEpochs:number) {
+  updateAll(history: any[], totalEpochs: number) {
     const myAcc: number[] = [];
     const myMae: number[] = [];
     const myMse: number[] = [];
@@ -93,11 +106,10 @@ export class LineChartComponent implements AfterViewInit {
     const myEpochs: number[] = [];
     this.history = history;
     this.history.forEach((metrics, epoch) => {
-      if(totalEpochs>100)
-      {
-        let epochEstimate=epoch*Math.round(Math.sqrt(totalEpochs))
-        if(epochEstimate>totalEpochs)
-          epochEstimate=totalEpochs;
+      if (totalEpochs > 100) {
+        let epochEstimate = epoch * Math.round(Math.sqrt(totalEpochs))
+        if (epochEstimate > totalEpochs)
+          epochEstimate = totalEpochs;
         myEpochs.push(epochEstimate);
       }
       else
@@ -131,10 +143,10 @@ export class LineChartComponent implements AfterViewInit {
       }
     });
 
-    this.update(myEpochs, myAcc, myLoss, myMae, myMse, myValAcc,myValLoss,myValMAE,myValMSE);
+    this.update(myEpochs, myAcc, myLoss, myMae, myMse, myValAcc, myValLoss, myValMAE, myValMSE);
   }
   ngAfterViewInit(): void {
-    
+
     window.addEventListener('resize', () => { this.resize() });
     this.resize();
     this.myChartAcc = new Chart("myChartacc",
@@ -147,27 +159,27 @@ export class LineChartComponent implements AfterViewInit {
             label: 'Accuracy',
             data: this.dataAcc,
             borderWidth: 1,
-            
+
           },
           {
             label: 'Val_Accuracy',
             data: this.dataValAcc,
             borderWidth: 1
-          }          
+          }
           ]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: true,
+          //responsive: true,
+          //maintainAspectRatio: true,
           plugins: {
             legend: {
-                labels: {
-                    // This more specific font property overrides the global property
-                    color:'white',
-                    font: {
-                      size: 10
-                  }
+              labels: {
+                // This more specific font property overrides the global property
+                color: 'white',
+                font: {
+                  size: 10
                 }
+              }
             }
           },
           scales: {
@@ -181,14 +193,14 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Epoha',
-                color:"white"
+                color: "white"
               }
             },
             y: {
               beginAtZero: true,
               ticks: {
                 color: 'white'
-              
+
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
@@ -196,7 +208,7 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Vrednost',
-                color:"white"
+                color: "white"
               }
             }
 
@@ -207,40 +219,40 @@ export class LineChartComponent implements AfterViewInit {
 
         }
       },
-      
+
     );
-    if(this.experiment.type==ProblemType.BinaryClassification || this.experiment.type==ProblemType.MultiClassification){}
+    if (this.experiment.type == ProblemType.BinaryClassification || this.experiment.type == ProblemType.MultiClassification) { }
     this.myChartLoss = new Chart("myChartloss",
       {
         type: 'line',
         data: {
           labels: this.dataEpoch,
           datasets: [
-          {
-            label: 'Loss',
-            data: this.dataLOSS,
-            borderWidth: 1
-          },
-          {
-            label: 'Val_Loss',
-            data: this.dataValLoss,
-            borderWidth: 1
-          },
+            {
+              label: 'Loss',
+              data: this.dataLOSS,
+              borderWidth: 1
+            },
+            {
+              label: 'Val_Loss',
+              data: this.dataValLoss,
+              borderWidth: 1
+            },
           ]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: true,
+          //responsive: true,
+          //maintainAspectRatio: true,
 
           plugins: {
             legend: {
-                labels: {
-                    // This more specific font property overrides the global property
-                    color:'white',
-                    font: {
-                      size: 10
-                  }
+              labels: {
+                // This more specific font property overrides the global property
+                color: 'white',
+                font: {
+                  size: 10
                 }
+              }
             }
           },
           scales: {
@@ -254,14 +266,14 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Epoha',
-                color:"white"
+                color: "white"
               }
             },
             y: {
               beginAtZero: true,
               ticks: {
                 color: 'white'
-              
+
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
@@ -269,7 +281,7 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Vrednost',
-                color:"white"
+                color: "white"
               }
             }
 
@@ -280,7 +292,7 @@ export class LineChartComponent implements AfterViewInit {
 
         }
       },
-      
+
     );
     this.myChartMse = new Chart("myChartmse",
       {
@@ -288,31 +300,31 @@ export class LineChartComponent implements AfterViewInit {
         data: {
           labels: this.dataEpoch,
           datasets: [
-          {
-            label: 'MSE',
-            data: this.dataMSE,
-            borderWidth: 1
-          },
-          {
-            label: 'Val_MSE',
-            data: this.dataValMSE,
-            borderWidth: 1
-          }
+            {
+              label: 'MSE',
+              data: this.dataMSE,
+              borderWidth: 1
+            },
+            {
+              label: 'Val_MSE',
+              data: this.dataValMSE,
+              borderWidth: 1
+            }
           ]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: true,
+          //responsive: true,
+          //maintainAspectRatio: true,
 
           plugins: {
             legend: {
-                labels: {
-                    // This more specific font property overrides the global property
-                    color:'white',
-                    font: {
-                      size: 10
-                  }
+              labels: {
+                // This more specific font property overrides the global property
+                color: 'white',
+                font: {
+                  size: 10
                 }
+              }
             }
           },
           scales: {
@@ -326,14 +338,14 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Epoha',
-                color:"white"
+                color: "white"
               }
             },
             y: {
               beginAtZero: true,
               ticks: {
                 color: 'white'
-              
+
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
@@ -341,7 +353,7 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Vrednost',
-                color:"white"
+                color: "white"
               }
             }
 
@@ -352,7 +364,7 @@ export class LineChartComponent implements AfterViewInit {
 
         }
       },
-      
+
     );
     this.myChartMae = new Chart("myChartmae",
       {
@@ -360,31 +372,31 @@ export class LineChartComponent implements AfterViewInit {
         data: {
           labels: this.dataEpoch,
           datasets: [
-          {
-            label: 'MAE',
-            data: this.dataMAE,
-            borderWidth: 1
-          },
-          {
-            label: 'Val_MAE',
-            data: this.dataValMAE,
-            borderWidth: 1
-          },
+            {
+              label: 'MAE',
+              data: this.dataMAE,
+              borderWidth: 1
+            },
+            {
+              label: 'Val_MAE',
+              data: this.dataValMAE,
+              borderWidth: 1
+            },
           ]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: true,
+          //responsive: true,
+          //maintainAspectRatio: true,
 
           plugins: {
             legend: {
-                labels: {
-                    // This more specific font property overrides the global property
-                    color:'white',
-                    font: {
-                      size: 10
-                  }
+              labels: {
+                // This more specific font property overrides the global property
+                color: 'white',
+                font: {
+                  size: 10
                 }
+              }
             }
           },
           scales: {
@@ -398,14 +410,14 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Epoha',
-                color:"white"
+                color: "white"
               }
             },
             y: {
               beginAtZero: true,
               ticks: {
                 color: 'white'
-              
+
               },
               grid: {
                 color: "rgba(0, 99, 171, 0.5)"
@@ -413,7 +425,7 @@ export class LineChartComponent implements AfterViewInit {
               title: {
                 display: true,
                 text: 'Vrednost',
-                color:"white"
+                color: "white"
               }
             }
 
@@ -424,9 +436,9 @@ export class LineChartComponent implements AfterViewInit {
 
         }
       },
-      
+
     );
-    
+
   }
 }
 

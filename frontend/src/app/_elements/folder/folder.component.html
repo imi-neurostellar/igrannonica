@@ -76,16 +76,16 @@
                             {{file.lastUpdated | date}}
                         </div>
                         <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
-                            <button *ngIf="selectedTab==TabType.MyDatasets" class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;">
-                                <mat-icon matTooltip="Preuzmi" matTooltipPosition="above">download</mat-icon>
+                            <button *ngIf="selectedTab==TabType.MyDatasets" class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;" matTooltip="Preuzmi" matTooltipPosition="above">
+                                <mat-icon>download</mat-icon>
                             </button>
-                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)" style="display: inline-block;">
-                                <mat-icon matTooltip="Obriši" matTooltipPosition="above">delete</mat-icon>
+                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)" style="display: inline-block;" matTooltip="Obriši" matTooltipPosition="above">
+                                <mat-icon>delete</mat-icon>
                             </button>
                         </div>
-                        <div class="mx-2 hover-show" *ngIf="selectedTab == TabType.PublicDatasets || selectedTab == TabType.PublicModels">
+                        <div class="mx-2 hover-show" *ngIf="selectedTab == TabType.PublicDatasets || selectedTab == TabType.PublicModels" matTooltip="Uvezi" matTooltipPosition="right">
                             <button class="btn-clear file-button" (click)="addFile(file, $event)">
-                                <mat-icon matTooltip="Uvezi" matTooltipPosition="right">note_add</mat-icon>
+                                <mat-icon>note_add</mat-icon>
                             </button>
                         </div>
                     </div>
@@ -122,11 +122,11 @@
     <div [ngSwitch]="newFileSelected" *ngIf="!listView">
         <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
             <div class="file-bottom-buttons-helper">
-                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
-                    <mat-icon matTooltip="Obriši" matTooltipPosition="above">delete</mat-icon>
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)" matTooltip="Obriši" matTooltipPosition="above">
+                    <mat-icon>delete</mat-icon>
                 </button>
-                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
-                    <mat-icon matTooltip="Preuzmi" matTooltipPosition="above">download</mat-icon>
+                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;" matTooltip="Preuzmi" matTooltipPosition="above">
+                    <mat-icon>download</mat-icon>
                 </button>
             </div>
             <!-- <button class="btn-clear file-button">
@@ -169,6 +169,6 @@
             </button>
         </ng-container>
     </div>
-    
+
 
 </div>
