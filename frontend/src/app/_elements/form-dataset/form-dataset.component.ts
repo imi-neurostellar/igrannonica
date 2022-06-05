@@ -155,6 +155,7 @@ export class FormDatasetComponent {
   uploadDataset(onSuccess: Function = (dataset: Dataset) => { }, onError: Function = () => { }) {
     if (this.files[0] == undefined) {
       shared.openDialog("Greška", "Niste izabrali fajl za učitavanje.");
+      onError();
       return;
     }
 

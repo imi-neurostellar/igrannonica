@@ -171,11 +171,13 @@ export class ExperimentComponent implements AfterViewInit {
 
               this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
                 let model = response;
-                this.folderModel.formModel.newModel = model;
+                this.folderModel.selectFile(model);
+                //this.folderModel.formModel.newModel = model;
                 this.step3 = true;
                 let numOfEpochsArray = Array.from({ length: model.epochs }, (_, i) => i + 1);
                 setTimeout(() => {
                   this.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
+                  this.goToPage(3);
                 })
               });
             });
@@ -189,6 +191,7 @@ export class ExperimentComponent implements AfterViewInit {
             this.dataset = response;
             this.folderDataset.forExperiment = this.experiment;
             this.folderDataset.selectFile(this.dataset);
+            this.goToPage(1);
           });
         });
       }
@@ -258,6 +261,9 @@ export class ExperimentComponent implements AfterViewInit {
     this.step2 = true;
     setTimeout(() => {
       this.folderModel.updateExperiment();
+      this.folderModel.selectFile(undefined);
+      this.folderModel.selectTab(TabType.NewFile);
+      this.goToPage(2);
     });
   }
 
@@ -276,9 +282,6 @@ export class ExperimentComponent implements AfterViewInit {
     setTimeout(() => {
       this.columnTable.loadDataset(d);
     });
-
-    this.folderModel.selectFile(undefined);
-    this.folderModel.selectTab(TabType.NewFile);
     // REFRESH GRAFIKA (4. KORAKA) URADITI 
   }
 

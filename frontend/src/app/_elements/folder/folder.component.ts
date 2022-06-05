@@ -62,6 +62,8 @@ export class FolderComponent implements AfterViewInit {
         if (this.type == FolderType.Dataset) {
           this.refreshFiles(dId);
         }
+        this.saveDisabled = false;
+        console.log("Notify dataset ", this.saveDisabled);
       });
     } else {
       console.warn("Dataset-Load: No connection!");
@@ -140,6 +142,9 @@ export class FolderComponent implements AfterViewInit {
   createNewFile() {
     if (this.type == FolderType.Dataset) {
       this.newFile = new Dataset();
+      this.formNewDataset.files = [];
+      this.formNewDataset.firstInput = false;
+      this.formNewDataset.filename = "";
     } else if (this.type == FolderType.Model) {
       this.newFile = new Model();
     }
@@ -251,6 +256,11 @@ export class FolderComponent implements AfterViewInit {
   }
 
   saveNewFile() {
+    console.log("USAO U saveDisabled: ", this.saveDisabled);
+    if (this.saveDisabled) {
+      console.log("USAO U IF");
+      return;
+    }
     this.saveDisabled = true;
     this.loadingAction = true;
     switch (this.type) {
@@ -261,9 +271,11 @@ export class FolderComponent implements AfterViewInit {
           this.okPressed.emit();
           //Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se obradi.");
           this.refreshFiles();
+          this.createNewFile();
         },
           () => {
             Shared.openDialog("Neuspeo pokušaj!", "Izvor podataka sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeći dataset.");
+            this.saveDisabled = false;
           });
         break;
       case FolderType.Model:
@@ -273,12 +285,13 @@ export class FolderComponent implements AfterViewInit {
           this.loadingAction = false;
           //Shared.openDialog("Obaveštenje", "Uspešno ste dodali novu konfiguraciju neuronske mreže u kolekciju.");
           this.refreshFiles(null, model._id); // todo select model
+          this.createNewFile();
         }, (err) => {
           Shared.openDialog("Neuspeo pokušaj!", "Konfiguracija neuronske mreže sa unetim nazivom već postoji u Vašoj kolekciji. Izmenite naziv ili iskoristite postojeću konfiguraciju.");
+          this.saveDisabled = false;
         });
         break;
     }
-    this.saveDisabled = false;
   }
 
   predictorsForExp: { [expId: string]: Predictor[] } = {}

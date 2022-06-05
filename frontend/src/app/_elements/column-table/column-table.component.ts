@@ -88,6 +88,7 @@ export class ColumnTableComponent implements AfterViewInit {
     if (this.route.snapshot.paramMap.get("id") == null && this.route.snapshot.paramMap.get("predictorId") == null) {
       this.dataset = dataset;
       this.setColumnTypeInitial();
+      this.resetColumnEncodings(Encoding.Label);
   
       this.columnsChecked = [];
       this.dataset.columnInfo.forEach(column => {
@@ -96,7 +97,6 @@ export class ColumnTableComponent implements AfterViewInit {
   
       this.resetInputColumns();
       this.resetOutputColumn();
-      this.resetColumnEncodings(Encoding.Label);
       this.setDeleteRowsForMissingValTreatment();
   
       this.nullValOption = [];
@@ -258,9 +258,11 @@ export class ColumnTableComponent implements AfterViewInit {
   resetColumnEncodings(encodingType: Encoding) {
     if (this.experiment != undefined && this.dataset != undefined) {
       this.experiment.encodings = [];
+      console.log("prvi: RESET COLUMN ENC, DUZINA ENCODINGS NIZA:", this.experiment.encodings.length);
       for (let i = 0; i < this.dataset.columnInfo.length; i++) {
         this.experiment.encodings.push(new ColumnEncoding(this.dataset?.columnInfo[i].columnName, encodingType));
       }
+      console.log("drugi: RESET COLUMN ENC, DUZINA ENCODINGS NIZA:", this.experiment.encodings.length);
       this.columnTableChangeDetected();
     }
   }
@@ -366,6 +368,7 @@ export class ColumnTableComponent implements AfterViewInit {
         Object.assign(this.experiment, experiment);
         this.experiment._columnsSelected = true;
         this.experimentChanged.emit();
+        this.okPressed.emit();
       }
     });
   }
@@ -385,6 +388,7 @@ export class ColumnTableComponent implements AfterViewInit {
       Object.assign(this.experiment, experiment);
       this.experiment._columnsSelected = true;
       this.experimentChanged.emit();
+      this.okPressed.emit();
     });
   }
 
