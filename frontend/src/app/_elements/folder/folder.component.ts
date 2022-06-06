@@ -63,6 +63,7 @@ export class FolderComponent implements AfterViewInit {
       this.signalRService.hubConnection.on("NotifyDataset", (dName: string, dId: string) => {
         if (this.type == FolderType.Dataset) {
           this.refreshFiles(dId);
+          this.okPressed.emit();
         }
         this.saveDisabled = false;
         console.log("Notify dataset ", this.saveDisabled);
@@ -298,7 +299,7 @@ export class FolderComponent implements AfterViewInit {
         this.formNewDataset!.uploadDataset((dataset: Dataset) => {
           this.newFile = undefined;
           this.loadingAction = false;
-          this.okPressed.emit();
+          //this.okPressed.emit();
           //Shared.openDialog("Obaveštenje", "Uspešno ste dodali novi izvor podataka u kolekciju. Molimo sačekajte par trenutaka da se obradi.");
           this.refreshFiles();
           this.createNewFile();
