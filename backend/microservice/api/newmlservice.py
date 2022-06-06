@@ -1,3 +1,4 @@
+from cmath import nan
 from enum import unique
 from itertools import count
 import os
@@ -374,13 +375,15 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
 
         
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt, metrics = ['accuracy'])
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
 
         hist=history.history
         #plt.plot(hist['accuracy'])
-        #plt.show()
+        plt.plot(history.history['loss'])
+        plt.plot(history.history['val_loss'])
+        plt.show()
         y_pred=classifier.predict(x_test)
         y_pred=np.argmax(y_pred,axis=1)
         
@@ -410,7 +413,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         #from ann_visualizer.visualize import ann_viz;
         #ann_viz(classifier, title="My neural network")
         
-        return filepath,[hist['loss'],hist['val_loss'],hist['accuracy'],hist['val_accuracy'],hist['mae'],hist['val_mae'],hist['mse'],hist['val_mse']]
+        return filepath,[hist['loss'],hist['val_loss'],hist['accuracy'],hist['val_accuracy'],[],[],[],[]]
 
     elif(problem_type=='binarni-klasifikacioni'):
         #print('*************************************************************************binarni')
@@ -444,7 +447,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         
         classifier.add(tf.keras.layers.Dense(units=1, activation=paramsModel['outputLayerActivationFunction']))#izlazni sloj
 
-        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt , metrics = ['accuracy','mae','mse'])
+        classifier.compile(loss =paramsModel["lossFunction"] , optimizer =opt , metrics = ['accuracy'])
 
         history=classifier.fit( x=x_train, y=y_train, epochs = paramsModel['epochs'],batch_size=int(paramsModel['batchSize']),callbacks=callback(x_test, y_test,paramsModel['_id']),validation_data=(x_val, y_val))
         hist=history.history
@@ -468,7 +471,7 @@ def train(dataset, paramsModel,paramsExperiment,paramsDataset,callback):
         logloss = float(sm.log_loss(y_test, y_pred))
         """
 
-        return filepath,[hist['loss'],hist['val_loss'],hist['accuracy'],hist['val_accuracy'],hist['mae'],hist['val_mae'],hist['mse'],hist['val_mse']]
+        return filepath,[hist['loss'],hist['val_loss'],hist['accuracy'],hist['val_accuracy'],[],[],[],[]]
 
     elif(problem_type=='regresioni'):
         reg=paramsModel['layers'][0]['regularisation']

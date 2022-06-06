@@ -19,6 +19,9 @@ namespace api.Services
         void Delete(string userId, string name);
         bool CheckHyperparameters(int inputNeurons, int hiddenLayerNeurons, int hiddenLayers, int outputNeurons);
         bool CheckDb();
+
+        public void UpdateAccessibleByLink(string modelId, bool accessibleByLink);
+        public void UpdateIsPublic(string modelId, bool isPublic);
     }
 }
 

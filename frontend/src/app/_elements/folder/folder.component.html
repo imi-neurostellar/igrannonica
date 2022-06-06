@@ -13,8 +13,8 @@
             <a class="m-1 stretched-link tab-link" (click)="selectTab(tab)" (mouseenter)="hoverOverTab(tab)" (mouseleave)="hoverOverTab(TabType.None)">{{tabTitles[tab]}}</a>
         </div>
 
-        <div class="folder-tab p-1 rounded-top" *ngIf="selectedFile" [style]="'z-index:' + (selectedTab == TabType.File ? 11 : (tabsToShow.length)) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.File, 'hover-tab' : hoverTab == TabType.File}">
-            <a class="m-1 stretched-link tab-link" (click)="selectTab(TabType.File)" (mouseenter)="hoverOverTab(TabType.File)" (mouseleave)="hoverOverTab(TabType.None)">{{selectedFile.name}}</a>
+        <div class="folder-tab p-1 rounded-top selected-file-tab" *ngIf="selectedFile" [style]="'z-index:' + (selectedTab == TabType.File ? 11 : (tabsToShow.length)) + ' ;'" [ngClass]="{'selected-tab' : selectedTab == TabType.File, 'hover-tab' : hoverTab == TabType.File}">
+            <a class="m-1 stretched-link tab-link text-overflow" (click)="selectTab(TabType.File)" (mouseenter)="hoverOverTab(TabType.File)" (mouseleave)="hoverOverTab(TabType.None)">{{selectedFile.name}}</a>
         </div>
     </div>
     <div id="selected-content" class="rounded-bottom text-offwhite">
@@ -58,19 +58,13 @@
         <!--{{fileToDisplay ? fileToDisplay.name : 'No file selected.'}} {{selectedFileIndex}} {{hoveringOverFileIndex}}-->
         <div class="folder-inside bg-blur">
             <div class="file-content" [ngClass]="{'form-hidden' : listView}">
-                <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
-                    <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)">
-                        <mat-icon matTooltip="Obriši" matTooltipPosition="right">delete</mat-icon>
-                    </button>
-                    <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;">
-                        <mat-icon matTooltip="Preuzmi" matTooltipPosition="before">download</mat-icon>
-                    </button>
-                    <!-- <button class="btn-clear file-button">
-                        <mat-icon>zoom_out_map</mat-icon>
-                    </button> -->
-                </div>
-                <app-form-model [ngClass]="{'form-hidden': type != FolderType.Model}" [forExperiment]="forExperiment" [hideProblemType]="(forExperiment ? true : false)" [forProblemType]="(forExperiment ? forExperiment.type : ProblemType.Regression)" (editEvent)="onFileChange()"></app-form-model>
-                <app-form-dataset [ngClass]="{'form-hidden': type != FolderType.Dataset}" [forExperiment]="forExperiment" (editEvent)="onFileChange()"></app-form-dataset>
+                <!-- New File -->
+                <app-form-model #newModel [ngClass]="{'form-hidden': type != FolderType.Model || !newFileSelected}" [forExperiment]="forExperiment" [hideProblemType]="(forExperiment ? true : false)" [forProblemType]="(forExperiment ? forExperiment.type : ProblemType.Regression)"></app-form-model>
+                <app-form-dataset #newDataset [ngClass]="{'form-hidden': type != FolderType.Dataset || !newFileSelected}" [forExperiment]="forExperiment"></app-form-dataset>
+                <!-- Selected File -->
+                <app-form-model #selectedModel [ngClass]="{'form-hidden': type != FolderType.Model  || newFileSelected}" [forExperiment]="forExperiment" [hideProblemType]="(forExperiment ? true : false)" [forProblemType]="(forExperiment ? forExperiment.type : ProblemType.Regression)"
+                    (editEvent)="onFileChange()"></app-form-model>
+                <app-form-dataset #selectedDataset [ngClass]="{'form-hidden': type != FolderType.Dataset  || newFileSelected}" [forExperiment]="forExperiment" (editEvent)="onFileChange()"></app-form-dataset>
             </div>
             <div [ngClass]="{'form-hidden' : !listView}" class="list-view">
                 <div *ngFor="let file of filteredFiles; let i = index">
@@ -82,16 +76,19 @@
                             {{file.lastUpdated | date}}
                         </div>
                         <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
-                            <button *ngIf="selectedTab==TabType.MyDatasets" class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;">
-                                <mat-icon matTooltip="Preuzmi" matTooltipPosition="before">download</mat-icon>
+                            <button *ngIf="selectedTab==TabType.MyDatasets || selectedTab==TabType.MyModels" class="btn-clear file-button" (click)="shareFile(file,$event)" style="display: inline-block;" matTooltip="Podeli" matTooltipPosition="above">
+                                <mat-icon>share</mat-icon>
                             </button>
-                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)" style="display: inline-block;">
-                                <mat-icon matTooltip="Obriši" matTooltipPosition="right">delete</mat-icon>
+                            <button *ngIf="selectedTab==TabType.MyDatasets" class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;" matTooltip="Preuzmi" matTooltipPosition="above">
+                                <mat-icon>download</mat-icon>
+                            </button>
+                            <button class="btn-clear file-button" (click)="deleteFile(file, $event)" style="display: inline-block;" matTooltip="Obriši" matTooltipPosition="above">
+                                <mat-icon>delete</mat-icon>
                             </button>
                         </div>
-                        <div class="mx-2 hover-show" *ngIf="selectedTab == TabType.PublicDatasets || selectedTab == TabType.PublicModels">
+                        <div class="mx-2 hover-show" *ngIf="selectedTab == TabType.PublicDatasets || selectedTab == TabType.PublicModels" matTooltip="Uvezi" matTooltipPosition="right">
                             <button class="btn-clear file-button" (click)="addFile(file, $event)">
-                                <mat-icon matTooltip="Uvezi" matTooltipPosition="right">note_add</mat-icon>
+                                <mat-icon>note_add</mat-icon>
                             </button>
                         </div>
                     </div>
@@ -105,7 +102,7 @@
                                 </div>
                             </div>
                             <div class="mx-2 hover-hide">
-                                {{predictor.lastUpdated | date}}
+                                {{predictor.dateCreated| date}}
                             </div>
                             <div class="mx-2 hover-show">
                                 <button class="btn-clear file-button" (click)="deleteFile(predictor, $event, true)">
@@ -116,7 +113,7 @@
                     </div>
 
                 </div>
-                <div class="list-add" [ngSwitch]="type" *ngIf="privacy != Privacy.Public" >
+                <div class="list-add" [ngSwitch]="type" *ngIf="privacy != Privacy.Public">
                     <!-- {{privacy == Privacy.Public ? 'javni ' : ' '}} -->
                     <button mat-raised-button *ngSwitchCase="FolderType.Dataset" (click)="selectNewFile()">Dodaj izvor podataka</button>
                     <button mat-raised-button *ngSwitchCase="FolderType.Model" (click)="selectNewFile()">Dodaj konfiguraciju neuronske mreže</button>
@@ -125,8 +122,26 @@
             </div>
         </div>
     </div>
+    <div [ngSwitch]="newFileSelected" *ngIf="!listView">
+        <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
+            <div class="file-bottom-buttons-helper">
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(selectedFile, $event)" matTooltip="Obriši" matTooltipPosition="above">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(selectedFile,$event)" style="display: inline-block;" matTooltip="Preuzmi" matTooltipPosition="above">
+                    <mat-icon>download</mat-icon>
+                </button>
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File" class="btn-clear file-button" (click)="shareFile(selectedFile,$event)" style="display: inline-block;" matTooltip="Podeli" matTooltipPosition="above">
+                    <mat-icon>share</mat-icon>
+                </button>
+            </div>
+            <!-- <button class="btn-clear file-button">
+                <mat-icon>zoom_out_map</mat-icon>
+            </button> -->
+        </div>
+    </div>
     <div id="footer" [ngSwitch]="newFileSelected" *ngIf="!listView">
-        <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" *ngSwitchCase="true">
+        <button mat-button (click)="saveNewFile()" class="bottom-button text-offwhite rounded-bottom" [disabled]="saveDisabled" *ngSwitchCase="true">
             <div  class="f-row">
                 <div>Sačuvaj</div>
                 <div class="pt-1">
@@ -160,4 +175,6 @@
             </button>
         </ng-container>
     </div>
+
+
 </div>

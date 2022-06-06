@@ -29,6 +29,10 @@ export class PredictorsService {
   getMyPredictors(): Observable<Predictor[]> {
     return this.http.get<Predictor[]>(`${Configuration.settings.apiURL}/predictor/mypredictors`, { headers: this.authService.authHeader() });
   }
+
+  downloadH5(id: string): Observable<Blob> {
+    return this.http.get(`${Configuration.settings.apiURL}/file/Download?id=` + id, { headers: this.authService.authHeader(), responseType: 'blob' });
+  }
 }
 
 export class Column {

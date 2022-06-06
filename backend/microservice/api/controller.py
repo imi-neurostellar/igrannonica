@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from cmath import log
 from dataclasses import dataclass
 from distutils.command.upload import upload
@@ -112,12 +113,12 @@ def train():
         "metricsMse":histMetrics[6],
         "metricsValMse":histMetrics[7]
     }
-    #print(predictor)
+    print(predictor)
     
     url = config.api_url + "/Predictor/add"
     r = requests.post(url, json=predictor).text
     
-    #print(r)
+    print(r)
     return r
 
 @app.route('/predict', methods = ['POST'])

@@ -1,0 +1,14 @@
+<h1 mat-dialog-title class="text-center">Podeli {{data.fileType == 0 ? 'izvor podataka' : 'konfiguraciju neuronske mreže'}}</h1>
+<div mat-dialog-content class="mt-5 mb-3 mx-1">
+    <form>
+        <mat-checkbox class="m-2" [(ngModel)]="data.file.isPublic" [ngModelOptions]="{standalone: true}" (change)="publicChanged()">Svi mogu da vide </mat-checkbox>
+        <mat-checkbox class="m-2" [(ngModel)]="data.file.accessibleByLink" [ngModelOptions]="{standalone: true}" (change)="linkChanged()">Osobe sa linkom mogu da vide</mat-checkbox>
+        <div class="input-group my-3">
+            <input type="text" [value]="link" class="form-control" placeholder="" aria-label="Copy link button addon" aria-describedby="button-copy">
+            <button class="btn btn-outline-primary" type="button" id="button-copy" (click)="copy()" [disabled]="!data.file.accessibleByLink"><div class="mt-1"><mat-icon *ngIf="data.file.accessibleByLink">link</mat-icon><mat-icon *ngIf="!data.file.accessibleByLink">link_off</mat-icon></div></button>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions class="justify-content-center">
+    <button mat-stroked-button (click)="close()">Gotovo</button>
+</div>

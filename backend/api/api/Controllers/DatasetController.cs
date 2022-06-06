@@ -282,5 +282,37 @@ namespace api.Controllers
             return Ok($"Dataset with ID = {id} deleted");
 
         }
+
+        [HttpPut("UpdateAccessibleByLink/{datasetId}")]
+        [Authorize(Roles = "User")]
+        public ActionResult UpdateAccessibleByLink(string datasetId, [FromBody] bool accessibleByLink)
+        {
+            string uploaderId = getUserId();
+
+            Dataset dataset = _datasetService.GetOneDataset(datasetId);
+
+            if (uploaderId != dataset.uploaderId)
+                return Unauthorized();
+
+            _datasetService.UpdateAccessibleByLink(datasetId, accessibleByLink);
+
+            return Ok(dataset.accessibleByLink);
+        }
+
+        [HttpPut("UpdateIsPublic/{datasetId}")]
+        [Authorize(Roles = "User")]
+        public ActionResult UpdateIsPublic(string datasetId, [FromBody] bool isPublic)
+        {
+            string uploaderId = getUserId();
+
+            Dataset dataset = _datasetService.GetOneDataset(datasetId);
+
+            if (uploaderId != dataset.uploaderId)
+                return Unauthorized();
+
+            _datasetService.UpdateIsPublic(datasetId, isPublic);
+
+            return Ok(dataset.isPublic);
+        }
     }
 }

@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MissingvaluesDialogComponent } from 'src/app/_modals/missingvalues-dialog/missingvalues-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CsvParseService } from 'src/app/_services/csv-parse.service';
-import { ProblemType } from 'src/app/_data/Model';
+import { NullValReplacer, ProblemType } from 'src/app/_data/Model';
 import { ExperimentsService } from 'src/app/_services/experiments.service';
 import { SaveExperimentDialogComponent } from 'src/app/_modals/save-experiment-dialog/save-experiment-dialog.component';
 import { AlertDialogComponent } from 'src/app/_modals/alert-dialog/alert-dialog.component';
@@ -15,6 +15,7 @@ import Shared from 'src/app/Shared';
 import { PieChartComponent } from '../_charts/pie-chart/pie-chart.component';
 import { BoxPlotComponent } from '../_charts/box-plot/box-plot.component';
 import { ActivatedRoute } from '@angular/router';
+import { UpdateExperimentDialogComponent } from 'src/app/_modals/update-experiment-dialog/update-experiment-dialog.component';
 
 @Component({
   selector: 'app-column-table',
@@ -87,6 +88,7 @@ export class ColumnTableComponent implements AfterViewInit {
     if (this.route.snapshot.paramMap.get("id") == null && this.route.snapshot.paramMap.get("predictorId") == null) {
       this.dataset = dataset;
       this.setColumnTypeInitial();
+      this.resetColumnEncodings(Encoding.Label);
   
       this.columnsChecked = [];
       this.dataset.columnInfo.forEach(column => {
@@ -95,7 +97,6 @@ export class ColumnTableComponent implements AfterViewInit {
   
       this.resetInputColumns();
       this.resetOutputColumn();
-      this.resetColumnEncodings(Encoding.Label);
       this.setDeleteRowsForMissingValTreatment();
   
       this.nullValOption = [];
@@ -180,8 +181,13 @@ export class ColumnTableComponent implements AfterViewInit {
     this.columnTableChanged.emit();
   }
 
-  columnTypeChanged(columnName: string) {
-    if (this.experiment.outputColumn == columnName)
+  columnTypeChanged(columnName: string, colIndex: number) {
+
+    this.experiment.nullValuesReplacers[colIndex].option = NullValueOptions.DeleteRows;
+    this.experiment.nullValuesReplacers[colIndex].value = "";
+    this.nullValOption[colIndex] = "Obriši redove (" + this.dataset?.columnInfo[colIndex].numNulls + ")";
+
+    if (this.experiment.outputColumn == columnName) 
       this.changeProblemType();
     else
       this.columnTableChangeDetected();
@@ -252,9 +258,11 @@ export class ColumnTableComponent implements AfterViewInit {
   resetColumnEncodings(encodingType: Encoding) {
     if (this.experiment != undefined && this.dataset != undefined) {
       this.experiment.encodings = [];
+      console.log("prvi: RESET COLUMN ENC, DUZINA ENCODINGS NIZA:", this.experiment.encodings.length);
       for (let i = 0; i < this.dataset.columnInfo.length; i++) {
         this.experiment.encodings.push(new ColumnEncoding(this.dataset?.columnInfo[i].columnName, encodingType));
       }
+      console.log("drugi: RESET COLUMN ENC, DUZINA ENCODINGS NIZA:", this.experiment.encodings.length);
       this.columnTableChangeDetected();
     }
   }
@@ -360,16 +368,27 @@ export class ColumnTableComponent implements AfterViewInit {
         Object.assign(this.experiment, experiment);
         this.experiment._columnsSelected = true;
         this.experimentChanged.emit();
+        this.okPressed.emit();
       }
     });
   }
 
   openUpdateExperimentDialog() {
-    this.experimentService.updateExperiment(this.experiment).subscribe((response) => {
-      Object.assign(this.experiment, response);
+    const dialogRef = this.dialog.open(UpdateExperimentDialogComponent, {
+      width: '350px',
+      data: { experiment: this.experiment }
+    });
+    dialogRef.afterClosed().subscribe(experiment => {
+      if (experiment == undefined)
+        return;
+      if (this.experiment._id != experiment._id)
+        Shared.openDialog("Novi eksperiment", "Uspešno ste sačuvali novi eksperiment. Nastavite rad na njemu.");
+      else
+        Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
+      Object.assign(this.experiment, experiment);
       this.experiment._columnsSelected = true;
       this.experimentChanged.emit();
-      Shared.openDialog("Izmena eksperimenta", "Uspešno ste izmenili podatke o eksperimentu.");
+      this.okPressed.emit();
     });
   }
 

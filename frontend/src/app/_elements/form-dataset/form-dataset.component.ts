@@ -13,6 +13,7 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./form-dataset.component.css']
 })
 export class FormDatasetComponent {
+  @Input() disableAll: boolean = false;
 
   @ViewChild(DatatableComponent) datatable!: DatatableComponent;
 
@@ -89,7 +90,7 @@ export class FormDatasetComponent {
 
   update() {
     this.firstInput = true;
-    if (this.files.length < 1){
+    if (this.files.length < 1) {
       this.loadExisting();
       return;
     }
@@ -155,10 +156,11 @@ export class FormDatasetComponent {
   uploadDataset(onSuccess: Function = (dataset: Dataset) => { }, onError: Function = () => { }) {
     if (this.files[0] == undefined) {
       shared.openDialog("Greška", "Niste izabrali fajl za učitavanje.");
+      onError();
       return;
     }
 
-    return this.modelsService.uploadData(this.files[0]).subscribe((file) => {
+    return this.datasetsService.uploadData(this.files[0]).subscribe((file) => {
       this.dataset._id = "";
       this.dataset.fileId = file._id;
       this.dataset.uploaderId = shared.userId;

@@ -15,6 +15,8 @@ import { MetricViewComponent } from 'src/app/_elements/metric-view/metric-view.c
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatasetsService } from 'src/app/_services/datasets.service';
 import { PredictorsService } from 'src/app/_services/predictors.service';
+import { LineChartComponent } from 'src/app/_elements/_charts/line-chart/line-chart.component';
+import Predictor from 'src/app/_data/Predictor';
 
 @Component({
   selector: 'app-experiment',
@@ -30,15 +32,31 @@ export class ExperimentComponent implements AfterViewInit {
   event: number = 0;
   experiment: Experiment;
   dataset?: Dataset;
+  predictor?: Predictor;
+
   @ViewChild("folderDataset") folderDataset!: FolderComponent;
   @ViewChild(ColumnTableComponent) columnTable!: ColumnTableComponent;
   @ViewChild("folderModel") folderModel!: FolderComponent;
-  @ViewChild("metricView") metricView!: MetricViewComponent;
+  @ViewChild("folderModelCompare") folderModelCmp!: FolderComponent;
+  @ViewChild("linechart") linechartComponent!: LineChartComponent;
+  @ViewChild("linechartCompare") linechartComponentCmp!: LineChartComponent;
 
   step1: boolean = false;
   step2: boolean = false;
   step3: boolean = false;
   step4: boolean = false;
+
+  comparing: boolean = false;
+
+  toggleCompare() {
+    this.comparing = !this.comparing;
+    setTimeout(() => {
+      if (this.folderModel.formModel)
+        this.folderModel.formModel.graph.resize();
+      if (this.folderModel.formNewModel)
+        this.folderModel.formNewModel.graph.resize();
+    });
+  }
 
   constructor(private experimentsService: ExperimentsService, private modelsService: ModelsService, private datasetsService: DatasetsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private route: ActivatedRoute) {
     this.experiment = new Experiment("exp1");
@@ -57,7 +75,22 @@ export class ExperimentComponent implements AfterViewInit {
       Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
     } else {
       this.modelsService.trainModel(this.modelToTrain._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
-      this.step4 = true;
+      this.step3 = true;
+      setTimeout(() => {
+        this.goToPage(3);
+      });
+    }
+  }
+
+  trainModelCmp() {
+    if (!this.modelToTrainCmp) {
+      Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
+    } else {
+      this.modelsService.trainModel(this.modelToTrainCmp._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
+      this.step3 = true;
+      setTimeout(() => {
+        this.goToPage(3);
+      });
     }
   }
 
@@ -83,15 +116,47 @@ export class ExperimentComponent implements AfterViewInit {
 
     if (this.signalRService.hubConnection) {
       this.signalRService.hubConnection.on("NotifyEpoch", (mName: string, mId: string, stat: string, totalEpochs: number, currentEpoch: number) => {
-        if (currentEpoch == 0) {
-          this.history = [];
-        }
+
         if (this.modelToTrain?._id == mId) {
+          if (currentEpoch == 0) {
+            this.linechartComponent.setName(mName);
+            this.history = [];
+          }
+
           stat = stat.replace(/'/g, '"');
           this.history.push(JSON.parse(stat));
-          this.metricView.update(this.history,this.modelToTrain.epochs);
+
+          this.linechartComponent.updateAll(this.history, this.modelToTrain.epochs);
+        }
+
+        if (this.modelToTrainCmp?._id == mId) {
+          if (currentEpoch == 0) {
+            this.linechartComponentCmp.setName(mName);
+            this.historyCmp = [];
+          }
+
+          stat = stat.replace(/'/g, '"');
+
+          this.historyCmp.push(JSON.parse(stat));
+          this.linechartComponentCmp.updateAll(this.historyCmp, this.modelToTrainCmp.epochs);
         }
       });
+
+      this.signalRService.hubConnection.on("NotifyPredictor", (pId: string, mId: string) => {
+        console.log("Predictor trained: ", pId, "for model:", mId);
+
+        if (this.modelToTrain && mId == this.modelToTrain._id) {
+          this.predictorsService.getPredictor(pId).subscribe((predictor) => {
+            this.linechartComponent.predictor = predictor;
+          });
+        }
+
+        if (this.modelToTrainCmp && mId == this.modelToTrainCmp._id) {
+          this.predictorsService.getPredictor(pId).subscribe((predictor) => {
+            this.linechartComponentCmp.predictor = predictor;
+          });
+        }
+      })
 
     }
 
@@ -102,6 +167,7 @@ export class ExperimentComponent implements AfterViewInit {
       if (predictorId != null) {
         this.predictorsService.getPredictor(predictorId!).subscribe((response) => {
           let predictor = response;
+          this.predictor = predictor;
           this.experimentsService.getExperimentById(predictor.experimentId).subscribe((response) => {
             this.experiment = response;
             this.datasetsService.getDatasetById(this.experiment.datasetId).subscribe((response: Dataset) => {
@@ -111,11 +177,13 @@ export class ExperimentComponent implements AfterViewInit {
 
               this.modelsService.getModelById(predictor.modelId).subscribe((response) => {
                 let model = response;
-                this.folderModel.formModel.newModel = model;
+                this.folderModel.selectFile(model);
+                //this.folderModel.formModel.newModel = model;
                 this.step3 = true;
-                let numOfEpochsArray = Array.from({length: model.epochs}, (_, i) => i + 1);
+                let numOfEpochsArray = Array.from({ length: model.epochs }, (_, i) => i + 1);
                 setTimeout(() => {
-                  this.metricView.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
+                  this.linechartComponent.update(numOfEpochsArray, predictor.metricsAcc, predictor.metricsLoss, predictor.metricsMae, predictor.metricsMse, predictor.metricsValAcc, predictor.metricsValLoss, predictor.metricsValMae, predictor.metricsValMse);
+                  this.goToPage(3);
                 })
               });
             });
@@ -129,6 +197,7 @@ export class ExperimentComponent implements AfterViewInit {
             this.dataset = response;
             this.folderDataset.forExperiment = this.experiment;
             this.folderDataset.selectFile(this.dataset);
+            this.goToPage(1);
           });
         });
       }
@@ -137,6 +206,7 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   history: any[] = [];
+  historyCmp: any[] = [];
 
   updatePageIfScrolled() {
     if (this.scrolling) return;
@@ -197,14 +267,18 @@ export class ExperimentComponent implements AfterViewInit {
     this.step2 = true;
     setTimeout(() => {
       this.folderModel.updateExperiment();
+      this.folderModel.selectFile(undefined);
+      this.folderModel.selectTab(TabType.NewFile);
+      this.goToPage(2);
     });
   }
 
   setDataset(dataset: FolderFile | null) {
-    if (dataset == null) {
+    if (dataset == null ||dataset==undefined) {
       this.columnTable.loaded = false;
       this.dataset = undefined;
       this.experiment.datasetId = '';
+      this.step1=false;
       return;
     }
     const d = <Dataset>dataset;
@@ -215,13 +289,21 @@ export class ExperimentComponent implements AfterViewInit {
     setTimeout(() => {
       this.columnTable.loadDataset(d);
     });
+    // REFRESH GRAFIKA (4. KORAKA) URADITI 
   }
 
   modelToTrain?: Model;
+  modelToTrainCmp?: Model;
 
   setModel(model: FolderFile) {
     const m = <Model>model;
     this.modelToTrain = m;
-    this.step3 = true;
+    //this.step3 = true;
+  }
+
+  setModelCmp(model: FolderFile) {
+    const m = <Model>model;
+    this.modelToTrainCmp = m;
+    //this.step3 = true;
   }
 }

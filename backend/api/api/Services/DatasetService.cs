@@ -75,7 +75,7 @@ namespace api.Services
 
         public Dataset GetOneDataset(string userId, string id)
         {
-            return _dataset.Find(dataset => dataset.uploaderId == userId && dataset._id == id && dataset.isPreProcess).FirstOrDefault();
+            return _dataset.Find(dataset => (dataset.uploaderId == userId || dataset.isPublic || dataset.accessibleByLink) && dataset._id == id && dataset.isPreProcess).FirstOrDefault();
         }
         public Dataset GetOneDatasetN(string userId, string name)
         {
@@ -104,6 +104,22 @@ namespace api.Services
 
             return dataset._id;
         }
-        
+
+        public void UpdateAccessibleByLink(string datasetId, bool accessibleByLink)
+        {
+            Dataset dataset = _dataset.Find(dataset => dataset._id == datasetId).FirstOrDefault();
+            dataset.accessibleByLink = accessibleByLink;
+
+            _dataset.ReplaceOne(dataset => dataset._id == datasetId, dataset);
+        }
+
+        public void UpdateIsPublic(string datasetId, bool isPublic)
+        {
+            Dataset dataset = _dataset.Find(dataset => dataset._id == datasetId).FirstOrDefault();
+            dataset.isPublic = isPublic;
+
+            _dataset.ReplaceOne(dataset => dataset._id == datasetId, dataset);
+        }
+
     }
 }

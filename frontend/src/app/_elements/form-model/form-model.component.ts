@@ -12,6 +12,8 @@ import { MatSliderChange } from '@angular/material/slider';
   styleUrls: ['./form-model.component.css']
 })
 export class FormModelComponent implements AfterViewInit {
+  @Input() disableAll: boolean = false;
+
   @ViewChild(GraphComponent) graph!: GraphComponent;
   @Input() forExperiment!: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();
@@ -25,11 +27,7 @@ export class FormModelComponent implements AfterViewInit {
   @Output() editEvent = new EventEmitter();
 
   ngAfterViewInit(): void {
-    this.lossFunction = this.lossFunctions[this.forProblemType][0];
-    this.outputLayerActivationFunction = this.outputLayerActivationFunctions[this.forProblemType][0];
-
-    this.newModel.lossFunction = this.lossFunction;
-    this.newModel.outputLayerActivationFunction = this.outputLayerActivationFunction;
+    
   }
 
   selectFormControl = new FormControl('', Validators.required);
@@ -80,10 +78,17 @@ export class FormModelComponent implements AfterViewInit {
   loadModel(model: Model) {
     this.newModel = model;
     this.forProblemType = model.type;
+    this.lossFunction = this.lossFunctions[this.forProblemType][0];
+    this.outputLayerActivationFunction = this.outputLayerActivationFunctions[this.forProblemType][0];
+
+    this.newModel.lossFunction = this.lossFunction;
+    this.newModel.outputLayerActivationFunction = this.outputLayerActivationFunction;
+    this.updateGraph();
   }
 
   updateGraph() {
-    this.graph.update();
+    if(this.newModel)
+      this.graph.update();
   }
 
   removeLayer() {

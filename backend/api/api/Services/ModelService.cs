@@ -67,7 +67,7 @@ namespace api.Services
 
         public Model GetOneModelById(string userId, string id)
         {
-            return _model.Find(model => model.uploaderId == userId && model._id == id).FirstOrDefault();
+            return _model.Find(model => (model.uploaderId == userId || model.isPublic || model.accessibleByLink) && model._id == id).FirstOrDefault();
         }
 
         public Model GetOneModel(string id)
@@ -105,6 +105,22 @@ namespace api.Services
             else
                 return true;
 
+        }
+
+        public void UpdateAccessibleByLink(string modelId, bool accessibleByLink)
+        {
+            Model model = _model.Find(model => model._id == modelId).FirstOrDefault();
+            model.accessibleByLink = accessibleByLink;
+
+            _model.ReplaceOne(model => model._id == modelId, model);
+        }
+
+        public void UpdateIsPublic(string modelId, bool isPublic)
+        {
+            Model model = _model.Find(model => model._id == modelId).FirstOrDefault();
+            model.isPublic = isPublic;
+
+            _model.ReplaceOne(model => model._id == modelId, model);
         }
     }
 }

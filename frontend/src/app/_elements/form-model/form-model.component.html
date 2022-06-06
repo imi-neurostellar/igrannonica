@@ -1,4 +1,4 @@
-<div *ngIf="newModel">
+<div *ngIf="newModel!=undefined">
     <div id="container">
         <div class="ns-row">
 
@@ -90,8 +90,8 @@
     <!-- GRAF -->
 
     <div class="m-2">
-        <div class="row">
-            <div class="col-sm-3 rounded" style="border:1px solid var(--ns-primary);margin-top: 10px; width: fit-content;">
+        <div class="ns-row">
+            <div class="ns-col rounded" style="border:1px solid var(--ns-primary);margin-top: 10px; min-width: fit-content; max-width: 30%;">
                 <!-- <label>Veličina skupa za validaciju: </label><b>{{validationSize}} %</b> 
                     <div class="text-center pt-3 pb-0 mb-0"><b>{{testSetDistribution}}%</b> : <b>{{100-testSetDistribution}}%</b></div>
                     <div class="text-center pt-0 mt-0 p-0">Trening ////slider////// Test</div>
@@ -120,9 +120,10 @@
                 </div>
             </div>
 
-            <div class="col-sm-9">
+            <div class="ns-col">
                 <!-- {{forExperiment._columnsSelected}} -->
-                <app-graph [model]="newModel" [inputColumns]="getInputColumns()"></app-graph>
+
+                <app-graph [model]="newModel" [inputColumns]="getInputColumns()" [outputColumn]="(this.forExperiment!=undefined)?this.forExperiment.outputColumn:''"></app-graph>
             </div>
         </div>
     </div>
@@ -189,7 +190,7 @@
 
         <!-- LAYERI -->
 
-        <div id="layers">
+        <div id="layers" style="margin-top: 10px;">
             <div class="layer" *ngFor="let item of newModel.layers; let i=index">
 
 
@@ -229,7 +230,7 @@
 
                 <mat-form-field appearance="fill" class="mat-fix">
                     <mat-label>Stopa regularizacije</mat-label>
-                    <mat-select [(ngModel)]="newModel.layers[i].regularisationRate">
+                    <mat-select [(ngModel)]="newModel.layers[i].regularisationRate" (selectionChange)="editEvent.emit();">
                         <mat-option *ngFor="let option of Object.keys(RegularisationRate); let optionName of Object.values(RegularisationRate)" [value]="option">
                             {{ optionName }}
                         </mat-option>

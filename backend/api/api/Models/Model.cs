@@ -44,7 +44,7 @@ namespace api.Models
     {
         
 
-        public Layer(int layerNumber, string activationFunction, int neurons, string regularisation, float regularisationRate) 
+        public Layer(int layerNumber, string activationFunction, int neurons, string regularisation, string regularisationRate) 
         {
             this.layerNumber = layerNumber;
             this.activationFunction = activationFunction;
@@ -57,7 +57,7 @@ namespace api.Models
         public string activationFunction { get; set; }
         public int neurons { get; set; }
         public string regularisation { get; set; }
-        public float regularisationRate  { get; set; }
+        public string regularisationRate  { get; set; }
     }
 }
 

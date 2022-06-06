@@ -22,6 +22,7 @@ import { YesNoDialogComponent } from './_modals/yes-no-dialog/yes-no-dialog.comp
 import { EncodingDialogComponent } from './_modals/encoding-dialog/encoding-dialog.component';
 import { MissingvaluesDialogComponent } from './_modals/missingvalues-dialog/missingvalues-dialog.component';
 import { SaveExperimentDialogComponent } from './_modals/save-experiment-dialog/save-experiment-dialog.component';
+import { UpdateExperimentDialogComponent } from './_modals/update-experiment-dialog/update-experiment-dialog.component';
 // Pages
 import { HomeComponent } from './_pages/home/home.component';
 import { ProfileComponent } from './_pages/profile/profile.component';
@@ -53,6 +54,9 @@ import { HeatmapComponent } from './_elements/_charts/heatmap/heatmap.component'
 import { HeatMapAllModule } from '@syncfusion/ej2-angular-heatmap';
 import { MetricViewComponent } from './_elements/metric-view/metric-view.component';
 import { SpinnerComponent } from './_elements/spinner/spinner.component';
+import { PageDatasetComponent } from './_pages/page-dataset/page-dataset.component';
+import { PageModelComponent } from './_pages/page-model/page-model.component';
+import { ShareDialogComponent } from './_modals/share-dialog/share-dialog.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -93,7 +97,11 @@ export function initializeApp(appConfig: Configuration) {
     MetricViewComponent,
     LineChartComponent,
     SaveExperimentDialogComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    UpdateExperimentDialogComponent,
+    PageDatasetComponent,
+    PageModelComponent,
+    ShareDialogComponent
   ],
   imports: [
     BrowserModule,

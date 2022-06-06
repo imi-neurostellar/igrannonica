@@ -27,7 +27,9 @@
                             <th>#</th>
                             <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                                 <div class="cell-align">
-                                    #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    <div class="text-overflow">
+                                        #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    </div>
                                     <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                                 </div>
                             </th>
@@ -63,7 +65,9 @@
                             <th>Kolona</th>
                             <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                                 <div class="cell-align">
-                                    #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    <div class="text-overflow">
+                                        #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    </div>
                                     <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                                 </div>
                             </th>
@@ -72,7 +76,7 @@
                     <tbody>
                         <tr *ngFor="let row of dataset.cMatrix; let i = index">
                             <th [ngClass]="{'header-disabled col-disabled' : !columnsChecked[i]}">
-                                <div class="text-left">
+                                <div class="text-left text-overflow">
                                     {{dataset.columnInfo[i].columnName}}
                                 </div>
                             </th>
@@ -97,7 +101,9 @@
                             <th>Naziv</th>
                             <th class="columnNames" *ngFor="let colInfo of dataset.columnInfo; let i = index" [ngClass]="{'header-disabled' : !columnsChecked[i]}">
                                 <div class="cell-align">
-                                    #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    <div class="text-overflow">
+                                        #{{i + 1}}&nbsp;&nbsp;{{colInfo.columnName}}
+                                    </div>
                                     <mat-checkbox color="primary" [(ngModel)]="columnsChecked[i]" (change)="changeInputColumns($event, colInfo.columnName)"></mat-checkbox>
                                 </div>
                             </th>
@@ -109,7 +115,7 @@
                             <td *ngFor="let colInfo of dataset.columnInfo; let i = index" class="pad-fix" [ngClass]="{'text-disabled' : !columnsChecked[i]}">
                                 <p class="verticalAlign text-left" style="font-size:13px;" *ngIf="!colInfo.isNumber">Kategorijski</p>
                                 <mat-form-field *ngIf="colInfo.isNumber">
-                                    <mat-select matNativeControl [(value)]="this.experiment.columnTypes[i]" [disabled]="!columnsChecked[i]" (selectionChange)="columnTypeChanged(colInfo.columnName);">
+                                    <mat-select matNativeControl [(value)]="this.experiment.columnTypes[i]" [disabled]="!columnsChecked[i]" (selectionChange)="columnTypeChanged(colInfo.columnName, i);">
                                         <mat-option [value]="ColumnType.categorical">Kategorijski</mat-option>
                                         <mat-option [value]="ColumnType.numerical">Numerički</mat-option>
                                     </mat-select>
@@ -141,8 +147,8 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr style="padding: 0">
-                            <th class="brighter cell-align long" (click)="openEncodingDialog()">
+                        <tr style="padding: 0;" *ngIf="experiment.encodings!=undefined">
+                            <th style="background-color:  var(--ns-primary);" (click)="openEncodingDialog()">
                                 <span class="verticalAlign">Enkodiranje</span>&nbsp;
                                 <span class="material-icons-round verticalAlign rotate">settings</span>
                             </th>
@@ -168,11 +174,13 @@
 
                                 <div *ngIf="colInfo.numNulls > 0">
                                     <button class="w-100" mat-raised-button [ngClass]="{ 'menu-disabled' : !columnsChecked[i]}" [matMenuTriggerFor]="menu" id="main_{{colInfo.columnName}}" #nullValMenu>
-                                    <div class="cell-align">
-                                        {{nullValOption[i]}}
-                                        <mat-icon>arrow_drop_down</mat-icon>
-                                    </div>
-                                </button>
+                                        <div class="cell-align">
+                                            <div [ngClass]="{'text-overflow' : experiment.nullValuesReplacers[i].option == NullValueOptions.Replace}">
+                                                {{nullValOption[i]}}
+                                            </div>
+                                            <mat-icon>arrow_drop_down</mat-icon>
+                                        </div>
+                                    </button>
                                     <mat-menu #menu="matMenu">
                                         <!--<button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteColumns, i)" value={{colInfo.columnName}}>Obriši kolonu</button>-->
                                         <button mat-menu-item (click)="MissValsDeleteClicked($event, NullValueOptions.DeleteRows, i)" value={{colInfo.columnName}}>Obriši redove ({{colInfo.numNulls}})</button>
@@ -180,12 +188,12 @@
                                     </mat-menu>
 
                                     <mat-menu #fillWith="matMenu">
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.mean}}>Mean ({{colInfo.mean}})</button>
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.median}}>Median ({{colInfo.median}})</button>
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.max}}>Max ({{colInfo.max}})</button>
-                                        <button *ngIf="colInfo.isNumber" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.min}}>Min ({{colInfo.min}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.mean}}>Mean ({{colInfo.mean}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.median}}>Median ({{colInfo.median}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.max}}>Max ({{colInfo.max}})</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.numerical" mat-menu-item (click)="MissValsReplaceClicked($event, colInfo.columnName, i)" value={{colInfo.min}}>Min ({{colInfo.min}})</button>
 
-                                        <button *ngIf="!colInfo.isNumber" mat-menu-item [matMenuTriggerFor]="uniques">Najčešće vrednosti</button>
+                                        <button *ngIf="experiment.columnTypes[i] == ColumnType.categorical" mat-menu-item [matMenuTriggerFor]="uniques">Najčešće vrednosti</button>
 
                                         <button mat-menu-item [matMenuTriggerFor]="replaceWith">Unesi vrednost...</button>
                                     </mat-menu>
@@ -195,7 +203,8 @@
                                     </mat-menu>
 
                                     <mat-menu #replaceWith="matMenu">
-                                        <input type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value] #enterAValue>
+                                        <input *ngIf="experiment.columnTypes[i] == ColumnType.categorical" type="text" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value] #enterAValue>
+                                        <input *ngIf="experiment.columnTypes[i] == ColumnType.numerical" type="number" id={{colInfo.columnName}} mat-menu-item placeholder="Unesi vrednost..." [value] #enterAValue>
                                         <button [disabled]="getValue(colInfo.columnName) == ''" mat-menu-item value={{getValue(colInfo.columnName)}} (click)="MissValsReplaceClicked($event, colInfo.columnName, i)">Potvrdi unos</button>
                                     </mat-menu>
                                 </div>
