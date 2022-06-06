@@ -10,11 +10,14 @@
     /*border: 1px solid red;*/
     transform: translate(-50%, -50%);
 }
-
-.node-text:not(.inputs) {
+.output{
+    font-weight: bold;
+    color: var(--offwhite);
+}
+.node-text:not(.output) {
     color: transparent;
 }
 
-.node-text:not(.inputs):hover {
+.node-text:not(.output):hover {
     color: var(--offwhite);
 }
