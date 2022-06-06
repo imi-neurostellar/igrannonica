@@ -19,5 +19,8 @@ namespace api.Services
         public void Update(Dataset dataset);
         string GetDatasetId(string fileId);
         //bool CheckDb();
+
+        public void UpdateAccessibleByLink(string datasetId, bool accessibleByLink);
+        public void UpdateIsPublic(string datasetId, bool isPublic);
     }
 }

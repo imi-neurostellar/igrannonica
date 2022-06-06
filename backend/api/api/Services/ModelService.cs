@@ -106,5 +106,21 @@ namespace api.Services
                 return true;
 
         }
+
+        public void UpdateAccessibleByLink(string modelId, bool accessibleByLink)
+        {
+            Model model = _model.Find(model => model._id == modelId).FirstOrDefault();
+            model.accessibleByLink = accessibleByLink;
+
+            _model.ReplaceOne(model => model._id == modelId, model);
+        }
+
+        public void UpdateIsPublic(string modelId, bool isPublic)
+        {
+            Model model = _model.Find(model => model._id == modelId).FirstOrDefault();
+            model.isPublic = isPublic;
+
+            _model.ReplaceOne(model => model._id == modelId, model);
+        }
     }
 }

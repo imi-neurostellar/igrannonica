@@ -28,7 +28,8 @@ export class GraphComponent implements AfterViewInit {
   @Input() outputNodeColor: string = '#dfd7d7';
 
   private ctx!: CanvasRenderingContext2D;
-  @Input() inputColumns?: string[];
+  @Input() inputColumns?: string[]=[];
+  @Input() outputColumn?:string="";
 
   constructor() { }
 
@@ -81,7 +82,7 @@ export class GraphComponent implements AfterViewInit {
     this.layers.push([new Node(outX, outY, this.outputNodeColor)])
     this.draw();
   }
-
+  
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 

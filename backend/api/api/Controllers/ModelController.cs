@@ -312,6 +312,38 @@ namespace api.Controllers
 
         }
 
+        [HttpPut("UpdateAccessibleByLink/{modelId}")]
+        [Authorize(Roles = "User")]
+        public ActionResult UpdateAccessibleByLink(string modelId, [FromBody] bool accessibleByLink)
+        {
+            string uploaderId = getUserId();
+
+            Model model = _modelService.GetOneModel(modelId);
+
+            if (uploaderId != model.uploaderId)
+                return Unauthorized();
+
+            _modelService.UpdateAccessibleByLink(modelId, accessibleByLink);
+
+            return Ok(model.accessibleByLink);
+        }
+
+        [HttpPut("UpdateIsPublic/{modelId}")]
+        [Authorize(Roles = "User")]
+        public ActionResult UpdateIsPublic(string modelId, [FromBody] bool isPublic)
+        {
+            string uploaderId = getUserId();
+
+            Model model = _modelService.GetOneModel(modelId);
+
+            if (uploaderId != model.uploaderId)
+                return Unauthorized();
+
+            _modelService.UpdateIsPublic(modelId, isPublic);
+
+            return Ok(model.isPublic);
+        }
+
     }
 
     public class TrainModelObject

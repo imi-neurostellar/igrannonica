@@ -13,6 +13,7 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./form-dataset.component.css']
 })
 export class FormDatasetComponent {
+  @Input() disableAll: boolean = false;
 
   @ViewChild(DatatableComponent) datatable!: DatatableComponent;
 

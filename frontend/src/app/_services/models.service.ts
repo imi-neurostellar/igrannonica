@@ -51,4 +51,12 @@ export class ModelsService {
     return this.http.get<Model>(`${Configuration.settings.apiURL}/model/byid/${modelId}`, { headers: this.authService.authHeader() });
   }
 
+  updateModelAccessibleByLink(id: string, acessibleByLink: boolean) {
+    return this.http.put(`${Configuration.settings.apiURL}/model/updateAccessibleByLink/` + id, acessibleByLink, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+
+  updateModelIsPublic(id: string, isPublic: boolean) {
+    return this.http.put(`${Configuration.settings.apiURL}/model/updateIsPublic/` + id, isPublic, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+
 }

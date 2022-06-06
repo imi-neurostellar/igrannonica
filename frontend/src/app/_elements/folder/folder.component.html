@@ -76,6 +76,9 @@
                             {{file.lastUpdated | date}}
                         </div>
                         <div class="mx-2 hover-show" *ngIf="selectedTab !== TabType.PublicDatasets && selectedTab !== TabType.PublicModels">
+                            <button *ngIf="selectedTab==TabType.MyDatasets || selectedTab==TabType.MyModels" class="btn-clear file-button" (click)="shareFile(file,$event)" style="display: inline-block;" matTooltip="Podeli" matTooltipPosition="above">
+                                <mat-icon>share</mat-icon>
+                            </button>
                             <button *ngIf="selectedTab==TabType.MyDatasets" class="btn-clear file-button" (click)="downloadFile(file,$event)" style="display: inline-block;" matTooltip="Preuzmi" matTooltipPosition="above">
                                 <mat-icon>download</mat-icon>
                             </button>
@@ -122,11 +125,14 @@
     <div [ngSwitch]="newFileSelected" *ngIf="!listView">
         <div class="file-bottom-buttons" *ngIf="selectedTab != TabType.NewFile">
             <div class="file-bottom-buttons-helper">
-                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(this.selectedFile, $event)" matTooltip="Obriši" matTooltipPosition="above">
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File && privacy != Privacy.Public" class="btn-clear file-button" (click)="deleteFile(selectedFile, $event)" matTooltip="Obriši" matTooltipPosition="above">
                     <mat-icon>delete</mat-icon>
                 </button>
-                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(this.selectedFile,$event)" style="display: inline-block;" matTooltip="Preuzmi" matTooltipPosition="above">
+                <button *ngIf="this.selectedFile && selectedTab==TabType.File && FolderType.Dataset==this.type" class="btn-clear file-button" (click)="downloadFile(selectedFile,$event)" style="display: inline-block;" matTooltip="Preuzmi" matTooltipPosition="above">
                     <mat-icon>download</mat-icon>
+                </button>
+                <button *ngIf="this.selectedFile && selectedTab == TabType.File" class="btn-clear file-button" (click)="shareFile(selectedFile,$event)" style="display: inline-block;" matTooltip="Podeli" matTooltipPosition="above">
+                    <mat-icon>share</mat-icon>
                 </button>
             </div>
             <!-- <button class="btn-clear file-button">

@@ -54,6 +54,9 @@ import { HeatmapComponent } from './_elements/_charts/heatmap/heatmap.component'
 import { HeatMapAllModule } from '@syncfusion/ej2-angular-heatmap';
 import { MetricViewComponent } from './_elements/metric-view/metric-view.component';
 import { SpinnerComponent } from './_elements/spinner/spinner.component';
+import { PageDatasetComponent } from './_pages/page-dataset/page-dataset.component';
+import { PageModelComponent } from './_pages/page-model/page-model.component';
+import { ShareDialogComponent } from './_modals/share-dialog/share-dialog.component';
 
 export function initializeApp(appConfig: Configuration) {
   return () => appConfig.load();
@@ -95,7 +98,10 @@ export function initializeApp(appConfig: Configuration) {
     LineChartComponent,
     SaveExperimentDialogComponent,
     SpinnerComponent,
-    UpdateExperimentDialogComponent
+    UpdateExperimentDialogComponent,
+    PageDatasetComponent,
+    PageModelComponent,
+    ShareDialogComponent
   ],
   imports: [
     BrowserModule,

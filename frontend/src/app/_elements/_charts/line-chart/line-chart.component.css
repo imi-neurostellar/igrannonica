@@ -22,7 +22,8 @@ canvas {
 }
 
 .hide {
-    display: none;
+    display: none !important;
+    background-color: red;
 }
 
 .dl-button {

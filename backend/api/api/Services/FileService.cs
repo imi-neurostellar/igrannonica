@@ -28,7 +28,7 @@ namespace api.Services
         public string GetFilePath(string id, string uploaderId)
         {
             FileModel file;
-            if (_dataset.Find(x=>x.fileId==id && x.isPublic==true).FirstOrDefault()!=null)
+            if (_dataset.Find(x=>x.fileId==id && (x.isPublic==true ||x.accessibleByLink==true)).FirstOrDefault()!=null)
                 file = _file.Find(x => x._id == id).FirstOrDefault();
             else
                 file = _file.Find(x => x._id == id && x.uploaderId == uploaderId).FirstOrDefault();

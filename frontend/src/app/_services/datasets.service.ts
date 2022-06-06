@@ -70,4 +70,12 @@ export class DatasetsService {
   downloadFile(id: string): Observable<Blob> {
     return this.http.get(`${Configuration.settings.apiURL}/file/Download?id=` + id, { headers: this.authService.authHeader(), responseType: 'blob' });
   }
+
+  updateDatasetAccessibleByLink(id: string, acessibleByLink: boolean) {
+    return this.http.put(`${Configuration.settings.apiURL}/dataset/updateAccessibleByLink/` + id, acessibleByLink, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
+
+  updateDatasetIsPublic(id: string, isPublic: boolean) {
+    return this.http.put(`${Configuration.settings.apiURL}/dataset/updateIsPublic/` + id, isPublic, { headers: this.authService.authHeader(), responseType: 'text' });
+  }
 }
