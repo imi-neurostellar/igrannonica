@@ -67,9 +67,8 @@
                     <button mat-raised-button *ngIf="comparing" (click)="toggleCompare()"><mat-icon>not_interested</mat-icon> Prekini upoređivanje</button>
                 </div>
                 <div class="side-by-side">
-                    <app-folder #folderModel [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.NewFile" [tabsToShow]="[TabType.MyModels]" (okPressed)="goToPage(3); trainModel();" (selectedFileChanged)="setModel($event);"></app-folder>
-                    <app-folder #folderModelCompare [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.MyModels" [tabsToShow]="[TabType.MyModels]" (okPressed)="goToPage(3); trainModelCmp();" (selectedFileChanged)="setModelCmp($event);" style="width: 50%;"
-                        *ngIf="comparing"></app-folder>
+                    <app-folder #folderModel [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.NewFile" [tabsToShow]="[TabType.MyModels]" (okPressed)="trainModel();" (selectedFileChanged)="setModel($event);"></app-folder>
+                    <app-folder #folderModelCompare [type]="FolderType.Model" [forExperiment]="experiment" [startingTab]="TabType.MyModels" [tabsToShow]="[TabType.MyModels]" (okPressed)="trainModelCmp();" (selectedFileChanged)="setModelCmp($event);" style="width: 50%;" *ngIf="comparing"></app-folder>
                 </div>
             </div>
         </div>

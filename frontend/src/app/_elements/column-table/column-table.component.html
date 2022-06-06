@@ -147,7 +147,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr style="padding: 0;">
+                        <tr style="padding: 0;" *ngIf="experiment.encodings.length > 0">
                             <th style="background-color:  var(--ns-primary);" (click)="openEncodingDialog()">
                                 <span class="verticalAlign">Enkodiranje</span>&nbsp;
                                 <span class="material-icons-round verticalAlign rotate">settings</span>
