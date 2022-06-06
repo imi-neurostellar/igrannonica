@@ -75,7 +75,10 @@ export class ExperimentComponent implements AfterViewInit {
       Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
     } else {
       this.modelsService.trainModel(this.modelToTrain._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
-      this.step4 = true;
+      this.step3 = true;
+      setTimeout(() => {
+        this.goToPage(3);
+      });
     }
   }
 
@@ -84,7 +87,10 @@ export class ExperimentComponent implements AfterViewInit {
       Shared.openDialog('Greška', 'Morate odabrati konfiguraciju neuronske mreže');
     } else {
       this.modelsService.trainModel(this.modelToTrainCmp._id, this.experiment._id).subscribe(() => { console.log("pocelo treniranje") });
-      this.step4 = true;
+      this.step3 = true;
+      setTimeout(() => {
+        this.goToPage(3);
+      });
     }
   }
 
@@ -268,10 +274,11 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   setDataset(dataset: FolderFile | null) {
-    if (dataset == null) {
+    if (dataset == null ||dataset==undefined) {
       this.columnTable.loaded = false;
       this.dataset = undefined;
       this.experiment.datasetId = '';
+      this.step1=false;
       return;
     }
     const d = <Dataset>dataset;
@@ -291,12 +298,12 @@ export class ExperimentComponent implements AfterViewInit {
   setModel(model: FolderFile) {
     const m = <Model>model;
     this.modelToTrain = m;
-    this.step3 = true;
+    //this.step3 = true;
   }
 
   setModelCmp(model: FolderFile) {
     const m = <Model>model;
     this.modelToTrainCmp = m;
-    this.step3 = true;
+    //this.step3 = true;
   }
 }

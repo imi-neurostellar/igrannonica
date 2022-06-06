@@ -67,7 +67,7 @@ namespace api.Services
 
         public Model GetOneModelById(string userId, string id)
         {
-            return _model.Find(model => model.uploaderId == userId && model._id == id).FirstOrDefault();
+            return _model.Find(model => (model.uploaderId == userId || model.isPublic || model.accessibleByLink) && model._id == id).FirstOrDefault();
         }
 
         public Model GetOneModel(string id)
