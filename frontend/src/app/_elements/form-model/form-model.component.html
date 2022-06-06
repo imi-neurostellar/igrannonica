@@ -122,7 +122,8 @@
 
             <div class="ns-col">
                 <!-- {{forExperiment._columnsSelected}} -->
-                <app-graph [model]="newModel" [inputColumns]="getInputColumns()"></app-graph>
+
+                <app-graph [model]="newModel" [inputColumns]="getInputColumns()" [outputColumn]="(this.forExperiment!=undefined)?this.forExperiment.outputColumn:''"></app-graph>
             </div>
         </div>
     </div>
