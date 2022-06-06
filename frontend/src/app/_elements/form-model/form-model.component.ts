@@ -12,6 +12,8 @@ import { MatSliderChange } from '@angular/material/slider';
   styleUrls: ['./form-model.component.css']
 })
 export class FormModelComponent implements AfterViewInit {
+  @Input() disableAll: boolean = false;
+
   @ViewChild(GraphComponent) graph!: GraphComponent;
   @Input() forExperiment!: Experiment;
   @Output() selectedModelChangeEvent = new EventEmitter<Model>();

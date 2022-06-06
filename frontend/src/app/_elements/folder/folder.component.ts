@@ -15,6 +15,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Predictor from 'src/app/_data/Predictor';
 import FileSaver from 'file-saver';
 import isEqual from 'lodash.isequal';
+import { ShareDialogComponent } from 'src/app/_modals/share-dialog/share-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-folder',
@@ -50,7 +52,7 @@ export class FolderComponent implements AfterViewInit {
 
   searchTerm: string = '';
 
-  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private router: Router, private route: ActivatedRoute) {
+  constructor(private datasetsService: DatasetsService, private experimentsService: ExperimentsService, private modelsService: ModelsService, private predictorsService: PredictorsService, private signalRService: SignalRService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog) {
     this.tabsToShow.forEach(tab => this.folders[tab] = []);
   }
 
@@ -104,6 +106,18 @@ export class FolderComponent implements AfterViewInit {
   }
 
   selectFile(file?: FolderFile) {
+    if (this.privacy == Privacy.Public) {
+      if (file) {
+        if (this.type == FolderType.Dataset) {
+          this.router.navigate(['dataset', file?._id]);
+        } else if (this.type == FolderType.Model) {
+          this.router.navigate(['model', file?._id]);
+        }
+      }
+
+    }
+
+
     this.formDataset.resetPagging();
     this.selectedFile = file;
     this.updateLastFileData(file);
@@ -152,6 +166,22 @@ export class FolderComponent implements AfterViewInit {
 
   ok() {
     this.okPressed.emit();
+  }
+
+  fileToShare: FolderFile | undefined = undefined;
+
+  shareFile(file: FolderFile, event: Event) {
+    event.stopPropagation();
+
+    this.fileToShare = file;
+
+    const dialogRef = this.dialog.open(ShareDialogComponent, {
+      width: '550px',
+      data: { file: this.fileToShare, fileType: this.type }
+    });
+    dialogRef.afterClosed().subscribe(experiment => {
+      this.refreshFiles();
+    });
   }
 
   _initialized: boolean = false;
@@ -547,9 +577,9 @@ export class FolderComponent implements AfterViewInit {
   selectTab(tab: TabType) {
     if (tab == TabType.NewFile) {
       this.selectNewFile();
-    } else if (tab == TabType.File) {
+    } /*else if (tab == TabType.File) {
       this.selectFile(this.selectedFile);
-    }
+    }*/
     this.listView = this.getListView(tab);
     this.type = this.getFolderType(tab);
     this.privacy = this.getPrivacy(tab);
